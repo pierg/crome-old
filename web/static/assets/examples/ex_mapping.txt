@@ -1,0 +1,19 @@
+CONSTANTS:
+    Delta_m         := 1          # meter
+
+GOAL:
+	NAME:
+		measure_distance
+    DESCRIPTION:
+        measure the distance from the front vehicle with precision DELTA
+    VARIABLES:
+		distance_front      := REAL
+		distance_real       := REAL
+
+	ASSUMPTIONS:
+        --
+	GUARANTEES:
+		distance_front > 0
+        distance_front - distance_real < Delta_m
+
+ENDGOALS

@@ -1,0 +1,66 @@
+MODULE context(time)
+VAR
+    status: {idle, wait, active, exit};
+
+ASSIGN
+    init(status) := idle;
+    next(status) := case
+                    (status=idle) & (time = 0) : {active};
+                    (status=active) & (time > 2) : {active, exit};
+                    (status=exit) : idle;
+                    TRUE: status;
+                    esac;
+    next(time) := case
+                 (status = active) & (time <= 2): time+1;
+                 (status = exit): 0;
+                 TRUE: time;
+                 esac;
+
+MODULE main
+VAR
+    time: 0..3;
+    day: process context(time);
+    night: process context(time);
+    location: {r1, r2, r3, r4, r5};
+    lastday: {r1, r2};
+    lastnight: {r3, r4};
+    person: boolean;
+    greet: boolean;
+
+ASSIGN
+  init(time) := 0;
+  init(location) := r1;
+  init(lastday) := r1;
+  init(lastnight) := r4;
+  next(location) := case
+                (location = r1) & (day.status = active): r2;
+                (location = r2) & (day.status = active): r1;
+                (location = r3) & (night.status = active): r4;
+                (location = r4) & (night.status = active): r3;
+                (location = r1) & (night.status = active): r5;
+                (location = r2) & (night.status = active): r5;
+                (location = r3) & (day.status = active): r5;
+                (location = r4) & (day.status = active): r5;
+                (location = r5) & (night.status = active) & (lastnight = r3): r4;
+                (location = r5) & (night.status = active) & (lastnight = r4): r3;
+                (location = r5) & (day.status = active) & (lastday = r1): r2;
+                (location = r5) & (day.status = active) & (lastday = r2): r1;
+                TRUE: location;
+                 esac;
+  next(lastnight) := case
+                (location = r3) : r3;
+                (location = r4) : r4;
+                TRUE : lastnight;
+                 esac;
+  next(lastday) := case
+                (location = r1) : r1;
+                (location = r2) : r2;
+                TRUE : lastday;
+                 esac;
+  next(greet) := case
+                (person = TRUE) : TRUE;
+                (person = FALSE) : FALSE;
+                 esac;
+
+
+

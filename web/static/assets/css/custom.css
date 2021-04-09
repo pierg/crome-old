@@ -1,0 +1,44 @@
+#insert_goals_div {
+    display: none;
+}
+
+#link_goals_div {
+    display: none;
+}
+
+#console_div {
+    display: none;
+}
+
+.comp_conj_element {
+    display: none;
+}
+
+.mapping_element {
+    display: none;
+}
+
+.refinement_element {
+    display: none;
+}
+
+
+#cy {
+    width: 1300px;
+    height: 800px;
+    display: block;
+}
+
+.compostion {
+    background-color: #7F00FF;
+}
+
+/* makes sticky faster; disable if you want animated tippies */
+.tippy-popper {
+    transition: none !important;
+}
+
+
+code {
+    background-color: unset;
+}

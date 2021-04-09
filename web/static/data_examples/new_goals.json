@@ -1,0 +1,400 @@
+[
+  {
+    "name": "accelerate_distance",
+    "description": "accelerate when the distance from the car in front is more than the desired distance",
+    "contracts": [
+      {
+        "assumptions": [
+          "distance_available",
+          "distance_front > 10"
+        ],
+        "guarantees": [
+          "velocity_ego_tnext > velocity_ego_t"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "decelerate_distance",
+    "description": "accelerate when the distance from the car in front is more than the desired distance",
+    "contracts": [
+      {
+        "assumptions": [
+          "distance_available",
+          "distance_front < 10"
+        ],
+        "guarantees": [
+          "velocity_ego_tnext < velocity_ego_t"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "maintainspeed_distance",
+    "description": "maintain the speed when the distance from the car in front is equal to the desired distance",
+    "contracts": [
+      {
+        "assumptions": [
+          "distance_available",
+          "distance_front == 10"
+        ],
+        "guarantees": [
+          "velocity_ego_tnext == velocity_ego_t"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "accelerate_follow",
+    "description": "accelerate when the leader accelerates",
+    "contracts": [
+      {
+        "assumptions": [
+          "velocity_ego_t < velocity_lea"
+        ],
+        "guarantees": [
+          "velocity_ego_tnext > velocity_ego_t"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "decelerate_follow",
+    "description": "decelerate when the leader decelerates",
+    "contracts": [
+      {
+        "assumptions": [
+          "velocity_ego_t > velocity_lea"
+        ],
+        "guarantees": [
+          "velocity_ego_tnext < velocity_ego_t"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "maintainspeed_follow",
+    "description": "maintain the speed when the leader maintains the speed",
+    "contracts": [
+      {
+        "assumptions": [
+          "velocity_ego_t == velocity_lea"
+        ],
+        "guarantees": [
+          "velocity_ego_tnext == velocity_ego_t"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "communicate_with_platoon_leader",
+    "description": "communicate with the leader of the platoon",
+    "contracts": [
+      {
+        "assumptions": [
+          "tr >= 3000000",
+          "tr <= 27000000",
+          "tr != 0",
+          "n < 10"
+        ],
+        "guarantees": [
+          "a_l >= -1",
+          "a_l <= 1",
+          "s_l >= 0",
+          "delay < 1/100"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "enstablish_connection_fixed",
+    "description": "enstablish a connection with a VANET",
+    "contracts": [
+      {
+        "assumptions": [
+          "tr >= 3000000",
+          "tr <= 27000000",
+          "tr != 0",
+          "n < 10"
+        ],
+        "guarantees": [
+          "connection",
+          "delay == ToReal(3200*n)/tr"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "retrieve_information",
+    "description": "retrieve needed information about speed, steering angle and other info",
+    "contracts": [
+      {
+        "assumptions": [
+          "connection"
+        ],
+        "guarantees": [
+          "a_l >= -13/25",
+          "a_l <= 13/25",
+          "s_l >= 0",
+          "s_l < 150"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "keep_short_distance",
+    "description": "keep a short distance from the vehicle ahead",
+    "contracts": [
+      {
+        "assumptions": [
+          "distance_available",
+          "distance_front > 10"
+        ],
+        "guarantees": [
+          "velocity_ego_tnext > velocity_ego_t"
+        ]
+      },
+      {
+        "assumptions": [
+          "distance_available",
+          "distance_front < 10"
+        ],
+        "guarantees": [
+          "velocity_ego_tnext < velocity_ego_t"
+        ]
+      },
+      {
+        "assumptions": [
+          "distance_available",
+          "distance_front == 10"
+        ],
+        "guarantees": [
+          "velocity_ego_tnext == velocity_ego_t"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "follow_leader",
+    "description": "follow the leader vehicle by keeping its speed",
+    "contracts": [
+      {
+        "assumptions": [
+          "velocity_ego_t < velocity_lea",
+          "Not(Or(And(distance_available, distance_front > 10),\n       And(distance_available, distance_front < 10),\n       And(distance_available, distance_front == 10)))"
+        ],
+        "guarantees": [
+          "velocity_ego_tnext > velocity_ego_t"
+        ]
+      },
+      {
+        "assumptions": [
+          "velocity_ego_t > velocity_lea",
+          "Not(Or(And(distance_available, distance_front > 10),\n       And(distance_available, distance_front < 10),\n       And(distance_available, distance_front == 10)))"
+        ],
+        "guarantees": [
+          "velocity_ego_tnext < velocity_ego_t"
+        ]
+      },
+      {
+        "assumptions": [
+          "velocity_ego_t == velocity_lea",
+          "Not(Or(And(distance_available, distance_front > 10),\n       And(distance_available, distance_front < 10),\n       And(distance_available, distance_front == 10)))"
+        ],
+        "guarantees": [
+          "velocity_ego_tnext == velocity_ego_t"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "speed_control",
+    "description": "control the speed of the vehicle based either on the distance to the vehicle in front or according the the leader of the platoon",
+    "contracts": [
+      {
+        "assumptions": [
+          "distance_available",
+          "distance_front > 10"
+        ],
+        "guarantees": [
+          "velocity_ego_tnext > velocity_ego_t"
+        ]
+      },
+      {
+        "assumptions": [
+          "distance_available",
+          "distance_front < 10"
+        ],
+        "guarantees": [
+          "velocity_ego_tnext < velocity_ego_t"
+        ]
+      },
+      {
+        "assumptions": [
+          "distance_available",
+          "distance_front == 10"
+        ],
+        "guarantees": [
+          "velocity_ego_tnext == velocity_ego_t"
+        ]
+      },
+      {
+        "assumptions": [
+          "velocity_ego_t < velocity_lea",
+          "Not(Or(And(distance_available, distance_front > 10),\n       And(distance_available, distance_front < 10),\n       And(distance_available, distance_front == 10)))"
+        ],
+        "guarantees": [
+          "velocity_ego_tnext > velocity_ego_t"
+        ]
+      },
+      {
+        "assumptions": [
+          "velocity_ego_t > velocity_lea",
+          "Not(Or(And(distance_available, distance_front > 10),\n       And(distance_available, distance_front < 10),\n       And(distance_available, distance_front == 10)))"
+        ],
+        "guarantees": [
+          "velocity_ego_tnext < velocity_ego_t"
+        ]
+      },
+      {
+        "assumptions": [
+          "velocity_ego_t == velocity_lea",
+          "Not(Or(And(distance_available, distance_front > 10),\n       And(distance_available, distance_front < 10),\n       And(distance_available, distance_front == 10)))"
+        ],
+        "guarantees": [
+          "velocity_ego_tnext == velocity_ego_t"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "communicate_with_platoon_leader_refined",
+    "description": "",
+    "contracts": [
+      {
+        "assumptions": [
+          "tr >= 3000000",
+          "tr <= 27000000",
+          "tr != 0",
+          "n < 10"
+        ],
+        "guarantees": [
+          "connection",
+          "delay == ToReal(3200*n)/tr",
+          "a_l >= -13/25",
+          "a_l <= 13/25",
+          "s_l >= 0",
+          "s_l < 150"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "following_communication",
+    "description": "followin mode of the platoon",
+    "contracts": [
+      {
+        "assumptions": [
+          "distance_available",
+          "distance_front > 10",
+          "tr >= 3000000",
+          "tr <= 27000000",
+          "tr != 0",
+          "n < 10"
+        ],
+        "guarantees": [
+          "velocity_ego_tnext > velocity_ego_t",
+          "a_l >= -1",
+          "a_l <= 1",
+          "s_l >= 0",
+          "delay < 1/100"
+        ]
+      },
+      {
+        "assumptions": [
+          "distance_available",
+          "distance_front < 10",
+          "tr >= 3000000",
+          "tr <= 27000000",
+          "tr != 0",
+          "n < 10"
+        ],
+        "guarantees": [
+          "velocity_ego_tnext < velocity_ego_t",
+          "a_l >= -1",
+          "a_l <= 1",
+          "s_l >= 0",
+          "delay < 1/100"
+        ]
+      },
+      {
+        "assumptions": [
+          "distance_available",
+          "distance_front == 10",
+          "tr >= 3000000",
+          "tr <= 27000000",
+          "tr != 0",
+          "n < 10"
+        ],
+        "guarantees": [
+          "velocity_ego_tnext == velocity_ego_t",
+          "a_l >= -1",
+          "a_l <= 1",
+          "s_l >= 0",
+          "delay < 1/100"
+        ]
+      },
+      {
+        "assumptions": [
+          "velocity_ego_t < velocity_lea",
+          "Not(Or(And(distance_available, distance_front > 10),\n       And(distance_available, distance_front < 10),\n       And(distance_available, distance_front == 10)))",
+          "tr >= 3000000",
+          "tr <= 27000000",
+          "tr != 0",
+          "n < 10"
+        ],
+        "guarantees": [
+          "velocity_ego_tnext > velocity_ego_t",
+          "a_l >= -1",
+          "a_l <= 1",
+          "s_l >= 0",
+          "delay < 1/100"
+        ]
+      },
+      {
+        "assumptions": [
+          "velocity_ego_t > velocity_lea",
+          "Not(Or(And(distance_available, distance_front > 10),\n       And(distance_available, distance_front < 10),\n       And(distance_available, distance_front == 10)))",
+          "tr >= 3000000",
+          "tr <= 27000000",
+          "tr != 0",
+          "n < 10"
+        ],
+        "guarantees": [
+          "velocity_ego_tnext < velocity_ego_t",
+          "a_l >= -1",
+          "a_l <= 1",
+          "s_l >= 0",
+          "delay < 1/100"
+        ]
+      },
+      {
+        "assumptions": [
+          "velocity_ego_t == velocity_lea",
+          "Not(Or(And(distance_available, distance_front > 10),\n       And(distance_available, distance_front < 10),\n       And(distance_available, distance_front == 10)))",
+          "tr >= 3000000",
+          "tr <= 27000000",
+          "tr != 0",
+          "n < 10"
+        ],
+        "guarantees": [
+          "velocity_ego_tnext == velocity_ego_t",
+          "a_l >= -1",
+          "a_l <= 1",
+          "s_l >= 0",
+          "delay < 1/100"
+        ]
+      }
+    ]
+  }
+]

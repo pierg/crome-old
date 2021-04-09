@@ -1,0 +1,30 @@
+    <div id="modal_goal_list">
+    </div>
+    <script id="modal_goal" type="template">
+        <div class="remodal" data-remodal-id="modal___GOAL_ID__">
+            <div class="content has-text-left">
+                <button data-remodal-action="close" class="remodal-close"></button>
+                <h1>__NAME__</h1>
+                <p>
+                    __DESCRIPTION__
+                </p>
+                <h2>Assumptions</h2>
+                <code>
+                    __ASSUMPTIONS__
+                </code>
+                <h2>Guarantees</h2>
+                <code>
+                    __GUARANTEES__
+                </code>
+            </div>
+            <div>
+                <button data-remodal-action="confirm" class="remodal-confirm">OK</button>
+                <button data-remodal-action="cancel" class="remodal-cancel">Cancel</button>
+            </div>
+        </div>
+    </script>
+    <div class="column"></div>
+    <div class="column"></div>
+    <div class="columns is-centered" id="cgt">
+        <div class="has-background-grey-lighter" id="cy"></div>
+    </div>

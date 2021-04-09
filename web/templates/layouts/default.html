@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+
+        {% include 'includes/header.html' %}
+
+    </head>
+    <body>
+
+        <div id="preloader">
+            <div id="status"></div>
+        </div>
+        {% include 'includes/navigation.html' %}
+
+        {{ content | safe }} 
+        
+{#        {% include 'includes/footer.html' %}#}
+
+        <script src="https://unpkg.com/notie"></script>
+<script src="/static/assets/js/intro_steps.js"></script>
+
+    </body>
+
+</html>

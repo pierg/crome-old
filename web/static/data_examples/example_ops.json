@@ -1,0 +1,26 @@
+[
+  {
+    "id": "following_communication_COMPOSITION",
+    "type": "COMPOSITION"
+  },
+  {
+    "id": "speed_control_CONJUNCTION",
+    "type": "CONJUNCTION"
+  },
+  {
+    "id": "keep_short_distance_CONJUNCTION",
+    "type": "CONJUNCTION"
+  },
+  {
+    "id": "follow_leader_CONJUNCTION",
+    "type": "CONJUNCTION"
+  },
+  {
+    "id": "communicate_with_platoon_leader_REFINEMENT",
+    "type": "REFINEMENT"
+  },
+  {
+    "id": "communicate_with_platoon_leader_refined_COMPOSITION",
+    "type": "COMPOSITION"
+  }
+]

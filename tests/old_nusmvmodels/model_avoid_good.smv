@@ -1,0 +1,41 @@
+MODULE main
+VAR
+    location: {rx, r1, r2, r3, r4, r5};
+    lastday: {r1, r2};
+    lastnight: {r3, r4};
+    context: {day, night};
+
+ASSIGN
+  init(location) := r1;
+  init(lastday) := r1;
+  init(lastnight) := r4;
+  init(context) := day;
+  next(location) := case
+                (location = r1) & (context = day): r2;
+                (location = r2) & (context = day): r1;
+                (location = r3) & (context = night): r4;
+                (location = r4) & (context = night): r3;
+                (location = r1) & (context = night): r5;
+                (location = r2) & (context = night): r5;
+                (location = r3) & (context = day): r5;
+                (location = r4) & (context = day): r5;
+                (location = r5) & (context = night) & (lastnight = r3): r4;
+                (location = r5) & (context = night) & (lastnight = r4): r3;
+                (location = r5) & (context = day) & (lastday = r1): r2;
+                (location = r5) & (context = day) & (lastday = r2): r1;
+                TRUE : location;
+                 esac;
+  next(lastnight) := case
+                (location = r3) : r3;
+                (location = r4) : r4;
+                TRUE : lastnight;
+                 esac;
+  next(lastday) := case
+                (location = r1) : r1;
+                (location = r2) : r2;
+                TRUE : lastday;
+                 esac;
+
+
+
+LTLSPEC ((G!(location=rx)) & (G(F(location=r1 & F(location=r2))) & (!(location=r2) U location=r1) & G(((location=r2) -> (X((!(location=r2) U location=r1))))) & G(((location=r1) -> (X((!(location=r1) U location=r2))))) & G(((location=r1) -> (X((!(location=r1) U location=r2))))) & G(((location=r2) -> (X((!(location=r2) U location=r1)))))) | (G(F(location=r3 & F(location=r4))) & (!(location=r4) U location=r3) & G(((location=r4) -> (X((!(location=r4) U location=r3))))) & G(((location=r3) -> (X((!(location=r3) U location=r4))))) & G(((location=r3) -> (X((!(location=r3) U location=r4))))) & G(((location=r4) -> (X((!(location=r4) U location=r3)))))))

@@ -1,0 +1,76 @@
+MODULE context(other)
+VAR
+    status: {idle, active, wait, exit};
+    time: 0..MAX_CONTEXT_TIME;
+DEFINE
+    MAX_CONTEXT_TIME := 50;
+    MIN_CONTEXT_TIME := 1;
+ASSIGN
+    init(time) :=0;
+    next(status) :=  case
+                    (status=idle) & (other=active) : idle;
+                    (status=idle) & (other=exit) : wait;
+                    (status=wait) & (other=idle) : active;
+                    (status=active) & (time < MIN_CONTEXT_TIME) : active;
+                    (status=active) & (time >= MIN_CONTEXT_TIME) & (time < MAX_CONTEXT_TIME) : {active, exit};
+                    (status=active) & (time = MAX_CONTEXT_TIME) : exit;
+                    (status=exit) : idle;
+                    TRUE: status;
+                     esac;
+    next(time) := case
+                 (status = active) & (time < MAX_CONTEXT_TIME): time+1;
+                 (status = exit): 0;
+                 TRUE: time;
+                  esac;
+
+MODULE main
+VAR
+    day: context(night.status);
+    night: context(day.status);
+    location: {r1, r2, r3, r4, r5};
+    lastday: {r1, r2};
+    lastnight: {r3, r4};
+    person: boolean;
+DEFINE
+  during_day := day.status = active | day.status = exit |  day.status = wait;
+  during_night := night.status = active | night.status = exit | night.status = wait;
+  greet := during_day;
+ASSIGN
+  init(day.status) := active;
+  init(night.status) := idle;
+  init(location) := r1;
+  init(lastday) := r1;
+  init(lastnight) := r4;
+  next(location) := case
+                (location = r1) & (during_day): r2;
+                (location = r2) & (during_day): r1;
+                (location = r3) & (during_night): r4;
+                (location = r4) & (during_night): r3;
+                (location = r1) & (during_night): r5;
+                (location = r2) & (during_night): r5;
+                (location = r3) & (during_day): r5;
+                (location = r4) & (during_day): r5;
+                (location = r5) & (during_night) & (lastnight = r3): r4;
+                (location = r5) & (during_night) & (lastnight = r4): r3;
+                (location = r5) & (during_day) & (lastday = r1): r2;
+                (location = r5) & (during_day) & (lastday = r2): r1;
+                TRUE: location;
+                 esac;
+  next(lastnight) := case
+                (location = r3) : r3;
+                (location = r4) : r4;
+                TRUE : lastnight;
+                 esac;
+  next(lastday) := case
+                (location = r1) : r1;
+                (location = r2) : r2;
+                TRUE : lastday;
+                 esac;
+
+
+LTLSPEC !(F((during_day) & (during_night)))
+LTLSPEC (G(F(during_day)) & G(F(during_night)))
+--conjunction
+LTLSPEC G(((person) -> (F(greet)))) & G(F(location=r1 & F(location=r2))) & (!(location=r2) U location=r1) & G(((location=r2) -> (X((!(location=r2) U location=r1))))) & G(((location=r1) -> (X((!(location=r1) U location=r2))))) & G(((location=r1) -> (X((!(location=r1) U location=r2))))) & G(((location=r2) -> (X((!(location=r2) U location=r1))))) & G(F(location=r3 & F(location=r4))) & (!(location=r4) U location=r3) & G(((location=r4) -> (X((!(location=r4) U location=r3))))) & G(((location=r3) -> (X((!(location=r3) U location=r4))))) & G(((location=r3) -> (X((!(location=r3) U location=r4))))) & G(((location=r4) -> (X((!(location=r4) U location=r3)))))
+--disjunction
+LTLSPEC (G(((person) -> (F(greet)))) & G(F(location=r1 & F(location=r2))) & (!(location=r2) U location=r1) & G(((location=r2) -> (X((!(location=r2) U location=r1))))) & G(((location=r1) -> (X((!(location=r1) U location=r2))))) & G(((location=r1) -> (X((!(location=r1) U location=r2))))) & G(((location=r2) -> (X((!(location=r2) U location=r1)))))) | G(F(location=r3 & F(location=r4))) & (!(location=r4) U location=r3) & G(((location=r4) -> (X((!(location=r4) U location=r3))))) & G(((location=r3) -> (X((!(location=r3) U location=r4))))) & G(((location=r3) -> (X((!(location=r3) U location=r4))))) & G(((location=r4) -> (X((!(location=r4) U location=r3)))))

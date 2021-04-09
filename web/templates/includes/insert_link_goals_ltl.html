@@ -1,0 +1,230 @@
+<section class="container" id="menu_bar">
+    <div class="box cta">
+        <div class="columns is-mobile is-centered">
+            <div class="buttons is-grouped is-grouped-multiline">
+                <div class="button is-primary" id="insert_goals_button">Insert Goals</div>
+                <div class="button is-primary" id="link_goals_button">Link Goals</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="column is-8 is-offset-2">
+        <div class="card article" id="insert_goals_div">
+            <div class="card-content">
+                <nav class="navbar" role="navigation" aria-label="main navigation">
+                    <div id="navbarBasicExample" class="navbar-menu">
+                        <div class="navbar-end">
+                            <a class="navbar-item">
+                                Documentation
+                            </a>
+                            <a class="navbar-item">
+
+                                <div class="file has-name">
+                                    <label class="file-label">
+                                        <input class="file-input" type="file" name="resume">
+                                        <span class="file-cta">
+                                              <span class="file-icon">
+                                                <i class="fas fa-upload"></i>
+                                              </span>
+                                              <span class="file-label">
+                                                Choose a file…
+                                              </span>
+                                            </span>
+                                    </label>
+                                </div>
+                            </a>
+
+
+                            <div class="navbar-item has-dropdown is-hoverable">
+                                <a class="navbar-link" id="load_examples">
+                                    Load Examples
+                                </a>
+
+                                <div class="navbar-dropdown" id="load_example_dropdown">
+                                    <a class="navbar-item" download="ex_platooning.txt">
+                                        Platooning Example
+                                    </a>
+                                    <a class="navbar-item" download="ex_completeness.txt">
+                                        Completeness Example
+                                    </a>
+                                    <a class="navbar-item" download="ex_conflict2.txt">
+                                        Conflict Example
+                                    </a>
+                                    <a class="navbar-item" download="ex_mapping2.txt">
+                                        Mapping Example
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+
+
+                <div class="field">
+                    <label class="label">Structured Text</label>
+                    <div class="control">
+                            <textarea class="textarea is-small is-family-monospace" rows="20"
+                                      id="textarea_insert_goals"></textarea>
+                    </div>
+                </div>
+                <div class="control">
+                    <button type="submit"
+                            class="button is-link is-fullwidth has-text-weight-medium is-medium"
+                            id="insert_goals_text_button">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card article" id="link_goals_div">
+            <div class="card-content">
+                <nav class="panel is-shadowless">
+                    <div class="panel-tabs">
+                        <div class="field" id="radio_operations">
+                            <input class="is-checkradio require_new_goal" id="composition_input" type="radio"
+                                   name="cgt_operation_radio" value="composition">
+                            <label for="composition_input">Composition</label>
+
+                            <input class="is-checkradio require_new_goal" id="conjunction_input" type="radio"
+                                   name="cgt_operation_radio" value="conjunction">
+                            <label for="conjunction_input">Conjunction</label>
+
+                            <input class="is-checkradio no_require_new_goal" id="mapping_input" type="radio"
+                                   name="cgt_operation_radio" value="mapping">
+                            <label for="mapping_input">Mapping</label>
+
+                            <input class="is-checkradio no_require_new_goal " id="refinement_input" type="radio"
+                                   name="cgt_operation_radio" value="refinement">
+                            <label for="refinement_input">Refinement</label>
+
+                        </div>
+                    </div>
+                </nav>
+
+                <div id="goal_list_linking_checkbox" class="comp_conj_element" type="template">
+                </div>
+                <script id="goal_checkbox" type="template">
+                    <label class="panel-block">
+                        <input type="checkbox" value="__GOAL_ID__">
+                        __NAME__
+                    </label>
+                </script>
+
+                <div class="field is-horizontal mapping_element">
+                    <div class="field-label is-normal">
+                        <label class="label">Goal to Map</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field is-fullwidth">
+                            <div class="control">
+                                <div class="select is-fullwidth">
+                                    <select id="options_of_goals">
+                                    </select>
+                                    <script id="options_of_goals_template" type="template">
+                                        <option>__NAME__</option>
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field is-horizontal mapping_element">
+                    <div class="field-label is-normal">
+                        <label class="label">Library of Components</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field is-fullwidth">
+                            <div class="control">
+                                <div class="select is-fullwidth">
+                                    <select id="library_select">
+                                        <option value="car_sensors">All car sensors</option>
+                                        <option value="car_radars">Car radars</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="field is-horizontal refinement_element">
+                    <div class="field-label is-normal">
+                        <label class="label">Abstract Goal</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field is-fullwidth">
+                            <div class="control">
+                                <div class="select is-fullwidth">
+                                    <select id="options_of_goals_1">
+                                    </select>
+                                    <script id="options_of_goals_1_template" type="template">
+                                        <option value="__GOAL_ID__">__NAME__</option>
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field is-horizontal refinement_element">
+                    <div class="field-label is-normal">
+                        <label class="label">Refined Goal</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field is-fullwidth">
+                            <div class="control">
+                                <div class="select is-fullwidth">
+                                    <select id="options_of_goals_2">
+                                    </select>
+                                    <script id="options_of_goals_2_template" type="template">
+                                        <option value="__GOAL_ID__">__NAME__</option>
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="field is-horizontal comp_conj_element">
+                    <div class="field-label is-normal">
+                        <label class="label">New goal name</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <input id="new_goal_name" class="input is-danger" type="text"
+                                       placeholder="Name identifies the goal">
+                            </div>
+                            <p class="help is-danger">
+                                This field is required
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field is-horizontal comp_conj_element">
+                    <div class="field-label is-normal">
+                        <label class="label">Description</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                        <textarea id="new_goal_description" class="textarea" rows="2"
+                                                  placeholder="Describe what the goal is supposed to do"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control">
+                    <button type="submit"
+                            class="button is-link is-fullwidth has-text-weight-medium is-medium"
+                            id="submit_links_goals_button">
+                        Submit
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

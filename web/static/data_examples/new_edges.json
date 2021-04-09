@@ -1,0 +1,97 @@
+[
+  {
+    "source": "following_communication",
+    "target": "following_communication_COMPOSITION",
+    "type": "refinement"
+  },
+  {
+    "source": "following_communication_COMPOSITION",
+    "target": "speed_control",
+    "type": "input"
+  },
+  {
+    "source": "speed_control",
+    "target": "speed_control_CONJUNCTION",
+    "type": "refinement"
+  },
+  {
+    "source": "speed_control_CONJUNCTION",
+    "target": "keep_short_distance",
+    "type": "input"
+  },
+  {
+    "source": "keep_short_distance",
+    "target": "keep_short_distance_CONJUNCTION",
+    "type": "refinement"
+  },
+  {
+    "source": "keep_short_distance_CONJUNCTION",
+    "target": "accelerate_distance",
+    "type": "input"
+  },
+  {
+    "source": "keep_short_distance_CONJUNCTION",
+    "target": "decelerate_distance",
+    "type": "input"
+  },
+  {
+    "source": "keep_short_distance_CONJUNCTION",
+    "target": "maintainspeed_distance",
+    "type": "input"
+  },
+  {
+    "source": "speed_control_CONJUNCTION",
+    "target": "follow_leader",
+    "type": "input"
+  },
+  {
+    "source": "follow_leader",
+    "target": "follow_leader_CONJUNCTION",
+    "type": "refinement"
+  },
+  {
+    "source": "follow_leader_CONJUNCTION",
+    "target": "accelerate_follow",
+    "type": "input"
+  },
+  {
+    "source": "follow_leader_CONJUNCTION",
+    "target": "decelerate_follow",
+    "type": "input"
+  },
+  {
+    "source": "follow_leader_CONJUNCTION",
+    "target": "maintainspeed_follow",
+    "type": "input"
+  },
+  {
+    "source": "following_communication_COMPOSITION",
+    "target": "communicate_with_platoon_leader",
+    "type": "input"
+  },
+  {
+    "source": "communicate_with_platoon_leader",
+    "target": "communicate_with_platoon_leader_REFINEMENT",
+    "type": "refinement"
+  },
+  {
+    "source": "communicate_with_platoon_leader_REFINEMENT",
+    "target": "communicate_with_platoon_leader_refined",
+    "type": "input"
+  },
+  {
+    "source": "communicate_with_platoon_leader_refined",
+    "target": "communicate_with_platoon_leader_refined_COMPOSITION",
+    "type": "refinement"
+  },
+  {
+    "source": "communicate_with_platoon_leader_refined_COMPOSITION",
+    "target": "enstablish_connection_fixed",
+    "type": "input"
+  },
+  {
+    "source": "communicate_with_platoon_leader_refined_COMPOSITION",
+    "target": "retrieve_information",
+    "type": "input"
+  }
+]
