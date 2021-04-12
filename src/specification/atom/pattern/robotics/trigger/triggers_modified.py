@@ -30,7 +30,7 @@ class PromptReaction(Trigger):
         new_typeset, pre, post, context, active = Trigger.process_bin_contextual_input(pre, post, context, active)
 
         c = Logic.and_([context, active])
-        f = Logic.g_(Logic.implies_(Logic.and_([c, pre]), Logic.and_([c, post])))
+        f = Logic.g_(Logic.implies_(Logic.and_([c, pre]), Logic.x_(Logic.w_(Logic.not_(c), Logic.and_([c, post])))))
 
         super().__init__(formula=(f, new_typeset))
 
@@ -45,7 +45,7 @@ class DelayedReaction(Trigger):
         new_typeset, pre, post, context, active = Trigger.process_bin_contextual_input(pre, post, context, active)
 
         c = Logic.and_([context, active])
-        f = Logic.g_(Logic.implies_(Logic.and_([c, pre]), Logic.x_(Logic.w_(Logic.not_(c), Logic.and_([c, post])))))
+        f = Logic.g_(Logic.implies_(Logic.and_([c, pre]), Logic.f_(Logic.and_([c, post]))))
 
         super().__init__(formula=(f, new_typeset))
 
@@ -90,7 +90,7 @@ class Wait(Trigger):
         new_typeset, pre, post, context, active = Trigger.process_bin_contextual_input(pre, post, context, active)
 
         c = Logic.and_([context, active])
-        f = Logic.u_(Logic.or_([Logic.and_([c, pre]),Logic.not_(c)]), Logic.and_([c, post]))
+        f = Logic.u_(Logic.or_([Logic.and_([c, pre]), Logic.not_(c)]), Logic.and_([c, post]))
         super().__init__(formula=(f, new_typeset))
 
 
