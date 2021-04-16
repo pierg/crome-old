@@ -10,7 +10,6 @@ import subprocess
 import platform
 import time
 from typing import Tuple, List, Dict, Set
-from graphviz import Source
 
 from controller.exceptions import SynthesisTimeout, OutOfMemoryException, UnknownStrixResponse
 from specification.atom import Atom, AtomKind
@@ -88,15 +87,57 @@ class Controller:
     def mealy_machine(self) -> str:
         return self.__mealy_machine
 
-    def react(self, inputs: Tuple[Atom] = ()) -> Tuple[Atom]:
+    def react(self, input_vector: Tuple[Atom] = ()) -> Tuple[Atom]:
         """Take a reaction in the mealy machine"""
-        (next_state, outputs) = self.__transitions[(inputs, self.__current_state)]
+        edges = self.get_outgoing_edges_from_state(self.__current_state)
+        """match input with any edge"""
+        selected_edge = None
+        for edge in edges:
+            selected_edge = edge
+            for i, elem in enumerate(edge):
+                if elem.dontcare:
+                    continue
+                if elem == input_vector[i]:
+                    continue
+                else:
+                    selected_edge = None
+                    break
+        if selected_edge is None:
+            raise Exception("No input matched")
+        (next_state, outputs) = self.__transitions[(selected_edge, self.__current_state)]
         self.__current_state = next_state
         output_choice = random.sample(outputs, 1)[0]
         for o in output_choice:
             if o.kind == AtomKind.LOCATION and not o.negated:
                 self.__current_location = list(o.typeset.values())[0]
         return output_choice
+
+
+    def simulate(self, steps: int = 50):
+        """Simulate a run of 50 steps"""
+
+        headers = ["t", "inputs", "outputs"]
+        history: List[List[str]] = []
+
+        for i in range(steps):
+            inputs = self.simulate_inputs()
+            outputs = self.react(inputs)
+            inputs_str = []
+            for x in inputs:
+                if not x.negated:
+                    inputs_str.append(str(x))
+            outputs_str = []
+            for x in outputs:
+                if not x.negated:
+                    outputs_str.append(str(x))
+            inputs_str = ', '.join(inputs_str)
+            outputs_str = ', '.join(outputs_str)
+            history.append([i, inputs_str, outputs_str])
+
+        return tabulate(history, headers=headers)
+
+
+
 
     def reset(self):
         """Reset mealy machine"""
@@ -132,6 +173,15 @@ class Controller:
             if state_t == state:
                 edges.append(outs)
         return edges
+
+
+    def get_outgoing_edges_from_state(self, state: str) -> List[Tuple[Atom]]:
+        edges = []
+        for (ins, state_s), (state_t, outs) in self.__transitions.items():
+            if state_s == state:
+                edges.append(ins)
+        return edges
+
 
     @mealy_machine.setter
     def mealy_machine(self, value: str):
@@ -276,6 +326,7 @@ class Controller:
                 if type(t).__name__ == class_name:
                     reachable_locations.append(t)
         return reachable_locations
+
 
     @staticmethod
     def generate_controller(assumptions: str, guarantees: str, ins: str, outs: str) -> Tuple[bool, str, str, float]:

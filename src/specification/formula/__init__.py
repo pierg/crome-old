@@ -183,14 +183,14 @@ class Formula(Specification):
                 [LogicTuple.and_([atom.formula() for atom in clause], brackets=True) for clause in self.dnf],
                 brakets=False)
 
-    def __and__(self, other: Formula) -> Formula:
+    def __and__(self, other: Union[Formula, Atom]) -> Formula:
         """self & other
         Returns a new Specification with the conjunction with other"""
         new_ltl = deepcopy(self)
         new_ltl &= other
         return new_ltl
 
-    def __or__(self, other: Formula) -> Formula:
+    def __or__(self, other: Union[Formula, Atom]) -> Formula:
         """self | other
         Returns a new Specification with the disjunction with other"""
         new_ltl = deepcopy(self)

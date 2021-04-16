@@ -174,7 +174,7 @@ class Logic:
     @staticmethod
     def gf_(prop: str) -> str:
         """Globally Eventually"""
-        return f"G F({prop})"
+        return f"G(F({prop}))"
 
     @staticmethod
     def u_(pre: str, post: str) -> str:

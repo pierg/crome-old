@@ -1,4 +1,6 @@
 from typing import List, Union, Tuple
+
+from specification import Specification
 from specification.atom import Atom
 from specification.atom.pattern.robotics import RoboticPattern
 from type import Boolean
@@ -27,14 +29,14 @@ class Trigger(RoboticPattern):
         return new_typeset, l
 
     @staticmethod
-    def process_bin_input(pre: Union[Atom, Boolean], post: Union[Atom, Boolean]) -> Tuple[Typeset, str, str]:
+    def process_bin_input(pre: Union[Specification, Boolean], post: Union[Specification, Boolean]) -> Tuple[Typeset, str, str]:
 
         new_typeset = Typeset()
 
         if isinstance(pre, Boolean):
             new_typeset |= pre
             pre = pre.name
-        elif isinstance(pre, Atom):
+        elif isinstance(pre, Specification):
             new_typeset |= pre.typeset
             pre = pre.string
         else:
@@ -43,7 +45,7 @@ class Trigger(RoboticPattern):
         if isinstance(post, Boolean):
             new_typeset |= post
             post = post.name
-        elif isinstance(post, Atom):
+        elif isinstance(post, Specification):
             new_typeset |= post.typeset
             post = post.string
         else:

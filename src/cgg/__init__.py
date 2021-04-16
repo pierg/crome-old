@@ -177,8 +177,10 @@ class Node(Goal):
     def get_scenarios(self) -> Set[Node]:
         if Link.CONJUNCTION in self.children:
             return self.children[Link.CONJUNCTION]
+        else:
+            return {self}
 
-    def orchestrate(self, n_steps: int, t_min_context: int):
+    def orchestrate(self, n_steps: int, t_min_context: int = 10):
         if t_min_context < self.t_trans:
             raise Exception("T context min < T transition max")
 
@@ -195,7 +197,7 @@ class Node(Goal):
         current_t = 0
         while current_t < n_steps:
             context_switch = False
-            if active_context_count >= t_min_context:
+            if active_context_count >= t_min_context and len(scenarios) > 1:
                 """Calculating context-switch probability"""
                 if cs_prob < 0.9:
                     cs_prob = cs_prob + 0.05 * (active_context_count - t_min_context)
@@ -259,7 +261,10 @@ class Node(Goal):
             inputs = s_ctrl.simulate_inputs()
             outputs = s_ctrl.react(inputs)
             active_context_count += 1
-            context_str = active_scenario.context.string
+            if active_scenario.context is not None:
+                context_str = active_scenario.context.string
+            else:
+                context_str = "true"
             inputs_str = []
             for x in inputs:
                 if not x.negated:
