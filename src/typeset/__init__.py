@@ -4,7 +4,7 @@ from copy import copy, deepcopy
 from itertools import combinations
 from typing import Set, Dict, Union, TypeVar, List, Tuple
 
-from type import Types, TypeKinds
+from type import Types, TypeKinds, BASE_CLASS_TYPES
 
 AllTypes = TypeVar('AllTypes', bound=Types)
 
@@ -102,7 +102,6 @@ class Typeset(dict):
         """ Updates self with self -= element """
         pass
 
-
     @staticmethod
     def get_instance_ts(specification_ts: Typeset, world_ts: Typeset) -> Typeset:
         new_ts = Typeset()
@@ -115,8 +114,6 @@ class Typeset(dict):
                         if type(elem).__name__ == ta:
                             new_ts |= elem
         return new_ts
-
-
 
     def extract_inputs_outputs(self) -> Tuple[Set[Types], Set[Types]]:
         """Returns a set of types in the typeset that are not controllable and controllable"""
@@ -201,6 +198,9 @@ class Typeset(dict):
     def update_subtypes(self):
         if len(self.values()) > 1:
             for (a, b) in combinations(self.values(), 2):
+                if a.__class__.__name__ in BASE_CLASS_TYPES or b.__class__.__name__ in BASE_CLASS_TYPES:
+                    continue
+                """If they are not base types"""
                 if isinstance(a, type(b)):
                     if a in self.__super_types:
                         self.__super_types[a].add(b)
@@ -252,4 +252,3 @@ class Typeset(dict):
     @property
     def adjacent_types(self) -> Dict[AllTypes, Set[AllTypes]]:
         return self.__adjacent_types
-

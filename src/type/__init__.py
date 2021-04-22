@@ -11,8 +11,23 @@ class TypeKinds(Enum):
     SENSOR_ACTION = auto()
     SENSOR_LOCATION = auto()
     LOCATION = auto()
+    ACTIVE = auto()
     ACTION = auto()
     CONTEXT = auto()
+
+
+BASE_CLASS_TYPES = ["Boolean",
+                    "BoundedInteger",
+                    "BooleanAction",
+                    "IntegerAction",
+                    "Active",
+                    "ContextTime",
+                    "ContextBooleanTime",
+                    "ContextLocation",
+                    "ContextIdentity",
+                    "ReachLocation",
+                    "IntegerSensor",
+                    "BooleanSensor"]
 
 
 class Types(ABC):
@@ -32,7 +47,7 @@ class Types(ABC):
 
     @property
     def controllable(self) -> bool:
-        if self.kind == TypeKinds.SENSOR or self.kind == TypeKinds.CONTEXT:
+        if self.kind == TypeKinds.SENSOR or self.kind == TypeKinds.CONTEXT or self.kind == TypeKinds.ACTIVE:
             return False
         return True
 

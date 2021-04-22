@@ -5,7 +5,7 @@ from worlds.illustrative_example.types.actions import *
 from worlds.illustrative_example.types.context import *
 
 
-class IllustrativeExample(World):
+class RunningExample(World):
 
     def __init__(self):
         super().__init__({
@@ -17,5 +17,6 @@ class IllustrativeExample(World):
             R5(),
             Day(),
             Night(),
-            Greet()
+            Greet(),
+            Register()
         })

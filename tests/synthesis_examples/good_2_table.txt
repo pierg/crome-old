@@ -1,0 +1,1179 @@
+States          	 S0, S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16, S17, S18, S19, S20, S21, S22, S23, S24, S25, S26, S27, S28, S29, S30, S31, S32, S33, S34, S35, S36, S37, S38, S39, S40, S41, S42
+Inital State    	 S0
+Input  Alphabet 	 pickup, hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1
+Output Alphabet 	 object_recognized
+
+true_ins                                 s    s'    true_outs
+---------------------------------------  ---  ----  -----------------
+- - - - - - - - - - - - -                S0   S1    object_recognized
+drop                                     S0   S1    object_recognized
+drop l2 r1                               S0   S1    object_recognized
+drop l1 r1                               S0   S1    object_recognized
+drop l1 l2 -                             S0   S1    object_recognized
+drop l5 r1                               S0   S1    object_recognized
+drop l5 l2 -                             S0   S1    object_recognized
+drop l5 l1 - -                           S0   S1    object_recognized
+drop k2 r1                               S0   S1    object_recognized
+drop k2 l2 -                             S0   S1    object_recognized
+drop k2 l1 - -                           S0   S1    object_recognized
+drop k2 l5 - - -                         S0   S1    object_recognized
+drop k1 r1                               S0   S1    object_recognized
+drop k1 l2 -                             S0   S1    object_recognized
+drop k1 l1 - -                           S0   S1    object_recognized
+drop k1 l5 - - -                         S0   S1    object_recognized
+drop k1 k2 - - - -                       S0   S1    object_recognized
+drop b2 r1                               S0   S1    object_recognized
+drop b2 l2 -                             S0   S1    object_recognized
+drop b2 l1 - -                           S0   S1    object_recognized
+drop b2 l5 - - -                         S0   S1    object_recognized
+drop b2 k2 - - - -                       S0   S1    object_recognized
+drop b2 k1 - - - - -                     S0   S1    object_recognized
+drop l6 r1                               S0   S1    object_recognized
+drop l6 l2 -                             S0   S1    object_recognized
+drop l6 l1 - -                           S0   S1    object_recognized
+drop l6 l5 - - -                         S0   S1    object_recognized
+drop l6 k2 - - - -                       S0   S1    object_recognized
+drop l6 k1 - - - - -                     S0   S1    object_recognized
+drop l6 b2 - - - - - -                   S0   S1    object_recognized
+drop l3 r1                               S0   S1    object_recognized
+drop l3 l2 -                             S0   S1    object_recognized
+drop l3 l1 - -                           S0   S1    object_recognized
+drop l3 l5 - - -                         S0   S1    object_recognized
+drop l3 k2 - - - -                       S0   S1    object_recognized
+drop l3 k1 - - - - -                     S0   S1    object_recognized
+drop l3 b2 - - - - - -                   S0   S1    object_recognized
+drop l3 l6 - - - - - - -                 S0   S1    object_recognized
+drop h1 r1                               S0   S1    object_recognized
+drop h1 l2 -                             S0   S1    object_recognized
+drop h1 l1 - -                           S0   S1    object_recognized
+drop h1 l5 - - -                         S0   S1    object_recognized
+drop h1 k2 - - - -                       S0   S1    object_recognized
+drop h1 k1 - - - - -                     S0   S1    object_recognized
+drop h1 b2 - - - - - -                   S0   S1    object_recognized
+drop h1 l6 - - - - - - -                 S0   S1    object_recognized
+drop h1 l3 - - - - - - - -               S0   S1    object_recognized
+drop h2 r1                               S0   S1    object_recognized
+drop h2 l2 -                             S0   S1    object_recognized
+drop h2 l1 - -                           S0   S1    object_recognized
+drop h2 l5 - - -                         S0   S1    object_recognized
+drop h2 k2 - - - -                       S0   S1    object_recognized
+drop h2 k1 - - - - -                     S0   S1    object_recognized
+drop h2 b2 - - - - - -                   S0   S1    object_recognized
+drop h2 l6 - - - - - - -                 S0   S1    object_recognized
+drop h2 l3 - - - - - - - -               S0   S1    object_recognized
+drop h2 h1 - - - - - - - - -             S0   S1    object_recognized
+drop k3 r1                               S0   S1    object_recognized
+drop k3 l2 -                             S0   S1    object_recognized
+drop k3 l1 - -                           S0   S1    object_recognized
+drop k3 l5 - - -                         S0   S1    object_recognized
+drop k3 k2 - - - -                       S0   S1    object_recognized
+drop k3 k1 - - - - -                     S0   S1    object_recognized
+drop k3 b2 - - - - - -                   S0   S1    object_recognized
+drop k3 l6 - - - - - - -                 S0   S1    object_recognized
+drop k3 l3 - - - - - - - -               S0   S1    object_recognized
+drop k3 h1 - - - - - - - - -             S0   S1    object_recognized
+drop k3 h2 - - - - - - - - - -           S0   S1    object_recognized
+drop l4 r1                               S0   S1    object_recognized
+drop l4 l2 -                             S0   S1    object_recognized
+drop l4 l1 - -                           S0   S1    object_recognized
+drop l4 l5 - - -                         S0   S1    object_recognized
+drop l4 k2 - - - -                       S0   S1    object_recognized
+drop l4 k1 - - - - -                     S0   S1    object_recognized
+drop l4 b2 - - - - - -                   S0   S1    object_recognized
+drop l4 l6 - - - - - - -                 S0   S1    object_recognized
+drop l4 l3 - - - - - - - -               S0   S1    object_recognized
+drop l4 h1 - - - - - - - - -             S0   S1    object_recognized
+drop l4 h2 - - - - - - - - - -           S0   S1    object_recognized
+drop l4 k3 - - - - - - - - - - -         S0   S1    object_recognized
+hold                                     S0   S1    object_recognized
+hold l2 r1                               S0   S1    object_recognized
+hold l1 r1                               S0   S1    object_recognized
+hold l1 l2 -                             S0   S1    object_recognized
+hold l5 r1                               S0   S1    object_recognized
+hold l5 l2 -                             S0   S1    object_recognized
+hold l5 l1 - -                           S0   S1    object_recognized
+hold k2 r1                               S0   S1    object_recognized
+hold k2 l2 -                             S0   S1    object_recognized
+hold k2 l1 - -                           S0   S1    object_recognized
+hold k2 l5 - - -                         S0   S1    object_recognized
+hold k1 r1                               S0   S1    object_recognized
+hold k1 l2 -                             S0   S1    object_recognized
+hold k1 l1 - -                           S0   S1    object_recognized
+hold k1 l5 - - -                         S0   S1    object_recognized
+hold k1 k2 - - - -                       S0   S1    object_recognized
+hold b2 r1                               S0   S1    object_recognized
+hold b2 l2 -                             S0   S1    object_recognized
+hold b2 l1 - -                           S0   S1    object_recognized
+hold b2 l5 - - -                         S0   S1    object_recognized
+hold b2 k2 - - - -                       S0   S1    object_recognized
+hold b2 k1 - - - - -                     S0   S1    object_recognized
+hold l6 r1                               S0   S1    object_recognized
+hold l6 l2 -                             S0   S1    object_recognized
+hold l6 l1 - -                           S0   S1    object_recognized
+hold l6 l5 - - -                         S0   S1    object_recognized
+hold l6 k2 - - - -                       S0   S1    object_recognized
+hold l6 k1 - - - - -                     S0   S1    object_recognized
+hold l6 b2 - - - - - -                   S0   S1    object_recognized
+hold l3 r1                               S0   S1    object_recognized
+hold l3 l2 -                             S0   S1    object_recognized
+hold l3 l1 - -                           S0   S1    object_recognized
+hold l3 l5 - - -                         S0   S1    object_recognized
+hold l3 k2 - - - -                       S0   S1    object_recognized
+hold l3 k1 - - - - -                     S0   S1    object_recognized
+hold l3 b2 - - - - - -                   S0   S1    object_recognized
+hold l3 l6 - - - - - - -                 S0   S1    object_recognized
+hold h1 r1                               S0   S1    object_recognized
+hold h1 l2 -                             S0   S1    object_recognized
+hold h1 l1 - -                           S0   S1    object_recognized
+hold h1 l5 - - -                         S0   S1    object_recognized
+hold h1 k2 - - - -                       S0   S1    object_recognized
+hold h1 k1 - - - - -                     S0   S1    object_recognized
+hold h1 b2 - - - - - -                   S0   S1    object_recognized
+hold h1 l6 - - - - - - -                 S0   S1    object_recognized
+hold h1 l3 - - - - - - - -               S0   S1    object_recognized
+hold h2 r1                               S0   S1    object_recognized
+hold h2 l2 -                             S0   S1    object_recognized
+hold h2 l1 - -                           S0   S1    object_recognized
+hold h2 l5 - - -                         S0   S1    object_recognized
+hold h2 k2 - - - -                       S0   S1    object_recognized
+hold h2 k1 - - - - -                     S0   S1    object_recognized
+hold h2 b2 - - - - - -                   S0   S1    object_recognized
+hold h2 l6 - - - - - - -                 S0   S1    object_recognized
+hold h2 l3 - - - - - - - -               S0   S1    object_recognized
+hold h2 h1 - - - - - - - - -             S0   S1    object_recognized
+hold k3 r1                               S0   S1    object_recognized
+hold k3 l2 -                             S0   S1    object_recognized
+hold k3 l1 - -                           S0   S1    object_recognized
+hold k3 l5 - - -                         S0   S1    object_recognized
+hold k3 k2 - - - -                       S0   S1    object_recognized
+hold k3 k1 - - - - -                     S0   S1    object_recognized
+hold k3 b2 - - - - - -                   S0   S1    object_recognized
+hold k3 l6 - - - - - - -                 S0   S1    object_recognized
+hold k3 l3 - - - - - - - -               S0   S1    object_recognized
+hold k3 h1 - - - - - - - - -             S0   S1    object_recognized
+hold k3 h2 - - - - - - - - - -           S0   S1    object_recognized
+hold l4 r1                               S0   S1    object_recognized
+hold l4 l2 -                             S0   S1    object_recognized
+hold l4 l1 - -                           S0   S1    object_recognized
+hold l4 l5 - - -                         S0   S1    object_recognized
+hold l4 k2 - - - -                       S0   S1    object_recognized
+hold l4 k1 - - - - -                     S0   S1    object_recognized
+hold l4 b2 - - - - - -                   S0   S1    object_recognized
+hold l4 l6 - - - - - - -                 S0   S1    object_recognized
+hold l4 l3 - - - - - - - -               S0   S1    object_recognized
+hold l4 h1 - - - - - - - - -             S0   S1    object_recognized
+hold l4 h2 - - - - - - - - - -           S0   S1    object_recognized
+hold l4 k3 - - - - - - - - - - -         S0   S1    object_recognized
+hold drop - - - - - - - - - - - - -      S0   S1    object_recognized
+pickup                                   S0   S1    object_recognized
+pickup l2 r1                             S0   S1    object_recognized
+pickup l1 r1                             S0   S1    object_recognized
+pickup l1 l2 -                           S0   S1    object_recognized
+pickup l5 r1                             S0   S1    object_recognized
+pickup l5 l2 -                           S0   S1    object_recognized
+pickup l5 l1 - -                         S0   S1    object_recognized
+pickup k2 r1                             S0   S1    object_recognized
+pickup k2 l2 -                           S0   S1    object_recognized
+pickup k2 l1 - -                         S0   S1    object_recognized
+pickup k2 l5 - - -                       S0   S1    object_recognized
+pickup k1 r1                             S0   S1    object_recognized
+pickup k1 l2 -                           S0   S1    object_recognized
+pickup k1 l1 - -                         S0   S1    object_recognized
+pickup k1 l5 - - -                       S0   S1    object_recognized
+pickup k1 k2 - - - -                     S0   S1    object_recognized
+pickup b2 r1                             S0   S1    object_recognized
+pickup b2 l2 -                           S0   S1    object_recognized
+pickup b2 l1 - -                         S0   S1    object_recognized
+pickup b2 l5 - - -                       S0   S1    object_recognized
+pickup b2 k2 - - - -                     S0   S1    object_recognized
+pickup b2 k1 - - - - -                   S0   S1    object_recognized
+pickup l6 r1                             S0   S1    object_recognized
+pickup l6 l2 -                           S0   S1    object_recognized
+pickup l6 l1 - -                         S0   S1    object_recognized
+pickup l6 l5 - - -                       S0   S1    object_recognized
+pickup l6 k2 - - - -                     S0   S1    object_recognized
+pickup l6 k1 - - - - -                   S0   S1    object_recognized
+pickup l6 b2 - - - - - -                 S0   S1    object_recognized
+pickup l3 r1                             S0   S1    object_recognized
+pickup l3 l2 -                           S0   S1    object_recognized
+pickup l3 l1 - -                         S0   S1    object_recognized
+pickup l3 l5 - - -                       S0   S1    object_recognized
+pickup l3 k2 - - - -                     S0   S1    object_recognized
+pickup l3 k1 - - - - -                   S0   S1    object_recognized
+pickup l3 b2 - - - - - -                 S0   S1    object_recognized
+pickup l3 l6 - - - - - - -               S0   S1    object_recognized
+pickup h1 r1                             S0   S1    object_recognized
+pickup h1 l2 -                           S0   S1    object_recognized
+pickup h1 l1 - -                         S0   S1    object_recognized
+pickup h1 l5 - - -                       S0   S1    object_recognized
+pickup h1 k2 - - - -                     S0   S1    object_recognized
+pickup h1 k1 - - - - -                   S0   S1    object_recognized
+pickup h1 b2 - - - - - -                 S0   S1    object_recognized
+pickup h1 l6 - - - - - - -               S0   S1    object_recognized
+pickup h1 l3 - - - - - - - -             S0   S1    object_recognized
+pickup h2 r1                             S0   S1    object_recognized
+pickup h2 l2 -                           S0   S1    object_recognized
+pickup h2 l1 - -                         S0   S1    object_recognized
+pickup h2 l5 - - -                       S0   S1    object_recognized
+pickup h2 k2 - - - -                     S0   S1    object_recognized
+pickup h2 k1 - - - - -                   S0   S1    object_recognized
+pickup h2 b2 - - - - - -                 S0   S1    object_recognized
+pickup h2 l6 - - - - - - -               S0   S1    object_recognized
+pickup h2 l3 - - - - - - - -             S0   S1    object_recognized
+pickup h2 h1 - - - - - - - - -           S0   S1    object_recognized
+pickup k3 r1                             S0   S1    object_recognized
+pickup k3 l2 -                           S0   S1    object_recognized
+pickup k3 l1 - -                         S0   S1    object_recognized
+pickup k3 l5 - - -                       S0   S1    object_recognized
+pickup k3 k2 - - - -                     S0   S1    object_recognized
+pickup k3 k1 - - - - -                   S0   S1    object_recognized
+pickup k3 b2 - - - - - -                 S0   S1    object_recognized
+pickup k3 l6 - - - - - - -               S0   S1    object_recognized
+pickup k3 l3 - - - - - - - -             S0   S1    object_recognized
+pickup k3 h1 - - - - - - - - -           S0   S1    object_recognized
+pickup k3 h2 - - - - - - - - - -         S0   S1    object_recognized
+pickup l4 r1                             S0   S1    object_recognized
+pickup l4 l2 -                           S0   S1    object_recognized
+pickup l4 l1 - -                         S0   S1    object_recognized
+pickup l4 l5 - - -                       S0   S1    object_recognized
+pickup l4 k2 - - - -                     S0   S1    object_recognized
+pickup l4 k1 - - - - -                   S0   S1    object_recognized
+pickup l4 b2 - - - - - -                 S0   S1    object_recognized
+pickup l4 l6 - - - - - - -               S0   S1    object_recognized
+pickup l4 l3 - - - - - - - -             S0   S1    object_recognized
+pickup l4 h1 - - - - - - - - -           S0   S1    object_recognized
+pickup l4 h2 - - - - - - - - - -         S0   S1    object_recognized
+pickup l4 k3 - - - - - - - - - - -       S0   S1    object_recognized
+pickup drop - - - - - - - - - - - - -    S0   S1    object_recognized
+pickup hold - - - - - - - - - - - - - -  S0   S1    object_recognized
+hold l4                                  S0   S2    object_recognized
+hold k3                                  S0   S3    object_recognized
+hold h2                                  S0   S4    object_recognized
+hold h1                                  S0   S5    object_recognized
+hold l3                                  S0   S6    object_recognized
+hold l6                                  S0   S7    object_recognized
+hold b2                                  S0   S8    object_recognized
+hold k1                                  S0   S9    object_recognized
+hold k2                                  S0   S10   object_recognized
+hold l5                                  S0   S11   object_recognized
+hold l1                                  S0   S12   object_recognized
+hold l2                                  S0   S13   object_recognized
+hold r1                                  S0   S14   object_recognized
+pickup l4                                S0   S15   object_recognized
+drop l4                                  S0   S16   object_recognized
+pickup k3                                S0   S17   object_recognized
+drop k3                                  S0   S18   object_recognized
+pickup h2                                S0   S19   object_recognized
+drop h2                                  S0   S20   object_recognized
+pickup h1                                S0   S21   object_recognized
+drop h1                                  S0   S22   object_recognized
+pickup l3                                S0   S23   object_recognized
+drop l3                                  S0   S24   object_recognized
+pickup l6                                S0   S25   object_recognized
+drop l6                                  S0   S26   object_recognized
+pickup b2                                S0   S27   object_recognized
+drop b2                                  S0   S28   object_recognized
+pickup k1                                S0   S29   object_recognized
+drop k1                                  S0   S30   object_recognized
+pickup k2                                S0   S31   object_recognized
+drop k2                                  S0   S32   object_recognized
+pickup l5                                S0   S33   object_recognized
+drop l5                                  S0   S34   object_recognized
+pickup l1                                S0   S35   object_recognized
+drop l1                                  S0   S36   object_recognized
+pickup l2                                S0   S37   object_recognized
+drop l2                                  S0   S38   object_recognized
+pickup r1                                S0   S39   object_recognized
+drop r1                                  S0   S40   object_recognized
+- - - - - - - - - - - - - - - -          S1   S1    object_recognized
+- - - - - - - - - - - - - -              S2   S1    object_recognized
+hold - -                                 S2   S1    object_recognized
+hold l1 r1                               S2   S1    object_recognized
+hold l1 l2 -                             S2   S1    object_recognized
+hold l5 r1                               S2   S1    object_recognized
+hold l5 l2 -                             S2   S1    object_recognized
+hold l5 l1 - -                           S2   S1    object_recognized
+hold k2 - - - -                          S2   S1    object_recognized
+hold k1 - - - - -                        S2   S1    object_recognized
+hold b2 - - - - - -                      S2   S1    object_recognized
+hold l6 - - - - - - -                    S2   S1    object_recognized
+hold l3 - - - - - - - -                  S2   S1    object_recognized
+hold h1 - - - - - - - - -                S2   S1    object_recognized
+hold h2 - - - - - - - - - -              S2   S1    object_recognized
+hold k3 - - - - - - - - - - -            S2   S1    object_recognized
+hold l4 r1                               S2   S1    object_recognized
+hold l4 l2 -                             S2   S1    object_recognized
+hold l4 l1 - -                           S2   S1    object_recognized
+hold l4 l5 - - -                         S2   S1    object_recognized
+hold l4 k2 - - - -                       S2   S1    object_recognized
+hold l4 k1 - - - - -                     S2   S1    object_recognized
+hold l4 b2 - - - - - -                   S2   S1    object_recognized
+hold l4 l6 - - - - - - -                 S2   S1    object_recognized
+hold l4 l3 - - - - - - - -               S2   S1    object_recognized
+hold l4 h1 - - - - - - - - -             S2   S1    object_recognized
+hold l4 h2 - - - - - - - - - -           S2   S1    object_recognized
+hold l4 k3 - - - - - - - - - - -         S2   S1    object_recognized
+hold drop - - - - - - - - - - - - -      S2   S1    object_recognized
+pickup - - - - - - - - - - - - - - -     S2   S1    object_recognized
+hold l4                                  S2   S2    object_recognized
+hold l5                                  S2   S11   object_recognized
+hold l1                                  S2   S12   object_recognized
+- - - - - - - - - - - - - - - -          S3   S1
+- - - - - - - - - - - - - -              S4   S1    object_recognized
+hold - - - - - - - -                     S4   S1    object_recognized
+hold l3 r1                               S4   S1    object_recognized
+hold l3 l2 -                             S4   S1    object_recognized
+hold l3 l1 - -                           S4   S1    object_recognized
+hold l3 l5 - - -                         S4   S1    object_recognized
+hold l3 k2 - - - -                       S4   S1    object_recognized
+hold l3 k1 - - - - -                     S4   S1    object_recognized
+hold l3 b2 - - - - - -                   S4   S1    object_recognized
+hold l3 l6 - - - - - - -                 S4   S1    object_recognized
+hold h1 r1                               S4   S1    object_recognized
+hold h1 l2 -                             S4   S1    object_recognized
+hold h1 l1 - -                           S4   S1    object_recognized
+hold h1 l5 - - -                         S4   S1    object_recognized
+hold h1 k2 - - - -                       S4   S1    object_recognized
+hold h1 k1 - - - - -                     S4   S1    object_recognized
+hold h1 b2 - - - - - -                   S4   S1    object_recognized
+hold h1 l6 - - - - - - -                 S4   S1    object_recognized
+hold h1 l3 - - - - - - - -               S4   S1    object_recognized
+hold h2 r1                               S4   S1    object_recognized
+hold h2 l2 -                             S4   S1    object_recognized
+hold h2 l1 - -                           S4   S1    object_recognized
+hold h2 l5 - - -                         S4   S1    object_recognized
+hold h2 k2 - - - -                       S4   S1    object_recognized
+hold h2 k1 - - - - -                     S4   S1    object_recognized
+hold h2 b2 - - - - - -                   S4   S1    object_recognized
+hold h2 l6 - - - - - - -                 S4   S1    object_recognized
+hold h2 l3 - - - - - - - -               S4   S1    object_recognized
+hold h2 h1 - - - - - - - - -             S4   S1    object_recognized
+hold k3 - - - - - - - - - - -            S4   S1    object_recognized
+hold l4 - - - - - - - - - - - -          S4   S1    object_recognized
+hold drop - - - - - - - - - - - - -      S4   S1    object_recognized
+pickup - - - - - - - - - - - - - - -     S4   S1    object_recognized
+hold h2                                  S4   S4    object_recognized
+hold h1                                  S4   S5    object_recognized
+hold l3                                  S4   S6    object_recognized
+- - - - - - - - - - - - - -              S5   S1    object_recognized
+hold -                                   S5   S1    object_recognized
+hold l2 r1                               S5   S1    object_recognized
+hold l1 - -                              S5   S1    object_recognized
+hold l5 - - -                            S5   S1    object_recognized
+hold k2 - - - -                          S5   S1    object_recognized
+hold k1 - - - - -                        S5   S1    object_recognized
+hold b2 - - - - - -                      S5   S1    object_recognized
+hold l6 - - - - - - -                    S5   S1    object_recognized
+hold l3 - - - - - - - -                  S5   S1    object_recognized
+hold h1 r1                               S5   S1    object_recognized
+hold h1 l2 -                             S5   S1    object_recognized
+hold h1 l1 - -                           S5   S1    object_recognized
+hold h1 l5 - - -                         S5   S1    object_recognized
+hold h1 k2 - - - -                       S5   S1    object_recognized
+hold h1 k1 - - - - -                     S5   S1    object_recognized
+hold h1 b2 - - - - - -                   S5   S1    object_recognized
+hold h1 l6 - - - - - - -                 S5   S1    object_recognized
+hold h1 l3 - - - - - - - -               S5   S1    object_recognized
+hold h2 r1                               S5   S1    object_recognized
+hold h2 l2 -                             S5   S1    object_recognized
+hold h2 l1 - -                           S5   S1    object_recognized
+hold h2 l5 - - -                         S5   S1    object_recognized
+hold h2 k2 - - - -                       S5   S1    object_recognized
+hold h2 k1 - - - - -                     S5   S1    object_recognized
+hold h2 b2 - - - - - -                   S5   S1    object_recognized
+hold h2 l6 - - - - - - -                 S5   S1    object_recognized
+hold h2 l3 - - - - - - - -               S5   S1    object_recognized
+hold h2 h1 - - - - - - - - -             S5   S1    object_recognized
+hold k3 - - - - - - - - - - -            S5   S1    object_recognized
+hold l4 - - - - - - - - - - - -          S5   S1    object_recognized
+hold drop - - - - - - - - - - - - -      S5   S1    object_recognized
+pickup - - - - - - - - - - - - - - -     S5   S1    object_recognized
+hold h2                                  S5   S4    object_recognized
+hold h1                                  S5   S5    object_recognized
+hold l2                                  S5   S13   object_recognized
+- - - - - - - - - - - - - -              S6   S1    object_recognized
+hold                                     S6   S1    object_recognized
+hold l2 r1                               S6   S1    object_recognized
+hold l1 - -                              S6   S1    object_recognized
+hold l5 - - -                            S6   S1    object_recognized
+hold k2 - - - -                          S6   S1    object_recognized
+hold k1 r1                               S6   S1    object_recognized
+hold k1 l2 -                             S6   S1    object_recognized
+hold k1 l1 - -                           S6   S1    object_recognized
+hold k1 l5 - - -                         S6   S1    object_recognized
+hold k1 k2 - - - -                       S6   S1    object_recognized
+hold b2 - - - - - -                      S6   S1    object_recognized
+hold l6 r1                               S6   S1    object_recognized
+hold l6 l2 -                             S6   S1    object_recognized
+hold l6 l1 - -                           S6   S1    object_recognized
+hold l6 l5 - - -                         S6   S1    object_recognized
+hold l6 k2 - - - -                       S6   S1    object_recognized
+hold l6 k1 - - - - -                     S6   S1    object_recognized
+hold l6 b2 - - - - - -                   S6   S1    object_recognized
+hold l3 r1                               S6   S1    object_recognized
+hold l3 l2 -                             S6   S1    object_recognized
+hold l3 l1 - -                           S6   S1    object_recognized
+hold l3 l5 - - -                         S6   S1    object_recognized
+hold l3 k2 - - - -                       S6   S1    object_recognized
+hold l3 k1 - - - - -                     S6   S1    object_recognized
+hold l3 b2 - - - - - -                   S6   S1    object_recognized
+hold l3 l6 - - - - - - -                 S6   S1    object_recognized
+hold h1 - - - - - - - - -                S6   S1    object_recognized
+hold h2 r1                               S6   S1    object_recognized
+hold h2 l2 -                             S6   S1    object_recognized
+hold h2 l1 - -                           S6   S1    object_recognized
+hold h2 l5 - - -                         S6   S1    object_recognized
+hold h2 k2 - - - -                       S6   S1    object_recognized
+hold h2 k1 - - - - -                     S6   S1    object_recognized
+hold h2 b2 - - - - - -                   S6   S1    object_recognized
+hold h2 l6 - - - - - - -                 S6   S1    object_recognized
+hold h2 l3 - - - - - - - -               S6   S1    object_recognized
+hold h2 h1 - - - - - - - - -             S6   S1    object_recognized
+hold k3 - - - - - - - - - - -            S6   S1    object_recognized
+hold l4 - - - - - - - - - - - -          S6   S1    object_recognized
+hold drop - - - - - - - - - - - - -      S6   S1    object_recognized
+pickup - - - - - - - - - - - - - - -     S6   S1    object_recognized
+hold h2                                  S6   S4    object_recognized
+hold l3                                  S6   S6    object_recognized
+hold l6                                  S6   S7    object_recognized
+hold k1                                  S6   S9    object_recognized
+hold l2                                  S6   S13   object_recognized
+hold r1                                  S6   S14   object_recognized
+- - - - - - - - - - - - - -              S7   S1    object_recognized
+hold - - -                               S7   S1    object_recognized
+hold l5 r1                               S7   S1    object_recognized
+hold l5 l2 -                             S7   S1    object_recognized
+hold l5 l1 - -                           S7   S1    object_recognized
+hold k2 - - - -                          S7   S1    object_recognized
+hold k1 - - - - -                        S7   S1    object_recognized
+hold b2 - - - - - -                      S7   S1    object_recognized
+hold l6 r1                               S7   S1    object_recognized
+hold l6 l2 -                             S7   S1    object_recognized
+hold l6 l1 - -                           S7   S1    object_recognized
+hold l6 l5 - - -                         S7   S1    object_recognized
+hold l6 k2 - - - -                       S7   S1    object_recognized
+hold l6 k1 - - - - -                     S7   S1    object_recognized
+hold l6 b2 - - - - - -                   S7   S1    object_recognized
+hold l3 r1                               S7   S1    object_recognized
+hold l3 l2 -                             S7   S1    object_recognized
+hold l3 l1 - -                           S7   S1    object_recognized
+hold l3 l5 - - -                         S7   S1    object_recognized
+hold l3 k2 - - - -                       S7   S1    object_recognized
+hold l3 k1 - - - - -                     S7   S1    object_recognized
+hold l3 b2 - - - - - -                   S7   S1    object_recognized
+hold l3 l6 - - - - - - -                 S7   S1    object_recognized
+hold h1 - - - - - - - - -                S7   S1    object_recognized
+hold h2 - - - - - - - - - -              S7   S1    object_recognized
+hold k3 - - - - - - - - - - -            S7   S1    object_recognized
+hold l4 - - - - - - - - - - - -          S7   S1    object_recognized
+hold drop - - - - - - - - - - - - -      S7   S1    object_recognized
+pickup - - - - - - - - - - - - - - -     S7   S1    object_recognized
+hold l3                                  S7   S6    object_recognized
+hold l6                                  S7   S7    object_recognized
+hold l5                                  S7   S11   object_recognized
+- - - - - - - - - - - - - -              S8   S1    object_recognized
+hold -                                   S8   S1    object_recognized
+hold l2 r1                               S8   S1    object_recognized
+hold l1 - -                              S8   S1    object_recognized
+hold l5 - - -                            S8   S1    object_recognized
+hold k2 - - - -                          S8   S1    object_recognized
+hold k1 - - - - -                        S8   S1    object_recognized
+hold b2 r1                               S8   S1    object_recognized
+hold b2 l2 -                             S8   S1    object_recognized
+hold b2 l1 - -                           S8   S1    object_recognized
+hold b2 l5 - - -                         S8   S1    object_recognized
+hold b2 k2 - - - -                       S8   S1    object_recognized
+hold b2 k1 - - - - -                     S8   S1    object_recognized
+hold l6 - - - - - - -                    S8   S1    object_recognized
+hold l3 - - - - - - - -                  S8   S1    object_recognized
+hold h1 - - - - - - - - -                S8   S1    object_recognized
+hold h2 - - - - - - - - - -              S8   S1    object_recognized
+hold k3 - - - - - - - - - - -            S8   S1    object_recognized
+hold l4 - - - - - - - - - - - -          S8   S1    object_recognized
+hold drop - - - - - - - - - - - - -      S8   S1    object_recognized
+pickup - - - - - - - - - - - - - - -     S8   S1    object_recognized
+hold b2                                  S8   S8    object_recognized
+hold l2                                  S8   S13   object_recognized
+- - - - - - - - - - - - - -              S9   S1    object_recognized
+hold - - - -                             S9   S1    object_recognized
+hold k2 r1                               S9   S1    object_recognized
+hold k2 l2 -                             S9   S1    object_recognized
+hold k2 l1 - -                           S9   S1    object_recognized
+hold k2 l5 - - -                         S9   S1    object_recognized
+hold k1 r1                               S9   S1    object_recognized
+hold k1 l2 -                             S9   S1    object_recognized
+hold k1 l1 - -                           S9   S1    object_recognized
+hold k1 l5 - - -                         S9   S1    object_recognized
+hold k1 k2 - - - -                       S9   S1    object_recognized
+hold b2 - - - - - -                      S9   S1    object_recognized
+hold l6 - - - - - - -                    S9   S1    object_recognized
+hold l3 r1                               S9   S1    object_recognized
+hold l3 l2 -                             S9   S1    object_recognized
+hold l3 l1 - -                           S9   S1    object_recognized
+hold l3 l5 - - -                         S9   S1    object_recognized
+hold l3 k2 - - - -                       S9   S1    object_recognized
+hold l3 k1 - - - - -                     S9   S1    object_recognized
+hold l3 b2 - - - - - -                   S9   S1    object_recognized
+hold l3 l6 - - - - - - -                 S9   S1    object_recognized
+hold h1 - - - - - - - - -                S9   S1    object_recognized
+hold h2 - - - - - - - - - -              S9   S1    object_recognized
+hold k3 r1                               S9   S1    object_recognized
+hold k3 l2 -                             S9   S1    object_recognized
+hold k3 l1 - -                           S9   S1    object_recognized
+hold k3 l5 - - -                         S9   S1    object_recognized
+hold k3 k2 - - - -                       S9   S1    object_recognized
+hold k3 k1 - - - - -                     S9   S1    object_recognized
+hold k3 b2 - - - - - -                   S9   S1    object_recognized
+hold k3 l6 - - - - - - -                 S9   S1    object_recognized
+hold k3 l3 - - - - - - - -               S9   S1    object_recognized
+hold k3 h1 - - - - - - - - -             S9   S1    object_recognized
+hold k3 h2 - - - - - - - - - -           S9   S1    object_recognized
+hold l4 - - - - - - - - - - - -          S9   S1    object_recognized
+hold drop - - - - - - - - - - - - -      S9   S1    object_recognized
+pickup - - - - - - - - - - - - - - -     S9   S1    object_recognized
+hold k3                                  S9   S3    object_recognized
+hold l3                                  S9   S6    object_recognized
+hold k1                                  S9   S9    object_recognized
+hold k2                                  S9   S10   object_recognized
+- - - - - - - - - - - - - -              S10  S1    object_recognized
+hold - - - -                             S10  S1    object_recognized
+hold k2 r1                               S10  S1    object_recognized
+hold k2 l2 -                             S10  S1    object_recognized
+hold k2 l1 - -                           S10  S1    object_recognized
+hold k2 l5 - - -                         S10  S1    object_recognized
+hold k1 r1                               S10  S1    object_recognized
+hold k1 l2 -                             S10  S1    object_recognized
+hold k1 l1 - -                           S10  S1    object_recognized
+hold k1 l5 - - -                         S10  S1    object_recognized
+hold k1 k2 - - - -                       S10  S1    object_recognized
+hold b2 - - - - - -                      S10  S1    object_recognized
+hold l6 - - - - - - -                    S10  S1    object_recognized
+hold l3 - - - - - - - -                  S10  S1    object_recognized
+hold h1 - - - - - - - - -                S10  S1    object_recognized
+hold h2 - - - - - - - - - -              S10  S1    object_recognized
+hold k3 r1                               S10  S1    object_recognized
+hold k3 l2 -                             S10  S1    object_recognized
+hold k3 l1 - -                           S10  S1    object_recognized
+hold k3 l5 - - -                         S10  S1    object_recognized
+hold k3 k2 - - - -                       S10  S1    object_recognized
+hold k3 k1 - - - - -                     S10  S1    object_recognized
+hold k3 b2 - - - - - -                   S10  S1    object_recognized
+hold k3 l6 - - - - - - -                 S10  S1    object_recognized
+hold k3 l3 - - - - - - - -               S10  S1    object_recognized
+hold k3 h1 - - - - - - - - -             S10  S1    object_recognized
+hold k3 h2 - - - - - - - - - -           S10  S1    object_recognized
+hold l4 - - - - - - - - - - - -          S10  S1    object_recognized
+hold drop - - - - - - - - - - - - -      S10  S1    object_recognized
+pickup - - - - - - - - - - - - - - -     S10  S1    object_recognized
+hold k3                                  S10  S3    object_recognized
+hold k1                                  S10  S9    object_recognized
+hold k2                                  S10  S10   object_recognized
+- - - - - - - - - - - - - -              S11  S1    object_recognized
+hold -                                   S11  S1    object_recognized
+hold l2 r1                               S11  S1    object_recognized
+hold l1 - -                              S11  S1    object_recognized
+hold l5 r1                               S11  S1    object_recognized
+hold l5 l2 -                             S11  S1    object_recognized
+hold l5 l1 - -                           S11  S1    object_recognized
+hold k2 - - - -                          S11  S1    object_recognized
+hold k1 - - - - -                        S11  S1    object_recognized
+hold b2 - - - - - -                      S11  S1    object_recognized
+hold l6 r1                               S11  S1    object_recognized
+hold l6 l2 -                             S11  S1    object_recognized
+hold l6 l1 - -                           S11  S1    object_recognized
+hold l6 l5 - - -                         S11  S1    object_recognized
+hold l6 k2 - - - -                       S11  S1    object_recognized
+hold l6 k1 - - - - -                     S11  S1    object_recognized
+hold l6 b2 - - - - - -                   S11  S1    object_recognized
+hold l3 - - - - - - - -                  S11  S1    object_recognized
+hold h1 - - - - - - - - -                S11  S1    object_recognized
+hold h2 - - - - - - - - - -              S11  S1    object_recognized
+hold k3 - - - - - - - - - - -            S11  S1    object_recognized
+hold l4 r1                               S11  S1    object_recognized
+hold l4 l2 -                             S11  S1    object_recognized
+hold l4 l1 - -                           S11  S1    object_recognized
+hold l4 l5 - - -                         S11  S1    object_recognized
+hold l4 k2 - - - -                       S11  S1    object_recognized
+hold l4 k1 - - - - -                     S11  S1    object_recognized
+hold l4 b2 - - - - - -                   S11  S1    object_recognized
+hold l4 l6 - - - - - - -                 S11  S1    object_recognized
+hold l4 l3 - - - - - - - -               S11  S1    object_recognized
+hold l4 h1 - - - - - - - - -             S11  S1    object_recognized
+hold l4 h2 - - - - - - - - - -           S11  S1    object_recognized
+hold l4 k3 - - - - - - - - - - -         S11  S1    object_recognized
+hold drop - - - - - - - - - - - - -      S11  S1    object_recognized
+pickup - - - - - - - - - - - - - - -     S11  S1    object_recognized
+hold l4                                  S11  S2    object_recognized
+hold l6                                  S11  S7    object_recognized
+hold l5                                  S11  S11   object_recognized
+hold l2                                  S11  S13   object_recognized
+- - - - - - - - - - - - - -              S12  S1    object_recognized
+hold -                                   S12  S1    object_recognized
+hold l2 r1                               S12  S1    object_recognized
+hold l1 r1                               S12  S1    object_recognized
+hold l1 l2 -                             S12  S1    object_recognized
+hold l5 - - -                            S12  S1    object_recognized
+hold k2 - - - -                          S12  S1    object_recognized
+hold k1 - - - - -                        S12  S1    object_recognized
+hold b2 - - - - - -                      S12  S1    object_recognized
+hold l6 - - - - - - -                    S12  S1    object_recognized
+hold l3 - - - - - - - -                  S12  S1    object_recognized
+hold h1 - - - - - - - - -                S12  S1    object_recognized
+hold h2 - - - - - - - - - -              S12  S1    object_recognized
+hold k3 - - - - - - - - - - -            S12  S1    object_recognized
+hold l4 r1                               S12  S1    object_recognized
+hold l4 l2 -                             S12  S1    object_recognized
+hold l4 l1 - -                           S12  S1    object_recognized
+hold l4 l5 - - -                         S12  S1    object_recognized
+hold l4 k2 - - - -                       S12  S1    object_recognized
+hold l4 k1 - - - - -                     S12  S1    object_recognized
+hold l4 b2 - - - - - -                   S12  S1    object_recognized
+hold l4 l6 - - - - - - -                 S12  S1    object_recognized
+hold l4 l3 - - - - - - - -               S12  S1    object_recognized
+hold l4 h1 - - - - - - - - -             S12  S1    object_recognized
+hold l4 h2 - - - - - - - - - -           S12  S1    object_recognized
+hold l4 k3 - - - - - - - - - - -         S12  S1    object_recognized
+hold drop - - - - - - - - - - - - -      S12  S1    object_recognized
+pickup - - - - - - - - - - - - - - -     S12  S1    object_recognized
+hold l4                                  S12  S2    object_recognized
+hold l1                                  S12  S12   object_recognized
+hold l2                                  S12  S13   object_recognized
+- - - - - - - - - - - - - -              S13  S1    object_recognized
+hold -                                   S13  S1    object_recognized
+hold l2 r1                               S13  S1    object_recognized
+hold l1 r1                               S13  S1    object_recognized
+hold l1 l2 -                             S13  S1    object_recognized
+hold l5 r1                               S13  S1    object_recognized
+hold l5 l2 -                             S13  S1    object_recognized
+hold l5 l1 - -                           S13  S1    object_recognized
+hold k2 - - - -                          S13  S1    object_recognized
+hold k1 - - - - -                        S13  S1    object_recognized
+hold b2 r1                               S13  S1    object_recognized
+hold b2 l2 -                             S13  S1    object_recognized
+hold b2 l1 - -                           S13  S1    object_recognized
+hold b2 l5 - - -                         S13  S1    object_recognized
+hold b2 k2 - - - -                       S13  S1    object_recognized
+hold b2 k1 - - - - -                     S13  S1    object_recognized
+hold l6 - - - - - - -                    S13  S1    object_recognized
+hold l3 r1                               S13  S1    object_recognized
+hold l3 l2 -                             S13  S1    object_recognized
+hold l3 l1 - -                           S13  S1    object_recognized
+hold l3 l5 - - -                         S13  S1    object_recognized
+hold l3 k2 - - - -                       S13  S1    object_recognized
+hold l3 k1 - - - - -                     S13  S1    object_recognized
+hold l3 b2 - - - - - -                   S13  S1    object_recognized
+hold l3 l6 - - - - - - -                 S13  S1    object_recognized
+hold h1 r1                               S13  S1    object_recognized
+hold h1 l2 -                             S13  S1    object_recognized
+hold h1 l1 - -                           S13  S1    object_recognized
+hold h1 l5 - - -                         S13  S1    object_recognized
+hold h1 k2 - - - -                       S13  S1    object_recognized
+hold h1 k1 - - - - -                     S13  S1    object_recognized
+hold h1 b2 - - - - - -                   S13  S1    object_recognized
+hold h1 l6 - - - - - - -                 S13  S1    object_recognized
+hold h1 l3 - - - - - - - -               S13  S1    object_recognized
+hold h2 - - - - - - - - - -              S13  S1    object_recognized
+hold k3 - - - - - - - - - - -            S13  S1    object_recognized
+hold l4 - - - - - - - - - - - -          S13  S1    object_recognized
+hold drop - - - - - - - - - - - - -      S13  S1    object_recognized
+pickup - - - - - - - - - - - - - - -     S13  S1    object_recognized
+hold h1                                  S13  S5    object_recognized
+hold l3                                  S13  S6    object_recognized
+hold b2                                  S13  S8    object_recognized
+hold l5                                  S13  S11   object_recognized
+hold l1                                  S13  S12   object_recognized
+hold l2                                  S13  S13   object_recognized
+- - - - - - - - - - - - - -              S14  S1    object_recognized
+hold                                     S14  S1    object_recognized
+hold l2 -                                S14  S1    object_recognized
+hold l1 - -                              S14  S1    object_recognized
+hold l5 - - -                            S14  S1    object_recognized
+hold k2 - - - -                          S14  S1    object_recognized
+hold k1 - - - - -                        S14  S1    object_recognized
+hold b2 - - - - - -                      S14  S1    object_recognized
+hold l6 - - - - - - -                    S14  S1    object_recognized
+hold l3 r1                               S14  S1    object_recognized
+hold l3 l2 -                             S14  S1    object_recognized
+hold l3 l1 - -                           S14  S1    object_recognized
+hold l3 l5 - - -                         S14  S1    object_recognized
+hold l3 k2 - - - -                       S14  S1    object_recognized
+hold l3 k1 - - - - -                     S14  S1    object_recognized
+hold l3 b2 - - - - - -                   S14  S1    object_recognized
+hold l3 l6 - - - - - - -                 S14  S1    object_recognized
+hold h1 - - - - - - - - -                S14  S1    object_recognized
+hold h2 - - - - - - - - - -              S14  S1    object_recognized
+hold k3 - - - - - - - - - - -            S14  S1    object_recognized
+hold l4 - - - - - - - - - - - -          S14  S1    object_recognized
+hold drop - - - - - - - - - - - - -      S14  S1    object_recognized
+pickup - - - - - - - - - - - - - - -     S14  S1    object_recognized
+hold l3                                  S14  S6    object_recognized
+hold r1                                  S14  S14   object_recognized
+- - - - - - - - - - - - - - - -          S15  S1
+- - - - - - - - - - - - - - -            S16  S1    object_recognized
+pickup - -                               S16  S1    object_recognized
+pickup l1 r1                             S16  S1    object_recognized
+pickup l1 l2 -                           S16  S1    object_recognized
+pickup l5 r1                             S16  S1    object_recognized
+pickup l5 l2 -                           S16  S1    object_recognized
+pickup l5 l1 - -                         S16  S1    object_recognized
+pickup k2 - - - -                        S16  S1    object_recognized
+pickup k1 - - - - -                      S16  S1    object_recognized
+pickup b2 - - - - - -                    S16  S1    object_recognized
+pickup l6 - - - - - - -                  S16  S1    object_recognized
+pickup l3 - - - - - - - -                S16  S1    object_recognized
+pickup h1 - - - - - - - - -              S16  S1    object_recognized
+pickup h2 - - - - - - - - - -            S16  S1    object_recognized
+pickup k3 - - - - - - - - - - -          S16  S1    object_recognized
+pickup l4 r1                             S16  S1    object_recognized
+pickup l4 l2 -                           S16  S1    object_recognized
+pickup l4 l1 - -                         S16  S1    object_recognized
+pickup l4 l5 - - -                       S16  S1    object_recognized
+pickup l4 k2 - - - -                     S16  S1    object_recognized
+pickup l4 k1 - - - - -                   S16  S1    object_recognized
+pickup l4 b2 - - - - - -                 S16  S1    object_recognized
+pickup l4 l6 - - - - - - -               S16  S1    object_recognized
+pickup l4 l3 - - - - - - - -             S16  S1    object_recognized
+pickup l4 h1 - - - - - - - - -           S16  S1    object_recognized
+pickup l4 h2 - - - - - - - - - -         S16  S1    object_recognized
+pickup l4 k3 - - - - - - - - - - -       S16  S1    object_recognized
+pickup drop - - - - - - - - - - - - -    S16  S1    object_recognized
+pickup hold - - - - - - - - - - - - - -  S16  S1    object_recognized
+pickup l4                                S16  S15   object_recognized
+pickup l5                                S16  S41   object_recognized
+pickup l1                                S16  S42   object_recognized
+- - - - - - - - - - - - - - - -          S17  S1
+- - - - - - - - - - - - - - -            S18  S1    object_recognized
+pickup - - - -                           S18  S1    object_recognized
+pickup k2 r1                             S18  S1    object_recognized
+pickup k2 l2 -                           S18  S1    object_recognized
+pickup k2 l1 - -                         S18  S1    object_recognized
+pickup k2 l5 - - -                       S18  S1    object_recognized
+pickup k1 r1                             S18  S1    object_recognized
+pickup k1 l2 -                           S18  S1    object_recognized
+pickup k1 l1 - -                         S18  S1    object_recognized
+pickup k1 l5 - - -                       S18  S1    object_recognized
+pickup k1 k2 - - - -                     S18  S1    object_recognized
+pickup b2 - - - - - -                    S18  S1    object_recognized
+pickup l6 - - - - - - -                  S18  S1    object_recognized
+pickup l3 - - - - - - - -                S18  S1    object_recognized
+pickup h1 - - - - - - - - -              S18  S1    object_recognized
+pickup h2 - - - - - - - - - -            S18  S1    object_recognized
+pickup k3 r1                             S18  S1    object_recognized
+pickup k3 l2 -                           S18  S1    object_recognized
+pickup k3 l1 - -                         S18  S1    object_recognized
+pickup k3 l5 - - -                       S18  S1    object_recognized
+pickup k3 k2 - - - -                     S18  S1    object_recognized
+pickup k3 k1 - - - - -                   S18  S1    object_recognized
+pickup k3 b2 - - - - - -                 S18  S1    object_recognized
+pickup k3 l6 - - - - - - -               S18  S1    object_recognized
+pickup k3 l3 - - - - - - - -             S18  S1    object_recognized
+pickup k3 h1 - - - - - - - - -           S18  S1    object_recognized
+pickup k3 h2 - - - - - - - - - -         S18  S1    object_recognized
+pickup l4 - - - - - - - - - - - -        S18  S1    object_recognized
+pickup drop - - - - - - - - - - - - -    S18  S1    object_recognized
+pickup hold - - - - - - - - - - - - - -  S18  S1    object_recognized
+pickup k3                                S18  S17   object_recognized
+pickup k1                                S18  S29   object_recognized
+pickup k2                                S18  S31   object_recognized
+- - - - - - - - - - - - - - - -          S19  S1
+- - - - - - - - - - - - - - -            S20  S1    object_recognized
+pickup - - - - - - - -                   S20  S1    object_recognized
+pickup l3 r1                             S20  S1    object_recognized
+pickup l3 l2 -                           S20  S1    object_recognized
+pickup l3 l1 - -                         S20  S1    object_recognized
+pickup l3 l5 - - -                       S20  S1    object_recognized
+pickup l3 k2 - - - -                     S20  S1    object_recognized
+pickup l3 k1 - - - - -                   S20  S1    object_recognized
+pickup l3 b2 - - - - - -                 S20  S1    object_recognized
+pickup l3 l6 - - - - - - -               S20  S1    object_recognized
+pickup h1 r1                             S20  S1    object_recognized
+pickup h1 l2 -                           S20  S1    object_recognized
+pickup h1 l1 - -                         S20  S1    object_recognized
+pickup h1 l5 - - -                       S20  S1    object_recognized
+pickup h1 k2 - - - -                     S20  S1    object_recognized
+pickup h1 k1 - - - - -                   S20  S1    object_recognized
+pickup h1 b2 - - - - - -                 S20  S1    object_recognized
+pickup h1 l6 - - - - - - -               S20  S1    object_recognized
+pickup h1 l3 - - - - - - - -             S20  S1    object_recognized
+pickup h2 r1                             S20  S1    object_recognized
+pickup h2 l2 -                           S20  S1    object_recognized
+pickup h2 l1 - -                         S20  S1    object_recognized
+pickup h2 l5 - - -                       S20  S1    object_recognized
+pickup h2 k2 - - - -                     S20  S1    object_recognized
+pickup h2 k1 - - - - -                   S20  S1    object_recognized
+pickup h2 b2 - - - - - -                 S20  S1    object_recognized
+pickup h2 l6 - - - - - - -               S20  S1    object_recognized
+pickup h2 l3 - - - - - - - -             S20  S1    object_recognized
+pickup h2 h1 - - - - - - - - -           S20  S1    object_recognized
+pickup k3 - - - - - - - - - - -          S20  S1    object_recognized
+pickup l4 - - - - - - - - - - - -        S20  S1    object_recognized
+pickup drop - - - - - - - - - - - - -    S20  S1    object_recognized
+pickup hold - - - - - - - - - - - - - -  S20  S1    object_recognized
+pickup h2                                S20  S19   object_recognized
+pickup h1                                S20  S21   object_recognized
+pickup l3                                S20  S23   object_recognized
+- - - - - - - - - - - - - - - -          S21  S1
+- - - - - - - - - - - - - - -            S22  S1    object_recognized
+pickup -                                 S22  S1    object_recognized
+pickup l2 r1                             S22  S1    object_recognized
+pickup l1 - -                            S22  S1    object_recognized
+pickup l5 - - -                          S22  S1    object_recognized
+pickup k2 - - - -                        S22  S1    object_recognized
+pickup k1 - - - - -                      S22  S1    object_recognized
+pickup b2 - - - - - -                    S22  S1    object_recognized
+pickup l6 - - - - - - -                  S22  S1    object_recognized
+pickup l3 - - - - - - - -                S22  S1    object_recognized
+pickup h1 r1                             S22  S1    object_recognized
+pickup h1 l2 -                           S22  S1    object_recognized
+pickup h1 l1 - -                         S22  S1    object_recognized
+pickup h1 l5 - - -                       S22  S1    object_recognized
+pickup h1 k2 - - - -                     S22  S1    object_recognized
+pickup h1 k1 - - - - -                   S22  S1    object_recognized
+pickup h1 b2 - - - - - -                 S22  S1    object_recognized
+pickup h1 l6 - - - - - - -               S22  S1    object_recognized
+pickup h1 l3 - - - - - - - -             S22  S1    object_recognized
+pickup h2 r1                             S22  S1    object_recognized
+pickup h2 l2 -                           S22  S1    object_recognized
+pickup h2 l1 - -                         S22  S1    object_recognized
+pickup h2 l5 - - -                       S22  S1    object_recognized
+pickup h2 k2 - - - -                     S22  S1    object_recognized
+pickup h2 k1 - - - - -                   S22  S1    object_recognized
+pickup h2 b2 - - - - - -                 S22  S1    object_recognized
+pickup h2 l6 - - - - - - -               S22  S1    object_recognized
+pickup h2 l3 - - - - - - - -             S22  S1    object_recognized
+pickup h2 h1 - - - - - - - - -           S22  S1    object_recognized
+pickup k3 - - - - - - - - - - -          S22  S1    object_recognized
+pickup l4 - - - - - - - - - - - -        S22  S1    object_recognized
+pickup drop - - - - - - - - - - - - -    S22  S1    object_recognized
+pickup hold - - - - - - - - - - - - - -  S22  S1    object_recognized
+pickup h2                                S22  S19   object_recognized
+pickup h1                                S22  S21   object_recognized
+pickup l2                                S22  S37   object_recognized
+- - - - - - - - - - - - - - - -          S23  S1
+- - - - - - - - - - - - - - -            S24  S1    object_recognized
+pickup                                   S24  S1    object_recognized
+pickup l2 r1                             S24  S1    object_recognized
+pickup l1 - -                            S24  S1    object_recognized
+pickup l5 - - -                          S24  S1    object_recognized
+pickup k2 - - - -                        S24  S1    object_recognized
+pickup k1 r1                             S24  S1    object_recognized
+pickup k1 l2 -                           S24  S1    object_recognized
+pickup k1 l1 - -                         S24  S1    object_recognized
+pickup k1 l5 - - -                       S24  S1    object_recognized
+pickup k1 k2 - - - -                     S24  S1    object_recognized
+pickup b2 - - - - - -                    S24  S1    object_recognized
+pickup l6 r1                             S24  S1    object_recognized
+pickup l6 l2 -                           S24  S1    object_recognized
+pickup l6 l1 - -                         S24  S1    object_recognized
+pickup l6 l5 - - -                       S24  S1    object_recognized
+pickup l6 k2 - - - -                     S24  S1    object_recognized
+pickup l6 k1 - - - - -                   S24  S1    object_recognized
+pickup l6 b2 - - - - - -                 S24  S1    object_recognized
+pickup l3 r1                             S24  S1    object_recognized
+pickup l3 l2 -                           S24  S1    object_recognized
+pickup l3 l1 - -                         S24  S1    object_recognized
+pickup l3 l5 - - -                       S24  S1    object_recognized
+pickup l3 k2 - - - -                     S24  S1    object_recognized
+pickup l3 k1 - - - - -                   S24  S1    object_recognized
+pickup l3 b2 - - - - - -                 S24  S1    object_recognized
+pickup l3 l6 - - - - - - -               S24  S1    object_recognized
+pickup h1 - - - - - - - - -              S24  S1    object_recognized
+pickup h2 r1                             S24  S1    object_recognized
+pickup h2 l2 -                           S24  S1    object_recognized
+pickup h2 l1 - -                         S24  S1    object_recognized
+pickup h2 l5 - - -                       S24  S1    object_recognized
+pickup h2 k2 - - - -                     S24  S1    object_recognized
+pickup h2 k1 - - - - -                   S24  S1    object_recognized
+pickup h2 b2 - - - - - -                 S24  S1    object_recognized
+pickup h2 l6 - - - - - - -               S24  S1    object_recognized
+pickup h2 l3 - - - - - - - -             S24  S1    object_recognized
+pickup h2 h1 - - - - - - - - -           S24  S1    object_recognized
+pickup k3 - - - - - - - - - - -          S24  S1    object_recognized
+pickup l4 - - - - - - - - - - - -        S24  S1    object_recognized
+pickup drop - - - - - - - - - - - - -    S24  S1    object_recognized
+pickup hold - - - - - - - - - - - - - -  S24  S1    object_recognized
+pickup h2                                S24  S19   object_recognized
+pickup l3                                S24  S23   object_recognized
+pickup l6                                S24  S25   object_recognized
+pickup k1                                S24  S29   object_recognized
+pickup l2                                S24  S37   object_recognized
+pickup r1                                S24  S39   object_recognized
+- - - - - - - - - - - - - - - -          S25  S1
+- - - - - - - - - - - - - - -            S26  S1    object_recognized
+pickup - - -                             S26  S1    object_recognized
+pickup l5 r1                             S26  S1    object_recognized
+pickup l5 l2 -                           S26  S1    object_recognized
+pickup l5 l1 - -                         S26  S1    object_recognized
+pickup k2 - - - -                        S26  S1    object_recognized
+pickup k1 - - - - -                      S26  S1    object_recognized
+pickup b2 - - - - - -                    S26  S1    object_recognized
+pickup l6 r1                             S26  S1    object_recognized
+pickup l6 l2 -                           S26  S1    object_recognized
+pickup l6 l1 - -                         S26  S1    object_recognized
+pickup l6 l5 - - -                       S26  S1    object_recognized
+pickup l6 k2 - - - -                     S26  S1    object_recognized
+pickup l6 k1 - - - - -                   S26  S1    object_recognized
+pickup l6 b2 - - - - - -                 S26  S1    object_recognized
+pickup l3 r1                             S26  S1    object_recognized
+pickup l3 l2 -                           S26  S1    object_recognized
+pickup l3 l1 - -                         S26  S1    object_recognized
+pickup l3 l5 - - -                       S26  S1    object_recognized
+pickup l3 k2 - - - -                     S26  S1    object_recognized
+pickup l3 k1 - - - - -                   S26  S1    object_recognized
+pickup l3 b2 - - - - - -                 S26  S1    object_recognized
+pickup l3 l6 - - - - - - -               S26  S1    object_recognized
+pickup h1 - - - - - - - - -              S26  S1    object_recognized
+pickup h2 - - - - - - - - - -            S26  S1    object_recognized
+pickup k3 - - - - - - - - - - -          S26  S1    object_recognized
+pickup l4 - - - - - - - - - - - -        S26  S1    object_recognized
+pickup drop - - - - - - - - - - - - -    S26  S1    object_recognized
+pickup hold - - - - - - - - - - - - - -  S26  S1    object_recognized
+pickup l3                                S26  S23   object_recognized
+pickup l6                                S26  S25   object_recognized
+pickup l5                                S26  S33   object_recognized
+- - - - - - - - - - - - - - - -          S27  S1
+- - - - - - - - - - - - - - -            S28  S1    object_recognized
+pickup -                                 S28  S1    object_recognized
+pickup l2 r1                             S28  S1    object_recognized
+pickup l1 - -                            S28  S1    object_recognized
+pickup l5 - - -                          S28  S1    object_recognized
+pickup k2 - - - -                        S28  S1    object_recognized
+pickup k1 - - - - -                      S28  S1    object_recognized
+pickup b2 r1                             S28  S1    object_recognized
+pickup b2 l2 -                           S28  S1    object_recognized
+pickup b2 l1 - -                         S28  S1    object_recognized
+pickup b2 l5 - - -                       S28  S1    object_recognized
+pickup b2 k2 - - - -                     S28  S1    object_recognized
+pickup b2 k1 - - - - -                   S28  S1    object_recognized
+pickup l6 - - - - - - -                  S28  S1    object_recognized
+pickup l3 - - - - - - - -                S28  S1    object_recognized
+pickup h1 - - - - - - - - -              S28  S1    object_recognized
+pickup h2 - - - - - - - - - -            S28  S1    object_recognized
+pickup k3 - - - - - - - - - - -          S28  S1    object_recognized
+pickup l4 - - - - - - - - - - - -        S28  S1    object_recognized
+pickup drop - - - - - - - - - - - - -    S28  S1    object_recognized
+pickup hold - - - - - - - - - - - - - -  S28  S1    object_recognized
+pickup b2                                S28  S27   object_recognized
+pickup l2                                S28  S37   object_recognized
+- - - - - - - - - - - - - - - -          S29  S1
+- - - - - - - - - - - - - - -            S30  S1    object_recognized
+pickup - - - -                           S30  S1    object_recognized
+pickup k2 r1                             S30  S1    object_recognized
+pickup k2 l2 -                           S30  S1    object_recognized
+pickup k2 l1 - -                         S30  S1    object_recognized
+pickup k2 l5 - - -                       S30  S1    object_recognized
+pickup k1 r1                             S30  S1    object_recognized
+pickup k1 l2 -                           S30  S1    object_recognized
+pickup k1 l1 - -                         S30  S1    object_recognized
+pickup k1 l5 - - -                       S30  S1    object_recognized
+pickup k1 k2 - - - -                     S30  S1    object_recognized
+pickup b2 - - - - - -                    S30  S1    object_recognized
+pickup l6 - - - - - - -                  S30  S1    object_recognized
+pickup l3 r1                             S30  S1    object_recognized
+pickup l3 l2 -                           S30  S1    object_recognized
+pickup l3 l1 - -                         S30  S1    object_recognized
+pickup l3 l5 - - -                       S30  S1    object_recognized
+pickup l3 k2 - - - -                     S30  S1    object_recognized
+pickup l3 k1 - - - - -                   S30  S1    object_recognized
+pickup l3 b2 - - - - - -                 S30  S1    object_recognized
+pickup l3 l6 - - - - - - -               S30  S1    object_recognized
+pickup h1 - - - - - - - - -              S30  S1    object_recognized
+pickup h2 - - - - - - - - - -            S30  S1    object_recognized
+pickup k3 r1                             S30  S1    object_recognized
+pickup k3 l2 -                           S30  S1    object_recognized
+pickup k3 l1 - -                         S30  S1    object_recognized
+pickup k3 l5 - - -                       S30  S1    object_recognized
+pickup k3 k2 - - - -                     S30  S1    object_recognized
+pickup k3 k1 - - - - -                   S30  S1    object_recognized
+pickup k3 b2 - - - - - -                 S30  S1    object_recognized
+pickup k3 l6 - - - - - - -               S30  S1    object_recognized
+pickup k3 l3 - - - - - - - -             S30  S1    object_recognized
+pickup k3 h1 - - - - - - - - -           S30  S1    object_recognized
+pickup k3 h2 - - - - - - - - - -         S30  S1    object_recognized
+pickup l4 - - - - - - - - - - - -        S30  S1    object_recognized
+pickup drop - - - - - - - - - - - - -    S30  S1    object_recognized
+pickup hold - - - - - - - - - - - - - -  S30  S1    object_recognized
+pickup k3                                S30  S17   object_recognized
+pickup l3                                S30  S23   object_recognized
+pickup k1                                S30  S29   object_recognized
+pickup k2                                S30  S31   object_recognized
+- - - - - - - - - - - - - - - -          S31  S1
+- - - - - - - - - - - - - - -            S32  S1    object_recognized
+pickup - - - -                           S32  S1    object_recognized
+pickup k2 r1                             S32  S1    object_recognized
+pickup k2 l2 -                           S32  S1    object_recognized
+pickup k2 l1 - -                         S32  S1    object_recognized
+pickup k2 l5 - - -                       S32  S1    object_recognized
+pickup k1 r1                             S32  S1    object_recognized
+pickup k1 l2 -                           S32  S1    object_recognized
+pickup k1 l1 - -                         S32  S1    object_recognized
+pickup k1 l5 - - -                       S32  S1    object_recognized
+pickup k1 k2 - - - -                     S32  S1    object_recognized
+pickup b2 - - - - - -                    S32  S1    object_recognized
+pickup l6 - - - - - - -                  S32  S1    object_recognized
+pickup l3 - - - - - - - -                S32  S1    object_recognized
+pickup h1 - - - - - - - - -              S32  S1    object_recognized
+pickup h2 - - - - - - - - - -            S32  S1    object_recognized
+pickup k3 r1                             S32  S1    object_recognized
+pickup k3 l2 -                           S32  S1    object_recognized
+pickup k3 l1 - -                         S32  S1    object_recognized
+pickup k3 l5 - - -                       S32  S1    object_recognized
+pickup k3 k2 - - - -                     S32  S1    object_recognized
+pickup k3 k1 - - - - -                   S32  S1    object_recognized
+pickup k3 b2 - - - - - -                 S32  S1    object_recognized
+pickup k3 l6 - - - - - - -               S32  S1    object_recognized
+pickup k3 l3 - - - - - - - -             S32  S1    object_recognized
+pickup k3 h1 - - - - - - - - -           S32  S1    object_recognized
+pickup k3 h2 - - - - - - - - - -         S32  S1    object_recognized
+pickup l4 - - - - - - - - - - - -        S32  S1    object_recognized
+pickup drop - - - - - - - - - - - - -    S32  S1    object_recognized
+pickup hold - - - - - - - - - - - - - -  S32  S1    object_recognized
+pickup k3                                S32  S17   object_recognized
+pickup k1                                S32  S29   object_recognized
+pickup k2                                S32  S31   object_recognized
+- - - - - - - - - - - - - - - -          S33  S1
+- - - - - - - - - - - - - - -            S34  S1    object_recognized
+pickup -                                 S34  S1    object_recognized
+pickup l2 r1                             S34  S1    object_recognized
+pickup l1 - -                            S34  S1    object_recognized
+pickup l5 r1                             S34  S1    object_recognized
+pickup l5 l2 -                           S34  S1    object_recognized
+pickup l5 l1 - -                         S34  S1    object_recognized
+pickup k2 - - - -                        S34  S1    object_recognized
+pickup k1 - - - - -                      S34  S1    object_recognized
+pickup b2 - - - - - -                    S34  S1    object_recognized
+pickup l6 r1                             S34  S1    object_recognized
+pickup l6 l2 -                           S34  S1    object_recognized
+pickup l6 l1 - -                         S34  S1    object_recognized
+pickup l6 l5 - - -                       S34  S1    object_recognized
+pickup l6 k2 - - - -                     S34  S1    object_recognized
+pickup l6 k1 - - - - -                   S34  S1    object_recognized
+pickup l6 b2 - - - - - -                 S34  S1    object_recognized
+pickup l3 - - - - - - - -                S34  S1    object_recognized
+pickup h1 - - - - - - - - -              S34  S1    object_recognized
+pickup h2 - - - - - - - - - -            S34  S1    object_recognized
+pickup k3 - - - - - - - - - - -          S34  S1    object_recognized
+pickup l4 r1                             S34  S1    object_recognized
+pickup l4 l2 -                           S34  S1    object_recognized
+pickup l4 l1 - -                         S34  S1    object_recognized
+pickup l4 l5 - - -                       S34  S1    object_recognized
+pickup l4 k2 - - - -                     S34  S1    object_recognized
+pickup l4 k1 - - - - -                   S34  S1    object_recognized
+pickup l4 b2 - - - - - -                 S34  S1    object_recognized
+pickup l4 l6 - - - - - - -               S34  S1    object_recognized
+pickup l4 l3 - - - - - - - -             S34  S1    object_recognized
+pickup l4 h1 - - - - - - - - -           S34  S1    object_recognized
+pickup l4 h2 - - - - - - - - - -         S34  S1    object_recognized
+pickup l4 k3 - - - - - - - - - - -       S34  S1    object_recognized
+pickup drop - - - - - - - - - - - - -    S34  S1    object_recognized
+pickup hold - - - - - - - - - - - - - -  S34  S1    object_recognized
+pickup l4                                S34  S15   object_recognized
+pickup l6                                S34  S25   object_recognized
+pickup l5                                S34  S33   object_recognized
+pickup l2                                S34  S37   object_recognized
+- - - - - - - - - - - - - - - -          S35  S1
+- - - - - - - - - - - - - - -            S36  S1    object_recognized
+pickup -                                 S36  S1    object_recognized
+pickup l2 r1                             S36  S1    object_recognized
+pickup l1 r1                             S36  S1    object_recognized
+pickup l1 l2 -                           S36  S1    object_recognized
+pickup l5 - - -                          S36  S1    object_recognized
+pickup k2 - - - -                        S36  S1    object_recognized
+pickup k1 - - - - -                      S36  S1    object_recognized
+pickup b2 - - - - - -                    S36  S1    object_recognized
+pickup l6 - - - - - - -                  S36  S1    object_recognized
+pickup l3 - - - - - - - -                S36  S1    object_recognized
+pickup h1 - - - - - - - - -              S36  S1    object_recognized
+pickup h2 - - - - - - - - - -            S36  S1    object_recognized
+pickup k3 - - - - - - - - - - -          S36  S1    object_recognized
+pickup l4 r1                             S36  S1    object_recognized
+pickup l4 l2 -                           S36  S1    object_recognized
+pickup l4 l1 - -                         S36  S1    object_recognized
+pickup l4 l5 - - -                       S36  S1    object_recognized
+pickup l4 k2 - - - -                     S36  S1    object_recognized
+pickup l4 k1 - - - - -                   S36  S1    object_recognized
+pickup l4 b2 - - - - - -                 S36  S1    object_recognized
+pickup l4 l6 - - - - - - -               S36  S1    object_recognized
+pickup l4 l3 - - - - - - - -             S36  S1    object_recognized
+pickup l4 h1 - - - - - - - - -           S36  S1    object_recognized
+pickup l4 h2 - - - - - - - - - -         S36  S1    object_recognized
+pickup l4 k3 - - - - - - - - - - -       S36  S1    object_recognized
+pickup drop - - - - - - - - - - - - -    S36  S1    object_recognized
+pickup hold - - - - - - - - - - - - - -  S36  S1    object_recognized
+pickup l4                                S36  S15   object_recognized
+pickup l1                                S36  S35   object_recognized
+pickup l2                                S36  S37   object_recognized
+- - - - - - - - - - - - - - - -          S37  S1
+- - - - - - - - - - - - - - -            S38  S1    object_recognized
+pickup -                                 S38  S1    object_recognized
+pickup l2 r1                             S38  S1    object_recognized
+pickup l1 r1                             S38  S1    object_recognized
+pickup l1 l2 -                           S38  S1    object_recognized
+pickup l5 r1                             S38  S1    object_recognized
+pickup l5 l2 -                           S38  S1    object_recognized
+pickup l5 l1 - -                         S38  S1    object_recognized
+pickup k2 - - - -                        S38  S1    object_recognized
+pickup k1 - - - - -                      S38  S1    object_recognized
+pickup b2 r1                             S38  S1    object_recognized
+pickup b2 l2 -                           S38  S1    object_recognized
+pickup b2 l1 - -                         S38  S1    object_recognized
+pickup b2 l5 - - -                       S38  S1    object_recognized
+pickup b2 k2 - - - -                     S38  S1    object_recognized
+pickup b2 k1 - - - - -                   S38  S1    object_recognized
+pickup l6 - - - - - - -                  S38  S1    object_recognized
+pickup l3 r1                             S38  S1    object_recognized
+pickup l3 l2 -                           S38  S1    object_recognized
+pickup l3 l1 - -                         S38  S1    object_recognized
+pickup l3 l5 - - -                       S38  S1    object_recognized
+pickup l3 k2 - - - -                     S38  S1    object_recognized
+pickup l3 k1 - - - - -                   S38  S1    object_recognized
+pickup l3 b2 - - - - - -                 S38  S1    object_recognized
+pickup l3 l6 - - - - - - -               S38  S1    object_recognized
+pickup h1 r1                             S38  S1    object_recognized
+pickup h1 l2 -                           S38  S1    object_recognized
+pickup h1 l1 - -                         S38  S1    object_recognized
+pickup h1 l5 - - -                       S38  S1    object_recognized
+pickup h1 k2 - - - -                     S38  S1    object_recognized
+pickup h1 k1 - - - - -                   S38  S1    object_recognized
+pickup h1 b2 - - - - - -                 S38  S1    object_recognized
+pickup h1 l6 - - - - - - -               S38  S1    object_recognized
+pickup h1 l3 - - - - - - - -             S38  S1    object_recognized
+pickup h2 - - - - - - - - - -            S38  S1    object_recognized
+pickup k3 - - - - - - - - - - -          S38  S1    object_recognized
+pickup l4 - - - - - - - - - - - -        S38  S1    object_recognized
+pickup drop - - - - - - - - - - - - -    S38  S1    object_recognized
+pickup hold - - - - - - - - - - - - - -  S38  S1    object_recognized
+pickup h1                                S38  S21   object_recognized
+pickup l3                                S38  S23   object_recognized
+pickup b2                                S38  S27   object_recognized
+pickup l5                                S38  S33   object_recognized
+pickup l1                                S38  S35   object_recognized
+pickup l2                                S38  S37   object_recognized
+- - - - - - - - - - - - - - - -          S39  S1
+- - - - - - - - - - - - - - -            S40  S1    object_recognized
+pickup                                   S40  S1    object_recognized
+pickup l2 -                              S40  S1    object_recognized
+pickup l1 - -                            S40  S1    object_recognized
+pickup l5 - - -                          S40  S1    object_recognized
+pickup k2 - - - -                        S40  S1    object_recognized
+pickup k1 - - - - -                      S40  S1    object_recognized
+pickup b2 - - - - - -                    S40  S1    object_recognized
+pickup l6 - - - - - - -                  S40  S1    object_recognized
+pickup l3 r1                             S40  S1    object_recognized
+pickup l3 l2 -                           S40  S1    object_recognized
+pickup l3 l1 - -                         S40  S1    object_recognized
+pickup l3 l5 - - -                       S40  S1    object_recognized
+pickup l3 k2 - - - -                     S40  S1    object_recognized
+pickup l3 k1 - - - - -                   S40  S1    object_recognized
+pickup l3 b2 - - - - - -                 S40  S1    object_recognized
+pickup l3 l6 - - - - - - -               S40  S1    object_recognized
+pickup h1 - - - - - - - - -              S40  S1    object_recognized
+pickup h2 - - - - - - - - - -            S40  S1    object_recognized
+pickup k3 - - - - - - - - - - -          S40  S1    object_recognized
+pickup l4 - - - - - - - - - - - -        S40  S1    object_recognized
+pickup drop - - - - - - - - - - - - -    S40  S1    object_recognized
+pickup hold - - - - - - - - - - - - - -  S40  S1    object_recognized
+pickup l3                                S40  S23   object_recognized
+pickup r1                                S40  S39   object_recognized
+- - - - - - - - - - - - - - - -          S41  S1
+- - - - - - - - - - - - - - - -          S42  S1

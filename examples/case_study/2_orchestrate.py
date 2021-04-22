@@ -9,7 +9,7 @@ from specification.atom.pattern.robotics.coremovement.surveillance import *
 from specification.atom.pattern.robotics.trigger.triggers import InstantaneousReaction, BoundReaction, Wait, \
     GlobalAvoidance, BoundDelay
 from tools.persistence import Persistence
-from worlds.illustrative_example import IllustrativeExample
+from worlds.illustrative_example import RunningExample
 
 """Illustrative Example:
 GOALS to model:

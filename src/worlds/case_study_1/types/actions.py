@@ -22,3 +22,13 @@ class DropObject(BooleanAction):
     @property
     def mutex_group(self):
         return "object_handling"
+
+
+class PickupObject(BooleanAction):
+
+    def __init__(self, name: str = "pickup"):
+        super().__init__(name)
+
+    @property
+    def mutex_group(self):
+        return "object_handling"

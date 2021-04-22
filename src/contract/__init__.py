@@ -129,7 +129,7 @@ class Contract:
             instance_ts = (a_typeset | g_typeset)
 
         """Extracting Inputs and Outputs Including the world"""
-        i_set, o_set = instance_ts.extract_inputs_outputs_excluding_context()
+        i_set, o_set = instance_ts.extract_inputs_outputs()
 
         i_typeset = Typeset(i_set)
         o_typeset = Typeset(o_set)
@@ -156,6 +156,12 @@ class Contract:
         if ret is not None:
             rules, typeset = ret
             a_liveness.extend(rules)
+
+        """Adding context and active signal rules"""
+        ret = Atom.context_active_rules(i_typeset, output=FormulaOutput.ListCNF)
+        if ret is not None:
+            rules, typeset = ret
+            assumptions.extend(rules)
 
         """Extract Inputs and Outputs"""
         inputs = [t.name for t in i_set]

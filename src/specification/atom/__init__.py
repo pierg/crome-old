@@ -7,7 +7,7 @@ from specification.enums import *
 from specification.exceptions import AtomNotSatisfiableException
 from specification.formula import Formula
 from tools.logic import Logic, LogicTuple
-from type import Boolean
+from type import Boolean, TypeKinds
 from typeset import Typeset
 
 
@@ -61,7 +61,7 @@ class Atom(Specification):
                 expression, typeset = self.__base_formula
             else:
                 expression, typeset = LogicTuple.implies_(self.__saturation.formula(), self.__base_formula,
-                                                         brackets=True)
+                                                          brackets=True)
         if self.negated:
             return Logic.not_(expression), typeset
         return expression, typeset
@@ -192,11 +192,39 @@ class Atom(Specification):
 
         sensors, outs = typeset.extract_inputs_outputs()
 
+        active_context_types = []
         for t in sensors:
             if isinstance(t, Boolean):
-                """G F a"""
-                rules_str.append(Logic.g_(Logic.f_(t.name)))
+                if t.kind == TypeKinds.SENSOR:
+                    rules_str.append(Logic.g_(Logic.f_(t.name)))
                 rules_typeset |= Typeset({t})
+
+        if len(rules_str) == 0:
+            return None
+
+        if output is not None and output == FormulaOutput.ListCNF:
+            return rules_str, rules_typeset
+
+        return Atom(formula=(Logic.and_(rules_str, brackets=True), rules_typeset), kind=AtomKind.LIVENESS_RULE)
+
+    @staticmethod
+    def context_active_rules(typeset: Typeset, output=None) -> Union[Atom, Tuple[List[str], Typeset]]:
+        """Extract Liveness rules from the Formula"""
+
+        rules_str = []
+        rules_typeset = Typeset()
+
+        inputs, outs = typeset.extract_inputs_outputs()
+
+        active_context_types = []
+        for t in inputs:
+            if isinstance(t, Boolean):
+                if t.kind == TypeKinds.ACTIVE or t.kind == TypeKinds.CONTEXT:
+                    active_context_types.append(t.name)
+                rules_typeset |= Typeset({t})
+
+        if len(active_context_types) > 0:
+            rules_str.append(Logic.g_(Logic.and_(active_context_types)))
 
         if len(rules_str) == 0:
             return None

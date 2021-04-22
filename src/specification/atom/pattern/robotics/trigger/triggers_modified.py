@@ -10,8 +10,8 @@ class InstantaneousReaction(Trigger):
 
     def __init__(self, pre: Union[Atom, Boolean],
                  post: Union[Atom, Boolean],
-                 context: Union[Atom, Boolean],
-                 active: Union[Atom, Boolean]):
+                 active: Union[Atom, Boolean],
+                 context: Union[Atom, Boolean] = None):
         new_typeset, pre, post, context, active = Trigger.process_bin_contextual_input(pre, post, context, active)
 
         c = Logic.and_([context, active])
@@ -25,8 +25,8 @@ class PromptReaction(Trigger):
 
     def __init__(self, pre: Union[Atom, Boolean],
                  post: Union[Atom, Boolean],
-                 context: Union[Atom, Boolean],
-                 active: Union[Atom, Boolean]):
+                 active: Union[Atom, Boolean],
+                 context: Union[Atom, Boolean] = None):
         new_typeset, pre, post, context, active = Trigger.process_bin_contextual_input(pre, post, context, active)
 
         c = Logic.and_([context, active])
@@ -40,8 +40,8 @@ class DelayedReaction(Trigger):
 
     def __init__(self, pre: Union[Atom, Boolean],
                  post: Union[Atom, Boolean],
-                 context: Union[Atom, Boolean],
-                 active: Union[Atom, Boolean]):
+                 active: Union[Atom, Boolean],
+                 context: Union[Atom, Boolean] = None):
         new_typeset, pre, post, context, active = Trigger.process_bin_contextual_input(pre, post, context, active)
 
         c = Logic.and_([context, active])
@@ -55,8 +55,8 @@ class BoundReaction(Trigger):
 
     def __init__(self, pre: Union[Atom, Boolean],
                  post: Union[Atom, Boolean],
-                 context: Union[Atom, Boolean],
-                 active: Union[Atom, Boolean]):
+                 active: Union[Atom, Boolean],
+                 context: Union[Atom, Boolean] = None):
         new_typeset, pre, post, context, active = Trigger.process_bin_contextual_input(pre, post, context, active)
 
         c = Logic.and_([context, active])
@@ -70,8 +70,8 @@ class BoundDelay(Trigger):
 
     def __init__(self, pre: Union[Atom, Boolean],
                  post: Union[Atom, Boolean],
-                 context: Union[Atom, Boolean],
-                 active: Union[Atom, Boolean]):
+                 active: Union[Atom, Boolean],
+                 context: Union[Atom, Boolean] = None):
         new_typeset, pre, post, context, active = Trigger.process_bin_contextual_input(pre, post, context, active)
 
         c = Logic.and_([context, active])
@@ -85,21 +85,11 @@ class Wait(Trigger):
 
     def __init__(self, pre: Union[Atom, Boolean],
                  post: Union[Atom, Boolean],
-                 context: Union[Atom, Boolean],
-                 active: Union[Atom, Boolean]):
+                 active: Union[Atom, Boolean],
+                 context: Union[Atom, Boolean] = None):
         new_typeset, pre, post, context, active = Trigger.process_bin_contextual_input(pre, post, context, active)
 
         c = Logic.and_([context, active])
         f = Logic.u_(Logic.or_([Logic.and_([c, pre]), Logic.not_(c)]), Logic.and_([c, post]))
         super().__init__(formula=(f, new_typeset))
 
-
-class GlobalAvoidance(Trigger):
-    """Specifies that an avoidance condition globally holds."""
-
-    def __init__(self, l: Union[Atom, Boolean]):
-        new_typeset, l = Trigger.process_uni_input(l)
-
-        f = Logic.g_(Logic.not_(l))
-
-        super().__init__(formula=(f, new_typeset))

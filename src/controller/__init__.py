@@ -12,6 +12,7 @@ import time
 from typing import Tuple, List, Dict, Set
 
 from controller.exceptions import SynthesisTimeout, OutOfMemoryException, UnknownStrixResponse
+from specification import Specification
 from specification.atom import Atom, AtomKind
 from tools.logic import Logic
 from tools.strings import StringMng
@@ -28,7 +29,7 @@ class Controller:
     def __init__(self,
                  mealy_machine: str,
                  world: World,
-                 name:str = None):
+                 name: str = None):
 
         if name is None:
             self.__name = ""
@@ -87,31 +88,40 @@ class Controller:
     def mealy_machine(self) -> str:
         return self.__mealy_machine
 
-    def react(self, input_vector: Tuple[Atom] = ()) -> Tuple[Atom]:
+    def react(self, input_vector: Tuple[Atom] = None) -> Tuple[Tuple[Atom], Tuple[Atom]]:
         """Take a reaction in the mealy machine"""
-        edges = self.get_outgoing_edges_from_state(self.__current_state)
+        edges = self.get_all_inputs_from_state(self.__current_state)
         """match input with any edge"""
         selected_edge = None
-        for edge in edges:
-            selected_edge = edge
-            for i, elem in enumerate(edge):
-                if elem.dontcare:
-                    continue
-                if elem == input_vector[i]:
-                    continue
-                else:
-                    selected_edge = None
-                    break
+        if input_vector is None:
+            """Take a random transition"""
+            selected_edge = random.choice(edges)
+        else:
+            for edge in edges:
+                for i, elem in enumerate(edge):
+                    if elem.dontcare:
+                        continue
+                    if elem != input_vector[i]:
+                        break
+                    selected_edge = edge
         if selected_edge is None:
-            raise Exception("No input matched")
+            raise Exception("No input matched with the edge")
         (next_state, outputs) = self.__transitions[(selected_edge, self.__current_state)]
         self.__current_state = next_state
         output_choice = random.sample(outputs, 1)[0]
         for o in output_choice:
             if o.kind == AtomKind.LOCATION and not o.negated:
                 self.__current_location = list(o.typeset.values())[0]
-        return output_choice
+        return selected_edge, output_choice
 
+
+    def simulate_inputs(self, active_probability: int = 0.2) -> Tuple[Atom]:
+        inputs_assignment = []
+        for input, values in self.__inputs_ap.items():
+            """random choice between input true [0] or false [1] with prob distribution """
+            inputs_assignment.append(choices([values[0], values[1]], [active_probability, 1 - active_probability]))
+
+        return tuple(*inputs_assignment)
 
     def simulate(self, steps: int = 50):
         """Simulate a run of 50 steps"""
@@ -120,8 +130,7 @@ class Controller:
         history: List[List[str]] = []
 
         for i in range(steps):
-            inputs = self.simulate_inputs()
-            outputs = self.react(inputs)
+            inputs, outputs = self.react()
             inputs_str = []
             for x in inputs:
                 if not x.negated:
@@ -136,35 +145,26 @@ class Controller:
 
         return tabulate(history, headers=headers)
 
-
-
-
     def reset(self):
         """Reset mealy machine"""
         self.__current_state = self.__initial_state
 
-    def simulate_inputs(self, active_probability: int = 0.2) -> Tuple[Atom]:
-        inputs_assignment = []
-        for input, values in self.__inputs_ap.items():
-            """random choice between input true [0] or false [1] with prob distribution """
-            inputs_assignment.append(choices([values[0], values[1]], [active_probability, 1 - active_probability]))
 
-        return tuple(*inputs_assignment)
+    # def all_inputs_combinations(self) -> List[Tuple[Atom]]:
+    #     binary_assignments = list(itertools.product([True, False], repeat=len(self.input_alphabet)))
+    #     inputs_assignments = []
+    #     for assignment in binary_assignments:
+    #         inputs = []
+    #         for i, input in enumerate(self.input_alphabet):
+    #             if assignment[i]:
+    #                 inputs.append(self.__inputs_ap[input][0])
+    #             else:
+    #                 inputs.append(self.__inputs_ap[input][1])
+    #         inputs_assignments.append(tuple(inputs))
+    #     return inputs_assignments
 
-    def all_inputs_combinations(self) -> List[Tuple[Atom]]:
-        binary_assignments = list(itertools.product([True, False], repeat=len(self.input_alphabet)))
-        inputs_assignments = []
-        for assignment in binary_assignments:
-            inputs = []
-            for i, input in enumerate(self.input_alphabet):
-                if assignment[i]:
-                    inputs.append(self.__inputs_ap[input][0])
-                else:
-                    inputs.append(self.__inputs_ap[input][1])
-            inputs_assignments.append(tuple(inputs))
-        return inputs_assignments
 
-    def get_incoming_edges_from_state(self, state: str) -> List[Tuple[Tuple[Atom]]]:
+    def get_all_outputs_from_state(self, state: str) -> List[Tuple[Tuple[Atom]]]:
         if state == self.__initial_state:
             self.react(self.simulate_inputs())
             state = self.__current_state
@@ -174,14 +174,12 @@ class Controller:
                 edges.append(outs)
         return edges
 
-
-    def get_outgoing_edges_from_state(self, state: str) -> List[Tuple[Atom]]:
+    def get_all_inputs_from_state(self, state: str) -> List[Tuple[Atom]]:
         edges = []
         for (ins, state_s), (state_t, outs) in self.__transitions.items():
             if state_s == state:
                 edges.append(ins)
         return edges
-
 
     @mealy_machine.setter
     def mealy_machine(self, value: str):
@@ -308,7 +306,7 @@ class Controller:
         """The mealy-machine has never reacted before"""
         """Extracting the first location to visit"""
         first_location_to_visit = None
-        for inputs in self.all_inputs_combinations():
+        for inputs in self.get_all_inputs_from_state(self.__current_state):
             (next_state, outputs) = self.__transitions[(inputs, self.__current_state)]
             output_choice = random.sample(outputs, 1)[0]
             for o in output_choice:
@@ -326,7 +324,6 @@ class Controller:
                 if type(t).__name__ == class_name:
                     reachable_locations.append(t)
         return reachable_locations
-
 
     @staticmethod
     def generate_controller(assumptions: str, guarantees: str, ins: str, outs: str) -> Tuple[bool, str, str, float]:

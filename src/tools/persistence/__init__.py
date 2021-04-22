@@ -24,11 +24,13 @@ class Persistence:
         pickle.dump(cgg, file)
         file.close()
 
-
     @staticmethod
-    def dump_controller(controller: Controller, folder_path: str):
+    def dump_controller(controller: Controller, folder_path: str, name: str = None):
 
-        output_file = f"{folder_path}/controller.dat"
+        if name is None:
+            name = "controller"
+
+        output_file = f"{folder_path}/{name}.dat"
 
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
@@ -36,7 +38,6 @@ class Persistence:
         file = open(output_file, 'wb')
         pickle.dump(controller, file)
         file.close()
-
 
     @staticmethod
     def load_cgg(session_folder_name: str) -> Node:
@@ -53,7 +54,6 @@ class Persistence:
         file.close()
 
         return cgg
-
 
     @staticmethod
     def load_controller(folder_path: str) -> Controller:

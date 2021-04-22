@@ -8,7 +8,7 @@ from specification.atom.pattern.robotics.coremovement.surveillance import *
 from specification.atom.pattern.robotics.trigger.triggers import InstantaneousReaction, BoundReaction, Wait, \
     GlobalAvoidance, BoundDelay
 from tools.persistence import Persistence
-from worlds.illustrative_example import IllustrativeExample
+from worlds.illustrative_example import RunningExample
 
 """Illustrative Example:
 GOALS to model:
@@ -18,7 +18,7 @@ always => if see a person, greet
 """
 
 """We import the world"""
-w = IllustrativeExample()
+w = RunningExample()
 
 """Strict Ordered Patrolling Location r1, r2"""
 ordered_patrol_day = StrictOrderedPatrolling([w["r1"], w["r2"]])
@@ -48,7 +48,7 @@ try:
                    world=w)
 
     cgg = Node.build_cgg({n_day, n_night, n_greet})
-    cgg.session_name = "running_example"
+    cgg.session_name = "running_example_delayed"
     cgg.save()
     cgg.realize_all(t_trans=3)
     Persistence.dump_cgg(cgg)

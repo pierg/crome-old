@@ -230,13 +230,13 @@ class Node(Goal):
                 ctrl_str = t_ctrl.name
 
                 """First reaction is already been made by the previous controller"""
-                outputs = t_ctrl.react()
+                inputs, outputs = t_ctrl.react()
                 active_location = None
                 for x in outputs:
                     if x.kind == AtomKind.LOCATION and not x.negated:
                         active_location = x
                 while list(active_location.typeset.values())[0] is not optimal_destination:
-                    outputs = t_ctrl.react()
+                    inputs, outputs = t_ctrl.react()
                     active_context_count += 1
                     active_location = None
                     for x in outputs:
@@ -258,8 +258,7 @@ class Node(Goal):
             s_ctrl = active_scenario.controller
             ctrl_str = s_ctrl.name
             """Take a step"""
-            inputs = s_ctrl.simulate_inputs()
-            outputs = s_ctrl.react(inputs)
+            inputs, outputs = s_ctrl.react()
             active_context_count += 1
             if active_scenario.context is not None:
                 context_str = active_scenario.context.string

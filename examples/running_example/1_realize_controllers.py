@@ -1,8 +1,6 @@
-import pickle
-
-from examples.simple_example_care_center import folder_name
 from tools.persistence import Persistence
-from worlds.illustrative_example import IllustrativeExample
+
+folder_name = "running_example"
 
 """Illustrative Example:
 GOALS to model:

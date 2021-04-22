@@ -1,7 +1,6 @@
 import os
 import pickle
 
-from examples.simple_example_care_center import folder_name
 from cgg import Node, Link
 from cgg.exceptions import CGGException
 from specification import FormulaOutput
@@ -9,7 +8,13 @@ from specification.atom.pattern.robotics.coremovement.surveillance import *
 from specification.atom.pattern.robotics.trigger.triggers import InstantaneousReaction, BoundReaction, Wait, \
     GlobalAvoidance, BoundDelay
 from tools.persistence import Persistence
-from worlds.illustrative_example import IllustrativeExample
+from worlds.illustrative_example import RunningExample
+
+
+folder_name = "running_example_delayed"
+
+
+
 
 """Illustrative Example:
 GOALS to model:
@@ -19,7 +24,7 @@ always => if see a person, greet
 """
 
 """We import the world"""
-w = IllustrativeExample()
+w = RunningExample()
 
 """Strict Ordered Patrolling Location r1, r2"""
 ordered_patrol_day = StrictOrderedPatrolling([w["r1"], w["r2"]])

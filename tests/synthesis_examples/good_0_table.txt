@@ -1,0 +1,63 @@
+States          	 S0, S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16, S17, S18, S19, S20, S21, S22, S23, S24, S25, S26, S27, S28, S29, S30, S31, S32, S33, S34, S35, S36, S37, S38, S39, S40
+Inital State    	 S0
+Input  Alphabet 	 object_recognized
+Output Alphabet 	 hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1
+
+true_ins           s    s'    true_outs
+-----------------  ---  ----  ------------
+                   S0   S1    l4
+object_recognized  S0   S2    l4
+                   S1   S3    l1
+object_recognized  S1   S4    l1
+-                  S2   S5    hold l1
+                   S3   S6    l2
+object_recognized  S3   S7    l2
+-                  S4   S8    hold l2
+-                  S5   S8    hold l2
+                   S6   S9    l3
+object_recognized  S6   S10   l3
+-                  S7   S11   hold l3
+-                  S8   S11   hold l3
+                   S9   S12   l6
+object_recognized  S9   S13   l6
+-                  S10  S14   hold l6
+-                  S11  S14   hold l6
+                   S12  S15   l5
+object_recognized  S12  S16   l5
+-                  S13  S17   hold l5
+-                  S14  S17   hold l5
+                   S15  S18   l2
+object_recognized  S15  S19   l2
+-                  S16  S20   hold l2
+-                  S17  S20   hold l2
+                   S18  S21   l1
+object_recognized  S18  S22   l1
+-                  S19  S23   hold l1
+-                  S20  S23   hold l1
+object_recognized  S21  S22   l1
+                   S21  S24   l2
+-                  S22  S25   hold l2
+-                  S23  S25   hold l2
+                   S24  S26   l1
+object_recognized  S24  S27   l1
+-                  S25  S28   hold l3
+                   S26  S1    l4
+object_recognized  S26  S2    l4
+-                  S27  S29   hold l4
+-                  S28  S30   hold k1
+-                  S29  S5    hold l1
+-                  S30  S31   hold drop k3
+                   S31  S32   k1
+object_recognized  S31  S33   k1
+                   S32  S34   l3
+object_recognized  S32  S35   l3
+-                  S33  S36   hold l3
+                   S34  S37   l2
+object_recognized  S34  S38   l2
+-                  S35  S39   hold l2
+-                  S36  S39   hold l2
+                   S37  S26   l1
+object_recognized  S37  S27   l1
+-                  S38  S40   hold l1
+-                  S39  S40   hold l1
+-                  S40  S29   hold l4

@@ -30,5 +30,6 @@ class CaseStudy(World):
             ObjectRecognized(),
             ObjectUnknown(),
             HoldObject(),
-            DropObject()
+            DropObject(),
+            PickupObject()
         })

@@ -20,6 +20,11 @@ class ContextBooleanTime(Boolean):
     def kind(self):
         return TypeKinds.CONTEXT
 
+    def to_atom(self):
+        from specification.atom import Atom, AtomKind
+        from typeset import Typeset
+        return Atom(formula=(self.name, Typeset({self})), check=False, kind=AtomKind.CONTEXT)
+
 
 class ContextLocation(Boolean):
 
@@ -30,6 +35,11 @@ class ContextLocation(Boolean):
     def kind(self):
         return TypeKinds.CONTEXT
 
+    def to_atom(self):
+        from specification.atom import Atom, AtomKind
+        from typeset import Typeset
+        return Atom(formula=(self.name, Typeset({self})), check=False, kind=AtomKind.CONTEXT)
+
 
 class ContextIdentity(Boolean):
 
@@ -39,3 +49,8 @@ class ContextIdentity(Boolean):
     @property
     def kind(self):
         return TypeKinds.CONTEXT
+
+    def to_atom(self):
+        from specification.atom import Atom, AtomKind
+        from typeset import Typeset
+        return Atom(formula=(self.name, Typeset({self})), check=False, kind=AtomKind.CONTEXT)

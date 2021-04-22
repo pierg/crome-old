@@ -80,14 +80,17 @@ class Trigger(RoboticPattern):
         else:
             raise AttributeError
 
-        if isinstance(context, Boolean):
-            new_typeset |= context
-            context = context.name
-        elif isinstance(context, Atom):
-            new_typeset |= context.typeset
-            context = context.string
+        if context is not None:
+            if isinstance(context, Boolean):
+                new_typeset |= context
+                context = context.name
+            elif isinstance(context, Atom):
+                new_typeset |= context.typeset
+                context = context.string
+            else:
+                raise AttributeError
         else:
-            raise AttributeError
+            context = "TRUE"
 
         if isinstance(active, Boolean):
             new_typeset |= active

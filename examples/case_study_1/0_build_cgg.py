@@ -19,6 +19,9 @@ hold = ap["hold"]
 drop = ap["drop"]
 object_recognized = ap["object_recognized"]
 
+example = ap["hold"] & ~ap["drop"] & ~ap["pickup"]
+print(example)
+
 patrol_living_room = Patrolling(living_room)
 hold_recognized_object = PromptReaction(ap["object_recognized"], ap["hold"])
 # hold_recognized_object = PromptReaction(ap["object_recognized"] & ~ap["hold"], ap["hold"])
