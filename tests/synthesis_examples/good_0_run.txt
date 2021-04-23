@@ -1,52 +1,52 @@
-  t  inputs             outputs
----  -----------------  --------------
-  0                     l4
-  1  object_recognized  l1
-  2  object_recognized  hold, l2
-  3  object_recognized  hold, l3
-  4  object_recognized  hold, l6
-  5  object_recognized  hold, l5
-  6  object_recognized  hold, l2
-  7  object_recognized  hold, l1
-  8  object_recognized  hold, l2
-  9  object_recognized  hold, l3
- 10  object_recognized  hold, k1
- 11  object_recognized  hold, drop, k3
- 12  object_recognized  k1
- 13  object_recognized  hold, l3
- 14  object_recognized  hold, l2
- 15  object_recognized  hold, l1
- 16  object_recognized  hold, l4
- 17  object_recognized  hold, l1
- 18  object_recognized  hold, l2
- 19  object_recognized  hold, l3
- 20  object_recognized  hold, l6
- 21  object_recognized  hold, l5
- 22  object_recognized  hold, l2
- 23  object_recognized  hold, l1
- 24  object_recognized  hold, l2
- 25  object_recognized  hold, l3
- 26  object_recognized  hold, k1
- 27  object_recognized  hold, drop, k3
- 28                     k1
- 29  object_recognized  l3
- 30  object_recognized  hold, l2
- 31  object_recognized  hold, l1
- 32  object_recognized  hold, l4
- 33  object_recognized  hold, l1
- 34  object_recognized  hold, l2
- 35  object_recognized  hold, l3
- 36  object_recognized  hold, l6
- 37  object_recognized  hold, l5
- 38  object_recognized  hold, l2
- 39  object_recognized  hold, l1
- 40  object_recognized  hold, l2
- 41  object_recognized  hold, l3
- 42  object_recognized  hold, k1
- 43  object_recognized  hold, drop, k3
- 44  object_recognized  k1
- 45  object_recognized  hold, l3
- 46  object_recognized  hold, l2
- 47  object_recognized  hold, l1
- 48  object_recognized  hold, l4
- 49  object_recognized  hold, l1
+  t  inputs                                                          outputs
+---  --------------------------------------------------------------  -----------------
+  0  hold, l1                                                        object_recognized
+  1  hold, l1                                                        object_recognized
+  2  hold, l2                                                        object_recognized
+  3  hold, b2                                                        object_recognized
+  4  hold, l2                                                        object_recognized
+  5  hold, l3                                                        object_recognized
+  6  hold, k1                                                        object_recognized
+  7  hold, drop, k3                                                  object_recognized
+  8  k2, l2, r1                                                      object_recognized
+  9  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 10  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 11  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 12  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 13  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 14  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 15  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 16  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 17  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 18  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 19  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 20  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 21  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 22  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 23  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 24  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 25  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 26  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 27  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 28  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 29  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 30  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 31  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 32  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 33  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 34  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 35  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 36  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 37  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 38  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 39  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 40  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 41  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 42  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 43  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 44  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 45  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 46  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 47  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 48  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized
+ 49  hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1  object_recognized

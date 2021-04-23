@@ -56,9 +56,12 @@ class Persistence:
         return cgg
 
     @staticmethod
-    def load_controller(folder_path: str) -> Controller:
+    def load_controller(folder_path: str, name: str = None) -> Controller:
 
-        file = f"{folder_path}/controller.dat"
+        if name is None:
+            file = f"{folder_path}/controller.dat"
+        else:
+            file = f"{folder_path}/{name}.dat"
 
         file = open(file, 'rb')
         controller = pickle.load(file)

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import itertools
 import random
 from random import choices
 
@@ -12,7 +11,6 @@ import time
 from typing import Tuple, List, Dict, Set
 
 from controller.exceptions import SynthesisTimeout, OutOfMemoryException, UnknownStrixResponse
-from specification import Specification
 from specification.atom import Atom, AtomKind
 from tools.logic import Logic
 from tools.strings import StringMng
@@ -28,7 +26,7 @@ class Controller:
 
     def __init__(self,
                  mealy_machine: str,
-                 world: World,
+                 world: World = None,
                  name: str = None):
 
         if name is None:
@@ -114,7 +112,6 @@ class Controller:
                 self.__current_location = list(o.typeset.values())[0]
         return selected_edge, output_choice
 
-
     def simulate_inputs(self, active_probability: int = 0.2) -> Tuple[Atom]:
         inputs_assignment = []
         for input, values in self.__inputs_ap.items():
@@ -149,7 +146,6 @@ class Controller:
         """Reset mealy machine"""
         self.__current_state = self.__initial_state
 
-
     # def all_inputs_combinations(self) -> List[Tuple[Atom]]:
     #     binary_assignments = list(itertools.product([True, False], repeat=len(self.input_alphabet)))
     #     inputs_assignments = []
@@ -162,7 +158,6 @@ class Controller:
     #                 inputs.append(self.__inputs_ap[input][1])
     #         inputs_assignments.append(tuple(inputs))
     #     return inputs_assignments
-
 
     def get_all_outputs_from_state(self, state: str) -> List[Tuple[Tuple[Atom]]]:
         if state == self.__initial_state:
@@ -192,12 +187,18 @@ class Controller:
         inputs_str: List[str] = StringMng.get_inputs_from_kiss(value)
         self.__input_alphabet: List[Boolean] = []
         for input in inputs_str:
-            self.__input_alphabet.append(self.world[input])
+            if self.world is not None:
+                self.__input_alphabet.append(self.world[input])
+            else:
+                self.__input_alphabet.append(Boolean(input))
 
         outputs_str: List[str] = StringMng.get_outputs_from_kiss(value)
         self.__output_alphabet: List[Boolean] = []
         for output in outputs_str:
-            self.__output_alphabet.append(self.world[output])
+            if self.world is not None:
+                self.__output_alphabet.append(self.world[output])
+            else:
+                self.__output_alphabet.append(Boolean(output))
 
         """For each input and variables, returns the AP tuple corresponding to its true/false/dontcare assignment"""
         self.__inputs_ap: Dict[Boolean, Tuple[Atom, Atom, Atom]] = {}
