@@ -10,7 +10,7 @@ world = CaseStudy()
 
 path = os.path.abspath(os.path.dirname(__file__))
 
-controller_name = "good_0"
+controller_name = "test_0"
 
 a, g, i, o = StringMng.parse_controller_specification_from_file(f"{path}/{controller_name}.txt")
 realizable, dot_format, kiss_format, exec_time = Controller.generate_controller(a, g, i, o)
