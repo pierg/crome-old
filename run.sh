@@ -9,18 +9,8 @@ else
         -h|--help)
           echo "options:"
           echo "-h, --help                show brief help"
-          echo "-c,                       launch clustering with default input"
-          echo "-m,                       launch mapping with default input"
-          exit 0
-          ;;
-        -c)
-          echo "Launching CROME..."
-          echo "Copying custom input file if exists..."
-          cp /home/crome_specifications.py /home/cogomo/
-          echo "Launching clustering..."
-          python3 ./run_crome.py
-          echo "Process finished, results avilable"
-          echo "Clustering finished, exiting..."
+          echo "-e,                       do not launch anything"
+          echo "-m,                       launch web-server"
           exit 0
           ;;
         -e)

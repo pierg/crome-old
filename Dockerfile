@@ -6,7 +6,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 COPY bin/ubuntu_19_10/updated/strix /usr/local/bin
 COPY bin/ubuntu_19_10/owl.jar /usr/local/bin
 RUN chmod +x /usr/local/bin/strix
-
 COPY bin/linux/nuXmv /usr/local/bin
 RUN chmod +x /usr/local/bin/nuXmv
 
@@ -85,11 +84,11 @@ RUN git clone -b master --single-branch https://github.com/pierg/cogomo.git
 
 RUN python3 -m pip install --user --upgrade pip
 
-WORKDIR /home/cogomo
+WORKDIR /home/crome
 
 
 RUN pip3 install -r requirements.txt
 
-ENV PYTHONPATH "${PYTHONPATH}:/home/cogomo:/home/cogomo/src:/home/cogomo:/home/cogomo/output:/home/cogomo/missions:/home/cogomo/src/z3"
+ENV PYTHONPATH "${PYTHONPATH}:/home/crome/src"
 
 ENTRYPOINT ["./entrypoint.sh"]
