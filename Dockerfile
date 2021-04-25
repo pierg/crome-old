@@ -43,15 +43,15 @@ WORKDIR /home/crome/dependencies/ubuntu_21_04
 # Extract dependencies and install Strix and nuXmV
 RUN unzip strix_bin.zip
 RUN unzip nuXmv_bin.zip
-RUN mv /home/crome/dependencies/bin/libowl.so /usr/bin
-RUN mv /home/crome/dependencies/bin/strix /usr/bin
+RUN mv /home/crome/dependencies/ubuntu_21_04/bin/libowl.so /usr/bin
+RUN mv /home/crome/dependencies/ubuntu_21_04/bin/strix /usr/bin
 
 # Export Library
 ENV LD_LIBRARY_PATH="/usr/bin"
 RUN export LD_LIBRARY_PATH
 
 # Copy Compiled NuXmv
-RUN mv /home/crome/dependencies/nuXmv /usr/bin
+RUN mv /home/crome/dependencies/ubuntu_21_04/nuXmv /usr/bin
 RUN chmod +x /usr/bin/nuXmv
 
 
