@@ -1,4 +1,3 @@
-# Generate Files
 if [ $# -eq 0 ]
   then
     echo "No parameters provided. Launching bash"
@@ -9,15 +8,10 @@ else
         -h|--help)
           echo "options:"
           echo "-h, --help                show brief help"
-          echo "-e,                       do not launch anything"
-          echo "-m,                       launch web-server"
+          echo "-w,                       launch web-server"
           exit 0
           ;;
-        -e)
-          echo "Waiting for commands..."
-          break
-          ;;
-         -w)
+        -w)
           echo "Launching the web-server..."
           python3 ./web/webapp.py
           ;;

@@ -6,7 +6,7 @@ FROM ubuntu:21.04
 
 RUN apt-get -qq -y update && \
     DEBIAN_FRONTEND=noninteractive apt-get -qq -y install \
-    software-properties-common
+        software-properties-common
 RUN add-apt-repository ppa:openjdk-r/ppa
 
 RUN apt-get -qq -y update && \
@@ -33,7 +33,7 @@ COPY . /home/crome/
 WORKDIR /home/crome/dependencies/ubuntu_21_04
 
 ## Install GraalVM and compile Strix from source
-## TODO: place graalvm-ce-java11-linux-amd64-21.1.0.tar.gz and strix_source.zip in /home/crome/dependencies/ubuntu_21_04
+## Place graalvm-ce-java11-linux-amd64-21.1.0.tar.gz and strix_source.zip in /home/crome/dependencies/ubuntu_21_04
 #RUN tar -xf graalvm-ce-java11-linux-amd64-21.1.0.tar.gz
 #RUN unzip strix_source.zip
 #RUN mv graalvm-ce-java11-21.1.0 java-11-graalvm
