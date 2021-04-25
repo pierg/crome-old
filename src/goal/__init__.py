@@ -15,6 +15,7 @@ from specification.atom.pattern.basic import GF
 from specification.formula import FormulaOutput
 from tools.storage import Store
 from tools.strings import StringMng
+from tools.strix import Strix
 from type import Boolean
 from worlds import World
 
@@ -163,14 +164,14 @@ class Goal:
             a, g, i, o = controller_info.get_strix_inputs()
             controller_synthesis_input = StringMng.get_controller_synthesis_str(controller_info)
             Store.save_to_file(controller_synthesis_input, "controller.txt", folder_name)
-            realized, dot_mealy, kiss_mealy, time = Controller.generate_controller(a, g, i, o)
+            realized, dot_mealy, kiss_mealy, time = Strix.generate_controller(a, g, i, o)
 
             if not realized:
                 controller_info = self.specification.get_controller_info(world_ts=self.__world)
                 a, g, i, o = controller_info.get_strix_inputs()
                 controller_synthesis_input = StringMng.get_controller_synthesis_str(controller_info)
                 Store.save_to_file(controller_synthesis_input, "controller.txt", folder_name)
-                realized, dot_mealy, kiss_mealy, time = Controller.generate_controller(a, g, i, o)
+                realized, dot_mealy, kiss_mealy, time = Strix.generate_controller(a, g, i, o)
 
             self.__realizable = realized
             self.__time_synthesis = time

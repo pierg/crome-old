@@ -23,6 +23,8 @@ from type import Types, Boolean
 from type.subtypes.locations import ReachLocation
 from typeset import Typeset
 from worlds import World
+from tools.strix import Strix
+
 
 
 class Link(Enum):
@@ -362,7 +364,7 @@ class Node(Goal):
                 controller_synthesis_input = StringMng.get_controller_synthesis_str(controller_info)
                 Store.save_to_file(controller_synthesis_input,
                                    f"t_controller_{start.name}_{finish.name}_specs.txt", folder_name)
-                realized, dot_mealy, kiss_mealy, time = Controller.generate_controller(a, g, i, o)
+                realized, dot_mealy, kiss_mealy, time = Strix.generate_controller(a, g, i, o)
                 if realized:
                     realizable = True
                     break

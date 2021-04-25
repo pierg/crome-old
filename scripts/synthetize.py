@@ -3,13 +3,15 @@ from controller import Controller
 from tools.persistence import Persistence
 from tools.storage import Store
 from tools.strings import StringMng
+from tools.strix import Strix
+
 
 path = os.path.abspath(os.path.dirname(__file__))
 
 controller_name = sys.argv[0]
 
 a, g, i, o = StringMng.parse_controller_specification_from_file(f"{path}/controllers/{controller_name}.txt")
-realizable, dot_format, kiss_format, exec_time = Controller.generate_controller(a, g, i, o)
+realizable, dot_format, kiss_format, exec_time = Strix.generate_controller(a, g, i, o)
 controller = Controller(mealy_machine=kiss_format)
 
 Persistence.dump_controller(controller, path, controller_name)
