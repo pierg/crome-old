@@ -23,7 +23,7 @@ class Strix:
             str: mealy machine of the controller (if found) or of the counter-examples if not found in dot format
             float: indicating the controller time"""
 
-        global command_dot, timeout
+        global command, timeout
 
         """Fix syntax"""
         assumptions = StringMng.strix_syntax_fix(assumptions)
@@ -31,9 +31,9 @@ class Strix:
 
         try:
             if ins == "":
-                strix_specs = Logic.implies_(assumptions, guarantees) + '" --outs="' + outs + '"'
+                strix_specs = f'-f "{Logic.implies_(assumptions, guarantees)}" --outs="{outs}"'
             else:
-                strix_specs = Logic.implies_(assumptions, guarantees) + '" --ins="' + ins + '" --outs="' + outs + '"'
+                strix_specs = f'-f "{Logic.implies_(assumptions, guarantees)}" --ins="{ins}" --outs="{outs}"'
 
             if platform.system() != "Linux":
                 strix_bin = "docker run lazkany/strix "
@@ -42,10 +42,10 @@ class Strix:
 
             if kiss:
                 """Kiss format"""
-                command = f"{strix_bin} --kiss -f {strix_specs}"
+                command = f"{strix_bin} --kiss {strix_specs}"
             else:
                 """Dot format"""
-                command = f"{strix_bin} --dot -f {strix_specs}"
+                command = f"{strix_bin} --dot {strix_specs}"
 
             timeout = 3600
             print("\n\nRUNNING COMMAND:\n\n" + command + "\n\n")
@@ -54,9 +54,9 @@ class Strix:
                                                   encoding='UTF-8').splitlines()
 
         except subprocess.TimeoutExpired:
-            raise SynthesisTimeout(command=command_dot, timeout=timeout)
+            raise SynthesisTimeout(command=command, timeout=timeout)
         except Exception as e:
-            raise UnknownStrixResponse(command=command_dot, response=e.__str__())
+            raise UnknownStrixResponse(command=command, response=e.__str__())
 
         exec_time = time.time() - start_time
 
@@ -65,7 +65,9 @@ class Strix:
         elif "UNREALIZABLE" in result:
             realizable = False
         else:
-            raise UnknownStrixResponse(command=command_dot, response="\n".join(result))
+            raise UnknownStrixResponse(command=command, response="\n".join(result))
+
+        processed_return = ""
 
         if kiss:
             for i, line in enumerate(result):
