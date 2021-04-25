@@ -4,8 +4,9 @@ FROM ubuntu:21.04
 #    apt-get install -y software-properties-common && \
 #    rm -rf /var/lib/apt/lists/*
 
-
-RUN apt-get update && apt-get install -y software-properties-common
+RUN apt-get -qq -y update && \
+    DEBIAN_FRONTEND=noninteractive apt-get -qq -y install \
+    software-properties-common
 RUN add-apt-repository ppa:openjdk-r/ppa
 
 RUN apt-get -qq -y update && \
