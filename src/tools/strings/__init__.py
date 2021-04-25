@@ -9,6 +9,13 @@ from tools.logic import Logic
 
 
 class StringMng:
+    ASSUMPTIONS_HEADER = '**ASSUMPTIONS**'
+    GUARANTEES_HEADER = '**GUARANTEES**'
+    INS_HEADER = '**INPUTS**'
+    OUTS_HEADER = '**OUTPUTS**'
+    END_HEADER = '**END**'
+    HEADER_SYMBOL = '**'
+    DATA_INDENT = 0
 
     @staticmethod
     def get_name_and_id(value: str = None) -> Tuple[str, str]:
@@ -43,37 +50,37 @@ class StringMng:
         ret = ""
 
         if len(controller_info.assumptions) > 0:
-            ret += "ASSUMPTIONS\n\n"
+            ret += f"{StringMng.ASSUMPTIONS_HEADER}\n\n"
             for p in controller_info.assumptions:
-                ret += "\t" + StringMng.strix_syntax_fix(p) + "\n"
+                ret += "\t" * StringMng.DATA_INDENT + StringMng.strix_syntax_fix(p) + "\n"
 
         if len(controller_info.a_liveness) > 0:
             for p in controller_info.a_liveness:
-                ret += "\t" + StringMng.strix_syntax_fix(p) + "\n"
+                ret += "\t" * StringMng.DATA_INDENT + StringMng.strix_syntax_fix(p) + "\n"
 
         if len(controller_info.a_mutex) > 0:
             for p in controller_info.a_mutex:
-                ret += "\t" + StringMng.strix_syntax_fix(p) + "\n"
+                ret += "\t" * StringMng.DATA_INDENT + StringMng.strix_syntax_fix(p) + "\n"
 
-        ret += "\n\nGUARANTEES\n\n"
+        ret += f"\n\n{StringMng.GUARANTEES_HEADER}\n\n"
         for p in controller_info.guarantees:
-            ret += "\t" + StringMng.strix_syntax_fix(p) + "\n"
+            ret += "\t" * StringMng.DATA_INDENT + StringMng.strix_syntax_fix(p) + "\n"
 
         if len(controller_info.g_mutex) > 0:
             for p in controller_info.g_mutex:
-                ret += "\t" + StringMng.strix_syntax_fix(p) + "\n"
+                ret += "\t" * StringMng.DATA_INDENT + StringMng.strix_syntax_fix(p) + "\n"
 
         if len(controller_info.g_adjacency) > 0:
             for p in controller_info.g_adjacency:
-                ret += "\t" + StringMng.strix_syntax_fix(p) + "\n"
+                ret += "\t" * StringMng.DATA_INDENT + StringMng.strix_syntax_fix(p) + "\n"
 
-        ret += "\n\nINPUTS\n\n"
-        ret += "\t" + ", ".join(controller_info.inputs)
+        ret += f"\n\n{StringMng.INS_HEADER}\n\n"
+        ret += "\t" * StringMng.DATA_INDENT + ", ".join(controller_info.inputs)
 
-        ret += "\n\nOUTPUTS\n\n"
-        ret += "\t" + ", ".join(controller_info.outputs)
+        ret += f"\n\n{StringMng.OUTS_HEADER}\n\n"
+        ret += "\t" * StringMng.DATA_INDENT + ", ".join(controller_info.outputs)
 
-        ret += "\n\nEND\n\n"
+        ret += f"\n\n{StringMng.END_HEADER}\n\n"
 
         return ret
 
@@ -105,14 +112,6 @@ class StringMng:
     def parse_controller_specification_from_file(file_path: str) -> Tuple[str, str, str, str]:
         """Returns: assumptions, guarantees, inputs, outputs"""
 
-        ASSUMPTIONS_HEADER = 'ASSUMPTIONS'
-        GUARANTEES_HEADER = 'GUARANTEES'
-        INS_HEADER = 'INPUTS'
-        OUTS_HEADER = 'OUTPUTS'
-        END_HEADER = 'END'
-        FILE_HEADER_INDENT = 0
-        DATA_INDENT = 1
-
         assumptions = []
         guarantees = []
         inputs = []
@@ -122,41 +121,41 @@ class StringMng:
 
         with open(file_path, 'r') as ifile:
             for line in ifile:
-                line, ntabs = StringMng._count_line(line)
+                line, header = StringMng._check_header(line)
 
                 # skip empty lines
                 if not line:
                     continue
 
                 # parse file header line
-                elif ntabs == FILE_HEADER_INDENT:
+                elif header:
 
-                    if ASSUMPTIONS_HEADER == line:
+                    if StringMng.ASSUMPTIONS_HEADER == line:
                         if file_header == "":
                             file_header = line
                         else:
                             Exception("File format not supported")
 
-                    elif GUARANTEES_HEADER == line:
-                        if file_header == ASSUMPTIONS_HEADER:
+                    elif StringMng.GUARANTEES_HEADER == line:
+                        if file_header == StringMng.ASSUMPTIONS_HEADER:
                             file_header = line
                         else:
                             Exception("File format not supported")
 
-                    elif INS_HEADER == line:
-                        if file_header == GUARANTEES_HEADER:
+                    elif StringMng.INS_HEADER == line:
+                        if file_header == StringMng.GUARANTEES_HEADER:
                             file_header = line
                         else:
                             Exception("File format not supported")
 
-                    elif OUTS_HEADER == line:
-                        if file_header == INS_HEADER:
+                    elif StringMng.OUTS_HEADER == line:
+                        if file_header == StringMng.INS_HEADER:
                             file_header = line
                         else:
                             Exception("File format not supported")
 
-                    elif END_HEADER == line:
-                        if file_header == OUTS_HEADER:
+                    elif StringMng.END_HEADER == line:
+                        if file_header == StringMng.OUTS_HEADER:
                             if len(assumptions) == 0:
                                 assumptions.append("true")
                             return Logic.and_(assumptions), Logic.and_(guarantees), ",".join(inputs), ",".join(outputs)
@@ -167,21 +166,17 @@ class StringMng:
 
                 else:
 
-                    if ASSUMPTIONS_HEADER == file_header:
-                        if ntabs == DATA_INDENT:
-                            assumptions.append(line.strip())
+                    if StringMng.ASSUMPTIONS_HEADER == file_header:
+                        assumptions.append(line.strip())
 
-                    if GUARANTEES_HEADER == file_header:
-                        if ntabs == DATA_INDENT:
-                            guarantees.append(line.strip())
+                    if StringMng.GUARANTEES_HEADER == file_header:
+                        guarantees.append(line.strip())
 
-                    if INS_HEADER == file_header:
-                        if ntabs == DATA_INDENT:
-                            inputs.append(line.strip())
+                    if StringMng.INS_HEADER == file_header:
+                        inputs.append(line.strip())
 
-                    if OUTS_HEADER == file_header:
-                        if ntabs == DATA_INDENT:
-                            outputs.append(line.strip())
+                    if StringMng.OUTS_HEADER == file_header:
+                        outputs.append(line.strip())
 
     @staticmethod
     def _count_line(line):
@@ -201,3 +196,12 @@ class StringMng:
         tab_count += int(space_count / 4)
         line = line.replace('\t', ' ' * TAB_WIDTH)  # replace tabs with spaces
         return line.strip(), tab_count
+
+    @staticmethod
+    def _check_header(line: str) -> Tuple[str, bool]:
+        """Returns a comment-free, tab-replaced line with no whitespace and the number of tabs"""
+        COMMENT_CHAR = '#'
+        line = line.split(COMMENT_CHAR, 1)[0]
+        if line.startswith(StringMng.HEADER_SYMBOL):
+            return line.strip(), True
+        return line.strip(), False
