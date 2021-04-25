@@ -4,11 +4,9 @@ import random
 from random import choices
 
 from tabulate import tabulate
-import time
 from typing import Tuple, List, Dict, Set
 
 from specification.atom import Atom, AtomKind
-from tools.logic import Logic
 from tools.strings import StringMng
 from type import Boolean, TypeKinds
 from type.subtypes.locations import ReachLocation
