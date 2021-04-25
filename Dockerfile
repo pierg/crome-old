@@ -8,8 +8,7 @@ FROM ubuntu:21.04
 RUN apt update &&
     apt install --no-install-recommends -y curl=7.* unzip=6.* maven=3.6.3-1 &&
     apt clean &&
-    rm -rf /var/lib/apt/lists/* &&
-    mkdir -p /usr/share/man/man1
+    rm -rf /var/lib/apt/lists/*
 
 RUN apt-get -qq -y update && \
     DEBIAN_FRONTEND=noninteractive apt-get -qq -y install \
