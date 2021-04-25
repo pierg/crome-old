@@ -164,24 +164,24 @@ class Goal:
             a, g, i, o = controller_info.get_strix_inputs()
             controller_synthesis_input = StringMng.get_controller_synthesis_str(controller_info)
             Store.save_to_file(controller_synthesis_input, "controller.txt", folder_name)
-            realized, dot_mealy, kiss_mealy, time = Strix.generate_controller(a, g, i, o)
+            realized, kiss_mealy, time = Strix.generate_controller(a, g, i, o)
 
             if not realized:
                 controller_info = self.specification.get_controller_info(world_ts=self.__world)
                 a, g, i, o = controller_info.get_strix_inputs()
                 controller_synthesis_input = StringMng.get_controller_synthesis_str(controller_info)
                 Store.save_to_file(controller_synthesis_input, "controller.txt", folder_name)
-                realized, dot_mealy, kiss_mealy, time = Strix.generate_controller(a, g, i, o)
+                realized, kiss_mealy, time = Strix.generate_controller(a, g, i, o)
 
             self.__realizable = realized
             self.__time_synthesis = time
 
             if realized:
                 Store.save_to_file(kiss_mealy, "controller_kiss", folder_name)
-                Store.generate_eps_from_dot(dot_mealy, "controller", folder_name)
+                # Store.generate_eps_from_dot(dot_mealy, "controller", folder_name)
             else:
                 Store.save_to_file(kiss_mealy, "controller_inverted_kiss", folder_name)
-                Store.generate_eps_from_dot(dot_mealy, "controller_inverted", folder_name)
+                # Store.generate_eps_from_dot(dot_mealy, "controller_inverted", folder_name)
 
             self.__controller = Controller(mealy_machine=kiss_mealy, world=self.world, name=self.name)
             print(f"NAME:\t{self.__name} ({self.__id})")

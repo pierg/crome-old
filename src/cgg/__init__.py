@@ -364,7 +364,7 @@ class Node(Goal):
                 controller_synthesis_input = StringMng.get_controller_synthesis_str(controller_info)
                 Store.save_to_file(controller_synthesis_input,
                                    f"t_controller_{start.name}_{finish.name}_specs.txt", folder_name)
-                realized, dot_mealy, kiss_mealy, time = Strix.generate_controller(a, g, i, o)
+                realized, kiss_mealy, time = Strix.generate_controller(a, g, i, o)
                 if realized:
                     realizable = True
                     break
@@ -376,8 +376,8 @@ class Node(Goal):
         else:
             Store.save_to_file(kiss_mealy, f"{start.name}_{finish.name}_mealy",
                                folder_name)
-            Store.generate_eps_from_dot(dot_mealy, f"{start.name}_{finish.name}_dot",
-                                        folder_name)
+            # Store.generate_eps_from_dot(dot_mealy, f"{start.name}_{finish.name}_dot",
+            #                             folder_name)
 
             t_controller = Controller(mealy_machine=kiss_mealy, world=self.world, name=t_controller_name)
             Store.save_to_file(str(t_controller), f"{start.name}_{finish.name}_table", folder_name)
