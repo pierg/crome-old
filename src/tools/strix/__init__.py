@@ -1,5 +1,6 @@
 import subprocess
 import platform
+from typing import Tuple
 
 from tools.logic import Logic
 

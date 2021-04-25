@@ -4,7 +4,8 @@ echo "...updating repository from server..."
 pwd
 git reset --hard HEAD
 git clean -f
-git pull --ff-only
+git config pull.rebase true
+git pull
 
 if [ $# -eq 0 ]
   then
