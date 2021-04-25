@@ -21,7 +21,7 @@ controller = Controller(mealy_machine=kiss_format)
 
 Persistence.dump_controller(controller, path, controller_name)
 
-print("\n~~~MEALY MACHINE~~~\n")
+print("\n~~~MEALY MACHINE~~~\n"+ str(controller))
 Store.save_to_file(str(controller), f"{controller_name}_table.txt", absolute_folder_path=f"{path}")
 
 run = controller.simulate()
