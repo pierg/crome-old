@@ -56,7 +56,7 @@ class Strix:
         except subprocess.TimeoutExpired:
             raise SynthesisTimeout(command=command, timeout=timeout)
         except Exception as e:
-            raise UnknownStrixResponse(command=command, response=e.__str__())
+            raise UnknownStrixResponse(command=command, response=e.output)
 
         exec_time = time.time() - start_time
 

@@ -2,6 +2,7 @@
 # - hold drop not mutex
 # - drop also when it already dropped
 # - no short path
+# - adding G((drop & k3) -> X(! drop)) makes it unrealizable
 
 **ASSUMPTIONS**
 
