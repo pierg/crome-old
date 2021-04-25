@@ -313,7 +313,7 @@ class Node(Goal):
                 self.__t_controllers[(start, finish)] = self.create_transition_controller(start, finish, t_trans_max)
                 self.__t_controllers[(finish, start)] = self.create_transition_controller(finish, start, t_trans_max)
 
-        print(f"{len(self.__t_controllers)} transition controllers generated:")
+        print(f"{len(self.__t_controllers)} transition controller_specs generated:")
         for start, finish in self.__t_controllers.keys():
             print(f"{start.name} -> {finish.name}")
 

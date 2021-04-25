@@ -138,19 +138,6 @@ class Controller:
         """Reset mealy machine"""
         self.__current_state = self.__initial_state
 
-    # def all_inputs_combinations(self) -> List[Tuple[Atom]]:
-    #     binary_assignments = list(itertools.product([True, False], repeat=len(self.input_alphabet)))
-    #     inputs_assignments = []
-    #     for assignment in binary_assignments:
-    #         inputs = []
-    #         for i, input in enumerate(self.input_alphabet):
-    #             if assignment[i]:
-    #                 inputs.append(self.__inputs_ap[input][0])
-    #             else:
-    #                 inputs.append(self.__inputs_ap[input][1])
-    #         inputs_assignments.append(tuple(inputs))
-    #     return inputs_assignments
-
     def get_all_outputs_from_state(self, state: str) -> List[Tuple[Tuple[Atom]]]:
         if state == self.__initial_state:
             self.react(self.simulate_inputs())
@@ -317,4 +304,3 @@ class Controller:
                 if type(t).__name__ == class_name:
                     reachable_locations.append(t)
         return reachable_locations
-

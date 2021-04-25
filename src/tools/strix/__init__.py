@@ -51,7 +51,7 @@ class Strix:
             print("\n\nRUNNING COMMAND:\n\n" + command + "\n\n")
             start_time = time.time()
             result = subprocess.check_output([command], shell=True, timeout=timeout,
-                                                  encoding='UTF-8').splitlines()
+                                             encoding='UTF-8').splitlines()
 
         except subprocess.TimeoutExpired:
             raise SynthesisTimeout(command=command, timeout=timeout)

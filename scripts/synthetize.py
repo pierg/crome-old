@@ -8,11 +8,14 @@ from tools.strix import Strix
 
 path = os.path.abspath(os.path.dirname(__file__))
 
-# controller_name = sys.argv[1]
+if len(sys.argv) > 1:
+    controller_name = sys.argv[1]
+else:
+    controller_name = "0"
 
-controller_name = "0"
+print(f"controller selected: {path}/controller_specs/{controller_name}.txt")
 
-a, g, i, o = StringMng.parse_controller_specification_from_file(f"{path}/controllers/{controller_name}.txt")
+a, g, i, o = StringMng.parse_controller_specification_from_file(f"{path}/controller_specs/{controller_name}.txt")
 realizable, kiss_format, exec_time = Strix.generate_controller(a, g, i, o)
 controller = Controller(mealy_machine=kiss_format)
 
