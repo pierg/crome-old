@@ -6,6 +6,7 @@ from tools.logic import Logic
 
 import time
 
+from tools.strings import StringMng
 from tools.strix.exceptions import *
 
 
@@ -19,6 +20,8 @@ class Strix:
             float: indicating the controller time"""
 
         global command_dot, timeout
+        assumptions = StringMng.strix_syntax_fix(assumptions)
+        guarantees = StringMng.strix_syntax_fix(guarantees)
         try:
             if ins == "":
                 strix_specs = Logic.implies_(assumptions, guarantees) + '" --outs="' + outs + '"'
@@ -33,7 +36,7 @@ class Strix:
                 command_kiss = docker_command + docker_params_kiss
             else:
                 params_dot = ' -k --dot -f "' + strix_specs
-                params_kiss = ' -k --kiss -f "' + strix_specs
+                params_kiss = ' --dot --kiss -f "' + strix_specs
                 command_dot = "strix" + params_dot
                 command_kiss = "strix" + params_kiss
             timeout = 3600
