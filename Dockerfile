@@ -1,7 +1,7 @@
 FROM ubuntu:21.04
 
-#RUN apt-get update && \
-#    apt-get install -y software-properties-common && \
+#RUN apt update && \
+#    apt install -y software-properties-common && \
 #    rm -rf /var/lib/apt/lists/*
 
 
@@ -10,13 +10,13 @@ RUN apt update &&
     apt clean &&
     rm -rf /var/lib/apt/lists/*
 
-RUN apt-get -qq -y update && \
-    DEBIAN_FRONTEND=noninteractive apt-get -qq -y install \
+RUN apt -qq -y update && \
+    DEBIAN_FRONTEND=noninteractive apt -qq -y install \
         software-properties-common
 RUN add-apt-repository ppa:openjdk-r/ppa
 
-RUN apt-get -qq -y update && \
-    DEBIAN_FRONTEND=noninteractive apt-get -qq -y install \
+RUN apt -qq -y update && \
+    DEBIAN_FRONTEND=noninteractive apt -qq -y install \
         g++ \
         cmake \
         make \
@@ -76,8 +76,8 @@ RUN apt -y update && DEBIAN_FRONTEND=noninteractive && \
 
 # Install CROME Dependencies
 # Install Python 3
-RUN apt-get update \
-      && apt-get install -y python3-pip python3-dev \
+RUN apt update \
+      && apt install -y python3-pip python3-dev \
       && cd /usr/local/bin \
       && ln -s /usr/bin/python3 python \
       && pip3 --no-cache-dir install --upgrade pip \
