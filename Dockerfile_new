@@ -1,0 +1,104 @@
+FROM ubuntu:21.04
+
+USER root
+WORKDIR /root
+
+
+RUN apt-get update && \
+    apt-get install -y software-properties-common && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN add-apt-repository ppa:openjdk-r/ppa
+
+RUN apt-get -qq -y update && \
+    DEBIAN_FRONTEND=noninteractive apt-get -qq -y install \
+        gcc \
+        g++ \
+        cmake \
+        libboost-dev \
+        libboost-program-options-dev \
+        libboost-filesystem-dev \
+        libboost-iostreams-dev \
+        zlib1g-dev \
+        openjdk-13-jdk \
+        unzip \
+        wget \
+        curl \
+        git \
+        make \
+        sudo \
+        bash-completion \
+        tree \
+        vim \
+        software-properties-common && \
+    mv /usr/bin/lsb_release /usr/bin/lsb_release.bak && \
+    apt-get -y autoclean && \
+    apt-get -y autoremove && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Python 3
+RUN apt-get update \
+      && apt-get install -y python3-pip python3-dev \
+      && cd /usr/local/bin \
+      && ln -s /usr/bin/python3 python \
+      && pip3 --no-cache-dir install --upgrade pip \
+      && rm -rf /var/lib/apt/lists/*
+
+# Enable tab completion by uncommenting it from /etc/bash.bashrc
+# The relevant lines are those below the phrase "enable bash completion in interactive shells"
+RUN export SED_RANGE="$(($(sed -n '\|enable bash completion in interactive shells|=' /etc/bash.bashrc)+1)),$(($(sed -n '\|enable bash completion in interactive shells|=' /etc/bash.bashrc)+7))" && \
+    sed -i -e "${SED_RANGE}"' s/^#//' /etc/bash.bashrc && \
+    unset SED_RANGE
+
+# Create user "crome" with sudo powers
+RUN useradd -m crome && \
+    usermod -aG sudo crome && \
+    echo '%sudo ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers && \
+    cp /root/.bashrc /home/crome/ && \
+    chown -R --from=root crome /home/crome
+
+# Use C.UTF-8 locale to avoid issues with ASCII encoding
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
+
+WORKDIR /home/crome
+ENV HOME /home/crome
+ENV USER crome
+USER crome
+ENV PATH /home/crome/.local/bin:$PATH
+
+# Avoid first use of sudo warning. c.f. https://askubuntu.com/a/22614/781671
+RUN touch $HOME/.sudo_as_admin_successful
+
+
+# Copy dependencies
+RUN mkdir /home/crome/dependencies
+COPY dependencies/strix.zip /home/crome/dependencies/
+COPY dependencies/nuXmv /home/crome/dependencies/
+COPY dependencies/graalvm-ce-java11-linux-amd64-21.1.0.tar.gz /home/crome/dependencies/
+
+## Install GraalVM
+WORKDIR /home/crome/dependencies
+RUN sudo tar -xf graalvm-ce-java11-linux-amd64-21.1.0.tar.gz
+RUN sudo mv graalvm-ce-java11-21.1.0 java-11-graalvm
+RUN sudo mv ./java-11-graalvm /usr/lib/jvm/
+RUN sudo /usr/lib/jvm/java-11-graalvm/bin/gu install native-image
+
+### Compile Strix
+RUN sudo unzip strix.zip
+WORKDIR /home/crome/dependencies/strix
+RUN sudo make
+
+#WORKDIR /home/crome/dependencies/strix-master
+
+
+## Install NuXmv
+#RUN sudo cp nuXmv /usr/local/bin
+#RUN sudo chmod +x /usr/local/bin/nuXmv
+
+
+
+WORKDIR /home/crome
+
+
+CMD [ "/bin/bash" ]

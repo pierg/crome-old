@@ -1,55 +1,62 @@
-FROM ubuntu:19.10
-
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Istall binary files of strix and nuXmv
-COPY bin/ubuntu_19_10/updated/strix /usr/local/bin
-COPY bin/ubuntu_19_10/owl.jar /usr/local/bin
-RUN chmod +x /usr/local/bin/strix
-COPY bin/linux/nuXmv /usr/local/bin
-RUN chmod +x /usr/local/bin/nuXmv
+FROM ubuntu:21.04
 
 
-# Install keyboard-configuration separately to avoid travis hanging waiting for keyboard selection
-RUN \
-    apt -y update && \
-    apt install -y keyboard-configuration
+RUN apt-get update && \
+    apt-get install -y software-properties-common && \
+    rm -rf /var/lib/apt/lists/*
 
-# Install general things
-RUN \
-    apt install -y \
-        git \
-        unzip \
-        nano \
-        wget \
-        gnupg2 \
-        tzdata
+RUN add-apt-repository ppa:openjdk-r/ppa
 
-
-
-RUN apt update
-RUN \
-    apt install -y \
+RUN apt-get -qq -y update && \
+    DEBIAN_FRONTEND=noninteractive apt-get -qq -y install \
+        g++ \
         cmake \
-        make\
+        make \
         libboost-dev \
         libboost-program-options-dev \
         libboost-filesystem-dev \
         libboost-iostreams-dev \
         zlib1g-dev \
-        default-jre \
-        openjdk-13-jdk
+        openjdk-13-jdk \
+        unzip \
+        git \
+        wget
 
 
-# Install CoGoMo dependencies
-RUN \
-    apt install -y \
-        python3-pip \
-        python3-dev
+# Copy repository with dependencies
+
+RUN mkdir /home/crome/
+COPY . /home/crome/
+
+WORKDIR /home/crome/dependencies/ubuntu_21_04
+
+## Install GraalVM and compile Strix from source
+## TODO: place graalvm-ce-java11-linux-amd64-21.1.0.tar.gz and strix_source.zip in /home/crome/dependencies/ubuntu_21_04
+#RUN tar -xf graalvm-ce-java11-linux-amd64-21.1.0.tar.gz
+#RUN unzip strix_source.zip
+#RUN mv graalvm-ce-java11-21.1.0 java-11-graalvm
+#RUN mv ./java-11-graalvm /usr/lib/jvm/
+#RUN /usr/lib/jvm/java-11-graalvm/bin/gu install native-image
+#WORKDIR /home/dependencies/ubuntu_21_04/strix
+#RUN make
+
+# Extract dependencies and install Strix and nuXmV
+RUN unzip strix_bin.zip
+RUN unzip nuXmv_bin.zip
+RUN mv /home/crome/dependencies/bin/libowl.so /usr/bin
+RUN mv /home/crome/dependencies/bin/strix /usr/bin
+
+# Export Library
+ENV LD_LIBRARY_PATH="/usr/bin"
+RUN export LD_LIBRARY_PATH
+
+# Copy Compiled NuXmv
+RUN mv /home/crome/dependencies/nuXmv /usr/bin
+RUN chmod +x /usr/bin/nuXmv
 
 
-# Needed for spot
-RUN wget -q -O - https://www.lrde.epita.fr/repo/debian.gpg | apt-key add -
+# Installing SPOT
+=RUN wget -q -O - https://www.lrde.epita.fr/repo/debian.gpg | apt-key add -
 RUN echo 'deb http://www.lrde.epita.fr/repo/debian/ stable/' >> /etc/apt/sources.list
 
 RUN apt -y update && DEBIAN_FRONTEND=noninteractive && \
@@ -58,34 +65,17 @@ RUN apt -y update && DEBIAN_FRONTEND=noninteractive && \
     libspot-dev \
     spot-doc
 
-# Installing Docker (to run strix)
-RUN \
-    apt install -y \
-        apt-transport-https \
-        ca-certificates \
-        curl \
-        software-properties-common
-RUN -fsSL https://download.docker.com/linux/ubuntu/gpg
-RUN apt-key add -
-RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic test"
-RUN apt update
-RUN apt install docker-ce
-RUN docker pull lazkany/strix
 
-
-RUN \
-    apt clean && \
-    rm -rf /var/lib/apt/lists/*
-
-
-WORKDIR /home
-
-RUN git clone -b master --single-branch https://github.com/pierg/cogomo.git
-
-RUN python3 -m pip install --user --upgrade pip
+# Install CROME Dependencies
+# Install Python 3
+RUN apt-get update \
+      && apt-get install -y python3-pip python3-dev \
+      && cd /usr/local/bin \
+      && ln -s /usr/bin/python3 python \
+      && pip3 --no-cache-dir install --upgrade pip \
+      && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /home/crome
-
 
 RUN pip3 install -r requirements.txt
 
