@@ -1,5 +1,6 @@
 import subprocess
 from typing import List, Tuple
+import platform
 
 from tools.logic import Logic
 from type import Boolean, BoundedInteger
@@ -53,8 +54,14 @@ class Nuxmv:
             ofile.write('\n')
 
         try:
-            output = subprocess.check_output(['nuXmv', smvfile], encoding='UTF-8',
-                                             stderr=subprocess.DEVNULL).splitlines()
+            if platform.system() != "Linux":
+                command = f"nuXmv {smvfile}"
+                output = subprocess.check_output([command], shell=True, encoding='UTF-8',
+                                                 stderr=subprocess.DEVNULL).splitlines()
+            else:
+                output = subprocess.check_output(['nuXmv', smvfile], encoding='UTF-8',
+                                                 stderr=subprocess.DEVNULL).splitlines()
+
             output = [x for x in output if not (x[:3] == '***' or x[:7] == 'WARNING' or x == '')]
             for line in output:
                 if line[:16] == '-- specification':

@@ -36,7 +36,7 @@ class Strix:
                 strix_specs = f'-f "{Logic.implies_(assumptions, guarantees)}" --ins="{ins}" --outs="{outs}"'
 
             if platform.system() != "Linux":
-                strix_bin = "docker run lazkany/strix "
+                strix_bin = "docker run pmallozzi/ltltools strix"
             else:
                 strix_bin = "strix "
 
