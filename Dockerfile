@@ -10,16 +10,16 @@ FROM ubuntu:21.04
 #    apt clean && \
 #    rm -rf /var/lib/apt/lists/*
 #
-RUN apt -qq -y update && \
-    DEBIAN_FRONTEND=noninteractive apt -y install \
-        tzdata \
-        software-properties-common
+#RUN apt -qq -y update && \
+#    DEBIAN_FRONTEND=noninteractive apt -y install \
+#        tzdata \
+#        software-properties-common
 
 
 
 
 #RUN DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata software-properties-common
-RUN add-apt-repository ppa:openjdk-r/ppa
+#RUN add-apt-repository ppa:openjdk-r/ppa
 
 
 RUN apt -qq -y update && \
@@ -32,7 +32,6 @@ RUN apt -qq -y update && \
         libboost-filesystem-dev \
         libboost-iostreams-dev \
         zlib1g-dev \
-        openjdk-13-jdk \
         unzip \
         git \
         wget
