@@ -15,6 +15,10 @@ else
           echo "Launching the web-server..."
           python3 ./web/webapp.py
           ;;
+        -s)
+          echo "Going to scripts folder..."
+          cd scripts
+          ;;
         *)
           break
           ;;

@@ -11,7 +11,7 @@ path = os.path.abspath(os.path.dirname(__file__))
 if len(sys.argv) > 1:
     controller_name = sys.argv[1]
 else:
-    controller_name = "2"
+    controller_name = "0"
 
 print(f"controller selected: {path}/controller_specs/{controller_name}.txt")
 
