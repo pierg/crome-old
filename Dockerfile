@@ -10,12 +10,15 @@ FROM ubuntu:21.04
 #    apt clean && \
 #    rm -rf /var/lib/apt/lists/*
 #
-#RUN apt -qq -y update && \
-#    DEBIAN_FRONTEND=noninteractive apt -qq -y install \
-#        software-properties-common
+RUN apt -qq -y update && \
+    DEBIAN_FRONTEND=noninteractive apt -y install \
+        tzdata \
+        software-properties-common
 
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata software-properties-common
+
+
+#RUN DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata software-properties-common
 RUN add-apt-repository ppa:openjdk-r/ppa
 
 
