@@ -19,11 +19,11 @@ a, g, i, o = StringMng.parse_controller_specification_from_file(f"{path}/control
 realizable, kiss_format, exec_time = Strix.generate_controller(a, g, i, o)
 controller = Controller(mealy_machine=kiss_format)
 
-Persistence.dump_controller(controller, path, controller_name)
+Persistence.dump_controller(controller, f"{path}/controller_specs", controller_name)
 
 print("\n~~~MEALY MACHINE~~~\n"+ str(controller))
-Store.save_to_file(str(controller), f"{controller_name}_table.txt", absolute_folder_path=f"{path}")
+Store.save_to_file(str(controller), f"{controller_name}_table.txt", absolute_folder_path=f"{path}/controller_specs")
 
 run = controller.simulate()
 print("\n\n\n~~~SIMULATION OF A RUN~~~\n" + run)
-Store.save_to_file(str(run), f"{controller_name}_run.txt", absolute_folder_path=f"{path}")
+Store.save_to_file(str(run), f"{controller_name}_run.txt", absolute_folder_path=f"{path}/controller_specs")

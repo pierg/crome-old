@@ -12,7 +12,7 @@ else:
 
 print(f"controller selected: {path}/controller_specs/{controller_name}.txt")
 
-controller = Persistence.load_controller(folder_path=path, name=controller_name)
+controller = Persistence.load_controller(folder_path=f"{path}/controller_specs", name=controller_name)
 
 print(controller)
 run = controller.simulate()
