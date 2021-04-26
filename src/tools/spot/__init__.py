@@ -1,7 +1,6 @@
 import subprocess
 from tools.storage import Store
-
-
+import platform
 
 class Spot:
 
@@ -11,8 +10,16 @@ class Spot:
 
             print(f"Generating Buchi for...\n{specification}")
 
-            result = subprocess.check_output(["ltl2tgba", "-B", specification, "-d"], encoding='UTF-8',
-                                             stderr=subprocess.DEVNULL).splitlines()
+
+            if platform.system() != "Linux":
+                command = f"ltl2tgba -B {specification} -d"
+                result = subprocess.check_output([command], shell=True, encoding='UTF-8',
+                                                 stderr=subprocess.DEVNULL).splitlines()
+            else:
+                result = subprocess.check_output(["ltl2tgba", "-B", specification, "-d"], encoding='UTF-8',
+                                                 stderr=subprocess.DEVNULL).splitlines()
+
+
 
             result = [x for x in result if not ('[Büchi]' in x)]
             result = "".join(result)
