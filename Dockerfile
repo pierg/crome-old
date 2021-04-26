@@ -5,15 +5,19 @@ FROM ubuntu:21.04
 #    rm -rf /var/lib/apt/lists/*
 
 
-RUN apt update && \
-    apt install --no-install-recommends -y curl=7.* unzip=6.* maven=3.6.3-1 && \
-    apt clean && \
-    rm -rf /var/lib/apt/lists/*
+#RUN apt update && \
+#    apt install --no-install-recommends -y curl=7.* unzip=6.* maven=3.6.3-1 && \
+#    apt clean && \
+#    rm -rf /var/lib/apt/lists/*
+#
+#RUN apt -qq -y update && \
+#    DEBIAN_FRONTEND=noninteractive apt -qq -y install \
+#        software-properties-common
 
-RUN apt -qq -y update && \
-    DEBIAN_FRONTEND=noninteractive apt -qq -y install \
-        software-properties-common
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata software-properties-common
 RUN add-apt-repository ppa:openjdk-r/ppa
+
 
 RUN apt -qq -y update && \
     DEBIAN_FRONTEND=noninteractive apt -qq -y install \
