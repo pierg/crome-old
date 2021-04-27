@@ -12,7 +12,7 @@ class Spot:
 
 
             if platform.system() != "Linux":
-                command = f"ltl2tgba -B {specification} -d"
+                command = f"docker run pmallozzi/ltltools ltl2tgba -B {specification} -d"
                 result = subprocess.check_output([command], shell=True, encoding='UTF-8',
                                                  stderr=subprocess.DEVNULL).splitlines()
             else:
