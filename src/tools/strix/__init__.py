@@ -31,12 +31,12 @@ class Strix:
 
         try:
             if ins == "":
-                strix_specs = f'-f "{Logic.implies_(assumptions, guarantees)}" --outs="{outs}"'
+                strix_specs = f"-f '{Logic.implies_(assumptions, guarantees)}' --outs='{outs}'"
             else:
-                strix_specs = f'-f "{Logic.implies_(assumptions, guarantees)}" --ins="{ins}" --outs="{outs}"'
+                strix_specs = f"-f '{Logic.implies_(assumptions, guarantees)}' --ins='{ins}' --outs='{outs}'"
 
             if platform.system() != "Linux":
-                strix_bin = "docker run pmallozzi/ltltools strix"
+                strix_bin = "docker run pmallozzi/ltltools strix "
             else:
                 strix_bin = "strix "
 
