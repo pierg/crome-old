@@ -54,12 +54,7 @@ class Nuxmv:
             ofile.write('\n')
 
         try:
-            if platform.system() != "Linux":
-                command = f"nuXmv {smvfile}"
-                output = subprocess.check_output([command], shell=True, encoding='UTF-8',
-                                                 stderr=subprocess.DEVNULL).splitlines()
-            else:
-                output = subprocess.check_output(['nuXmv', smvfile], encoding='UTF-8',
+            output = subprocess.check_output(['nuXmv', smvfile], encoding='UTF-8',
                                                  stderr=subprocess.DEVNULL).splitlines()
 
             output = [x for x in output if not (x[:3] == '***' or x[:7] == 'WARNING' or x == '')]
@@ -107,12 +102,7 @@ class Nuxmv:
             ofile.write('LTLSPEC ' + expression)
 
         try:
-            if platform.system() != "Linux":
-                command = f"nuXmv {smvfile}"
-                output = subprocess.check_output([command], shell=True, encoding='UTF-8',
-                                                 stderr=subprocess.DEVNULL).splitlines()
-            else:
-                output = subprocess.check_output(['nuXmv', smvfile], encoding='UTF-8',
+            output = subprocess.check_output(['nuXmv', smvfile], encoding='UTF-8',
                                                  stderr=subprocess.DEVNULL).splitlines()
             output = [x for x in output if not (x[:3] == '***' or x[:7] == 'WARNING' or x == '')]
             for line in output:
