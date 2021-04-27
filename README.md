@@ -26,6 +26,7 @@ Navigate to the running example folder `cd examples/running_example`
 
 **System requirements Windows or MacOS**
 * python >= 3.7
+* nuXmv
 * docker
 
 **Python packages**
