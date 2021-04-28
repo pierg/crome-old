@@ -5,6 +5,7 @@ from typing import Tuple
 from tools.logic import Logic
 
 import time
+import docker
 
 from tools.strings import StringMng
 from tools.strix.exceptions import *
@@ -50,8 +51,13 @@ class Strix:
             timeout = 3600
             print("\n\nRUNNING COMMAND:\n\n" + command + "\n\n")
             start_time = time.time()
-            result = subprocess.check_output([command], shell=True, timeout=timeout,
-                                             encoding='UTF-8').splitlines()
+            client = docker.from_env()
+            result = client.containers.run(image="pmallozzi/ltltools",
+                                           command="strix --kiss -f '((G(day & active) & G(F(person))) -> (G(((day & active & person) <-> (X(((! (day & active) U day & active & register) | G(! (day & active)))))))))' --ins='person ,day ,active' --outs='register'",
+                                           remove=True)
+            # result = subprocess.check_output(["docker run pmallozzi/ltltools strix"], shell=True, timeout=timeout,
+            # encoding='UTF-8').splitlines()
+            # result = subprocess.check_output([command], shell=True, timeout=timeout, encoding='UTF-8').splitlines()
 
         except subprocess.TimeoutExpired:
             raise SynthesisTimeout(command=command, timeout=timeout)

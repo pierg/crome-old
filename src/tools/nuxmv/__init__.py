@@ -54,7 +54,7 @@ class Nuxmv:
             ofile.write('\n')
 
         try:
-            output = subprocess.check_output(['nuXmv', smvfile], encoding='UTF-8',
+            output = subprocess.check_output(['D:\\Ensicaen\\Stage\\nuXmv\\nuXmv-2.0.0-win64\\bin\\nuXmv.exe', smvfile], encoding='UTF-8',
                                                  stderr=subprocess.DEVNULL).splitlines()
 
             output = [x for x in output if not (x[:3] == '***' or x[:7] == 'WARNING' or x == '')]
