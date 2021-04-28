@@ -51,6 +51,7 @@ class Strix:
             timeout = 3600
             print("\n\nRUNNING COMMAND:\n\n" + command + "\n\n")
             start_time = time.time()
+
             client = docker.from_env()
             result = client.containers.run(image="pmallozzi/ltltools",
                                            command="strix --kiss -f '((G(day & active) & G(F(person))) -> (G(((day & active & person) <-> (X(((! (day & active) U day & active & register) | G(! (day & active)))))))))' --ins='person ,day ,active' --outs='register'",
