@@ -23,6 +23,9 @@ class Store:
 
         output_file = f"{output_folder}/{file_name}"
 
+        output_folder = Path(output_folder)
+        output_file = Path(output_file)
+
         if not os.path.exists(output_folder):
             os.makedirs(output_folder)
 
