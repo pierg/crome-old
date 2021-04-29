@@ -44,6 +44,8 @@ class Store:
         else:
             output_folder = f"{Store.output_folder}"
 
+        output_folder = Path(output_folder)
+
         source = Source(dot_mealy, directory=output_folder, filename=file_name, format="eps")
         source.render(cleanup=True)
         print(f"{output_folder}/{file_name} -> DOT and EPS files generated")
