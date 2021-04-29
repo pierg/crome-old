@@ -54,9 +54,14 @@ class Strix:
                 client = docker.from_env()
                 result = client.containers.run(image=docker_image,
                                                command=command,
-                                               remove=True)
+                                               remove=True).splitlines()
             else:
                 result = subprocess.check_output([command], shell=True, timeout=timeout, encoding='UTF-8').splitlines()
+
+            # result = str(result, 'utf-8')
+            # print("\nRESULT\n")
+            # print(result)
+            # print("\nRESULT\n")
 
         except subprocess.TimeoutExpired:
             raise SynthesisTimeout(command=command, timeout=timeout)
