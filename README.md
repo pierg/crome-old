@@ -32,5 +32,6 @@ Navigate to the running example folder `cd examples/running_example`
 **Python packages**
 * graphviz
 * tabulate
+* docker
 
 

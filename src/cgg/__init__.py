@@ -345,7 +345,7 @@ class Node(Goal):
 
     def create_transition_controller(self, start: Types, finish: Types, t_trans: int) -> Controller:
 
-        t_controller_name = f"TRANS_{start.name}->{finish.name}"
+        t_controller_name = f"TRANS_{start.name}-{finish.name}"
 
         if self.session_name is None:
             folder_name = f"{self.t_controllers_folder_name}/{t_controller_name}"
