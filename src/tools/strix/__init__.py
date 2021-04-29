@@ -52,9 +52,11 @@ class Strix:
 
             if platform.system() != "Linux":
                 client = docker.from_env()
-                result = client.containers.run(image=docker_image,
+                result = str(client.containers.run(image=docker_image,
                                                command=command,
-                                               remove=True).splitlines()
+                                               remove=True)).split("\\n")
+                result.pop()
+                result[0] = result[0][2:]
             else:
                 result = subprocess.check_output([command], shell=True, timeout=timeout, encoding='UTF-8').splitlines()
 
