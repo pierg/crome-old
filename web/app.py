@@ -8,8 +8,8 @@ def index():
     return "Hello world !"
 
 
-@app.route('/welcome')
-def welcome():
+@app.route('/index')
+def main():
     return render_template("index.html")
 
 
