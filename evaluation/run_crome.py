@@ -85,7 +85,7 @@ try:
     res += f"NUMBER OF T-CTRL\t= {n_t_controllers}\n"
     res += f"TIME S-CTRL     \t= {t_s_controllers}\n"
     res += f"TIME T-CTRL     \t= {t_t_controllers}\n"
-    res += f"TIME TOTAL      \t= {t_cgg + t_s_controllers + t_t_controllers}"
+    res += f"TIME TOTAL      \t= {t_cgg + t_s_controllers + t_t_controllers}\n\n"
 
     print(res)
 
