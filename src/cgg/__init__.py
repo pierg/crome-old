@@ -186,8 +186,6 @@ class Node(Goal):
         else:
             return {self}
 
-
-
     def orchestrate(self, n_steps: int, t_min_context: int = 10):
         if t_min_context < self.t_trans:
             raise Exception("T context min < T transition max")
@@ -309,6 +307,12 @@ class Node(Goal):
 
         """Generating Transition Controllers"""
         for scenario_a, scenario_b in itertools.combinations(scenarios, 2):
+            # locs_a = scenario_a.controller.locations
+            # locs_b = scenario_a.controller.locations
+            #  TODO
+            # for loc_source, loc_target in itertools.product(locs_a, locs_b):
+
+
             scenario_a_entry_points = scenario_a.controller.all_entry_locations(self.world)
             scenario_b_entry_points = scenario_b.controller.all_entry_locations(self.world)
             print(", ".join([x.name for x in scenario_a_entry_points]))
@@ -322,6 +326,8 @@ class Node(Goal):
         print(f"{len(self.__t_controllers)} transition controller_specs generated:")
         for start, finish in self.__t_controllers.keys():
             print(f"{start.name} -> {finish.name}")
+
+
 
     def realize_specification_controllers(self, traversal: GraphTraversal = GraphTraversal.DFS,
                                           explored: Set[Node] = None, root=None):
