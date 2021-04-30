@@ -1,7 +1,7 @@
 from cgg import Node
 from cgg.exceptions import CGGException
 from specification.atom.pattern.robotics.coremovement.surveillance import *
-from specification.atom.pattern.robotics.trigger.triggers_modified import *
+from specification.atom.pattern.robotics.trigger.triggers import *
 from tools.persistence import Persistence
 from worlds.illustrative_example import RunningExample
 
@@ -23,11 +23,11 @@ ordered_patrol_day = StrictOrderedPatrolling([w["r1"], w["r2"]])
 """Strict Ordered Patrolling Location r3, r4"""
 ordered_patrol_night = StrictOrderedPatrolling([w["r3"], w["r4"]])
 
-"""Only if see a person, greet immediatly"""
-greet = BoundReaction(w["person"], w["greet"], active=w["active"])
+"""Only if see a person, greet immediately"""
+greet = BoundReaction(w["person"], w["greet"])
 
 """Only if see a person, register in the next step"""
-register = BoundDelay(w["person"], w["register"], active=w["active"], context=w["day"])
+register = BoundDelay(w["person"], w["register"])
 
 try:
 
