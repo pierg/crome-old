@@ -21,9 +21,8 @@ print(f"controller selected: {path}/{controller_name}.txt")
 a, g, i, o = StringMng.parse_controller_specification_from_file(f"{path}/{controller_name}.txt")
 realizable, kiss_format, exec_time = Strix.generate_controller(a, g, i, o)
 
-print(f"TIME MONOLITHIC SYNTHESIS    \t= {exec_time}")
-Store.save_to_file(f"TIME MONOLITHIC SYNTHESIS    \t= {exec_time}", f"monolithic_time.txt",
-                   absolute_folder_path=f"{path}")
+res = f"TIME MONOLITHIC SYNTHESIS    \t= {exec_time}\n\n"
+Store.save_to_file(res, f"monolithic_time.txt", absolute_folder_path=f"{path}")
 
 controller = Controller(mealy_machine=kiss_format, synth_time=exec_time)
 
