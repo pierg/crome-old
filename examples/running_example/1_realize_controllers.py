@@ -1,6 +1,6 @@
 from tools.persistence import Persistence
 
-folder_name = "running_example"
+folder_name = "robocup"
 
 """Illustrative Example:
 GOALS to model:

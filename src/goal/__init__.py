@@ -32,7 +32,6 @@ class Goal:
         """Read only properties"""
         self.__realizable = None
         self.__controller = None
-        self.__time_synthesis = None
 
         """Properties defined on first instantiation"""
         self.name: str = name
@@ -132,18 +131,16 @@ class Goal:
         return self.__controller
 
     @property
-    def time_synthesis(self) -> int:
-        if self.__time_synthesis is not None:
-            return round(self.__time_synthesis, 2)
-        else:
-            return -1
+    def synth_time(self) -> float:
+        return self.controller.synth_time
 
     def translate_to_buchi(self):
 
         if self.session_name is None:
             folder_name = self.goal_folder_name
-        else:
             folder_name = f"{self.session_name}/{self.goal_folder_name}"
+        else:
+            pass
 
         self.specification.assumptions.translate_to_buchi("assumptions", folder_name)
         self.specification.guarantees.translate_to_buchi("guarantees", folder_name)
@@ -174,7 +171,6 @@ class Goal:
                 realized, kiss_mealy, time = Strix.generate_controller(a, g, i, o)
 
             self.__realizable = realized
-            self.__time_synthesis = time
 
             if realized:
                 Store.save_to_file(kiss_mealy, "controller_kiss", folder_name)
@@ -183,7 +179,7 @@ class Goal:
                 Store.save_to_file(kiss_mealy, "controller_inverted_kiss", folder_name)
                 # Store.generate_eps_from_dot(dot_mealy, "controller_inverted", folder_name)
 
-            self.__controller = Controller(mealy_machine=kiss_mealy, world=self.world, name=self.name)
+            self.__controller = Controller(mealy_machine=kiss_mealy, world=self.world, name=self.name, synth_time=time)
             print(f"NAME:\t{self.__name} ({self.__id})")
             print(self.__controller)
             Store.save_to_file(str(self.__controller), "controller_table", folder_name)
@@ -205,7 +201,7 @@ class Goal:
         ret += "\t" * level + f"|\t  {goal.specification.guarantees.pretty_print(FormulaOutput.CNF)} \n"
         if goal.realizable is not None:
             if goal.realizable:
-                ret += "\t" * level + f"|\t  REALIZABLE:\tYES\t{goal.time_synthesis} seconds\n"
+                ret += "\t" * level + f"|\t  REALIZABLE:\tYES\t{goal.synth_time} seconds\n"
             else:
                 ret += "\t" * level + f"|\t  REALIZABLE:\tNO\n"
         return ret

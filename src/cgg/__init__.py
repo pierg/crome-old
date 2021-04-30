@@ -26,7 +26,6 @@ from worlds import World
 from tools.strix import Strix
 
 
-
 class Link(Enum):
     REFINEMENT = 0
     COMPOSITION = 1
@@ -96,6 +95,11 @@ class Node(Goal):
     @property
     def t_trans(self) -> int:
         return self.__t_trans
+
+    @property
+    def t_controllers(self) -> Dict[Tuple[ReachLocation, ReachLocation], Controller]:
+        """Returns all transition controllers"""
+        return self.__t_controllers
 
     @property
     def t_controllers_folder_name(self) -> str:
@@ -181,6 +185,8 @@ class Node(Goal):
             return self.children[Link.CONJUNCTION]
         else:
             return {self}
+
+
 
     def orchestrate(self, n_steps: int, t_min_context: int = 10):
         if t_min_context < self.t_trans:
@@ -340,6 +346,15 @@ class Node(Goal):
         if traversal == GraphTraversal.BFS:
             raise NotImplemented
 
+    def get_all_nodes(self) -> Set[Node]:
+
+        """Depth-first search"""
+        result = set()
+        result.add(self)
+        for child in self.children_nodes():
+            result |= child.get_all_nodes()
+        return result
+
     def save(self):
         Store.save_to_file(str(self), "cgg.txt", self.session_name)
 
@@ -379,7 +394,8 @@ class Node(Goal):
             # Store.generate_eps_from_dot(dot_mealy, f"{start.name}_{finish.name}_dot",
             #                             folder_name)
 
-            t_controller = Controller(mealy_machine=kiss_mealy, world=self.world, name=t_controller_name)
+            t_controller = Controller(mealy_machine=kiss_mealy, world=self.world, name=t_controller_name,
+                                      synth_time=time)
             Store.save_to_file(str(t_controller), f"{start.name}_{finish.name}_table", folder_name)
 
             return t_controller
