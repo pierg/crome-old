@@ -1,8 +1,6 @@
-from worlds import World
-from worlds.illustrative_example.types.locations import *
-from worlds.illustrative_example.types.sensors import *
-from worlds.illustrative_example.types.actions import *
-from worlds.illustrative_example.types.context import *
+
+from world import World
+from world.predefined.simple_gridworld.types import *
 
 
 class RunningExample(World):

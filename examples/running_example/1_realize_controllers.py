@@ -1,23 +1,15 @@
 from tools.persistence import Persistence
-
-folder_name = "robocup"
-
-"""Illustrative Example:
-GOALS to model:
-during context day => start from r1, patrol r1, r2 
-during context night => start from r3, patrol r3, r4 
-always => if see a person, greet
-"""
+from running_example import output_folder_name
 
 """Load CGG"""
-cgg = Persistence.load_cgg(folder_name)
+cgg = Persistence.load_cgg(output_folder_name)
 
 """Realize Specification and Transition Controllers indicating the Maximum Transition Time"""
 cgg.realize_all(t_trans=3)
-
-"""Save CGG"""
-cgg.save()
-Persistence.dump_cgg(cgg)
-
 print(cgg)
 
+"""Save CGG again with the controllers information"""
+cgg.save()
+
+"""Save CGG for persistence"""
+Persistence.dump_cgg(cgg)

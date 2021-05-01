@@ -22,7 +22,7 @@ from tools.strings import StringMng
 from type import Types, Boolean
 from type.subtypes.locations import ReachLocation
 from typeset import Typeset
-from worlds import World
+from world import World
 from tools.strix import Strix
 
 

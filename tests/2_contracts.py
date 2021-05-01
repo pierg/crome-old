@@ -1,7 +1,7 @@
 from contract import Contract
 from contract.exceptions import ContractException
 from specification.atom.pattern.basic import Init
-from worlds.simple_gridworld import SimpleGridWorld, SeA, SeB, GoA, GoB
+from world.simple_gridworld import SimpleGridWorld, SeA, SeB, GoA, GoB
 
 sw = SimpleGridWorld()
 

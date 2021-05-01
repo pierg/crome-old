@@ -8,7 +8,7 @@ class Store:
     output_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'output'))
 
     @staticmethod
-    def save_to_file(text: str, file_name: str, output_folder_path=None, absolute_folder_path=None):
+    def save_to_file(text: str, file_name: str, output_folder_name=None, absolute_folder_path=None):
 
         if Path(file_name).suffix == "":
             file_name += ".txt"
@@ -16,8 +16,8 @@ class Store:
         if absolute_folder_path is not None:
             output_folder = absolute_folder_path
         else:
-            if output_folder_path is not None:
-                output_folder = f"{Store.output_folder}/{output_folder_path}"
+            if output_folder_name is not None:
+                output_folder = f"{Store.output_folder}/{output_folder_name}"
             else:
                 output_folder = f"{Store.output_folder}"
 

@@ -11,7 +11,7 @@ from tools.strings import StringMng
 from type import Boolean, TypeKinds
 from type.subtypes.locations import ReachLocation
 from typeset import Typeset
-from worlds import World
+from world import World
 
 
 class Controller:

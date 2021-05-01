@@ -5,7 +5,7 @@ from cgg.exceptions import CGGException
 from specification.atom.pattern.robotics.coremovement.surveillance import *
 from specification.atom.pattern.robotics.trigger.triggers import *
 from tools.storage import Store
-from worlds.illustrative_example import RunningExample
+from examples.running_example.world import RunningExample
 import time
 
 folder_name = "crome_evaluation"

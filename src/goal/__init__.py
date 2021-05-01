@@ -17,7 +17,7 @@ from tools.storage import Store
 from tools.strings import StringMng
 from tools.strix import Strix
 from type import Boolean
-from worlds import World
+from world import World
 
 
 class Goal:
@@ -227,7 +227,7 @@ class Goal:
                     new_goal_world = g.world
                 else:
                     if new_goal_world is not g.world:
-                        raise GoalException("conjoining goals that have different 'worlds'")
+                        raise GoalException("conjoining goals that have different 'world'")
 
         try:
             new_contract = Contract.composition(set_of_contracts)
@@ -273,7 +273,7 @@ class Goal:
                     new_goal_world = g.world
                 else:
                     if new_goal_world is not g.world:
-                        raise GoalException("conjoining goals that have different 'worlds'")
+                        raise GoalException("conjoining goals that have different 'world'")
 
         try:
             new_contract = Contract.conjunction(set_of_contracts)
@@ -311,7 +311,7 @@ class Goal:
                     new_goal_world = g.world
                 else:
                     if new_goal_world is not g.world:
-                        raise GoalException("disjoining goals that have different 'worlds'")
+                        raise GoalException("disjoining goals that have different 'world'")
 
         try:
             new_contract = Contract.disjunction(set_of_contracts)

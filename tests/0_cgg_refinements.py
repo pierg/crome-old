@@ -5,7 +5,7 @@ from specification.atom.pattern.robotics.coremovement.surveillance import *
 from type.subtypes.context import ContextBooleanTime
 from type.subtypes.locations import ReachLocation
 from typeset import Typeset
-from worlds import World
+from world import World
 
 """Continuation of 5_modelling_problems:
 GOAL to model:

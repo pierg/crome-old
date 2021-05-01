@@ -6,8 +6,8 @@ class Greet(BooleanAction):
     def __init__(self, name: str = "greet"):
         super().__init__(name)
 
+class Register(BooleanAction):
 
-class Cure(BooleanAction):
-
-    def __init__(self, name: str = "cure"):
+    def __init__(self, name: str = "register"):
         super().__init__(name)
+

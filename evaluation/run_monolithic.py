@@ -1,10 +1,10 @@
-import os, sys
+import os
 from controller import Controller
 from tools.storage import Store
 from tools.strings import StringMng
 from tools.strix import Strix
 from specification.atom.pattern.robotics.trigger.triggers_modified import *
-from worlds.illustrative_example import RunningExample
+from examples.running_example.world import RunningExample
 
 w = RunningExample()
 greet = BoundReaction(w["person"], w["greet"], w["active"], w["day"])

@@ -1,10 +1,10 @@
-from cgg import Node, Link
+from cgg import Node
 from cgg.exceptions import CGGException
 from specification import FormulaOutput
 from specification.atom.pattern.robotics.coremovement.surveillance import *
-from specification.atom.pattern.robotics.trigger.triggers import InstantaneousReaction, BoundReaction, Wait, \
-    GlobalAvoidance, BoundDelay
-from worlds.illustrative_example import RunningExample
+from specification.atom.pattern.robotics.trigger.triggers import Wait, \
+    BoundDelay
+from examples.running_example.world import RunningExample
 
 """Illustrative Example:
 GOALS to model:

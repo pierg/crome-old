@@ -1,60 +1,54 @@
 from cgg import Node
 from cgg.exceptions import CGGException
+from running_example import output_folder_name
 from specification.atom.pattern.robotics.coremovement.surveillance import *
 from specification.atom.pattern.robotics.trigger.triggers import *
 from tools.persistence import Persistence
-from worlds.illustrative_example import RunningExample
 
-folder_name = "robocup"
+from running_example.environment import *
 
-"""Illustrative Example:
-GOALS to model:
-during context day => start from r1, patrol r1, r2 
-during context night => start from r3, patrol r3, r4 
-always => if see a person, greet in the next step
-"""
-
-"""We import the world"""
+"""After modeling the world, we import it"""
 w = RunningExample()
-
-"""Strict Ordered Patrolling Location r1, r2"""
-ordered_patrol_day = StrictOrderedPatrolling([w["r1"], w["r2"]])
-
-"""Strict Ordered Patrolling Location r3, r4"""
-ordered_patrol_night = StrictOrderedPatrolling([w["r3"], w["r4"]])
-
-"""Only if see a person, greet immediately"""
-greet = BoundReaction(w["person"], w["greet"])
-
-"""Only if see a person, register in the next step"""
-register = BoundDelay(w["person"], w["register"])
 
 try:
 
-    n_day = Node(name="day_patrol_a",
-                 context=w["day"],
-                 specification=ordered_patrol_day,
-                 world=w)
+    """G1) during context day => start from r1, patrol r1, r2 in strict order"""
+    g1 = Node(name="day_patrol_12",
+              description="Strict Ordered Patrolling Location r1, r2",
+              context=w["day"],
+              specification=StrictOrderedPatrolling([w["r1"], w["r2"]]),
+              world=w)
 
-    n_night = Node(name="night_patrol_b",
-                   context=w["night"],
-                   specification=ordered_patrol_night,
-                   world=w)
+    """G2) during context night => start from r3, patrol r3, r4 in strict order"""
+    g2 = Node(name="night_patrol_34",
+              description="Strict Ordered Patrolling Location r3, r4",
+              context=w["night"],
+              specification=StrictOrderedPatrolling([w["r3"], w["r4"]]),
+              world=w)
 
-    n_greet = Node(name="greet_person",
-                   specification=greet,
-                   world=w)
+    """G3) always => if see a person, greet in the same step"""
+    g3 = Node(name="greet_person",
+              description="Only if see a person, greet immediately",
+              specification=BoundReaction(w["person"], w["greet"]),
+              world=w)
 
-    n_register = Node(name="register_person",
-                      context=w["day"],
-                      specification=register,
-                      world=w)
+    """G4) during context day => if see a person, register in the next step"""
+    g4 = Node(name="register_person",
+              description="Only if see a person, register in the next step",
+              context=w["day"],
+              specification=BoundDelay(w["person"], w["register"]),
+              world=w)
 
-    cgg = Node.build_cgg({n_day, n_night, n_greet, n_register})
-    cgg.set_session_name(folder_name)
-    cgg.save()
-    Persistence.dump_cgg(cgg)
+    """Automatically build the CGG"""
+    cgg = Node.build_cgg({g1, g2, g3, g4})
     print(cgg)
+
+    """Setting the saving folder"""
+    cgg.set_session_name(output_folder_name)
+    """Save CGG as text file"""
+    cgg.save()
+    """Save CGG so that it can be loaded later"""
+    Persistence.dump_cgg(cgg)
 
 
 except CGGException as e:
