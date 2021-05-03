@@ -1,0 +1,20 @@
+# SCENARIO 2 SERVICE ROBOT
+
+**ASSUMPTIONS**
+
+
+**GUARANTEES**
+
+G(((alexa) <-> (reply)))
+
+
+**INPUTS**
+
+alexa
+
+**OUTPUTS**
+
+reply
+
+
+**END**

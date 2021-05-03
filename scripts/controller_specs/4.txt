@@ -1,44 +1,35 @@
-# SCENARIO 1 CLEAN UP
-# - hold drop not mutex
-# + good holding
-# - no short path
+# SCENARIO 4 CLEAN UP
+# >>> NOT WORKING
 
 **ASSUMPTIONS**
 
-# RULE if the robot has the object, then disable the sensor for new objects
-G(hold -> X(!object_recognized))
+# RULE preparing breakfast takes two timesteps
+G(prepare_breakfast <-> XXX(breakfast_ready))
 
 
 **GUARANTEES**
 
-# patrol living room
-G(F(l1)) & G(F(l2)) & G(F(l3)) & G(F(l4)) & G(F(l5)) & G(F(l6))
+# RULE can only prepare serve breakfast in the kitchen
+G(k2 <-> X prepare_breakfast)
+
+# RULE cannot move while preparing breakfast
+G((preparing & !breakfast_ready & k2) -> X (k2))
+
 
 # Drop objects in the garbage
-G(k3 <-> X drop)
+G(l2 <-> X serve_breakfast)
 
 # RULE keep robots with free hands
 G(F(!hold))
 
-# RULE keep holding unless the robot drops the object
-G((hold & X !drop) -> X(hold))
+# RULE keep holding unless the robot serve_breakfasts the object
+G((hold & X !serve_breakfast) -> X(hold))
 
-# RULE if it drops the object then it does not hold anymore
-G((drop) -> X(!hold))
+# RULE if it serve_breakfasts the object then it does not hold anymore
+G((serve_breakfast) -> X(!hold))
 
-# RULE if it wants to drops then it is holding an object
-G(X drop -> (hold))
-
-
-# if the robot is available to hold and
-# its in the location where it recognises an object
-# then it should not move from that location
-G((object_recognized & !hold & l1) -> X (l1))
-G((object_recognized & !hold & l2) -> X (l2))
-G((object_recognized & !hold & l3) -> X (l3))
-G((object_recognized & !hold & l4) -> X (l4))
-G((object_recognized & !hold & l5) -> X (l5))
-G((object_recognized & !hold & l6) -> X (l6))
+# RULE if it wants to serve_breakfasts then it is holding an object
+G(X serve_breakfast -> (hold))
 
 
 
@@ -60,10 +51,10 @@ G(((r1) -> (X((r1 | l3)))))
 
 **INPUTS**
 
-object_recognized
+breakfast_ready
 
 **OUTPUTS**
 
-hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1
+hold, prepare_breakfast, preparing, serve_breakfast, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1
 
 **END**

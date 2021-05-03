@@ -3,19 +3,15 @@ from cgg.exceptions import CGGException
 from contract import Contract
 from robocup.world import RobocupHome
 from robocup import output_folder_name
-from specification.atom.pattern.basic import GF
+from specification.atom.pattern.basic import GF, X
 from specification.atom.pattern.robotics.coremovement.surveillance import *
 from specification.atom.pattern.robotics.trigger.triggers import *
 from specification.formula import Formula
 from tools.persistence import Persistence
+from world import Rule
 
 """We import the environment"""
 w = RobocupHome()
-
-"""Elements used in the goals"""
-
-"""if the robot has the object, then disable the sensor for new objects"""
-no_objects_when_hold = PromptReaction(w["hold"], ~w["object_recognized"])
 
 living_room = [w["l1"], w["l2"], w["l3"], w["l4"], w["l5"], w["l6"]]
 kitchen = [w["k1"], w["k2"]]
@@ -25,6 +21,43 @@ patrol_living_room = Patrolling(living_room)
 
 """patrol kitchen"""
 patrol_kitchen = Patrolling(kitchen)
+
+"""Modeling the rules of the world"""
+env_rules = {
+    Rule(
+        rule=PromptReaction(w["hold"], w["!object_recognized"]),
+        trigger=w["clean"],
+        description="if the robot has the object, then disable the sensor for new objects",
+        system=False
+    )
+}
+
+sys_rules = {
+    Rule(
+        rule=GF(w["!hold"]),
+        trigger=w["clean"],
+        description="keep robots with free hands",
+        system=True
+    ),
+    Rule(
+        rule=PromptReaction(w["hold"] & X(w["!drop"]), w["hold"]),
+        trigger=w["clean"],
+        description="keep holding unless the robot drops the object",
+        system=True
+    ),
+    Rule(
+        rule=PromptReaction(w["drop"], w["!hold"]),
+        trigger=w["clean"],
+        description="if it drops the object then it does not hold anymore",
+        system=True
+    ),
+    Rule(
+        rule=PromptReaction(X(w["drop"]), w["hold"]),
+        trigger=w["clean"],
+        description="if it wants to drops then it is holding an object",
+        system=True
+    )
+}
 
 """if the robot is available to hold and its in the location where it recognises an object 
 then it should not move from that location"""

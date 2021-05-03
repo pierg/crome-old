@@ -1,8 +1,38 @@
 from specification import Specification
+from specification.atom import Atom
 from type.subtypes.active import Active
-from typing import Set
+from typing import Set, Dict, Tuple
 from type import Types
 from typeset import Typeset
+
+
+class Rule:
+    def __init__(self,
+                 rule: Specification,
+                 trigger: Specification = None,
+                 description: str = None,
+                 system: bool = True
+                 ):
+        self.__rule = rule
+        self.__trigger = trigger
+        self.__description = description
+        self.__system = system
+
+    @property
+    def rule(self):
+        return self.__rule
+
+    @property
+    def trigger(self):
+        return self.__trigger
+
+    @property
+    def description(self):
+        return self.__description
+
+    @property
+    def system(self):
+        return self.__system
 
 
 class World(dict):
@@ -21,16 +51,15 @@ class World(dict):
             super(World, self).__setitem__(name, elem.to_atom())
             super(World, self).__setitem__(f"!{name}", ~elem.to_atom())
 
-        self.__rules = set()
+        self.__rules: Set[Rule] = set()
 
     @property
-    def rules(self) -> Set[Specification]:
+    def rules(self) -> Set[Rule]:
         return self.__rules
 
     @property
     def typeset(self) -> Typeset:
         return self.__typeset
 
-    def add_rules(self, rules: Set[Specification]):
-        for rule in rules:
-            self.__rules |= rule
+    def add_rules(self, rules: Set[Rule]):
+        self.__rules |= rules
