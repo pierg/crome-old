@@ -14,10 +14,11 @@
     "js/2.2cb51cc1.chunk.js.LICENSE.txt": "/static/react/js/2.2cb51cc1.chunk.js.LICENSE.txt",
     "media/logo.6ce24c58.svg": "/static/react/media/logo.6ce24c58.svg"
   },
+
   "entrypoints": [
-    "js/runtime-main.e7806da0.js",
-    "js/2.2cb51cc1.chunk.js",
-    "css/main.9d5b29c0.chunk.css",
-    "js/main.00e28540.chunk.js"
+    "js/runtime-main.410d6291.js",
+    "js/2.10f8cc48.chunk.js",
+    "css/main.8c8b27cf.chunk.css",
+    "js/main.7531b04e.chunk.js"
   ]
 }
