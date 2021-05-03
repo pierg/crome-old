@@ -1,7 +1,7 @@
 from cgg import Node
 from cgg.exceptions import CGGException
 from contract import Contract
-from robocup.modeling_environement import RobocupHome
+from robocup.world import RobocupHome
 from robocup import output_folder_name
 from specification.atom.pattern.basic import GF
 from specification.atom.pattern.robotics.coremovement.surveillance import *
@@ -10,8 +10,7 @@ from specification.formula import Formula
 from tools.persistence import Persistence
 
 """We import the environment"""
-w_types = RobocupHome()
-w = w_types.get_atoms()
+w = RobocupHome()
 
 """Elements used in the goals"""
 
@@ -63,7 +62,7 @@ try:
                             drop_near_garbage &
                             keep_free_hands
              ),
-             world=w_types),
+             world=w),
         Node(name="gpse",
              description="General Purpose Service Robot."
                          "Similar to a modern smart-speaker,"
@@ -71,7 +70,7 @@ try:
              specification=Contract(
                  guarantees=BoundReaction(w["alexa"], w["reply"])
              ),
-             world=w_types),
+             world=w),
         Node(name="groceries",
              description="The robot stores groceries into a pantry shelf while paying attention"
                          " to sorting objects in their appropriate place, i.e. storing an apple next to other fruits.",
@@ -80,7 +79,7 @@ try:
                  guarantees=patrol_kitchen &
                             PromptReaction(w["groceries_recognized"], w["store"] & w["k2"])
              ),
-             world=w_types),
+             world=w),
     }
 
     """Save set of goals so that they can be loaded later"""

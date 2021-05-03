@@ -137,7 +137,7 @@ class Contract:
 
 
 
-        """For the rules we extracts rules from the types based on assumptions and inputs"""
+        """For the rules we extracts rules from the world based on assumptions and inputs"""
         a_typeset = a_typeset | i_typeset
 
         """We remove the inputs typeset from the guarantees and we incorporate the world ts"""

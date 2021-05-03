@@ -34,7 +34,7 @@ class Typeset(dict):
         memo[id(self)] = result
         for k, v in self.__dict__.items():
             setattr(result, k, deepcopy(v))
-        """Do not perform a deepcopy of the types"""
+        """Do not perform a deepcopy of the world"""
         for k, v in self.items():
             result[k] = v
         return result
@@ -116,7 +116,7 @@ class Typeset(dict):
         return new_ts
 
     def extract_inputs_outputs(self) -> Tuple[Set[Types], Set[Types]]:
-        """Returns a set of types in the typeset that are not controllable and controllable"""
+        """Returns a set of world in the typeset that are not controllable and controllable"""
         i = set()
         o = set()
         if len(self.values()) > 0:
@@ -128,7 +128,7 @@ class Typeset(dict):
         return i, o
 
     def extract_inputs_outputs_excluding_context(self) -> Tuple[Set[Types], Set[Types]]:
-        """Returns a set of types (excluding contexts) in the typeset that are not controllable and controllable"""
+        """Returns a set of world (excluding contexts) in the typeset that are not controllable and controllable"""
         i = set()
         o = set()
         if len(self.values()) > 0:
@@ -142,7 +142,7 @@ class Typeset(dict):
         return i, o
 
     def extract_actions(self) -> Set[Types]:
-        """Returns a set of types in the typeset that are controllable actions"""
+        """Returns a set of world in the typeset that are controllable actions"""
         ret = set()
         if len(self.values()) > 0:
             for t in self.values():
@@ -151,7 +151,7 @@ class Typeset(dict):
         return ret
 
     def extract_location(self) -> Set[Types]:
-        """Returns a set of types in the typeset that are controllable location"""
+        """Returns a set of world in the typeset that are controllable location"""
         ret = set()
         if len(self.values()) > 0:
             for t in self.values():
@@ -160,7 +160,7 @@ class Typeset(dict):
         return ret
 
     def extract_sensors(self) -> Set[Types]:
-        """Returns a set of types in the typeset that are not controllable sensors"""
+        """Returns a set of world in the typeset that are not controllable sensors"""
         ret = set()
         if len(self.values()) > 0:
             for t in self.values():
@@ -169,7 +169,7 @@ class Typeset(dict):
         return ret
 
     def extract_sensor_actions(self) -> Set[Types]:
-        """Returns a set of types in the typeset that are sensors of action completion"""
+        """Returns a set of world in the typeset that are sensors of action completion"""
         ret = set()
         if len(self.values()) > 0:
             for t in self.values():
@@ -178,7 +178,7 @@ class Typeset(dict):
         return ret
 
     def extract_sensor_locations(self) -> Set[Types]:
-        """Returns a set of types in the typeset that are sensors indicating current robot location"""
+        """Returns a set of world in the typeset that are sensors indicating current robot location"""
         ret = set()
         if len(self.values()) > 0:
             for t in self.values():
@@ -200,7 +200,7 @@ class Typeset(dict):
             for (a, b) in combinations(self.values(), 2):
                 if a.__class__.__name__ in BASE_CLASS_TYPES or b.__class__.__name__ in BASE_CLASS_TYPES:
                     continue
-                """If they are not base types"""
+                """If they are not base world"""
                 if isinstance(a, type(b)):
                     if a in self.__super_types:
                         self.__super_types[a].add(b)

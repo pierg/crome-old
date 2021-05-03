@@ -1,5 +1,8 @@
 from world import World
-from robocup.types import *
+from .sensors import *
+from .actions import *
+from .locations import *
+from .context import *
 
 
 class RobocupHome(World):
