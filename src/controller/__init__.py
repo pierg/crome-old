@@ -9,7 +9,7 @@ from typing import Tuple, List, Dict, Set
 from specification.atom import Atom, AtomKind
 from tools.strings import StringMng
 from type import Boolean, TypeKinds
-from type.subtypes.locations import ReachLocation
+from type.subtypes.location import ReachLocation
 from typeset import Typeset
 from world import World
 

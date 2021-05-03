@@ -1,7 +1,7 @@
 from typing import Set
 
 from specification.atom.pattern.robotics.coremovement.surveillance import OrderedPatrolling, Patrolling
-from type.subtypes.locations import ReachLocation
+from type.subtypes.location import ReachLocation
 
 """We define 2 mutex locations: living_room and bedroom adjacent to each other"""
 

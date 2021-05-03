@@ -1,13 +1,13 @@
 from cgg import Node
 from cgg.exceptions import CGGException
+from robocup.modeling_environement import RobocupHome
 from running_example import output_folder_name
-from running_example.modeling_environment import RunningExample
 from specification.atom.pattern.robotics.coremovement.surveillance import *
 from specification.atom.pattern.robotics.trigger.triggers import *
 from tools.persistence import Persistence
 
 """We import the environment"""
-w = RunningExample()
+w = RobocupHome()
 
 try:
 

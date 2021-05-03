@@ -1,8 +1,8 @@
 from world import World
-from world.predefined.house.types import *
+from robocup.types import *
 
 
-class CaseStudy(World):
+class RobocupHome(World):
 
     def __init__(self):
         super().__init__({

@@ -1,4 +1,4 @@
-from type.subtypes.actions import *
+from type.subtypes.action import *
 
 
 class Greet(BooleanAction):

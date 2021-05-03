@@ -5,9 +5,9 @@ from cgg import Node
 from cgg.exceptions import CGGException
 from specification.atom.pattern.basic import Init, G, F
 from specification.atom.pattern.robotics.coremovement.surveillance import Patrolling
-from type.subtypes.actions import BooleanAction
-from type.subtypes.locations import ReachLocation
-from type.subtypes.sensors import BooleanSensor
+from type.subtypes.action import BooleanAction
+from type.subtypes.location import ReachLocation
+from type.subtypes.sensor import BooleanSensor
 
 """Let's define two actions and sensors"""
 

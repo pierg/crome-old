@@ -3,7 +3,7 @@ from cgg import Node
 from cgg.exceptions import CGGException
 from specification.atom.pattern.robotics.coremovement.surveillance import Patrolling
 from type.subtypes.context import ContextBooleanTime
-from type.subtypes.locations import ReachLocation
+from type.subtypes.location import ReachLocation
 
 """Continuation of 5_modelling_problems:
 GOAL to model:

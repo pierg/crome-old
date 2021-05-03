@@ -20,7 +20,7 @@ from tools.logic import Logic
 from tools.storage import Store
 from tools.strings import StringMng
 from type import Types, Boolean
-from type.subtypes.locations import ReachLocation
+from type.subtypes.location import ReachLocation
 from typeset import Typeset
 from world import World
 from tools.strix import Strix

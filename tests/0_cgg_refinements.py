@@ -3,7 +3,7 @@ from cgg import Node
 from cgg.exceptions import CGGException
 from specification.atom.pattern.robotics.coremovement.surveillance import *
 from type.subtypes.context import ContextBooleanTime
-from type.subtypes.locations import ReachLocation
+from type.subtypes.location import ReachLocation
 from typeset import Typeset
 from world import World
 

@@ -1,4 +1,4 @@
-from type.subtypes.sensors import *
+from type.subtypes.sensor import *
 
 
 class ObjectRecognized(BooleanSensor):
