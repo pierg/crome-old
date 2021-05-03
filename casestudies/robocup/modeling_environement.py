@@ -7,9 +7,10 @@ class RobocupHome(World):
     def __init__(self):
         super().__init__(
             actions={
-                HoldObject(),
-                DropObject(),
-                PickupObject()
+                Hold(),
+                Drop(),
+                Reply(),
+                Store()
             },
             locations={
                 L1(),
@@ -33,7 +34,8 @@ class RobocupHome(World):
             },
             sensors={
                 ObjectRecognized(),
-                ObjectUnknown(),
+                Alexa(),
+                GroceriesRecognized()
             },
             contexts={
                 Housekeeping(),

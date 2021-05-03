@@ -2,7 +2,7 @@ from cgg import Node
 from cgg.exceptions import CGGException
 from contract import Contract
 from robocup.modeling_environement import RobocupHome
-from running_example import output_folder_name
+from robocup import output_folder_name
 from specification.atom.pattern.basic import GF
 from specification.atom.pattern.robotics.coremovement.surveillance import *
 from specification.atom.pattern.robotics.trigger.triggers import *
@@ -19,9 +19,13 @@ w = w_types.get_atoms()
 no_objects_when_hold = PromptReaction(w["hold"], ~w["object_recognized"])
 
 living_room = [w["l1"], w["l2"], w["l3"], w["l4"], w["l5"], w["l6"]]
+kitchen = [w["k1"], w["k2"]]
 
 """patrol living room"""
 patrol_living_room = Patrolling(living_room)
+
+"""patrol kitchen"""
+patrol_kitchen = Patrolling(kitchen)
 
 """if the robot is available to hold and its in the location where it recognises an object 
 then it should not move from that location"""
@@ -58,6 +62,23 @@ try:
                             if_drop_not_hold &
                             drop_near_garbage &
                             keep_free_hands
+             ),
+             world=w_types),
+        Node(name="gpse",
+             description="General Purpose Service Robot."
+                         "Similar to a modern smart-speaker,"
+                         "The robot can be asked to do anything and it immediately response with a voice notification",
+             specification=Contract(
+                 guarantees=BoundReaction(w["alexa"], w["reply"])
+             ),
+             world=w_types),
+        Node(name="groceries",
+             description="The robot stores groceries into a pantry shelf while paying attention"
+                         " to sorting objects in their appropriate place, i.e. storing an apple next to other fruits.",
+             context=w["housekeeping"] & w["groceries"],
+             specification=Contract(
+                 guarantees=patrol_kitchen &
+                            PromptReaction(w["groceries_recognized"], w["store"] & w["k2"])
              ),
              world=w_types),
     }
