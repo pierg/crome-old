@@ -1,8 +1,9 @@
-from type.subtypes.context import ContextBooleanTime
+from type.subtypes.context import ContextBooleanTime, ContextBooleanMode
 
-class Day(ContextBooleanTime):
 
-    def __init__(self, name: str = "day"):
+class Housekeeping(ContextBooleanTime):
+
+    def __init__(self, name: str = "housekeeping"):
         super().__init__(name)
 
     @property
@@ -10,12 +11,41 @@ class Day(ContextBooleanTime):
         return "time"
 
 
-class Night(ContextBooleanTime):
+class Party(ContextBooleanTime):
 
-    def __init__(self, name: str = "night"):
+    def __init__(self, name: str = "party"):
         super().__init__(name)
 
     @property
     def mutex_group(self):
         return "time"
 
+
+class Cleanup(ContextBooleanMode):
+
+    def __init__(self, name: str = "cleanup"):
+        super().__init__(name)
+
+    @property
+    def mutex_group(self):
+        return "modes"
+
+
+class Groceries(ContextBooleanMode):
+
+    def __init__(self, name: str = "groceries"):
+        super().__init__(name)
+
+    @property
+    def mutex_group(self):
+        return "modes"
+
+
+class Garbage(ContextBooleanMode):
+
+    def __init__(self, name: str = "garbage"):
+        super().__init__(name)
+
+    @property
+    def mutex_group(self):
+        return "modes"

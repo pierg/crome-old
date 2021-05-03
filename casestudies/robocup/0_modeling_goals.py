@@ -1,41 +1,65 @@
 from cgg import Node
 from cgg.exceptions import CGGException
+from contract import Contract
 from robocup.modeling_environement import RobocupHome
 from running_example import output_folder_name
+from specification.atom.pattern.basic import GF
 from specification.atom.pattern.robotics.coremovement.surveillance import *
 from specification.atom.pattern.robotics.trigger.triggers import *
+from specification.formula import Formula
 from tools.persistence import Persistence
 
 """We import the environment"""
-w = RobocupHome()
+w_types = RobocupHome()
+w = w_types.get_atoms()
+
+"""Elements used in the goals"""
+
+"""if the robot has the object, then disable the sensor for new objects"""
+no_objects_when_hold = PromptReaction(w["hold"], ~w["object_recognized"])
+
+living_room = [w["l1"], w["l2"], w["l3"], w["l4"], w["l5"], w["l6"]]
+
+"""patrol living room"""
+patrol_living_room = Patrolling(living_room)
+
+"""if the robot is available to hold and its in the location where it recognises an object 
+then it should not move from that location"""
+stay_location_if_object = Formula("TRUE")
+for loc in living_room:
+    stay_location_if_object &= PromptReaction(w["object_recognized"] & ~w["hold"] & loc, ~w["object_recognized"])
+
+"""Do not hold if no object is sensed"""
+dont_hold_if_no_object = PromptReaction(~w["hold"] & ~w["object_recognized"], ~w["hold"])
+
+"""If it drops the object then it does not hold anymore"""
+if_drop_not_hold = PromptReaction(w["hold"] & w["drop"], ~w["hold"])
+
+"""Drop only when it is in the garbage and is holding"""
+drop_near_garbage = InstantaneousReaction(w["drop"], ~w["k3"] & w["hold"])
+
+"""GF(!hold)"""
+keep_free_hands = GF(~w["hold"])
 
 try:
 
     """Modeling the set of goals using robotic patterns"""
     set_of_goals = {
-        Node(name="day_patrol_12",
-             description="During context day => start from r1, patrol r1, r2 in strict order,\n"
-                         "Strict Ordered Patrolling Location r1, r2",
-             context=w["day"],
-             specification=StrictOrderedPatrolling([w["r1"], w["r2"]]),
-             world=w),
-        Node(name="night_patrol_34",
-             description="During context night => start from r3, patrol r3, r4 in strict order,\n"
-                         "Strict Ordered Patrolling Location r3, r4",
-             context=w["night"],
-             specification=StrictOrderedPatrolling([w["r3"], w["r4"]]),
-             world=w),
-        Node(name="greet_person",
-             description="Always => if see a person, greet in the same step,\n"
-                         "Only if see a person, greet immediately",
-             specification=BoundReaction(w["person"], w["greet"]),
-             world=w),
-        Node(name="register_person",
-             description="During context day => if see a person, register in the next step,\n"
-                         "Only if see a person, register in the next step",
-             context=w["day"],
-             specification=BoundDelay(w["person"], w["register"]),
-             world=w)
+        Node(name="cleanup",
+             description="Inside the living room are some misplaced objects. "
+                         "The robot has to tidy up that room, throwing to the garbage the unrecognized ones."
+                         "Find all misplaced objects in a room and bring them to their predeﬁned locations.",
+             context=w["housekeeping"] & w["cleanup"],
+             specification=Contract(
+                 assumptions=no_objects_when_hold,
+                 guarantees=patrol_living_room &
+                            stay_location_if_object &
+                            dont_hold_if_no_object &
+                            if_drop_not_hold &
+                            drop_near_garbage &
+                            keep_free_hands
+             ),
+             world=w_types),
     }
 
     """Save set of goals so that they can be loaded later"""

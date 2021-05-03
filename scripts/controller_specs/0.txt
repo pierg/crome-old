@@ -5,7 +5,7 @@
 **ASSUMPTIONS**
 
 # only show objects in the living room
-G((!object_recognized & !(l1 | l2 | l3 | l4 | l5 | l6)) -> X ! object_recognized)
+# G((!object_recognized & !(l1 | l2 | l3 | l4 | l5 | l6)) -> X ! object_recognized)
 
 # if the robot has the object, then disable the sensor for new objects
 G(hold -> X(!object_recognized))
@@ -35,7 +35,7 @@ G((!hold & !object_recognized) -> X(!hold))
 # keep holding unless the robot drops the object
 G((hold & !drop) -> X(hold))
 
-# it it drops the object then it does not hold anymore
+# if it drops the object then it does not hold anymore
 G((hold & drop) -> X(!hold))
 
 # if it drops then it is in the garbage location (k3) and it is holding an objects
