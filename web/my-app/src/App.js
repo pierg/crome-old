@@ -17,6 +17,10 @@ function App() {
     <div className="App">
       <header className="App-header">
         <Icon name="Add" color="white" size="20px" />
+        <form action="/example/" method="post">
+          <button name="forwardBtn" type="submit">Run Example 1</button>
+        </form>
+        <div>Example output : {window.result}</div>
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
