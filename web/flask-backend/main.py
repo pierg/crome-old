@@ -2,7 +2,7 @@ import flask
 import sys
 import subprocess
 
-from flask import render_template
+from flask import render_template, request
 
 app = flask.Flask("__main__")
 
@@ -15,10 +15,10 @@ def my_index():
 @app.route("/example/", methods=['POST'])
 def run_example():
     # Moving forward code
+    example_name = request.form['exampleButtons']
     result = subprocess.check_output([sys.executable, "..\\..\\examples\\running_example"
-                                                      "\\1_analysis_build_cgg.py"])
+                                                      "\\" + example_name + ".py"])
     return render_template('index.html', result=result)
-
 
 
 app.run(debug=True)

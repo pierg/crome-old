@@ -16,9 +16,14 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Icon name="Add" color="white" size="20px" />
         <form action="/example/" method="post">
-          <button name="forwardBtn" type="submit">Run Example 1</button>
+          <select name="exampleButtons">
+            <option>0_modeling_goals</option>
+            <option>1_analysis_build_cgg</option>
+            <option>2_synthesis_realize_controllers</option>
+            <option>3_simulation_orchestrate</option>
+          </select>
+          <button name="submitExample" type="submit">Run Example</button>
         </form>
         <div>Example output : {window.result}</div>
         <img src={logo} className="App-logo" alt="logo" />
