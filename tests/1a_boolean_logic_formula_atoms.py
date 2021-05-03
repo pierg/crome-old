@@ -3,7 +3,7 @@ from typing import Set
 from specification import NotSatisfiableException
 from specification.formula import FormulaOutput
 from specification.atom import Atom
-from type.subtypes.locations import ReachLocation
+from type.subtypes.location import ReachLocation
 from typeset import Typeset
 
 

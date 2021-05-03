@@ -1,9 +1,9 @@
 from cgg import Node
 from cgg.exceptions import CGGException
 from running_example import output_folder_name
+from running_example.modeling_environment import RunningExample
 from specification.atom.pattern.robotics.coremovement.surveillance import *
 from specification.atom.pattern.robotics.trigger.triggers import *
-from world.predefined.simple_gridworld import RunningExample
 from tools.persistence import Persistence
 
 """We import the environment"""

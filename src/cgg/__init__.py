@@ -20,7 +20,7 @@ from tools.logic import Logic
 from tools.storage import Store
 from tools.strings import StringMng
 from type import Types, Boolean
-from type.subtypes.locations import ReachLocation
+from type.subtypes.location import ReachLocation
 from typeset import Typeset
 from world import World
 from tools.strix import Strix
@@ -213,8 +213,8 @@ class Node(Goal):
                 while new_scenario is active_scenario:
                     new_scenario = random.sample(scenarios, 1)[0]
 
-                start = active_scenario.controller.entry_locations_next_step(self.world)[0]
-                destinations = new_scenario.controller.entry_locations_next_step(self.world)
+                start = active_scenario.controller.entry_locations_next_step(self.world.typeset)[0]
+                destinations = new_scenario.controller.entry_locations_next_step(self.world.typeset)
 
                 """Set new active scenario"""
                 active_scenario = new_scenario
@@ -312,9 +312,8 @@ class Node(Goal):
             #  TODO
             # for loc_source, loc_target in itertools.product(locs_a, locs_b):
 
-
-            scenario_a_entry_points = scenario_a.controller.all_entry_locations(self.world)
-            scenario_b_entry_points = scenario_b.controller.all_entry_locations(self.world)
+            scenario_a_entry_points = scenario_a.controller.all_entry_locations(self.world.typeset)
+            scenario_b_entry_points = scenario_b.controller.all_entry_locations(self.world.typeset)
             print(", ".join([x.name for x in scenario_a_entry_points]))
             print(", ".join([x.name for x in scenario_b_entry_points]))
             for start, finish in itertools.product(scenario_a_entry_points, scenario_b_entry_points):
@@ -326,8 +325,6 @@ class Node(Goal):
         print(f"{len(self.__t_controllers)} transition controller_specs generated:")
         for start, finish in self.__t_controllers.keys():
             print(f"{start.name} -> {finish.name}")
-
-
 
     def realize_specification_controllers(self, traversal: GraphTraversal = GraphTraversal.DFS,
                                           explored: Set[Node] = None, root=None):
@@ -380,7 +377,7 @@ class Node(Goal):
             trans_spec = Atom(formula=(trans_spec_str, typeset))
             trans_contract = Contract(guarantees=trans_spec)
             try:
-                controller_info = trans_contract.get_controller_info(world_ts=self.world)
+                controller_info = trans_contract.get_controller_info(world_ts=self.world.typeset)
                 a, g, i, o = controller_info.get_strix_inputs()
                 controller_synthesis_input = StringMng.get_controller_synthesis_str(controller_info)
                 Store.save_to_file(controller_synthesis_input,

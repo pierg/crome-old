@@ -9,7 +9,7 @@ from typing import Tuple, List, Dict, Set
 from specification.atom import Atom, AtomKind
 from tools.strings import StringMng
 from type import Boolean, TypeKinds
-from type.subtypes.locations import ReachLocation
+from type.subtypes.location import ReachLocation
 from typeset import Typeset
 from world import World
 
@@ -178,7 +178,7 @@ class Controller:
         self.__input_alphabet: List[Boolean] = []
         for input in inputs_str:
             if self.world is not None:
-                self.__input_alphabet.append(self.world[input])
+                self.__input_alphabet.append(self.world.typeset[input])
             else:
                 self.__input_alphabet.append(Boolean(input))
 
@@ -186,7 +186,7 @@ class Controller:
         self.__output_alphabet: List[Boolean] = []
         for output in outputs_str:
             if self.world is not None:
-                self.__output_alphabet.append(self.world[output])
+                self.__output_alphabet.append(self.world.typeset[output])
             else:
                 self.__output_alphabet.append(Boolean(output))
 

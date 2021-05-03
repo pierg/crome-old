@@ -1,9 +1,9 @@
 from type import BoundedInteger, Boolean, TypeKinds
 
 
-class ContextTime(BoundedInteger):
+class ContextInteger(BoundedInteger):
 
-    def __init__(self, name: str = "time"):
+    def __init__(self, name: str = "integer_context", min_value: int = None, max_value: int = None):
         super().__init__(name, min_value=0, max_value=24)
 
     @property
@@ -11,46 +11,46 @@ class ContextTime(BoundedInteger):
         return TypeKinds.CONTEXT
 
 
-class ContextBooleanTime(Boolean):
+class ContextBoolean(Boolean):
+
+    def __init__(self, name: str = "boolean_context"):
+        super().__init__(name)
+
+    @property
+    def kind(self):
+        return TypeKinds.CONTEXT
+
+    def to_atom(self):
+        from specification.atom import Atom, AtomKind
+        from typeset import Typeset
+        return Atom(formula=(self.name, Typeset({self})), check=False, kind=AtomKind.CONTEXT)
+
+
+class ContextIntegerTime(ContextInteger):
+
+    def __init__(self, name: str = "time"):
+        super().__init__(name, min_value=0, max_value=24)
+
+
+class ContextBooleanTime(ContextBoolean):
 
     def __init__(self, name: str = "time"):
         super().__init__(name)
 
-    @property
-    def kind(self):
-        return TypeKinds.CONTEXT
 
-    def to_atom(self):
-        from specification.atom import Atom, AtomKind
-        from typeset import Typeset
-        return Atom(formula=(self.name, Typeset({self})), check=False, kind=AtomKind.CONTEXT)
+class ContextBooleanMode(ContextBoolean):
+
+    def __init__(self, name: str = "mode"):
+        super().__init__(name)
 
 
-class ContextLocation(Boolean):
+class ContextLocation(ContextBoolean):
 
     def __init__(self, name: str = "location"):
         super().__init__(name)
 
-    @property
-    def kind(self):
-        return TypeKinds.CONTEXT
 
-    def to_atom(self):
-        from specification.atom import Atom, AtomKind
-        from typeset import Typeset
-        return Atom(formula=(self.name, Typeset({self})), check=False, kind=AtomKind.CONTEXT)
-
-
-class ContextIdentity(Boolean):
+class ContextIdentity(ContextBoolean):
 
     def __init__(self, name: str = "identity"):
         super().__init__(name)
-
-    @property
-    def kind(self):
-        return TypeKinds.CONTEXT
-
-    def to_atom(self):
-        from specification.atom import Atom, AtomKind
-        from typeset import Typeset
-        return Atom(formula=(self.name, Typeset({self})), check=False, kind=AtomKind.CONTEXT)
