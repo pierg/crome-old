@@ -99,14 +99,16 @@ class StrictOrderedPatrolling(CoreMovement):
             f3.append(f)
         f3 = Logic.and_(f3)
 
-        f4 = []
-        """1..n   G(l_{(i+1)%n} -> X((!l_{(i+1)%n} U l_{i})))"""
-        for i, l in enumerate(loc):
-            f = Logic.g_(Logic.implies_(loc[i], Logic.x_(Logic.u_(Logic.not_(loc[i]), loc[(i + 1) % n]))))
-            f4.append(f)
-        f4 = Logic.and_(f4)
-
-        new_formula = Logic.and_([f1, f2, f3, f4])
+        if len(loc) > 2:
+            f4 = []
+            """1..n   G(l_{(i+1)%n} -> X((!l_{(i+1)%n} U l_{i})))"""
+            for i, l in enumerate(loc):
+                f = Logic.g_(Logic.implies_(loc[i], Logic.x_(Logic.u_(Logic.not_(loc[i]), loc[(i + 1) % n]))))
+                f4.append(f)
+            f4 = Logic.and_(f4)
+            new_formula = Logic.and_([f1, f2, f3, f4])
+        else:
+            new_formula = Logic.and_([f1, f2, f3])
 
         super().__init__(formula=(new_formula, new_typeset))
 

@@ -1,5 +1,5 @@
 from tools.persistence import Persistence
-from running_example import output_folder_name
+from robocup import output_folder_name
 
 """Load CGG"""
 cgg = Persistence.load_cgg(output_folder_name)

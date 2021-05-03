@@ -1,0 +1,33 @@
+**ASSUMPTIONS**
+
+true
+GF(!groceries_recognized)
+GF(groceries_recognized)
+
+
+# if the robot has the object, then disable the sensor for new objects
+G(hold -> X(!groceries_recognized))
+
+
+
+**GUARANTEES**
+
+G(F(k1)) & G(F(k2))
+G(((groceries_recognized) <-> (X(store & k2))))
+G((k2 & ! (k3) & ! (k1) & ! (l3)) | (k3 & ! (k2) & ! (k1) & ! (l3)) | (k1 & ! (k2) & ! (k3) & ! (l3)) | (l3 & ! (k2) & ! (k3) & ! (k1)))
+G(((k2) -> (X((k2 | k3 | k1)))))
+G(((k1) -> (X((k2 | k3 | k1 | l3)))))
+G(((l3) -> (X((k1 | l3)))))
+G(((k3) -> (X((k2 | k3 | k1)))))
+
+
+**INPUTS**
+
+groceries_recognized
+
+**OUTPUTS**
+
+k2, store, k1, l3, k3, hold
+
+**END**
+

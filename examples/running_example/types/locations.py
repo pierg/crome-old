@@ -1,4 +1,4 @@
-from type.subtypes.locations import *
+from type.subtypes.location import *
 
 """"
     R1      R2   

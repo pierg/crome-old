@@ -1,22 +1,26 @@
-from specification.atom import Atom
+from specification import Specification
 from type.subtypes.active import Active
+from typing import Set
+from type import Types
 from typeset import Typeset
 
-from typing import Set, TypeVar, Dict
 
-from type import Types
+class World(dict):
+    def __init__(self, actions: Set[Types] = None, locations: Set[Types] = None, sensors: Set[Types] = None,
+                 contexts: Set[Types] = None, rules: Set[Specification] = None):
+        super().__init__()
 
-AllTypes = TypeVar('AllTypes', bound=Types)
+        self.__typeset = Typeset(actions | locations | sensors | contexts | {Active()})
 
+        for name, elem in self.__typeset.items():
+            super(World, self).__setitem__(name, elem.to_atom())
 
-class World(Typeset):
-    def __init__(self, types: Set[AllTypes] = None):
-        types_with_active = types | {Active()}
-        super().__init__(types_with_active)
+        self.__rules = rules
 
-    def get_atoms(self) -> Dict["str", Atom]:
-        dictionary = {}
-        for key, elem in self.items():
-            dictionary[key] = elem.to_atom()
+    @property
+    def rules(self) -> Set[Specification]:
+        return self.__rules
 
-        return dictionary
+    @property
+    def typeset(self) -> Typeset:
+        return self.__typeset

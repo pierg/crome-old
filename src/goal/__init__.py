@@ -164,7 +164,7 @@ class Goal:
             realized, kiss_mealy, time = Strix.generate_controller(a, g, i, o)
 
             if not realized:
-                controller_info = self.specification.get_controller_info(world_ts=self.__world)
+                controller_info = self.specification.get_controller_info(world_ts=self.__world.typeset)
                 a, g, i, o = controller_info.get_strix_inputs()
                 controller_synthesis_input = StringMng.get_controller_synthesis_str(controller_info)
                 Store.save_to_file(controller_synthesis_input, "controller.txt", folder_name)
