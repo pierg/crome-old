@@ -1,5 +1,8 @@
 import os
 import pickle
+
+from typing import Set
+
 from cgg import Node
 from controller import Controller
 
@@ -22,6 +25,23 @@ class Persistence:
 
         file = open(output_file, 'wb')
         pickle.dump(cgg, file)
+        file.close()
+
+    @staticmethod
+    def dump_goals(set_goals: Set[Node], subfolder_name: str = None):
+
+        if subfolder_name is not None:
+            output_folder = f"{Persistence.output_folder}/{subfolder_name}"
+        else:
+            output_folder = f"{Persistence.output_folder}"
+
+        output_file = f"{output_folder}/goals.dat"
+
+        if not os.path.exists(output_folder):
+            os.makedirs(output_folder)
+
+        file = open(output_file, 'wb')
+        pickle.dump(set_goals, file)
         file.close()
 
     @staticmethod
@@ -68,3 +88,19 @@ class Persistence:
         file.close()
 
         return controller
+
+    @staticmethod
+    def load_goals(subfolder_name: str = None) -> Set[Node]:
+
+        if subfolder_name is not None:
+            output_folder = f"{Persistence.output_folder}/{subfolder_name}"
+        else:
+            output_folder = f"{Persistence.output_folder}"
+
+        file = f"{output_folder}/goals.dat"
+
+        file = open(file, 'rb')
+        set_goals = pickle.load(file)
+        file.close()
+
+        return set_goals
