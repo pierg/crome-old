@@ -1,8 +1,5 @@
-from worlds import World
-from worlds.case_study_1.types.locations import *
-from worlds.case_study_1.types.sensors import *
-from worlds.case_study_1.types.actions import *
-from worlds.case_study_1.types.context import *
+from world import World
+from world.predefined.house.types import *
 
 
 class CaseStudy(World):

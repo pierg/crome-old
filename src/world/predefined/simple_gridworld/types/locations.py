@@ -32,7 +32,7 @@ class R2(ReachLocation):
 
     @property
     def adjacency_set(self):
-        return {"R1", "A"}
+        return {"R1", "R5"}
 
 
 class R3(ReachLocation):

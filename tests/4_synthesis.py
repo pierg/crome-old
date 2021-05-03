@@ -3,8 +3,8 @@ from cgg import Node, GraphTraversal
 from goal.exceptions import GoalException
 from specification.atom.pattern.basic import Init
 from specification.atom.pattern.robotics.coremovement.surveillance import Patrolling
-from worlds.abcd_gridworld import ABCDGridworld
-from worlds.simple_gridworld import SimpleGridWorld
+from world.abcd_gridworld import ABCDGridworld
+from world.simple_gridworld import SimpleGridWorld
 
 """Let us instantiate a world"""
 sw = SimpleGridWorld()

@@ -1,11 +1,8 @@
-from worlds import World
-from worlds.case_study.types.locations import *
-from worlds.case_study.types.sensors import *
-from worlds.case_study.types.actions import *
-from worlds.case_study.types.context import *
+from world import World
+from .types import *
 
 
-class CaseStudy(World):
+class RobocupHome(World):
 
     def __init__(self):
         super().__init__({

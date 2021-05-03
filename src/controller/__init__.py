@@ -11,7 +11,7 @@ from tools.strings import StringMng
 from type import Boolean, TypeKinds
 from type.subtypes.locations import ReachLocation
 from typeset import Typeset
-from worlds import World
+from world import World
 
 
 class Controller:
@@ -19,12 +19,19 @@ class Controller:
     def __init__(self,
                  mealy_machine: str,
                  world: World = None,
-                 name: str = None):
+                 name: str = None,
+                 synth_time: float = None):
 
         if name is None:
             self.__name = ""
         else:
             self.__name = name
+
+        if synth_time is None:
+            self.__synth_time = -1
+        else:
+            self.__synth_time = synth_time
+
         self.world = world
         self.mealy_machine = mealy_machine
         self.__current_location = None
@@ -69,6 +76,10 @@ class Controller:
     @property
     def name(self) -> str:
         return self.__name
+
+    @property
+    def synth_time(self) -> float:
+        return round(self.__synth_time, 2)
 
     @world.setter
     def world(self, value: World):

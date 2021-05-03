@@ -22,9 +22,8 @@ from tools.strings import StringMng
 from type import Types, Boolean
 from type.subtypes.locations import ReachLocation
 from typeset import Typeset
-from worlds import World
+from world import World
 from tools.strix import Strix
-
 
 
 class Link(Enum):
@@ -96,6 +95,11 @@ class Node(Goal):
     @property
     def t_trans(self) -> int:
         return self.__t_trans
+
+    @property
+    def t_controllers(self) -> Dict[Tuple[ReachLocation, ReachLocation], Controller]:
+        """Returns all transition controllers"""
+        return self.__t_controllers
 
     @property
     def t_controllers_folder_name(self) -> str:
@@ -303,6 +307,12 @@ class Node(Goal):
 
         """Generating Transition Controllers"""
         for scenario_a, scenario_b in itertools.combinations(scenarios, 2):
+            # locs_a = scenario_a.controller.locations
+            # locs_b = scenario_a.controller.locations
+            #  TODO
+            # for loc_source, loc_target in itertools.product(locs_a, locs_b):
+
+
             scenario_a_entry_points = scenario_a.controller.all_entry_locations(self.world)
             scenario_b_entry_points = scenario_b.controller.all_entry_locations(self.world)
             print(", ".join([x.name for x in scenario_a_entry_points]))
@@ -316,6 +326,8 @@ class Node(Goal):
         print(f"{len(self.__t_controllers)} transition controller_specs generated:")
         for start, finish in self.__t_controllers.keys():
             print(f"{start.name} -> {finish.name}")
+
+
 
     def realize_specification_controllers(self, traversal: GraphTraversal = GraphTraversal.DFS,
                                           explored: Set[Node] = None, root=None):
@@ -339,6 +351,15 @@ class Node(Goal):
 
         if traversal == GraphTraversal.BFS:
             raise NotImplemented
+
+    def get_all_nodes(self) -> Set[Node]:
+
+        """Depth-first search"""
+        result = set()
+        result.add(self)
+        for child in self.children_nodes():
+            result |= child.get_all_nodes()
+        return result
 
     def save(self):
         Store.save_to_file(str(self), "cgg.txt", self.session_name)
@@ -379,7 +400,8 @@ class Node(Goal):
             # Store.generate_eps_from_dot(dot_mealy, f"{start.name}_{finish.name}_dot",
             #                             folder_name)
 
-            t_controller = Controller(mealy_machine=kiss_mealy, world=self.world, name=t_controller_name)
+            t_controller = Controller(mealy_machine=kiss_mealy, world=self.world, name=t_controller_name,
+                                      synth_time=time)
             Store.save_to_file(str(t_controller), f"{start.name}_{finish.name}_table", folder_name)
 
             return t_controller

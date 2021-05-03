@@ -1,5 +1,4 @@
-from type.subtypes.context import ContextBooleanTime, ContextIdentity
-
+from type.subtypes.context import ContextBooleanTime
 
 class Day(ContextBooleanTime):
 
@@ -20,14 +19,3 @@ class Night(ContextBooleanTime):
     def mutex_group(self):
         return "time"
 
-
-
-
-class Severe(ContextIdentity):
-
-    def __init__(self, name: str = "severe"):
-        super().__init__(name)
-
-    @property
-    def mutex_group(self):
-        return "severe"
