@@ -1,4 +1,4 @@
-# SCENARIO 5 TAKE OUT THE GARBAGE TEXT
+# SCENARIO 5 CARRY LUGGAGE
 # - it's not blocked in location when it recognized the garbage, NEXT problem
 
 **ASSUMPTIONS**
