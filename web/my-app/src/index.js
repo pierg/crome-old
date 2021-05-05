@@ -1,13 +1,30 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import { StyleReset } from 'atomize';
+import { StyleReset, Icon } from 'atomize';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import CardStats from "./components/Cards/CardStats";
+import IndexDropdown from "./components/Dropdowns/IndexDropdown";
+import NotificationDropdown from "./components/Dropdowns/NotificationDropdown";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import "assets/styles/tailwind.css";
+import { Provider as StyletronProvider, DebugEngine } from "styletron-react";
+import { Client as Styletron } from "styletron-engine-atomic";
+
+const debug =
+  process.env.NODE_ENV === "production" ? void 0 : new DebugEngine();
+
+// 1. Create a client engine instance
+const engine = new Styletron();
 
 ReactDOM.render(
   <React.StrictMode>
     <App />
+    <NotificationDropdown />
+      <StyletronProvider value={engine} debug={debug} debugAfterHydration>
+      <Icon name="Add" size="20px"/>
+      </StyletronProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
