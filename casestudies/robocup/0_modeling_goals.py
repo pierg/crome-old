@@ -13,15 +13,15 @@ from world import Rule
 """We import the environment"""
 w = RobocupHome()
 
-all_locations = [w["l1"], w["l2"], w["l3"], w["l4"], w["l5"], w["l6"],
-                 w["k1"], w["k2"], w["k3"],
-                 w["r1"], w["r2"],
-                 w["h1"], w["h2"],
-                 w["b1"], w["b2"], w["b3"],
-                 w["e1"], w["e2"]]
+# all_locations = [w["l1"], w["l2"], w["l3"], w["l4"], w["l5"], w["l6"],
+#                  w["k1"], w["k2"], w["k3"],
+#                  w["r1"], w["r2"],
+#                  w["h1"], w["h2"],
+#                  w["b1"], w["b2"], w["b3"],
+#                  w["e1"], w["e2"]]
 
 print("CIAO")
-print(Patrolling(all_locations))
+print(OrderedPatrolling([w["k3"], w["e1"]]))
 print("CEAYSD")
 
 living_room = [w["l1"], w["l2"], w["l3"], w["l4"], w["l5"], w["l6"]]

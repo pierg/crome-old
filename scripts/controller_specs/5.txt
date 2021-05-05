@@ -1,5 +1,5 @@
 # SCENARIO 5 TAKE OUT THE GARBAGE TEXT
-
+# - ok but what to do when the goal finishes? It should go back to k3 and wait for garbage_Recognized
 
 **ASSUMPTIONS**
 
@@ -11,7 +11,10 @@ G(hold -> X(!garbage_recognized))
 **GUARANTEES**
 
 # GOAL 1: strict order visit from garbage to entrance
-F(k3) & F(h2) & F(e1) & (!(h2) U k3) & (!(e1) U h2)
+#F(k3) & F(h2) & F(e1) & (!(h2) U k3) & (!(e1) U h2)
+# Ordered Patrolling
+G(F(k3 & F(e1))) & (!(e1) U k3) & G(((e1) -> (X((!(e1) U k3))))) & G(((k3) -> (X((!(k3) U e1)))))
+
 
 # GOAL 2: drop garbage in e1
 G(e1 <-> X drop)
