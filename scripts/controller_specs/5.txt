@@ -6,6 +6,8 @@
 # RULE A1: if the robot has the garbage, then disable the sensor for new garbage
 G(hold -> X(!garbage_recognized))
 
+G(!k3 -> X(!garbage_recognized))
+
 
 
 **GUARANTEES**
@@ -32,9 +34,6 @@ G((drop) -> X(!hold))
 G(X drop -> (hold))
 
 
-# if the robot is available to hold and
-# its in the location where it recognises an object
-# then it should not move from that location
 G((garbage_recognized & !hold & k3) -> X (k3))
 
 
