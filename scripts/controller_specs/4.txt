@@ -13,7 +13,7 @@ G(hold -> X(!breakfast_ready))
 **GUARANTEES**
 
 # patrol living room
-G(F(l2)) & G(F(k1)) & G(F(k2))
+G(F(l2)) & G(F(k1))
 
 # serve_breakfast objects only at the table
 G(l2 <-> X serve_breakfast)
