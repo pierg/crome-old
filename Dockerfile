@@ -3,7 +3,7 @@ FROM pmallozzi/ltltools
 RUN git clone https://github.com/pierg/crome.git --branch dev --single-branch
 WORKDIR /home/crome
 
-# Installing NodeJS
+### Installing NodeJS as in https://github.com/sitespeedio/docker-node/blob/main/Dockerfile
 ENV NPM_CONFIG_LOGLEVEL info
 ENV NODE_VERSION 14.16.0
 
@@ -38,7 +38,7 @@ RUN export PLATFORM=$(if [ "$TARGETPLATFORM" = "linux/amd64" ] ; then echo "x64"
   && rm "node-v$NODE_VERSION-linux-$PLATFORM.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
   && apt-get purge -y --auto-remove $buildDeps \
   && ln -s /usr/local/bin/node /usr/local/bin/nodejs
-
+###
 
 
 RUN pip3 install -r requirements.txt
