@@ -35,19 +35,6 @@ function App() {
           <button name="submitExample" type="submit">Run Example</button>
         </form>
         <div>Example output : {window.result}</div>
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <p>My Token = {window.token}</p>
-        <a
-          className="App-link"
-          href="https://reactjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
         <Icon name="Add" color="black" size="50px" />
       </header>
     </div>

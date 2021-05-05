@@ -11,6 +11,8 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "assets/styles/tailwind.css";
 import { Provider as StyletronProvider, DebugEngine } from "styletron-react";
 import { Client as Styletron } from "styletron-engine-atomic";
+import PagesDropdown from "./components/Dropdowns/PagesDropdown";
+import TableDropdown from "./components/Dropdowns/TableDropdown";
 
 const debug =
   process.env.NODE_ENV === "production" ? void 0 : new DebugEngine();
@@ -20,11 +22,12 @@ const engine = new Styletron();
 
 ReactDOM.render(
   <React.StrictMode>
+      <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
+          <div>Dropdown to select action : </div>
+          <TableDropdown />
+          <div>It seems we can't modify the content of the dropdown</div>
+      </div>
     <App />
-    <NotificationDropdown />
-      <StyletronProvider value={engine} debug={debug} debugAfterHydration>
-      <Icon name="Add" size="20px"/>
-      </StyletronProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
