@@ -3,6 +3,8 @@ FROM pmallozzi/ltltools
 RUN git clone https://github.com/pierg/crome.git --branch dev --single-branch
 WORKDIR /home/crome
 
+ARG TARGETPLATFORM
+
 ### Installing NodeJS as in https://github.com/sitespeedio/docker-node/blob/main/Dockerfile
 ENV NPM_CONFIG_LOGLEVEL info
 ENV NODE_VERSION 14.16.0
