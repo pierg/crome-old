@@ -4,7 +4,6 @@ from world import World
 from robocup.types import *
 
 
-
 class RobocupHome(World):
 
     def __init__(self):
@@ -17,7 +16,7 @@ class RobocupHome(World):
             },
             locations={
                 # L1(),
-                L2(),
+                # L2(),
                 L3(),
                 # L4(),
                 # L5(),
@@ -26,12 +25,12 @@ class RobocupHome(World):
                 # B2(),
                 # B3(),
                 # H1(),
-                # H2(),
-                # E1(),
-                # E2(),
+                H2(),
+                E1(),
+                E2(),
                 K1(),
                 # K2(),
-                # K3(),
+                K3(),
                 # R1(),
                 # R2(),
             },
@@ -59,7 +58,3 @@ if __name__ == '__main__':
     print("\n\n")
     print("\n".join(a_rules))
     print(", ".join(a_ts.keys()))
-
-
-
-
