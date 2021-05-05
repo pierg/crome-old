@@ -35,10 +35,10 @@ G(X store -> (hold))
 G((groceries_recognized & !hold & k1) -> X (k1))
 
 
-G((k2 & !(k3)) | (k3 & !(k2)))
+G((k2 & !(k1)) | (k1 & !(k2)))
 
-G(((k2) -> (X((k2 | k3)))))
-G(((k3) -> (X((k2 | k3)))))
+G(((k2) -> (X((k2 | k1)))))
+G(((k1) -> (X((k2 | k1)))))
 
 
 **INPUTS**
@@ -47,6 +47,6 @@ groceries_recognized
 
 **OUTPUTS**
 
-hold, store, k2, k3
+hold, store, k2, k1
 
 **END**
