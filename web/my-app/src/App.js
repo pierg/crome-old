@@ -11,9 +11,18 @@ import {
 } from "atomize";
 import ReactDOM from "react-dom";
 import React from "react";
+import { Provider as StyletronProvider, DebugEngine } from "styletron-react";
+import { Client as Styletron } from "styletron-engine-atomic";
+
+const debug =
+  process.env.NODE_ENV === "production" ? void 0 : new DebugEngine();
+
+// 1. Create a client engine instance
+const engine = new Styletron();
 
 function App() {
   return (
+      <StyletronProvider value={engine} debug={debug} debugAfterHydration>
     <div className="App">
       <header className="App-header">
         <form action="/example/" method="post">
@@ -33,14 +42,16 @@ function App() {
         <p>My Token = {window.token}</p>
         <a
           className="App-link"
-          href="https://reactjs.org"
+          href="https://reactjs.org/"
           target="_blank"
           rel="noopener noreferrer"
         >
           Learn React
         </a>
+        <Icon name="Add" color="black" size="50px" />
       </header>
     </div>
+      </StyletronProvider>
   );
 }
 
