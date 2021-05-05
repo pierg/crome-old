@@ -6,7 +6,7 @@
 # RULE A1: if the robot has the garbage, then disable the sensor for new garbage
 G(hold -> X(!garbage_recognized))
 
-G(!k3 -> (!garbage_recognized))
+G(!k3 -> X(!garbage_recognized))
 
 
 
