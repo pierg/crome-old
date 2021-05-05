@@ -19,7 +19,7 @@ always => if see a person, greet in the next step
 
 path = os.path.abspath(os.path.dirname(__file__))
 
-"""We import the world"""
+"""We import the types"""
 w = RunningExample()
 
 """Strict Ordered Patrolling Location r1, r2"""

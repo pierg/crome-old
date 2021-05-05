@@ -11,7 +11,10 @@ from tools.strings import StringMng
 from type import Boolean, TypeKinds
 from type.subtypes.location import ReachLocation
 from typeset import Typeset
-from world import World
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from world import World
 
 
 class Controller:

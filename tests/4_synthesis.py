@@ -6,7 +6,7 @@ from specification.atom.pattern.robotics.coremovement.surveillance import Patrol
 from world.abcd_gridworld import ABCDGridworld
 from world.simple_gridworld import SimpleGridWorld
 
-"""Let us instantiate a world"""
+"""Let us instantiate a types"""
 sw = SimpleGridWorld()
 """"
     A   B   
@@ -56,7 +56,7 @@ try:
     print(
         "The CGG is unrealizable because a-b, c-d are adjacent within each other but there is no way to go from a-b to c-d")
 
-    """Let us instantiate a different world"""
+    """Let us instantiate a different types"""
     sw = ABCDGridworld()
     """"
         A   B   

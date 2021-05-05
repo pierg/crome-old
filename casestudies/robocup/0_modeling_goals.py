@@ -1,8 +1,8 @@
 from cgg import Node
 from cgg.exceptions import CGGException
 from contract import Contract
-from robocup.world import RobocupHome
 from robocup import output_folder_name
+from robocup.modeling_environment import RobocupHome
 from specification.atom.pattern.basic import GF, X
 from specification.atom.pattern.robotics.coremovement.surveillance import *
 from specification.atom.pattern.robotics.trigger.triggers import *
@@ -13,6 +13,17 @@ from world import Rule
 """We import the environment"""
 w = RobocupHome()
 
+all_locations = [w["l1"], w["l2"], w["l3"], w["l4"], w["l5"], w["l6"],
+                 w["k1"], w["k2"], w["k3"],
+                 w["r1"], w["r2"],
+                 w["h1"], w["h2"],
+                 w["b1"], w["b2"], w["b3"],
+                 w["e1"], w["e2"]]
+
+print("CIAO")
+print(Patrolling(all_locations))
+print("CEAYSD")
+
 living_room = [w["l1"], w["l2"], w["l3"], w["l4"], w["l5"], w["l6"]]
 kitchen = [w["k1"], w["k2"]]
 
@@ -22,7 +33,7 @@ patrol_living_room = Patrolling(living_room)
 """patrol kitchen"""
 patrol_kitchen = Patrolling(kitchen)
 
-"""Modeling the rules of the world"""
+"""Modeling the rules of the types"""
 env_rules = {
     Rule(
         rule=PromptReaction(w["hold"], w["!object_recognized"]),

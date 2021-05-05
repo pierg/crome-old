@@ -11,7 +11,7 @@ during context night => start from r3, patrol r3, r4
 always => if see a person, greet
 """
 
-"""We import the world"""
+"""We import the types"""
 w = Crome()
 
 """Strict Ordered Patrolling Location r1, r2"""

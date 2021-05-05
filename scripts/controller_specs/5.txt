@@ -1,40 +1,37 @@
-# SCENARIO 4 SERVING BREAKFAST
-# - only works when breakfast_ready is in k1
-# - it should go to k1, take the breakfast and serve it
+# SCENARIO 5 TAKE OUT THE GARBAGE
+
 
 **ASSUMPTIONS**
 
-# RULE if the robot has the object, then disable the sensor for new objects
-G(hold -> X(!breakfast_ready))
-
-#G(!k1 <-> X !(breakfast_ready))
+# RULE A1: if the robot has the garbage, then disable the sensor for new garbage
+G(hold -> X(!garbage_recognized))
 
 
 **GUARANTEES**
 
-# patrol living room
-G(F(l2)) & G(F(k1)) & G(F(k2))
+# GOAL 1: strict order visit from garbage to entrance
+F(k3) & F(h2) & F(e1) & (!(h2) U k3) & (!(e1) U h2) & (!(k3) U k3 & X((!(k3) U h2))) & (!(h2) U h2 & X((!(h2) U e1)))
 
-# serve_breakfast objects only at the table
-G(l2 <-> X serve_breakfast)
-
-# GOAL
-G((breakfast_ready & !hold & k1) -> X(k1))
-
-
+# GOAL 2: drop garbage in e1
+G(e1 <-> X drop)
 
 # RULE keep robots with free hands
 G(F(!hold))
 
-# RULE keep holding unless the robot serve_breakfasts
-G((hold & X !serve_breakfast) -> X(hold))
+# RULE keep holding unless the robot drops the object
+G((hold & X !drop) -> X(hold))
 
-# RULE if it serve_breakfasts the object then it does not hold anymore
-G((serve_breakfast) -> X(!hold))
+# RULE if it drops the object then it does not hold anymore
+G((drop) -> X(!hold))
 
-# RULE if it wants to serve_breakfasts then it is holding an object
-G(X serve_breakfast -> (hold))
+# RULE if it wants to drops then it is holding an object
+G(X drop -> (hold))
 
+
+# if the robot is available to hold and
+# its in the location where it recognises an object
+# then it should not move from that location
+G((garbage_recognized & !hold & k3) -> X (k3))
 
 
 G((r1 & !(k3) & !(l5) & !(l1) & !(e1) & !(k1) & !(b3) & !(r2) & !(h1) & !(h2) & !(l2) & !(k2) & !(l3) & !(l4) & !(l6) & !(b1) & !(e2) & !(b2)) | (k3 & !(r1) & !(l5) & !(l1) & !(e1) & !(k1) & !(b3) & !(r2) & !(h1) & !(h2) & !(l2) & !(k2) & !(l3) & !(l4) & !(l6) & !(b1) & !(e2) & !(b2)) | (l5 & !(r1) & !(k3) & !(l1) & !(e1) & !(k1) & !(b3) & !(r2) & !(h1) & !(h2) & !(l2) & !(k2) & !(l3) & !(l4) & !(l6) & !(b1) & !(e2) & !(b2)) | (l1 & !(r1) & !(l5) & !(k3) & !(e1) & !(k1) & !(b3) & !(r2) & !(h1) & !(h2) & !(l2) & !(k2) & !(l3) & !(l4) & !(l6) & !(b1) & !(e2) & !(b2)) | (e1 & !(r1) & !(l5) & !(k3) & !(l1) & !(k1) & !(b3) & !(r2) & !(h1) & !(h2) & !(l2) & !(k2) & !(l3) & !(l4) & !(l6) & !(b1) & !(e2) & !(b2)) | (b3 & !(r1) & !(l5) & !(k3) & !(l1) & !(e1) & !(k1) & !(r2) & !(h1) & !(h2) & !(l2) & !(k2) & !(l3) & !(l4) & !(l6) & !(b1) & !(e2) & !(b2)) | (h1 & !(r1) & !(l5) & !(k3) & !(l1) & !(e1) & !(k1) & !(b3) & !(r2) & !(h2) & !(l2) & !(k2) & !(l3) & !(l4) & !(l6) & !(b1) & !(e2) & !(b2)) | (h2 & !(r1) & !(l5) & !(k3) & !(l1) & !(e1) & !(k1) & !(b3) & !(r2) & !(h1) & !(l2) & !(k2) & !(l3) & !(l4) & !(l6) & !(b1) & !(e2) & !(b2)) | (l3 & !(r1) & !(l5) & !(k3) & !(l1) & !(e1) & !(k1) & !(b3) & !(r2) & !(h1) & !(h2) & !(l2) & !(k2) & !(l4) & !(l6) & !(b1) & !(e2) & !(b2)) | (l4 & !(r1) & !(l5) & !(k3) & !(l1) & !(e1) & !(k1) & !(b3) & !(r2) & !(h1) & !(h2) & !(l2) & !(k2) & !(l6) & !(l3) & !(b1) & !(e2) & !(b2)) | (l6 & !(r1) & !(l5) & !(k3) & !(l1) & !(e1) & !(k1) & !(b3) & !(r2) & !(h1) & !(h2) & !(l2) & !(k2) & !(l3) & !(l4) & !(b1) & !(e2) & !(b2)) | (b1 & !(r1) & !(l5) & !(k3) & !(l1) & !(e1) & !(k1) & !(b3) & !(r2) & !(h1) & !(h2) & !(l2) & !(k2) & !(l3) & !(l4) & !(l6) & !(e2) & !(b2)) | (k1 & !(r1) & !(l5) & !(k3) & !(l1) & !(e1) & !(b3) & !(r2) & !(h1) & !(h2) & !(l2) & !(k2) & !(l3) & !(l4) & !(l6) & !(b1) & !(e2) & !(b2)) | (r2 & !(r1) & !(l5) & !(k3) & !(l1) & !(e1) & !(k1) & !(b3) & !(h1) & !(h2) & !(l2) & !(k2) & !(l3) & !(l4) & !(l6) & !(b1) & !(e2) & !(b2)) | (l2 & !(r1) & !(l5) & !(k3) & !(l1) & !(e1) & !(k1) & !(b3) & !(r2) & !(h1) & !(h2) & !(k2) & !(l3) & !(l4) & !(l6) & !(b1) & !(e2) & !(b2)) | (k2 & !(r1) & !(l5) & !(k3) & !(l1) & !(e1) & !(k1) & !(b3) & !(r2) & !(h1) & !(h2) & !(l2) & !(l3) & !(l4) & !(l6) & !(b1) & !(e2) & !(b2)) | (e2 & !(r1) & !(l5) & !(k3) & !(l1) & !(e1) & !(k1) & !(b3) & !(r2) & !(h1) & !(h2) & !(l2) & !(k2) & !(l3) & !(l4) & !(l6) & !(b1) & !(b2)) | (b2 & !(r1) & !(l5) & !(k3) & !(l1) & !(e1) & !(k1) & !(b3) & !(r2) & !(h1) & !(h2) & !(l2) & !(k2) & !(l3) & !(l4) & !(l6) & !(b1) & !(e2)))
@@ -58,13 +55,12 @@ G(((k2) -> (X((k3 | k2 | k1)))))
 G(((e2) -> (X((h2 | e1 | e2)))))
 G(((b2) -> (X((b3 | b1 | l2 | b2)))))
 
-
 **INPUTS**
 
-breakfast_ready
+garbage_recognized
 
 **OUTPUTS**
 
-hold, serve_breakfast, k3, k2, k1, l5, l2, l6, l4, r1, l3, r2, l1, e1, e2, b3, b2, b1, h1, h2
+hold, drop, k3, k2, k1, l5, l2, l6, l4, r1, l3, r2, l1, e1, e2, b3, b2, b1, h1, h2
 
 **END**

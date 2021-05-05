@@ -1,8 +1,8 @@
+from specification import FormulaOutput
+from specification.atom import Atom
 from world import World
-from .sensors import *
-from .actions import *
-from .locations import *
-from .context import *
+from robocup.types import *
+
 
 
 class RobocupHome(World):
@@ -47,3 +47,19 @@ class RobocupHome(World):
                 Groceries(),
                 Garbage()
             })
+
+
+if __name__ == '__main__':
+    w = RobocupHome()
+    a_rules, a_ts = Atom.extract_mutex_rules(w.typeset, output=FormulaOutput.ListCNF)
+    m_rules, m_ts = Atom.extract_adjacency_rules(w.typeset, output=FormulaOutput.ListCNF)
+
+    print("\n".join(m_rules))
+    print(", ".join(m_ts.keys()))
+    print("\n\n")
+    print("\n".join(a_rules))
+    print(", ".join(a_ts.keys()))
+
+
+
+

@@ -1,32 +1,33 @@
 # SCENARIO 1 CLEAN UP
-# - hold drop not mutex
-# + good holding
+# Inside the living room are some misplaced objects.
+# The robot has to tidy up that room, throwing to the garbage the unrecognized ones.
+# Description: Go around the living room and drop any object in the garbage
 # - no short path
 
 **ASSUMPTIONS**
 
-# RULE if the robot has the object, then disable the sensor for new objects
+# RULE A1: if the robot has the object, then disable the sensor for new objects
 G(hold -> X(!object_recognized))
 
 
 **GUARANTEES**
 
-# patrol living room
+# GOAL 1: patrol living room
 G(F(l1)) & G(F(l2)) & G(F(l3)) & G(F(l4)) & G(F(l5)) & G(F(l6))
 
-# Drop objects in the garbage
+# GOAL 2: grop objects in the garbage
 G(k3 <-> X drop)
 
-# RULE keep robots with free hands
+# RULE G1: keep robots with free hands
 G(F(!hold))
 
-# RULE keep holding unless the robot drops the object
+# RULE G2: keep holding unless the robot drops the object
 G((hold & X !drop) -> X(hold))
 
-# RULE if it drops the object then it does not hold anymore
+# RULE G3: if it drops the object then it does not hold anymore
 G((drop) -> X(!hold))
 
-# RULE if it wants to drops then it is holding an object
+# RULE G4: if it wants to drops then it is holding an object
 G(X drop -> (hold))
 
 
@@ -42,20 +43,27 @@ G((object_recognized & !hold & l6) -> X (l6))
 
 
 
-G((l4 & ! (k3) & ! (h2) & ! (h1) & ! (l3) & ! (l6) & ! (b2) & ! (k1) & ! (k2) & ! (l5) & ! (l1) & ! (l2) & ! (r1)) | (k3 & ! (l4) & ! (h2) & ! (h1) & ! (l3) & ! (l6) & ! (b2) & ! (k1) & ! (k2) & ! (l5) & ! (l1) & ! (l2) & ! (r1)) | (h2 & ! (l4) & ! (k3) & ! (h1) & ! (l3) & ! (l6) & ! (b2) & ! (k1) & ! (k2) & ! (l5) & ! (l1) & ! (l2) & ! (r1)) | (h1 & ! (l4) & ! (k3) & ! (h2) & ! (l3) & ! (l6) & ! (b2) & ! (k1) & ! (k2) & ! (l5) & ! (l1) & ! (l2) & ! (r1)) | (l3 & ! (l4) & ! (k3) & ! (h2) & ! (h1) & ! (l6) & ! (b2) & ! (k2) & ! (k1) & ! (l5) & ! (l1) & ! (l2) & ! (r1)) | (l6 & ! (l4) & ! (k3) & ! (h2) & ! (h1) & ! (l3) & ! (b2) & ! (k1) & ! (k2) & ! (l5) & ! (l1) & ! (l2) & ! (r1)) | (b2 & ! (l4) & ! (k3) & ! (h2) & ! (h1) & ! (l3) & ! (k2) & ! (l6) & ! (k1) & ! (l5) & ! (l1) & ! (l2) & ! (r1)) | (k1 & ! (l4) & ! (k3) & ! (h2) & ! (h1) & ! (l3) & ! (l6) & ! (b2) & ! (k2) & ! (l5) & ! (l1) & ! (l2) & ! (r1)) | (k2 & ! (l4) & ! (k3) & ! (h2) & ! (h1) & ! (l3) & ! (l6) & ! (b2) & ! (k1) & ! (l5) & ! (l1) & ! (l2) & ! (r1)) | (l5 & ! (l4) & ! (k3) & ! (h2) & ! (h1) & ! (l3) & ! (l6) & ! (b2) & ! (k1) & ! (k2) & ! (l1) & ! (l2) & ! (r1)) | (l1 & ! (l4) & ! (k3) & ! (h2) & ! (h1) & ! (l3) & ! (l6) & ! (b2) & ! (k1) & ! (k2) & ! (l5) & ! (l2) & ! (r1)) | (l2 & ! (l4) & ! (k3) & ! (h2) & ! (h1) & ! (l3) & ! (l6) & ! (b2) & ! (k1) & ! (k2) & ! (l5) & ! (l1) & ! (r1)) | (r1 & ! (l4) & ! (k3) & ! (h2) & ! (h1) & ! (l3) & ! (l6) & ! (b2) & ! (k1) & ! (k2) & ! (l5) & ! (l1) & ! (l2)))
-G(((l4) -> (X((l5 | l4 | l1)))))
-G(((k3) -> (X((k2 | k3 | k1)))))
-G(((h2) -> (X((h1 | l3 | h2)))))
-G(((h1) -> (X((h1 | h2 | l2)))))
-G(((l3) -> (X((h2 | l3 | l6 | k1 | l2 | r1)))))
+G((r1 & !(k3) & !(l5) & !(l1) & !(e1) & !(k1) & !(b3) & !(r2) & !(h1) & !(h2) & !(l2) & !(k2) & !(l3) & !(l4) & !(l6) & !(b1) & !(e2) & !(b2)) | (k3 & !(r1) & !(l5) & !(l1) & !(e1) & !(k1) & !(b3) & !(r2) & !(h1) & !(h2) & !(l2) & !(k2) & !(l3) & !(l4) & !(l6) & !(b1) & !(e2) & !(b2)) | (l5 & !(r1) & !(k3) & !(l1) & !(e1) & !(k1) & !(b3) & !(r2) & !(h1) & !(h2) & !(l2) & !(k2) & !(l3) & !(l4) & !(l6) & !(b1) & !(e2) & !(b2)) | (l1 & !(r1) & !(l5) & !(k3) & !(e1) & !(k1) & !(b3) & !(r2) & !(h1) & !(h2) & !(l2) & !(k2) & !(l3) & !(l4) & !(l6) & !(b1) & !(e2) & !(b2)) | (e1 & !(r1) & !(l5) & !(k3) & !(l1) & !(k1) & !(b3) & !(r2) & !(h1) & !(h2) & !(l2) & !(k2) & !(l3) & !(l4) & !(l6) & !(b1) & !(e2) & !(b2)) | (b3 & !(r1) & !(l5) & !(k3) & !(l1) & !(e1) & !(k1) & !(r2) & !(h1) & !(h2) & !(l2) & !(k2) & !(l3) & !(l4) & !(l6) & !(b1) & !(e2) & !(b2)) | (h1 & !(r1) & !(l5) & !(k3) & !(l1) & !(e1) & !(k1) & !(b3) & !(r2) & !(h2) & !(l2) & !(k2) & !(l3) & !(l4) & !(l6) & !(b1) & !(e2) & !(b2)) | (h2 & !(r1) & !(l5) & !(k3) & !(l1) & !(e1) & !(k1) & !(b3) & !(r2) & !(h1) & !(l2) & !(k2) & !(l3) & !(l4) & !(l6) & !(b1) & !(e2) & !(b2)) | (l3 & !(r1) & !(l5) & !(k3) & !(l1) & !(e1) & !(k1) & !(b3) & !(r2) & !(h1) & !(h2) & !(l2) & !(k2) & !(l4) & !(l6) & !(b1) & !(e2) & !(b2)) | (l4 & !(r1) & !(l5) & !(k3) & !(l1) & !(e1) & !(k1) & !(b3) & !(r2) & !(h1) & !(h2) & !(l2) & !(k2) & !(l6) & !(l3) & !(b1) & !(e2) & !(b2)) | (l6 & !(r1) & !(l5) & !(k3) & !(l1) & !(e1) & !(k1) & !(b3) & !(r2) & !(h1) & !(h2) & !(l2) & !(k2) & !(l3) & !(l4) & !(b1) & !(e2) & !(b2)) | (b1 & !(r1) & !(l5) & !(k3) & !(l1) & !(e1) & !(k1) & !(b3) & !(r2) & !(h1) & !(h2) & !(l2) & !(k2) & !(l3) & !(l4) & !(l6) & !(e2) & !(b2)) | (k1 & !(r1) & !(l5) & !(k3) & !(l1) & !(e1) & !(b3) & !(r2) & !(h1) & !(h2) & !(l2) & !(k2) & !(l3) & !(l4) & !(l6) & !(b1) & !(e2) & !(b2)) | (r2 & !(r1) & !(l5) & !(k3) & !(l1) & !(e1) & !(k1) & !(b3) & !(h1) & !(h2) & !(l2) & !(k2) & !(l3) & !(l4) & !(l6) & !(b1) & !(e2) & !(b2)) | (l2 & !(r1) & !(l5) & !(k3) & !(l1) & !(e1) & !(k1) & !(b3) & !(r2) & !(h1) & !(h2) & !(k2) & !(l3) & !(l4) & !(l6) & !(b1) & !(e2) & !(b2)) | (k2 & !(r1) & !(l5) & !(k3) & !(l1) & !(e1) & !(k1) & !(b3) & !(r2) & !(h1) & !(h2) & !(l2) & !(l3) & !(l4) & !(l6) & !(b1) & !(e2) & !(b2)) | (e2 & !(r1) & !(l5) & !(k3) & !(l1) & !(e1) & !(k1) & !(b3) & !(r2) & !(h1) & !(h2) & !(l2) & !(k2) & !(l3) & !(l4) & !(l6) & !(b1) & !(b2)) | (b2 & !(r1) & !(l5) & !(k3) & !(l1) & !(e1) & !(k1) & !(b3) & !(r2) & !(h1) & !(h2) & !(l2) & !(k2) & !(l3) & !(l4) & !(l6) & !(b1) & !(e2)))
+
+G(((k3) -> (X((k3 | k2 | k1)))))
+G(((l5) -> (X((l5 | l2 | l6 | l4)))))
+G(((r1) -> (X((r1 | l3 | r2)))))
+G(((l1) -> (X((l2 | l1 | l4)))))
+G(((e1) -> (X((e1 | e2)))))
+G(((b3) -> (X((b2 | b1 | b3)))))
+G(((h1) -> (X((h2 | l2 | h1)))))
+G(((h2) -> (X((e2 | h2 | h1 | l3)))))
+G(((l3) -> (X((r1 | k1 | h2 | l2 | l3 | l6)))))
+G(((l4) -> (X((l5 | l1 | l4)))))
 G(((l6) -> (X((l5 | l6 | l3)))))
-G(((b2) -> (X((l2 | b2)))))
-G(((k1) -> (X((k3 | l3 | k2 | k1)))))
+G(((b1) -> (X((b3 | b1 | b2)))))
+G(((k1) -> (X((k3 | k2 | k1 | l3)))))
+G(((r2) -> (X((r1 | r2)))))
+G(((l2) -> (X((l5 | l1 | h1 | l2 | l3 | b2)))))
 G(((k2) -> (X((k3 | k2 | k1)))))
-G(((l5) -> (X((l5 | l4 | l6 | l2)))))
-G(((l1) -> (X((l4 | l1 | l2)))))
-G(((l2) -> (X((h1 | l3 | b2 | l5 | l1 | l2)))))
-G(((r1) -> (X((r1 | l3)))))
+G(((e2) -> (X((h2 | e1 | e2)))))
+G(((b2) -> (X((b3 | b1 | l2 | b2)))))
+
 
 
 **INPUTS**
@@ -64,6 +72,6 @@ object_recognized
 
 **OUTPUTS**
 
-hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1
+hold, drop, k3, k2, k1, l5, l2, l6, l4, r1, l3, r2, l1, e1, e2, b3, b2, b1, h1, h2
 
 **END**
