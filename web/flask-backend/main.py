@@ -1,5 +1,7 @@
+from pathlib import Path
+
 import flask
-import sys
+import sys, os
 import subprocess
 
 from flask import render_template, request
@@ -19,8 +21,11 @@ def run_example():
     example_name = request.form['exampleButtons']
     output_path = "../../examples/running_example/" + example_name + ".py"
     output_path = Path(output_path)
+    print(output_path)
     result = subprocess.check_output([sys.executable, output_path])
     return render_template('index.html', result=result)
 
 
-app.run(debug=True)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 80))
+    app.run(host='0.0.0.0', port=port, debug=True)
