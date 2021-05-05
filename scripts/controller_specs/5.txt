@@ -6,13 +6,12 @@
 # RULE A1: if the robot has the garbage, then disable the sensor for new garbage
 G(hold -> X(!garbage_recognized))
 
-G(F(!garbage_recognized))
 
 
 **GUARANTEES**
 
 # GOAL 1: strict order visit from garbage to entrance
-F(k3) & F(h2) & F(e1) & (!(h2) U k3) & (!(e1) U h2) & (!(k3) U k3 & X((!(k3) U h2))) & (!(h2) U h2 & X((!(h2) U e1)))
+F(k3) & F(h2) & F(e1) & (!(h2) U k3) & (!(e1) U h2)
 
 # GOAL 2: drop garbage in e1
 G(e1 <-> X drop)
