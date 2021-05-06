@@ -1,6 +1,7 @@
 FROM pmallozzi/ltltools:web
 
-RUN git clone https://github.com/pierg/crome.git --branch dev --single-branch
+RUN mkdir /home/crome
+COPY . /home/crome/
 WORKDIR /home/crome
 
 
