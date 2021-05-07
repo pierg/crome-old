@@ -1,7 +1,11 @@
 import React from "react";
 import { createPopper } from "@popperjs/core";
 
-const NotificationDropdown = () => {
+export default function TableDropdownF({
+  firstAction,
+    secondAction,
+    thirdAction,
+}) {
 
   // dropdown props
   const [dropdownPopoverShow, setDropdownPopoverShow] = React.useState(false);
@@ -43,7 +47,7 @@ const NotificationDropdown = () => {
           }
           onClick={(e) => e.preventDefault()}
         >
-            Action
+            {firstAction}
         </a>
         <a
           href="#pablo"
@@ -52,7 +56,7 @@ const NotificationDropdown = () => {
           }
           onClick={(e) => e.preventDefault()}
         >
-          Another action
+            {secondAction}
         </a>
         <a
           href="#pablo"
@@ -61,11 +65,9 @@ const NotificationDropdown = () => {
           }
           onClick={(e) => e.preventDefault()}
         >
-          Something else here
+            {thirdAction}
         </a>
       </div>
     </>
   );
 };
-
-export default NotificationDropdown;

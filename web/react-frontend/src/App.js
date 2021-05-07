@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import {
   ThemeProvider,
@@ -35,7 +34,6 @@ function App() {
           <button name="submitExample" type="submit">Run Example</button>
         </form>
         <div>Example output : {window.result}</div>
-        <Icon name="Add" color="black" size="50px" />
       </header>
     </div>
       </StyletronProvider>
