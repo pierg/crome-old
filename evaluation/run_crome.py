@@ -75,7 +75,7 @@ try:
         t_s_controllers += node.synth_time
         n_s_controllers += 1
         states.append(str(len(node.controller.states)))
-        states.append(str(len(node.controller.transitions)))
+        transitions.append(str(len(node.controller.transitions)))
 
     t_t_controllers = 0
     n_t_controllers = 0
