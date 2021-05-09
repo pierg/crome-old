@@ -313,9 +313,13 @@ class Node(Goal):
             # locs_b = scenario_a.controller.locations
             #  TODO
             # for loc_source, loc_target in itertools.product(locs_a, locs_b):
+            #
+            # scenario_a_entry_points = scenario_a.controller.all_entry_locations(self.world.typeset)
+            # scenario_b_entry_points = scenario_b.controller.all_entry_locations(self.world.typeset)
+            #
+            scenario_a_entry_points = scenario_a.controller.locations
+            scenario_b_entry_points = scenario_b.controller.locations
 
-            scenario_a_entry_points = scenario_a.controller.all_entry_locations(self.world.typeset)
-            scenario_b_entry_points = scenario_b.controller.all_entry_locations(self.world.typeset)
             print(", ".join([x.name for x in scenario_a_entry_points]))
             print(", ".join([x.name for x in scenario_b_entry_points]))
             for start, finish in itertools.product(scenario_a_entry_points, scenario_b_entry_points):

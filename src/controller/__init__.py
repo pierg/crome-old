@@ -304,16 +304,16 @@ class Controller:
         return self.__input_alphabet
 
     @property
-    def output_alphabet(self) -> List[Boolean]:
-        return self.__output_alphabet
-
-    @property
     def locations(self) -> List[ReachLocation]:
         locations = []
         for element in self.__output_alphabet:
             if element.kind == TypeKinds.LOCATION and isinstance(element, ReachLocation):
                 locations.append(element)
         return locations
+
+    @property
+    def output_alphabet(self) -> List[Boolean]:
+        return self.__output_alphabet
 
     def all_entry_locations(self, typeset: Typeset) -> Set[ReachLocation]:
         """List of all locations from where it is possible to reach any of the locations of the controller"""
