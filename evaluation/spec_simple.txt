@@ -42,15 +42,12 @@ G(!(day & active) | (r1 -> X(!(day & active) U ((!(day & active) | !r1) U ((day 
 
 
 # Active is false only when transitioning
-G(r5 <-> ! active)
+G(r5 -> ! active)
 
 # Active only for one step (forcing to only visit r5 and change context)
 G(!active -> X active)
 
-# Forcing to not go to other locations during the context (NOT WORKING)
-#G(day -> !(r3 | r4))
-#G(night -> !(r1 | r2))
-
+G((active & X!active) -> ((day & X night) | (night & X day)))
 
 
 # Mutex and adjacency Rules
