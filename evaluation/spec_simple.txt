@@ -1,7 +1,5 @@
 **ASSUMPTIONS**
 
-G(F(person))
-
 G(F(day))
 G(F(night))
 
@@ -44,19 +42,14 @@ G(!(day & active) | (r2 -> X(!(day & active) U ((!(day & active) | !r2) U ((day 
 G(!(day & active) | (r1 -> X(!(day & active) U ((!(day & active) | !r1) U ((day & active) & r2)))))
 
 
+G(r5 -> X !r5)
+
 # Active is false only when transitioning
 G(r5 <-> ! active)
 
 
-# In all context (when active) immediately greet when see a person
-G(((active & person) <-> (active & greet)))
 
-# Only the day register a person in the next step
-G(((day & active & person) <-> (X(((!(day & active) U day & active & register) | G(!(day & active)))))))
-
-
-
-G(F(r1 & F(r2))) & (! (r2) U r1) & G(((r2) -> (X((! (r2) U r1))))) & G(((r1) -> (X((! (r1) U r2))))) & G(((r1) -> (X((! (r1) U r2))))) & G(((r2) -> (X((! (r2) U r1)))))
+# Mutex and adjacency Rules
 G((r4 & ! (r3) & ! (r1) & ! (r2) & ! (r5)) | (r1 & ! (r4) & ! (r5) & ! (r2) & ! (r3)) | (r5 & ! (r4) & ! (r1) & ! (r2) & ! (r3)) | (r2 & ! (r4) & ! (r5) & ! (r1) & ! (r3)) | (r3 & ! (r4) & ! (r5) & ! (r2) & ! (r1)))
 G(((r4) -> (X((r4 | r3 | r5)))))
 G(((r5) -> (X((r4 | r5 | r2 | r1 | r3)))))
@@ -67,11 +60,11 @@ G(((r3) -> (X((r4 | r3 | r5)))))
 
 **INPUTS**
 
-person, day, night
+day, night
 
 **OUTPUTS**
 
-r4, r5, r2, r1, register, r3, greet, active
+r4, r5, r2, r1, r3, active
 
 **END**
 

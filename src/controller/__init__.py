@@ -148,6 +148,52 @@ class Controller:
 
         return tabulate(history, headers=headers)
 
+
+    def simulate_day_night(self, steps: int = 50):
+        """Simulate a run of 50 steps"""
+
+        headers = ["t", "inputs", "outputs"]
+        history: List[List[str]] = []
+
+        d_time = True
+
+        for i in range(steps):
+            """Take a reaction in the mealy machine"""
+            edges = self.get_all_inputs_from_state(self.__current_state)
+            n_edges = []
+            d_edges = []
+            for edge in edges:
+                for element in edge:
+                    if list(element.typeset.keys())[0] == "day":
+                        if not element.negated:
+                            d_edges.append(edge)
+                        else:
+                            n_edges.append(edge)
+            if i % 5 == 0:
+                d_time = not d_time
+
+            if d_time:
+                selected_edge = random.choice(d_edges)
+            else:
+                selected_edge = random.choice(n_edges)
+
+            inputs, outputs = self.react(selected_edge)
+            inputs_str = []
+            for x in inputs:
+                if not x.negated:
+                    inputs_str.append(str(x))
+            outputs_str = []
+            for x in outputs:
+                if not x.negated:
+                    outputs_str.append(str(x))
+            inputs_str = ', '.join(inputs_str)
+            outputs_str = ', '.join(outputs_str)
+            history.append([i, inputs_str, outputs_str])
+
+        return tabulate(history, headers=headers)
+
+
+
     def reset(self):
         """Reset mealy machine"""
         self.__current_state = self.__initial_state

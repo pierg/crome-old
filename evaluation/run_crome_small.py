@@ -28,11 +28,11 @@ ordered_patrol_day = StrictOrderedPatrolling([w["r1"], w["r2"]])
 """Strict Ordered Patrolling Location r3, r4"""
 ordered_patrol_night = StrictOrderedPatrolling([w["r3"], w["r4"]])
 
-"""Only if see a person, greet immediately"""
-greet = BoundReaction(w["person"], w["greet"])
-
-"""Only if see a person, register in the next step"""
-register = BoundDelay(w["person"], w["register"])
+# """Only if see a person, greet immediately"""
+# greet = BoundReaction(w["person"], w["greet"])
+#
+# """Only if see a person, register in the next step"""
+# register = BoundDelay(w["person"], w["register"])
 
 try:
 
@@ -46,17 +46,17 @@ try:
                    specification=ordered_patrol_night,
                    world=w)
 
-    n_greet = Node(name="greet_person",
-                   specification=greet,
-                   world=w)
-
-    n_register = Node(name="register_person",
-                      context=w["day"],
-                      specification=register,
-                      world=w)
+    # n_greet = Node(name="greet_person",
+    #                specification=greet,
+    #                world=w)
+    #
+    # n_register = Node(name="register_person",
+    #                   context=w["day"],
+    #                   specification=register,
+    #                   world=w)
 
     t_cgg_start = time.time()
-    cgg = Node.build_cgg({n_day, n_night, n_greet, n_register})
+    cgg = Node.build_cgg({n_day, n_night})
     t_cgg_end = time.time()
 
     t_cgg = t_cgg_end - t_cgg_start
@@ -66,6 +66,8 @@ try:
     print(cgg)
 
     cgg.realize_all(t_trans=3)
+    simulation = cgg.controller.simulate(50)
+    print(simulation)
 
     t_s_controllers = 0
     n_s_controllers = 0

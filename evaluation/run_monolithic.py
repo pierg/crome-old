@@ -1,16 +1,12 @@
 import os
 from controller import Controller
+from running_example.modeling_environment import RunningExample
+from tools.persistence import Persistence
 from tools.storage import Store
 from tools.strings import StringMng
 from tools.strix import Strix
 from specification.atom.pattern.robotics.trigger.triggers_modified import *
-from examples.running_example.world import RunningExample
 
-w = RunningExample()
-greet = BoundReaction(w["person"], w["greet"], w["active"], w["day"])
-register = BoundDelay(w["person"], w["register"], w["active"], w["day"])
-print(greet)
-print(register)
 
 path = os.path.abspath(os.path.dirname(__file__))
 
@@ -26,9 +22,11 @@ Store.save_to_file(res, f"monolithic_time.txt", absolute_folder_path=f"{path}")
 
 controller = Controller(mealy_machine=kiss_format, synth_time=exec_time)
 
+Persistence.dump_controller(controller, f"{path}", name=f"{controller_name}")
+
 print("\n~~~MEALY MACHINE~~~\n" + str(controller))
 Store.save_to_file(str(controller), f"{controller_name}_table.txt", absolute_folder_path=f"{path}")
 
-run = controller.simulate()
+run = controller.simulate_day_night()
 print("\n\n\n~~~SIMULATION OF A RUN~~~\n" + run)
 Store.save_to_file(str(run), f"{controller_name}_run.txt", absolute_folder_path=f"{path}")
