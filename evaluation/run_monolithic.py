@@ -17,10 +17,11 @@ print(f"controller selected: {path}/{controller_name}.txt")
 a, g, i, o = StringMng.parse_controller_specification_from_file(f"{path}/{controller_name}.txt")
 realizable, kiss_format, exec_time = Strix.generate_controller(a, g, i, o)
 
-res = f"TIME MONOLITHIC SYNTHESIS    \t= {exec_time}\n\n"
-Store.save_to_file(res, f"monolithic_time.txt", absolute_folder_path=f"{path}")
-
 controller = Controller(mealy_machine=kiss_format, synth_time=exec_time)
+
+
+res = f"TIME MONOLITHIC SYNTHESIS    \t= {exec_time}\nN OF STATES:\t{len(controller.states)}\nN OF EDGES:\t{len(controller.transitions)}"
+Store.save_to_file(res, f"monolithic_time.txt", absolute_folder_path=f"{path}")
 
 Persistence.dump_controller(controller, f"{path}", name=f"{controller_name}")
 
@@ -30,3 +31,5 @@ Store.save_to_file(str(controller), f"{controller_name}_table.txt", absolute_fol
 run = controller.simulate_day_night()
 print("\n\n\n~~~SIMULATION OF A RUN~~~\n" + run)
 Store.save_to_file(str(run), f"{controller_name}_run.txt", absolute_folder_path=f"{path}")
+
+print(f"\n\nRESULTS:\n{res}")

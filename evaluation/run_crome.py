@@ -69,9 +69,13 @@ try:
 
     t_s_controllers = 0
     n_s_controllers = 0
+    states = []
+    transitions = []
     for node in cgg.get_scenarios():
         t_s_controllers += node.synth_time
         n_s_controllers += 1
+        states.append(str(len(node.controller.states)))
+        states.append(str(len(node.controller.transitions)))
 
     t_t_controllers = 0
     n_t_controllers = 0
@@ -82,15 +86,17 @@ try:
     res = ""
     res += f"TIME CGG BUILD  \t= {t_cgg}\n"
     res += f"NUMBER OF S-CTRL\t= {n_s_controllers}\n"
-    res += f"NUMBER OF T-CTRL\t= {n_t_controllers}\n"
+    res += f"NUMBER OF STATES\t= {', '.join(states)}\n"
+    res += f"NUMBER OF TRANSITIONS\t= {', '.join(transitions)}\n"
+    res += f"\nNUMBER OF T-CTRL\t= {n_t_controllers}\n"
     res += f"TIME S-CTRL     \t= {t_s_controllers}\n"
     res += f"TIME T-CTRL     \t= {t_t_controllers}\n"
     res += f"TIME TOTAL      \t= {t_cgg + t_s_controllers + t_t_controllers}\n\n"
 
-    print(res)
-
     Store.save_to_file(f"{res}", f"crome_times.txt",
                        absolute_folder_path=f"{path}")
+
+    print(f"\n\nRESULTS:\n{res}")
 
 except CGGException as e:
     raise e
