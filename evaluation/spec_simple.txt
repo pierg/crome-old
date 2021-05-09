@@ -47,6 +47,7 @@ G(r5 -> ! active)
 # Active only for one step (forcing to only visit r5 and change context)
 G(!active -> X active)
 
+# Deactivates when inactive
 G((active & X!active) -> ((day & X night) | (night & X day)))
 
 
