@@ -4,7 +4,6 @@ from cgg import Node
 from cgg.exceptions import CGGException
 from running_example.modeling_environment import RunningExample
 from specification.atom.pattern.robotics.coremovement.surveillance import *
-from specification.atom.pattern.robotics.trigger.triggers import *
 from tools.persistence import Persistence
 from tools.storage import Store
 import time
@@ -29,22 +28,36 @@ ordered_patrol_day = StrictOrderedPatrolling([w["r1"], w["r2"]])
 """Strict Ordered Patrolling Location r3, r4"""
 ordered_patrol_night = StrictOrderedPatrolling([w["r3"], w["r4"]])
 
-# """Only if see a person, greet immediately"""
-# greet = BoundReaction(w["person"], w["greet"])
-#
-# """Only if see a person, register in the next step"""
-# register = BoundDelay(w["person"], w["register"])
-
 try:
 
-    cgg = Persistence.load_cgg(folder_name)
+    n_day = Node(name="day_patrol_a",
+                 context=w["day"],
+                 specification=ordered_patrol_day,
+                 world=w)
 
-    """Launch a simulation of n_steps where each contexts does change for at least t_min_context """
+    n_night = Node(name="night_patrol_b",
+                   context=w["night"],
+                   specification=ordered_patrol_night,
+                   world=w)
+
+    t_cgg_start = time.time()
+    cgg = Node.build_cgg({n_day, n_night})
+    t_cgg_end = time.time()
+
+    t_cgg = t_cgg_end - t_cgg_start
+
+    cgg.set_session_name(folder_name)
+    cgg.save()
+    print(cgg)
+
+    cgg.realize_all(t_trans=3)
+    cgg.save()
+
+    Persistence.dump_cgg(cgg)
+
     run = cgg.orchestrate(n_steps=50, t_min_context=6)
     print(run)
 
-    """Save simulation as text file"""
-    Store.save_to_file(str(run), file_name="crome_simple_run.txt", absolute_folder_path=f"{path}")
 
 
 except CGGException as e:

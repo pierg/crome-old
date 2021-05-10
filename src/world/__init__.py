@@ -5,6 +5,10 @@ from typing import Set, Dict, Tuple
 from type import Types
 from typeset import Typeset
 
+from typing import TYPE_CHECKING
+
+from type.subtypes.location import ReachLocation
+
 
 class Rule:
     def __init__(self,
@@ -63,3 +67,13 @@ class World(dict):
 
     def add_rules(self, rules: Set[Rule]):
         self.__rules |= rules
+
+    def adjacent_types(self, location: ReachLocation) -> Set[ReachLocation]:
+
+        adjacent_types = set()
+        for class_name in location.adjacency_set:
+            for t in self.typeset.values():
+                if type(t).__name__ == class_name:
+                    adjacent_types.add(t)
+
+        return adjacent_types
