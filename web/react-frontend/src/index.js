@@ -41,7 +41,6 @@ ReactDOM.render(
             <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
           <div>Dropdown to select action : </div>
           <TableDropdownF firstAction={"test1"} secondAction={"test2"} thirdAction={"test3"}/>
-          <div>It seems we can't modify the content of the dropdown</div>
       </div>
         </StyletronProvider>
     <App />
