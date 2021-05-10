@@ -8,8 +8,6 @@ from specification.atom.pattern.robotics.trigger.triggers import *
 from tools.storage import Store
 import time
 
-folder_name = "crome_evaluation"
-
 """Illustrative Example:
 GOALS to model:
 during context day => start from r1, patrol r1, r2 
@@ -18,6 +16,8 @@ always => if see a person, greet in the next step
 """
 
 path = os.path.abspath(os.path.dirname(__file__))
+
+result_folder = f"{path}/results/CROME"
 
 """We import the world"""
 w = RunningExample()
@@ -61,7 +61,7 @@ try:
 
     t_cgg = t_cgg_end - t_cgg_start
 
-    cgg.set_session_name(folder_name)
+    cgg.set_session_name("crome_evaluation")
     cgg.save()
     print(cgg)
 
@@ -99,10 +99,10 @@ try:
     run = cgg.orchestrate(n_steps=50, t_min_context=6)
     print(run)
 
-    Store.save_to_file(f"{res}", f"results/CROME/results.txt", absolute_folder_path=f"{path}")
+    Store.save_to_file(f"{res}", f"results.txt", absolute_folder_path=f"{result_folder}")
 
     """Save simulation as text file"""
-    Store.save_to_file(str(run), file_name="results/CROME/run.txt", absolute_folder_path=f"{path}")
+    Store.save_to_file(str(run), file_name="run.txt", absolute_folder_path=f"{result_folder}")
 
 
 except CGGException as e:
