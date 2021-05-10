@@ -25,7 +25,7 @@ import TableDropdownF from "./components/Dropdowns/TableDropdownF";
 import HeaderStats from "./components/Headers/HeaderStats";
 import TabsF from "./components/Tabs/TabsF";
 import Header from "./components/Pages/Header";
-import Index from "./components/Pages";
+import Index from "./components/Pages/Index";
 
 
 
