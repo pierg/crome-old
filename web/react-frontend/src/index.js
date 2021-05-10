@@ -25,10 +25,12 @@ import TableDropdownF from "./components/Dropdowns/TableDropdownF";
 import HeaderStats from "./components/Headers/HeaderStats";
 import TabsF from "./components/Tabs/TabsF";
 import Header from "./components/Pages/Header";
-import Index from "./components/Pages";
 import Footer from "./components/Footers/Footer";
 import FooterSmall from "./components/Footers/FooterSmall";
 import WorldModeling from "./components/Pages/WorldModeling";
+
+import Index from "./components/Pages/Index";
+
 
 
 
@@ -40,12 +42,11 @@ const engine = new Styletron();
 
 ReactDOM.render(
   <React.StrictMode>
-        <StyletronProvider value={engine} debug={debug} debugAfterHydration>
-        </StyletronProvider>
     <App />
   </React.StrictMode>,
   document.getElementById('root')
 );
+
 
 ReactDOM.render(
     <React.StrictMode>
@@ -56,6 +57,7 @@ ReactDOM.render(
     </React.StrictMode>,
     document.getElementById('index')
 );
+
 
 
 export default function Main() {
