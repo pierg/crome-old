@@ -53,7 +53,6 @@ ReactDOM.render(
             <Header/>
             <Index />
             <FooterSmall />
-        <TabsF firstMenu={"Environment"} secondMenu={"World Modeling"} thirdMenu={"Goal Modeling"} fourthMenu={"Analysis"} fifthMenu={"Synthesis"} firstPage={<></>} secondPage={<WorldModeling />} thirdPage={<></>} fourthPage={<></>} fifthPage={<></>}/>
     </React.StrictMode>,
     document.getElementById('index')
 );
