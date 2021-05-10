@@ -99,10 +99,10 @@ try:
     run = cgg.orchestrate(n_steps=50, t_min_context=6)
     print(run)
 
-    Store.save_to_file(f"{res}", f"CROME/results.txt", absolute_folder_path=f"{path}")
+    Store.save_to_file(f"{res}", f"results/CROME/results.txt", absolute_folder_path=f"{path}")
 
     """Save simulation as text file"""
-    Store.save_to_file(str(run), file_name="CROME/run.txt", absolute_folder_path=f"{path}")
+    Store.save_to_file(str(run), file_name="results/CROME/run.txt", absolute_folder_path=f"{path}")
 
 
 except CGGException as e:
