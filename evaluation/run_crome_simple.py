@@ -91,8 +91,16 @@ try:
 
     print(res)
 
-    Store.save_to_file(f"{res}", f"crome_times.txt",
+    Store.save_to_file(f"{res}", f"crome_simple_times.txt",
                        absolute_folder_path=f"{path}")
+
+    """Launch a simulation of n_steps where each contexts does change for at least t_min_context """
+    run = cgg.orchestrate(n_steps=50, t_min_context=6)
+    print(run)
+
+    """Save simulation as text file"""
+    Store.save_to_file(str(run), file_name="crome_simple_run.txt", absolute_folder_path=f"{path}")
+
 
 except CGGException as e:
     raise e

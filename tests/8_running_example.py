@@ -13,7 +13,7 @@ always => if see a person, greet
 during day =>
 """
 
-"""We import the types"""
+"""We import the variables"""
 w = Crome()
 
 """Strict Ordered Patrolling Location r1, r2"""

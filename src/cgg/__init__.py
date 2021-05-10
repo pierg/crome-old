@@ -228,12 +228,14 @@ class Node(Goal):
                 optimal_destination = None
                 for destination in destinations:
                     if n_states is None:
-                        n_states = len(self.__t_controllers[(start, destination)].states)
-                        optimal_destination = destination
-                    else:
-                        if len(self.__t_controllers[(start, destination)].states) < n_states:
+                        if (start, destination) in self.__t_controllers:
                             n_states = len(self.__t_controllers[(start, destination)].states)
                             optimal_destination = destination
+                    else:
+                        if (start, destination) in self.__t_controllers:
+                            if len(self.__t_controllers[(start, destination)].states) < n_states:
+                                n_states = len(self.__t_controllers[(start, destination)].states)
+                                optimal_destination = destination
                 t_ctrl = self.__t_controllers[(start, optimal_destination)]
                 ctrl_str = t_ctrl.name
 
@@ -314,11 +316,11 @@ class Node(Goal):
             #  TODO
             # for loc_source, loc_target in itertools.product(locs_a, locs_b):
             #
-            # scenario_a_entry_points = scenario_a.controller.all_entry_locations(self.world.typeset)
-            # scenario_b_entry_points = scenario_b.controller.all_entry_locations(self.world.typeset)
+            scenario_a_entry_points = scenario_a.controller.all_entry_locations(self.world.typeset)
+            scenario_b_entry_points = scenario_b.controller.all_entry_locations(self.world.typeset)
             #
-            scenario_a_entry_points = scenario_a.controller.locations
-            scenario_b_entry_points = scenario_b.controller.locations
+            # scenario_a_entry_points = scenario_a.controller.locations
+            # scenario_b_entry_points = scenario_b.controller.locations
 
             print(", ".join([x.name for x in scenario_a_entry_points]))
             print(", ".join([x.name for x in scenario_b_entry_points]))

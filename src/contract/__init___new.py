@@ -137,10 +137,10 @@ class Contract:
 
 
 
-        """For the rules we extracts rules from the types based on assumptions and inputs"""
+        """For the rules we extracts rules from the variables based on assumptions and inputs"""
         a_typeset = a_typeset | i_typeset
 
-        """We remove the inputs typeset from the guarantees and we incorporate the types ts"""
+        """We remove the inputs typeset from the guarantees and we incorporate the variables ts"""
         g_typeset = g_typeset - i_typeset
 
         """Adding Mutex Rules"""

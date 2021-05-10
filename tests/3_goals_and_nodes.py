@@ -6,7 +6,7 @@ from specification.atom.pattern.basic import Init
 from specification.atom.pattern.robotics.coremovement.surveillance import Patrolling
 from world.simple_gridworld import SimpleGridWorld
 
-"""Let us instantiate a types"""
+"""Let us instantiate a variables"""
 sw = SimpleGridWorld()
 t = sw.typeset
 

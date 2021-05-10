@@ -33,7 +33,7 @@ patrol_living_room = Patrolling(living_room)
 """patrol kitchen"""
 patrol_kitchen = Patrolling(kitchen)
 
-"""Modeling the rules of the types"""
+"""Modeling the rules of the variables"""
 env_rules = {
     Rule(
         rule=PromptReaction(w["hold"], w["!object_recognized"]),

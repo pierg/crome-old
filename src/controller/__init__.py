@@ -340,9 +340,9 @@ class Controller:
 
     def entry_locations_next_step(self, typeset: Typeset) -> List[ReachLocation]:
         """Returns a set of locations from where it is possible to reach the next location the controller will visit"""
-        if self.__current_location is not None:
-            """The last visited location is for sure a location from where the robot can reach the next location"""
-            return [self.__current_location]
+        # if self.__current_location is not None:
+        #     """The last visited location is for sure a location from where the robot can reach the next location"""
+        #     return [self.__current_location]
         """The mealy-machine has never reacted before"""
         """Extracting the first location to visit"""
         first_location_to_visit = None
