@@ -50,7 +50,8 @@ ReactDOM.render(
 
 ReactDOM.render(
     <React.StrictMode>
-
+        <Header />
+        <Index />
     </React.StrictMode>,
     document.getElementById('index')
 );
