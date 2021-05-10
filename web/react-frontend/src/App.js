@@ -21,7 +21,8 @@ const engine = new Styletron();
 
 function App() {
   return (
-      <StyletronProvider value={engine} debug={debug} debugAfterHydration>
+      <> </>
+  /*    <StyletronProvider value={engine} debug={debug} debugAfterHydration>
     <div className="App">
       <header className="App-header">
         <form action="/example/" method="post">
@@ -36,7 +37,7 @@ function App() {
         <div>Example output : {window.result}</div>
       </header>
     </div>
-      </StyletronProvider>
+      </StyletronProvider> */
   );
 }
 

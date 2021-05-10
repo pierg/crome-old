@@ -26,6 +26,9 @@ import HeaderStats from "./components/Headers/HeaderStats";
 import TabsF from "./components/Tabs/TabsF";
 import Header from "./components/Pages/Header";
 import Index from "./components/Pages";
+import Footer from "./components/Footers/Footer";
+import FooterSmall from "./components/Footers/FooterSmall";
+import WorldModeling from "./components/Pages/WorldModeling";
 
 
 
@@ -38,11 +41,6 @@ const engine = new Styletron();
 ReactDOM.render(
   <React.StrictMode>
         <StyletronProvider value={engine} debug={debug} debugAfterHydration>
-            <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
-          <div>Dropdown to select action : </div>
-          <TableDropdownF firstAction={"test1"} secondAction={"test2"} thirdAction={"test3"}/>
-          <div>It seems we can't modify the content of the dropdown</div>
-      </div>
         </StyletronProvider>
     <App />
   </React.StrictMode>,
@@ -53,6 +51,8 @@ ReactDOM.render(
     <React.StrictMode>
             <Header/>
             <Index />
+            <FooterSmall />
+        <TabsF firstMenu={"Environment"} secondMenu={"World Modeling"} thirdMenu={"Goal Modeling"} fourthMenu={"Analysis"} fifthMenu={"Synthesis"} firstPage={<></>} secondPage={<WorldModeling />} thirdPage={<></>} fourthPage={<></>} fifthPage={<></>}/>
     </React.StrictMode>,
     document.getElementById('index')
 );

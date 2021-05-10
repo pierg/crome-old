@@ -4,6 +4,14 @@ export default function TabsF({
   firstMenu,
     secondMenu,
     thirdMenu,
+    fourthMenu,
+    fifthMenu,
+    firstPage,
+    secondPage,
+    thirdPage,
+    fourthPage,
+    fifthPage,
+
 }) {
   const [openTab, setOpenTab] = React.useState(1);
   return (
@@ -34,6 +42,9 @@ export default function TabsF({
               </a>
             </li>
             <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
+              <i className="fas fa-chevron-circle-right text-lightBlue-600"></i>
+            </li>
+            <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
               <a
                 className={
                   "text-xs font-bold uppercase px-5 py-3 shadow-lg rounded block leading-normal " +
@@ -51,6 +62,9 @@ export default function TabsF({
               >
                 {secondMenu}
               </a>
+            </li>
+            <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
+              <i className="fas fa-chevron-circle-right text-lightBlue-600"></i>
             </li>
             <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
               <a
@@ -71,40 +85,68 @@ export default function TabsF({
                 {thirdMenu}
               </a>
             </li>
+            <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
+              <i className="fas fa-chevron-circle-right text-lightBlue-600"></i>
+            </li>
+            <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
+              <a
+                className={
+                  "text-xs font-bold uppercase px-5 py-3 shadow-lg rounded block leading-normal " +
+                  (openTab === 4
+                    ? "text-white bg-lightBlue-600"
+                    : "text-lightBlue-600 bg-white")
+                }
+                onClick={e => {
+                  e.preventDefault();
+                  setOpenTab(4);
+                }}
+                data-toggle="tab"
+                href="#link4"
+                role="tablist"
+              >
+                {fourthMenu}
+              </a>
+            </li>
+            <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
+              <i className="fas fa-chevron-circle-right text-lightBlue-600"></i>
+            </li>
+            <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
+              <a
+                className={
+                  "text-xs font-bold uppercase px-5 py-3 shadow-lg rounded block leading-normal " +
+                  (openTab === 5
+                    ? "text-white bg-lightBlue-600"
+                    : "text-lightBlue-600 bg-white")
+                }
+                onClick={e => {
+                  e.preventDefault();
+                  setOpenTab(5);
+                }}
+                data-toggle="tab"
+                href="#link5"
+                role="tablist"
+              >
+                {fifthMenu}
+              </a>
+            </li>
           </ul>
           <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded">
             <div className="px-4 py-5 flex-auto">
               <div className="tab-content tab-space">
                 <div className={openTab === 1 ? "block" : "hidden"} id="link1">
-                  <p>
-                    Collaboratively administrate empowered markets via
-                    plug-and-play networks. Dynamically procrastinate B2C users
-                    after installed base benefits.
-                    <br />
-                    <br /> Dramatically visualize customer directed convergence
-                    without revolutionary ROI.
-                  </p>
+                  {firstPage}
                 </div>
                 <div className={openTab === 2 ? "block" : "hidden"} id="link2">
-                  <p>
-                    Completely synergize resource taxing relationships via
-                    premier niche markets. Professionally cultivate one-to-one
-                    customer service with robust ideas.
-                    <br />
-                    <br />
-                    Dynamically innovate resource-leveling customer service for
-                    state of the art customer service.
-                  </p>
+                  {secondPage}
                 </div>
                 <div className={openTab === 3 ? "block" : "hidden"} id="link3">
-                  <p>
-                    Efficiently unleash cross-media information without
-                    cross-media value. Quickly maximize timely deliverables for
-                    real-time schemas.
-                    <br />
-                    <br /> Dramatically maintain clicks-and-mortar solutions
-                    without functional solutions.
-                  </p>
+                  {thirdPage}
+                </div>
+                <div className={openTab === 4 ? "block" : "hidden"} id="link4">
+                  {fourthPage}
+                </div>
+                <div className={openTab === 5 ? "block" : "hidden"} id="link5">
+                  {fifthPage}
                 </div>
               </div>
             </div>
