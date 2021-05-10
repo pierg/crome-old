@@ -1,7 +1,7 @@
 from specification import FormulaOutput
 from specification.atom import Atom
 from world import World
-from robocup.types import *
+from robocup.variables import *
 
 
 class RobocupHome(World):
