@@ -24,8 +24,8 @@ import { Client as Styletron } from "styletron-engine-atomic";
 import TableDropdownF from "./components/Dropdowns/TableDropdownF";
 import HeaderStats from "./components/Headers/HeaderStats";
 import TabsF from "./components/Tabs/TabsF";
-import Header from "./components/Pages/Header";
-import Index from "./components/Pages";
+/*import Header from "./components/Pages/Header";
+import Index from "./components/Pages";*/
 
 
 
@@ -51,11 +51,20 @@ ReactDOM.render(
 
 ReactDOM.render(
     <React.StrictMode>
+
+    </React.StrictMode>,
+    document.getElementById('index')
+);
+
+/*
+ReactDOM.render(
+    <React.StrictMode>
             <Header/>
             <Index />
     </React.StrictMode>,
     document.getElementById('index')
 );
+ */
 
 
 export default function Main() {
