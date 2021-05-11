@@ -1,56 +1,40 @@
 import React from 'react';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../assets/styles/tailwind.css";
-import {Link, Route, BrowserRouter} from 'react-router-dom'
-import {CGG} from "../../index";
 
+import {Link, Route, BrowserRouter} from 'react-router-dom'
+import ButtonDiv from "../Buttons/ButtonDiv";
 
 export default function Index ({
-
+    title
 }) {
     return (
         <>  <BrowserRouter>
             <div className="container px-4 mx-auto pt-24 ">
                 <div className="flex flex-wrap">
-                    <div className="w-full px-4 flex-1">
-
-                    </div>
-                <h1 className="text-5xl font-normal leading-normal mt-0 mb-2 text-lightBlue-600">
-                Contract-Based Goals Graph
-                </h1>
-                        <div className="w-full px-4 flex-1">
-
-                    </div>
-
-            </div>
-            </div>
-            <section className="mt-48 md:mt-40 pb-48 pt-48 relative">
-            <div className="container px-0 mx-auto ">
-                <div className="flex flex-wrap">
-                    <div className="w-full px-12 pt-20 flex-1 rounded border border-solid border-blueGray-100">
-                        <div> <h3 className="text-2xl mb-2 font-light leading-normal"> Create your own CGG with customized goals, actions, locations...</h3></div>
-
-                        <div className="pt-6" >
-                            <Link to="/CGG">
-                            <button className="text-lightBlue-600 bg-transparent border border-solid border-indigo-500 hover:bg-indigo-500 hover:text-white active:bg-blueGray-50 font-bold uppercase text-sm px-6 py-3 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                                    type="button">
-                          <i className="fas fa-upload"></i> Create CGG
-                            </button></Link>
-                        <Route path="/CGG" component={CGG} />
-                        </div>
-
-                    </div>
-                    <div className="w-full px-4 flex-1">
-
-                    </div>
-                        <div className="w-full px-12 pt-20 flex-1 rounded border border-solid border-blueGray-100">
-                      <div><h3 className="text-2xl mb-2 pb-20 font-light leading-normal ">Load an existing example of CGG</h3></div>
-                      <div className="pt-6"><button className="text-lightBlue-600 bg-transparent border border-solid border-indigo-500 hover:bg-indigo-500 hover:text-white active:bg-blueGray-50 font-bold uppercase text-sm px-6 py-3 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
-                          <i className="fas fa-plus-circle"></i> Load CGG
-                      </button></div>
-                    </div>
+                    <div className="w-full px-4 flex-1"/>
+                    <h1 className="text-5xl font-normal leading-normal mt-0 mb-2 text-lightBlue-600">{title}</h1>
+                    <div className="w-full px-4 flex-1"/>
                 </div>
             </div>
+            <section className="mt-48 md:mt-40 pb-48 pt-32 relative">
+                <div className="container px-0 mx-auto ">
+                    <div className="flex flex-wrap">
+                        <ButtonDiv
+                            divText="Create your own CGG"
+                            buttonText="Create CGG"
+                            icon="fas fa-upload"
+                            link="/page2"
+                        />
+                        <div className="w-full px-4 flex-1"/>
+                        <ButtonDiv
+                            divText="Load an existing example of CGG"
+                            buttonText="Load CGG"
+                            icon="fas fa-plus-circle"
+                            link="/page2"
+                        />
+                    </div>
+                </div>
             </section>
 
         </BrowserRouter>

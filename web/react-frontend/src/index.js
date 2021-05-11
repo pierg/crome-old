@@ -16,22 +16,14 @@ import Header from "./components/Pages/Header";
 import FooterSmall from "./components/Footers/FooterSmall";
 import WorldModeling from "./components/Pages/WorldModeling";
 import Index from "./components/Pages/Index";
+import {BrowserRouter, Link} from "react-router-dom";
+import {Route, Switch} from "react-router";
 
 const debug =
   process.env.NODE_ENV === "production" ? void 0 : new DebugEngine();
 
 // 1. Create a client engine instance
 const engine = new Styletron();
-
-
-ReactDOM.render(
-    <React.StrictMode>
-            <Header/>
-            <Index />
-            <FooterSmall />
-    </React.StrictMode>,
-    document.getElementById('root')
-);
 
 export const CGG = () => {
     return (
@@ -45,6 +37,31 @@ export const CGG = () => {
         </React.StrictMode>
     );
 };
+
+ReactDOM.render(
+    <React.StrictMode>
+        <Header
+            title={"Crome"}
+            leftElement={"Other"}
+            centerElement={"CGG"}
+            rightElement={"About"}/>
+
+        <BrowserRouter>
+            <Switch>
+                <Route exact path="/">
+                    <Index
+                        title={"Contract-Based Goals Graph"}
+                    />
+                </Route>
+                <Route path="/page2">
+                    <CGG/>
+                </Route>
+            </Switch>
+        </BrowserRouter>
+        <FooterSmall />
+    </React.StrictMode>,
+    document.getElementById('root')
+);
 
 
 export default function Main() {

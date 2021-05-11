@@ -1,5 +1,6 @@
 {
   "files": {
+<<<<<<< HEAD
     "main.css": "/static/react/css/main.f280f776.chunk.css",
     "main.js": "/static/react/js/main.bddeaa1d.chunk.js",
     "main.js.map": "/static/react/js/main.bddeaa1d.chunk.js.map",
@@ -8,19 +9,40 @@
     "css/2.24472da0.chunk.css": "/static/react/css/2.24472da0.chunk.css",
     "js/2.f9942716.chunk.js": "/static/react/js/2.f9942716.chunk.js",
     "js/2.f9942716.chunk.js.map": "/static/react/js/2.f9942716.chunk.js.map",
+=======
+    "main.css": "/static/react/css/main.ea6aeaa7.chunk.css",
+    "main.js": "/static/react/js/main.2b01380e.chunk.js",
+    "main.js.map": "/static/react/js/main.2b01380e.chunk.js.map",
+    "runtime-main.js": "/static/react/js/runtime-main.6aee688b.js",
+    "runtime-main.js.map": "/static/react/js/runtime-main.6aee688b.js.map",
+    "css/2.24472da0.chunk.css": "/static/react/css/2.24472da0.chunk.css",
+    "js/2.0cacb1e5.chunk.js": "/static/react/js/2.0cacb1e5.chunk.js",
+    "js/2.0cacb1e5.chunk.js.map": "/static/react/js/2.0cacb1e5.chunk.js.map",
+>>>>>>> 92245f161e2956aa61260c977ca702644bddc7b2
     "js/3.3163e060.chunk.js": "/static/react/js/3.3163e060.chunk.js",
     "js/3.3163e060.chunk.js.map": "/static/react/js/3.3163e060.chunk.js.map",
     "../../templates/index.html": "/static/react/../../templates/index.html",
     "css/2.24472da0.chunk.css.map": "/static/react/css/2.24472da0.chunk.css.map",
+<<<<<<< HEAD
     "css/main.f280f776.chunk.css.map": "/static/react/css/main.f280f776.chunk.css.map",
     "js/2.f9942716.chunk.js.LICENSE.txt": "/static/react/js/2.f9942716.chunk.js.LICENSE.txt",
+=======
+    "css/main.ea6aeaa7.chunk.css.map": "/static/react/css/main.ea6aeaa7.chunk.css.map",
+    "js/2.0cacb1e5.chunk.js.LICENSE.txt": "/static/react/js/2.0cacb1e5.chunk.js.LICENSE.txt",
+>>>>>>> 92245f161e2956aa61260c977ca702644bddc7b2
     "media/all.min.css": "/static/react/media/fa-solid-900.efbd5d20.eot"
   },
   "entrypoints": [
     "js/runtime-main.6aee688b.js",
     "css/2.24472da0.chunk.css",
+<<<<<<< HEAD
     "js/2.f9942716.chunk.js",
     "css/main.f280f776.chunk.css",
     "js/main.bddeaa1d.chunk.js"
+=======
+    "js/2.0cacb1e5.chunk.js",
+    "css/main.ea6aeaa7.chunk.css",
+    "js/main.2b01380e.chunk.js"
+>>>>>>> 92245f161e2956aa61260c977ca702644bddc7b2
   ]
 }
