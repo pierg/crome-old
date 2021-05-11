@@ -1,12 +1,15 @@
 import React from 'react';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../assets/styles/tailwind.css";
+import {Link, Route, BrowserRouter} from 'react-router-dom'
+import {CGG} from "../../index";
+
 
 export default function Index ({
 
 }) {
     return (
-        <>
+        <>  <BrowserRouter>
             <div className="container px-4 mx-auto pt-24 ">
                 <div className="flex flex-wrap">
                     <div className="w-full px-4 flex-1">
@@ -27,9 +30,15 @@ export default function Index ({
                     <div className="w-full px-12 pt-20 flex-1 rounded border border-solid border-blueGray-100">
                         <div> <h3 className="text-2xl mb-2 font-light leading-normal"> Create your own CGG with customized goals, actions, locations...</h3></div>
 
-                        <div className="pt-6" ><button className="text-lightBlue-600 bg-transparent border border-solid border-indigo-500 hover:bg-indigo-500 hover:text-white active:bg-blueGray-50 font-bold uppercase text-sm px-6 py-3 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
+                        <div className="pt-6" >
+                            <Link to="/CGG">
+                            <button className="text-lightBlue-600 bg-transparent border border-solid border-indigo-500 hover:bg-indigo-500 hover:text-white active:bg-blueGray-50 font-bold uppercase text-sm px-6 py-3 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                    type="button">
                           <i className="fas fa-upload"></i> Create CGG
-                        </button></div>
+                            </button></Link>
+                        <Route path="/CGG" component={CGG} />
+                        </div>
+
                     </div>
                     <div className="w-full px-4 flex-1">
 
@@ -43,6 +52,8 @@ export default function Index ({
                 </div>
             </div>
             </section>
+
+        </BrowserRouter>
         </>
     );
 }

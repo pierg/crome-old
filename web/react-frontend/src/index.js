@@ -6,33 +6,16 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "assets/styles/tailwind.css";
-
-
-import {
-  ThemeProvider,
-  DefaultTheme,
-  Div,
-  Button,
-  Text,
-} from "atomize";
-import CardStats from "./components/Cards/CardStats";
-
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "assets/styles/tailwind.css";
 import { Provider as StyletronProvider, DebugEngine } from "styletron-react";
 import { Client as Styletron } from "styletron-engine-atomic";
 import TableDropdownF from "./components/Dropdowns/TableDropdownF";
-import HeaderStats from "./components/Headers/HeaderStats";
 import TabsF from "./components/Tabs/TabsF";
 import Header from "./components/Pages/Header";
-import Footer from "./components/Footers/Footer";
 import FooterSmall from "./components/Footers/FooterSmall";
 import WorldModeling from "./components/Pages/WorldModeling";
-
 import Index from "./components/Pages/Index";
-
-
-
 
 const debug =
   process.env.NODE_ENV === "production" ? void 0 : new DebugEngine();
@@ -40,24 +23,28 @@ const debug =
 // 1. Create a client engine instance
 const engine = new Styletron();
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
-
 
 ReactDOM.render(
     <React.StrictMode>
             <Header/>
             <Index />
             <FooterSmall />
-        <TabsF firstMenu={"Environment"} secondMenu={"World Modeling"} thirdMenu={"Goal Modeling"} fourthMenu={"Analysis"} fifthMenu={"Synthesis"} firstPage={<></>} secondPage={<WorldModeling />} thirdPage={<></>} fourthPage={<></>} fifthPage={<></>}/>
     </React.StrictMode>,
-    document.getElementById('index')
+    document.getElementById('root')
 );
 
+export const CGG = () => {
+    return (
+
+        <React.StrictMode>
+            <Header/>
+            <TabsF firstMenu={"Environment"} secondMenu={"World Modeling"} thirdMenu={"Goal Modeling"}
+                   fourthMenu={"Analysis"} fifthMenu={"Synthesis"} firstPage={<></>} secondPage={<WorldModeling/>}
+                   thirdPage={<></>} fourthPage={<></>} fifthPage={<></>}/>
+            <FooterSmall/>
+        </React.StrictMode>
+    );
+};
 
 
 export default function Main() {
