@@ -30,6 +30,8 @@ import FooterSmall from "./components/Footers/FooterSmall";
 import WorldModeling from "./components/Pages/WorldModeling";
 
 import Index from "./components/Pages/Index";
+import {BrowserRouter, Link} from "react-router-dom";
+import {Route, Switch} from "react-router";
 
 
 
@@ -50,9 +52,27 @@ ReactDOM.render(
 
 ReactDOM.render(
     <React.StrictMode>
-            <Header/>
-            <Index />
-            <FooterSmall />
+        <Header
+            title={"Crome"}
+            leftElement={"Other"}
+            centerElement={"CGG"}
+            rightElement={"About"}/>
+
+        <BrowserRouter>
+            <Switch>
+                <Route exact path="/">
+                    <Index
+                        title={"Contract-Based Goals Graph"}
+                    />
+                </Route>
+                <Route path="/page2">
+                    <Index
+                        title={"Contract-Based Goals Graph Page 2"}
+                    />
+                </Route>
+            </Switch>
+        </BrowserRouter>
+        <FooterSmall />
     </React.StrictMode>,
     document.getElementById('index')
 );

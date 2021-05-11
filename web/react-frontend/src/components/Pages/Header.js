@@ -23,12 +23,15 @@ const engine = new Styletron();
 
 
 export default function Header ({
-
+    title,
+    leftElement,
+    centerElement,
+    rightElement
 }) {
     return (
         <>
             <StyletronProvider value={engine} debug={debug} debugAfterHydration>
-                <Row bg={"#8dc9f0"} textAlign="center" align="center" fontFamily="Roboto" maxW="100%">
+                <Row bg={"#8dc9f0"} textAlign="center" align="center" fontFamily="Roboto" m={{ l: '0', r: '0' }}>
                     <Col size={{ xs: 12, lg: 1 }}>
                         <Div p="1rem">
                             Logo
@@ -36,7 +39,7 @@ export default function Header ({
                     </Col>
                     <Col size={{ xs: 12, lg: 1 }}>
                         <Div p="1rem" textAlign={{ xs: "center", lg: "left" }} textColor={"white"}>
-                            <Text tag={"h2"} textSize="display2" textColor={"gray300"}>Crome</Text>
+                            <Text tag={"h2"} textSize="display2" textColor={"gray300"}>{title}</Text>
                         </Div>
                     </Col>
                     <Col size={{ xs: 12, lg: 8 }}>
@@ -47,17 +50,17 @@ export default function Header ({
                                 </Col>
                                 <Col size={{ xs: 12, lg: 2 }}>
                                     <Div p="1rem">
-                                        <Text>Other</Text>
+                                        <Text>{leftElement}</Text>
                                     </Div>
                                 </Col>
                                 <Col size={{ xs: 12, lg: 2 }}>
                                     <Div p="1rem">
-                                        <Text>CGG</Text>
+                                        <Text>{centerElement}</Text>
                                     </Div>
                                 </Col>
                                 <Col size={{ xs: 12, lg: 2 }}>
                                     <Div p="1rem">
-                                        <Text>About</Text>
+                                        <Text>{rightElement}</Text>
                                     </Div>
                                 </Col>
                                 <Col size={{ xs: 12, lg: 3 }}>
