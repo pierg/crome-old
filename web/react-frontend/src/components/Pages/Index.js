@@ -29,7 +29,7 @@ export default function Index ({
                             divText="Load an existing example of CGG"
                             buttonText="Load CGG"
                             icon="fas fa-plus-circle"
-                            link="/page2"
+                            link="/goals"
                         />
                     </div>
                 </div>

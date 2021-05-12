@@ -12,21 +12,25 @@ import Header from "./components/Pages/Header";
 import FooterSmall from "./components/Footers/FooterSmall";
 import WorldModeling from "./components/Pages/CreateCGG/WorldModeling";
 import Index from "./components/Pages/Index";
+import GoalModeling from "./components/Pages/GoalModeling";
 import App from './App';
+<<<<<<< HEAD
 import CreateEnvironment from "./components/Pages/CreateCGG/CreateEnvironment";
+=======
+import RunExample from "./components/Pages/RunExample";
+>>>>>>> 4afdc6a9cc2f1bf837c96d6a2545601de670153e
 
 
 //  Page create your own CGG
 
 export const CreateCGG = () => {
     return (
-
         <React.StrictMode>
             <TabsF firstMenu={"Environment"} secondMenu={"World Modeling"} thirdMenu={"Goal Modeling"} fourthMenu={"Analysis"} fifthMenu={"Synthesis"}
                    firstPage={<CreateEnvironment/>}
                    secondPage={<WorldModeling firstCategory={"Actions"} secondCategory={"Sensors"} thirdCategory={"Context"}/>}
                    thirdPage={<></>}
-                   fourthPage={<></>}
+                   fourthPage={<RunExample/>}
                    fifthPage={<></>}/>
         </React.StrictMode>
     );
@@ -36,13 +40,12 @@ export const CreateCGG = () => {
 
 ReactDOM.render(
     <React.StrictMode>
-        <Header
-            title={"Crome"}
-            leftElement={"Other"}
-            centerElement={"CGG"}
-            rightElement={"About"}/>
-
         <BrowserRouter>
+            <Header
+                title={"Crome"}
+                leftElement={"Other"}
+                centerElement={"CGG"}
+                rightElement={"About"}/>
             <Switch>
                 <Route exact path="/">
                     <Index
@@ -52,9 +55,12 @@ ReactDOM.render(
                 <Route path="/createCGG">
                     <CreateCGG/>
                 </Route>
+                <Route path="/goals">
+                    <GoalModeling/>
+                </Route>
             </Switch>
+            <FooterSmall />
         </BrowserRouter>
-        <FooterSmall />
     </React.StrictMode>,
     document.getElementById('root')
 );
@@ -63,7 +69,6 @@ export default function Main() {
     return (
         <>
             <App />
-
         </>
     );
 }
