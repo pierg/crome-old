@@ -7,7 +7,6 @@ import {
   Row,
   Col
 } from "atomize";
-
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../assets/styles/tailwind.css";
 import { Provider as StyletronProvider, DebugEngine } from "styletron-react";
@@ -18,9 +17,6 @@ const debug =
 
 // 1. Create a client engine instance
 const engine = new Styletron();
-
-
-
 
 export default function Header ({
     title,
@@ -77,12 +73,3 @@ export default function Header ({
         </>
     );
 }
-/*
-<Div bg={"#8dc9f0"} h={{ xs: 'auto', md: '15vh' }} d={"flex"} align={"center"} >
-                <Div >logo</Div>
-                <Div m={{l:"2%"}}><Text tag={"h2"} textSize="display2" textColor={"gray800"}>Crome</Text></Div>
-                <Div m={{l:"35%"}}><Text tag={"h4"} textSize="subheader" textColor={"white"}>Other</Text></Div>
-                <Div m={{l:"5%"}}><Text tag={"h4"} textSize="subheader" textColor={"white"}>CGG</Text></Div>
-                <Div m={{l:"5%"}}><Text tag={"h4"} textSize="subheader" textColor={"white"}>About</Text></Div>
-            </Div>
- */

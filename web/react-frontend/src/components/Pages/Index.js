@@ -1,15 +1,13 @@
 import React from 'react';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../assets/styles/tailwind.css";
-
-import {Link, Route, BrowserRouter} from 'react-router-dom'
 import ButtonDiv from "../Buttons/ButtonDiv";
 
 export default function Index ({
     title
 }) {
     return (
-        <>  <BrowserRouter>
+        <>
             <div className="container px-4 mx-auto pt-24 ">
                 <div className="flex flex-wrap">
                     <div className="w-full px-4 flex-1"/>
@@ -24,7 +22,7 @@ export default function Index ({
                             divText="Create your own CGG"
                             buttonText="Create CGG"
                             icon="fas fa-upload"
-                            link="/page2"
+                            link="/createCGG"
                         />
                         <div className="w-full px-4 flex-1"/>
                         <ButtonDiv
@@ -36,8 +34,7 @@ export default function Index ({
                     </div>
                 </div>
             </section>
-
-        </BrowserRouter>
         </>
     );
+
 }
