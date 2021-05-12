@@ -10,9 +10,10 @@ import {Route, Switch} from "react-router";
 import TabsF from "./components/Tabs/TabsF";
 import Header from "./components/Pages/Header";
 import FooterSmall from "./components/Footers/FooterSmall";
-import WorldModeling from "./components/Pages/WorldModeling";
+import WorldModeling from "./components/Pages/CreateCGG/WorldModeling";
 import Index from "./components/Pages/Index";
 import App from './App';
+import CreateEnvironment from "./components/Pages/CreateCGG/CreateEnvironment";
 
 
 //  Page create your own CGG
@@ -22,7 +23,7 @@ export const CreateCGG = () => {
 
         <React.StrictMode>
             <TabsF firstMenu={"Environment"} secondMenu={"World Modeling"} thirdMenu={"Goal Modeling"} fourthMenu={"Analysis"} fifthMenu={"Synthesis"}
-                   firstPage={<></>}
+                   firstPage={<CreateEnvironment/>}
                    secondPage={<WorldModeling firstCategory={"Actions"} secondCategory={"Sensors"} thirdCategory={"Context"}/>}
                    thirdPage={<></>}
                    fourthPage={<></>}

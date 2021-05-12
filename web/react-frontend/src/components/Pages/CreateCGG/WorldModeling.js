@@ -1,6 +1,6 @@
 import React from 'react';
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import "../../assets/styles/tailwind.css";
+import "../../../assets/styles/tailwind.css";
 
 
 export default function WorldModeling ({
