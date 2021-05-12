@@ -15,7 +15,7 @@ def my_index():
     return flask.render_template("index.html", token="Hello Flask+React")
 
 
-@app.route("/example/", methods=['POST'])
+@app.route("/createCGG/", methods=['POST'])
 def run_example():
     # Moving forward code
     example_name = request.form['exampleButtons']
@@ -23,6 +23,7 @@ def run_example():
     output_path = Path(output_path)
     print(output_path)
     result = subprocess.check_output([sys.executable, output_path])
+    print(result)
     return render_template('index.html', result=result)
 
 

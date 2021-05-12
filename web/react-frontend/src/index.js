@@ -14,6 +14,7 @@ import WorldModeling from "./components/Pages/WorldModeling";
 import Index from "./components/Pages/Index";
 import GoalModeling from "./components/Pages/GoalModeling";
 import App from './App';
+import RunExample from "./components/Pages/RunExample";
 
 
 //  Page create your own CGG
@@ -25,7 +26,7 @@ export const CreateCGG = () => {
                    firstPage={<></>}
                    secondPage={<WorldModeling firstCategory={"Actions"} secondCategory={"Sensors"} thirdCategory={"Context"}/>}
                    thirdPage={<></>}
-                   fourthPage={<></>}
+                   fourthPage={<RunExample/>}
                    fifthPage={<></>}/>
         </React.StrictMode>
     );
