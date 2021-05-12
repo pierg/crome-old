@@ -32,6 +32,7 @@ import WorldModeling from "./components/Pages/WorldModeling";
 import Index from "./components/Pages/Index";
 import {BrowserRouter, Link} from "react-router-dom";
 import {Route, Switch} from "react-router";
+import GoalModeling from "./components/Pages/GoalModeling";
 
 
 
@@ -52,13 +53,12 @@ ReactDOM.render(
 
 ReactDOM.render(
     <React.StrictMode>
-        <Header
-            title={"Crome"}
-            leftElement={"Other"}
-            centerElement={"CGG"}
-            rightElement={"About"}/>
-
         <BrowserRouter>
+            <Header
+                title={"Crome"}
+                leftElement={"Other"}
+                centerElement={"CGG"}
+                rightElement={"About"}/>
             <Switch>
                 <Route exact path="/">
                     <Index
@@ -70,9 +70,12 @@ ReactDOM.render(
                         title={"Contract-Based Goals Graph Page 2"}
                     />
                 </Route>
+                <Route path="/goals">
+                    <GoalModeling/>
+                </Route>
             </Switch>
+            <FooterSmall />
         </BrowserRouter>
-        <FooterSmall />
     </React.StrictMode>,
     document.getElementById('index')
 );

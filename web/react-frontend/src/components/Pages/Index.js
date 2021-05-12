@@ -2,7 +2,6 @@ import React from 'react';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../assets/styles/tailwind.css";
 import ButtonDiv from "../Buttons/ButtonDiv";
-import {Link} from "react-router-dom";
 
 export default function Index ({
     title
@@ -30,7 +29,7 @@ export default function Index ({
                             divText="Load an existing example of CGG"
                             buttonText="Load CGG"
                             icon="fas fa-plus-circle"
-                            link="/page2"
+                            link="/goals"
                         />
                     </div>
                 </div>
