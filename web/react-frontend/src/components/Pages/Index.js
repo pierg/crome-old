@@ -22,7 +22,7 @@ export default function Index ({
                             divText="Create your own CGG"
                             buttonText="Create CGG"
                             icon="fas fa-upload"
-                            link="/"
+                            link="/createCGG"
                         />
                         <div className="w-full px-4 flex-1"/>
                         <ButtonDiv
@@ -36,4 +36,5 @@ export default function Index ({
             </section>
         </>
     );
+
 }

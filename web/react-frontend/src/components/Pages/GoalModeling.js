@@ -3,14 +3,6 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../assets/styles/tailwind.css";
 
 
-document.addEventListener('DOMContentLoaded', function(event) {
-    document.getElementById("target").addEventListener("click", function () {
-        console.log(document.getElementById("container").innerHTML);
-        document.getElementById("container").innerHTML += "<div class=\"w-full lg:w-6/12 xl:w-3/12 px-4 text-blueGray-700 rounded border border-solid border-blueGray-100\">Test</div>";
-        console.log(document.getElementById("container").innerHTML);
-    });
-})
-
 export default class GoalModeling extends React.Component {
 
     state = {
@@ -46,7 +38,7 @@ const ParentComponent = props => (
         <div className="px-4 md:px-10 mx-auto w-full">
             <div>
                 {/* Card stats */}
-                <div className="flex flex-wrap" id={"container"}>
+                <div className="flex flex-wrap justify-center" id={"container"}>
                     {props.children}
                     <div className="w-full lg:w-6/12 xl:w-3/12 m-4 px-4 bg-lightBlue-600 text-blueGray-700 rounded border border-solid border-blueGray-100">
                         <a href="#" onClick={props.addChild}>Add</a>

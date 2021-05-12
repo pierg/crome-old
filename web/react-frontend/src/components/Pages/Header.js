@@ -7,7 +7,6 @@ import {
   Row,
   Col
 } from "atomize";
-
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../assets/styles/tailwind.css";
 import { Provider as StyletronProvider, DebugEngine } from "styletron-react";
@@ -19,9 +18,6 @@ const debug =
 
 // 1. Create a client engine instance
 const engine = new Styletron();
-
-
-
 
 export default function Header ({
     title,
