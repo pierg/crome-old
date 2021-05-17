@@ -17,97 +17,106 @@ Node.prototype = {
   }
 }
 
-class GridWorld {
-  constructor(canvas, width, height, options) {
+function GridWorld(canvas, width, height, options) {
 
-    this.options = options || {};
+  options = options || {};
 
-    this.canvas = canvas;
-    this.ctx = canvas.getContext('2d');
-    this.width = floor(width);
-    this.height = floor(height);
+  this.canvas  = canvas;
+  this.ctx     = canvas.getContext("2d");
+  this.width   = floor(width);
+  this.height  = floor(height);
 
+  let padding = options.padding;
 
-    let padding = options.padding;
-
-    if (typeof padding === 'undefined') {
-      padding = 0;
-    }
-
-    if (typeof padding === 'number') {
-      this.padding = {
-        top: padding,
-        right: padding,
-        bottom: padding,
-        left: padding
-      };
-    } else {
-      this.padding = padding;
-    }
-
-    this.cellSize = _n(options.cellSize, 32);
-    this.cellSpacing = _n(options.cellSpacing, 1);
-    this.drawBorder = !!options.drawBorder;
-    this.borderColor = options.borderColor || 'black';
-    this.backgroundColor = options.backgroundColor || 'white';
-
-    if (options.resizeCanvas) {
-      let cw = this.padding.left + this.padding.right,
-          ch = this.padding.top + this.padding.bottom;
-
-      cw += (this.width * (this.cellSize + this.cellSpacing)) - this.cellSpacing;
-      ch += (this.height * (this.cellSize + this.cellSpacing)) - this.cellSpacing;
-
-      if (this.drawBorder) {
-        cw += (this.cellSpacing * 2);
-        ch += (this.cellSpacing * 2);
-      }
-
-      this.canvas.width = cw;
-      this.canvas.height = ch;
-    }
-
-    this.nodes = [];
-    for (let j = 0; j < this.height; ++j) {
-      for (let i = 0; i < this.width; ++i) {
-        this.nodes.push(new Node(i, j, null));
-      }
-    }
-
-
-    //
-    // Event handling
-    // TODO: support dragging
-
-    let self = this;
-
-    this.onclick = options.onclick;
+  if (typeof padding === 'undefined') {
+    padding = 0;
   }
 
-  p2n(x, y) {
+  if (typeof padding === 'number') {
+    this.padding = {
+      top     : padding,
+      right   : padding,
+      bottom  : padding,
+      left    : padding
+    };
+  } else {
+    this.padding = padding;
+  }
 
-    x -= this.padding.left;
-    y -= this.padding.top;
+  this.cellSize = _n(options.cellSize, 32);
+  this.cellSpacing = _n(options.cellSpacing, 1);
+  this.drawBorder = !!options.drawBorder;
+  this.borderColor = options.borderColor || 'black';
+  this.backgroundColor = options.backgroundColor || 'white';
+
+  if (options.resizeCanvas) {
+    let cw = this.padding.left + this.padding.right,
+        ch = this.padding.top + this.padding.bottom;
+
+    cw += (this.width * (this.cellSize + this.cellSpacing)) - this.cellSpacing;
+    ch += (this.height * (this.cellSize + this.cellSpacing)) - this.cellSpacing;
 
     if (this.drawBorder) {
-      x -= (this.cellSpacing * 2);
-      y -= (this.cellSpacing * 2);
+      cw += (this.cellSpacing * 2);
+      ch += (this.cellSpacing * 2);
     }
 
-    x = floor(x / (this.cellSize + this.cellSpacing));
-    y = floor(y / (this.cellSize + this.cellSpacing));
+    this.canvas.width = cw;
+    this.canvas.height = ch;
+  }
 
-    if (x >= 0 && x < this.width && y >= 0 && y < this.height) {
-      return this.nodes[(y * this.width) + x];
+  this.nodes = [];
+  for (let j = 0; j < this.height; ++j) {
+    for (let i = 0; i < this.width; ++i) {
+      this.nodes.push(new Node(i, j, null));
+    }
+  }
+
+  //
+  // Event handling
+  // TODO: support dragging
+
+  let self = this;
+
+  this.onclick = options.onclick;
+
+  function p2n(x, y) {
+
+    x -= self.padding.left;
+    y -= self.padding.top;
+
+    if (self.drawBorder) {
+      x -= (self.cellSpacing * 2);
+      y -= (self.cellSpacing * 2);
+    }
+
+    x = floor(x / (self.cellSize + self.cellSpacing));
+    y = floor(y / (self.cellSize + self.cellSpacing));
+
+    if (x >= 0 && x < self.width && y >= 0 && y < self.height) {
+      return self.nodes[(y * self.width) + x];
     } else {
       return null;
     }
   }
 
-  draw() {
+  canvas.addEventListener('click', function(evt) {
 
-    console.log("dessin");
+    if (!self.onclick)
+      return;
 
+    let node = p2n(evt.offsetX, evt.offsetY);
+
+    if (node)
+      self.onclick(node);
+
+  });
+
+}
+
+GridWorld.prototype = {
+  draw: function() {
+    console.log("test2");
     let csz   = this.cellSize,
         csp   = this.cellSpacing,
         ctx   = this.ctx,
@@ -140,37 +149,37 @@ class GridWorld {
 
     ctx.restore();
 
-  }
+  },
 
-  get(x, y) {
+  get: function(x, y) {
     return this.nodes[(y * this.width) + x];
-  }
+  },
 
-  getBackgroundColor(x, y) {
+  getBackgroundColor: function(x, y) {
     return this.nodes[(y * this.width) + x].backgroundColor;
-  }
+  },
 
-  setBackgroundColor(x, y, color) {
+  setBackgroundColor: function(x, y, color) {
     this.nodes[(y * this.width) + x].backgroundColor = color || null;
-  }
+  },
 
-  isBlocked(x, y) {
+  isBlocked: function(x, y) {
     return this.nodes[(y * this.width) + x].blocked;
-  }
+  },
 
-  setBlocked(x, y, blocked) {
+  setBlocked: function(x, y, blocked) {
     this.nodes[(y * this.width) + x].blocked = !!blocked;
-  }
+  },
 
-  setAttribute(x, y, key, value) {
+  setAttribute: function(x, y, key, value) {
     this.nodes[(y * this.width) + x][key] = value;
-  }
+  },
 
-  eachNeighbour2(x, y, callback) {
+  eachNeighbour: function(x, y, callback) {
     return this.eachNodeNeighbour(this.nodes[(y * this.width) + x], callback);
-  }
+  },
 
-  eachNodeNeighbour(node, callback) {
+  eachNodeNeighbour: function(node, callback) {
 
     let x   = node.x,
         y   = node.y,
@@ -185,24 +194,13 @@ class GridWorld {
     if (y > 0   && !ns[ix-w].blocked) callback(ns[ix-w], nix++);
     if (y < h-1 && !ns[ix+w].blocked) callback(ns[ix+w], nix++);
 
-  }
+  },
 
-  eachNode(callback) {
+  eachNode: function(callback) {
     this.nodes.forEach(callback);
   }
-  /*canvas.addEventListener('click', function(evt) {
 
-    if (!self.onclick)
-      return;
-
-    let node = this.p2n(evt.offsetX, evt.offsetY);
-
-    if (node)
-      self.onclick(node);
-
-  }); */
-
-}
+};
 
 
 export default GridWorld;

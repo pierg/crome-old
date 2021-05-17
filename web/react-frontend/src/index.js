@@ -4,7 +4,7 @@ import reportWebVitals from './reportWebVitals';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "assets/styles/tailwind.css";
 import {BrowserRouter} from "react-router-dom";
-import {Route, Switch} from "react-router";
+import {Route, Switch} from "react-router-dom";
 
 // Components
 import TabsF from "./components/Tabs/TabsF";
@@ -14,11 +14,8 @@ import WorldModeling from "./components/Pages/CreateCGG/WorldModeling";
 import Index from "./components/Pages/Index";
 import GoalModeling from "./components/Pages/GoalModeling";
 import App from './App';
-<<<<<<< HEAD
 import CreateEnvironment from "./components/Pages/CreateCGG/CreateEnvironment";
-=======
 import RunExample from "./components/Pages/RunExample";
->>>>>>> 4afdc6a9cc2f1bf837c96d6a2545601de670153e
 
 
 //  Page create your own CGG
@@ -27,7 +24,7 @@ export const CreateCGG = () => {
     return (
         <React.StrictMode>
             <TabsF firstMenu={"Environment"} secondMenu={"World Modeling"} thirdMenu={"Goal Modeling"} fourthMenu={"Analysis"} fifthMenu={"Synthesis"}
-                   firstPage={<CreateEnvironment/>}
+                   firstPage={<></>}
                    secondPage={<WorldModeling firstCategory={"Actions"} secondCategory={"Sensors"} thirdCategory={"Context"}/>}
                    thirdPage={<></>}
                    fourthPage={<RunExample/>}
