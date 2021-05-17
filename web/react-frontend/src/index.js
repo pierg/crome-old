@@ -4,16 +4,17 @@ import reportWebVitals from './reportWebVitals';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "assets/styles/tailwind.css";
 import {BrowserRouter} from "react-router-dom";
-import {Route, Switch} from "react-router";
+import {Route, Switch} from "react-router-dom";
 
 // Components
 import TabsF from "./components/Tabs/TabsF";
 import Header from "./components/Pages/Header";
 import FooterSmall from "./components/Footers/FooterSmall";
-import WorldModeling from "./components/Pages/WorldModeling";
+import WorldModeling from "./components/Pages/CreateCGG/WorldModeling";
 import Index from "./components/Pages/Index";
 import GoalModeling from "./components/Pages/GoalModeling";
 import App from './App';
+import CreateEnvironment from "./components/Pages/CreateCGG/CreateEnvironment";
 import RunExample from "./components/Pages/RunExample";
 
 
