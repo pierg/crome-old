@@ -65,3 +65,4 @@ const ChildComponent = props => <div className="w-full lg:w-6/12 xl:w-3/12 m-4 p
                     </div>
                 </div>
  */
+

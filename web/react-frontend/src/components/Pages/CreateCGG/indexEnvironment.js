@@ -18,11 +18,10 @@ Node.prototype = {
 }
 
 function GridWorld(canvas, width, height, options) {
-
   options = options || {};
 
   this.canvas  = canvas;
-  this.ctx     = canvas.getContext("2d");
+  this.ctx     = canvas.getContext('2d');
   this.width   = floor(width);
   this.height  = floor(height);
 
@@ -116,7 +115,7 @@ function GridWorld(canvas, width, height, options) {
 
 GridWorld.prototype = {
   draw: function() {
-    console.log("test2");
+
     let csz   = this.cellSize,
         csp   = this.cellSpacing,
         ctx   = this.ctx,

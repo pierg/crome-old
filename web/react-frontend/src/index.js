@@ -24,7 +24,7 @@ export const CreateCGG = () => {
     return (
         <React.StrictMode>
             <TabsF firstMenu={"Environment"} secondMenu={"World Modeling"} thirdMenu={"Goal Modeling"} fourthMenu={"Analysis"} fifthMenu={"Synthesis"}
-                   firstPage={<></>}
+                   firstPage={<CreateEnvironment/>}
                    secondPage={<WorldModeling firstCategory={"Actions"} secondCategory={"Sensors"} thirdCategory={"Context"}/>}
                    thirdPage={<></>}
                    fourthPage={<RunExample/>}
