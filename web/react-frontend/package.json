@@ -30,6 +30,7 @@
     "camelcase": "^6.1.0",
     "case-sensitive-paths-webpack-plugin": "2.3.0",
     "chart.js": "2.9.4",
+    "classnames": "^2.3.1",
     "css-loader": "^5.2.4",
     "dist": "^0.1.2",
     "dotenv": "8.2.0",
@@ -74,6 +75,7 @@
     "react-router-bootstrap": "^0.25.0",
     "react-router-dom": "5.2.0",
     "react-scripts": "4.0.3",
+    "react-syntax-highlighter": "^15.4.3",
     "react-transition-group": "^4.4.1",
     "resolve": "1.18.1",
     "resolve-url-loader": "^3.1.2",
@@ -175,6 +177,7 @@
   },
   "devDependencies": {
     "components": "^0.1.0",
+    "prettier": "^2.3.0",
     "sass": "^1.32.13",
     "sass-loader": "7.3.1",
     "styletron-engine-atomic": "^1.4.7"
