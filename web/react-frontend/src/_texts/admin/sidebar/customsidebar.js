@@ -16,17 +16,17 @@ const textProps = {
     },
     {
       icon: "fas fa-tv",
-      text: "Page 1 for Section 1",
+      text: "Components",
       active: true,
       link: {
-        href: "#pablo",
+        href: "#/components",
       },
     },
     {
       icon: "fas fa-tools",
-      text: "Page 2 for Section 1",
+      text: "Run Example",
       link: {
-        href: "#pablo",
+        href: "#/example",
       },
     },
     {

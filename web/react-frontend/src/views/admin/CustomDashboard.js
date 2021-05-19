@@ -21,6 +21,10 @@ import TabsF from "../../components/Tabs/TabsF";
 import CustomHeader from "../../components/Headers/Admin/CustomHeader";
 import customheadercards from "../../_texts/admin/headers/customheadercards";
 import customsidebar from "../../_texts/admin/sidebar/customsidebar";
+import ChildComponent from "../../components/Custom/ChildComponent";
+import MediaPlayerTeamInfo from "../../components/MediaPlayers/MediaPlayerTeamInfo";
+import custommediaplayerteaminfo from "_texts/e-commerce/mediaplayers/custommediaplayerteaminfo.js";
+import CustomMediaPlayer from "../../components/Custom/CustomMediaPlayer";
 
 export default function CustomDashboard() {
   const location = useLocation();
@@ -31,18 +35,34 @@ export default function CustomDashboard() {
     <>
       <Sidebar {...customsidebar} />
       <div className="relative md:ml-64 bg-blueGray-100">
-        <NavbarSearchUser {...navbarsearchusersettings2} />
         <CustomHeader {...customheadercards} />
         <div className="px-4 md:px-6 mx-auto w-full -mt-24">
-          <div className="flex flex-wrap">
-            <div className="w-full xl:w-8/12 px-4">
-              {/*<CardChartJS {...cardchartjsdashboard1} />*/}
+          <div className="flex flex-wrap justify-center">
+
+            <ChildComponent
+                  statTitle="Goal Name"
+                  number="1"
+                  statDescription="Description of the goal"
+                  statContext="Context of the goal"
+                  statObjectives="Objectives of the goal"
+                  statIconName="fas fa-pen-square"
+                  statSecondIconName="fas fa-trash-alt"
+                  statIconColor="bg-lightBlue-600" />
+
+
+
+            {/*<div className="w-full xl:w-8/12 px-4">
+              {/*<CardChartJS {...cardchartjsdashboard1}
 
             </div>
             <div className="w-full xl:w-4/12 px-4">
-              {/*<CardChartJS {...cardchartjsdashboard2} />*/}
-            </div>
+              {/*<CardChartJS {...cardchartjsdashboard2}
+            </div> />*/}
           </div>
+
+          <CustomMediaPlayer {...custommediaplayerteaminfo} />
+
+
           <div className="flex flex-wrap">
             <div className="w-full xl:w-8/12 px-4">
               {/*<CardFullTable {...cardfulltabledashboard1} />*/}
