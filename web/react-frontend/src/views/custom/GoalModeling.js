@@ -46,7 +46,7 @@ const ParentComponent = props => (
                 <div className="flex flex-wrap justify-center" id={"container"}>
                     {props.children}
                     <div className="w-full lg:w-6/12 xl:w-3/12 m-4 px-4 bg-lightBlue-600 text-blueGray-700 rounded border border-solid border-blueGray-100">
-                        <a href="#" onClick={props.addChild}>Add</a>
+                        <button onClick={props.addChild}>Add</button>
                     </div>
                 </div>
             </div>
