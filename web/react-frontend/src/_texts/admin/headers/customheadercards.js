@@ -1,0 +1,46 @@
+
+const textProps = {
+  color: "lightBlue",
+  cards: [{
+      statSubtitle: "Traffic",
+      statTitle: "World Modeling",
+      statArrow: "up",
+      statPercent: "3.48",
+      statPercentColor: "text-emerald-500",
+      statDescripiron: "Since last month",
+      statIconName: "fas fa-globe",
+      statIconColor: "bg-red-500",
+    },
+    {
+      statSubtitle: "NEW USERS",
+      statTitle: "Goal Modeling",
+      statArrow: "down",
+      statPercent: "3.48",
+      statPercentColor: "text-red-500",
+      statDescripiron: "Since last week",
+      statIconName: "fas fa-bullseye",
+      statIconColor: "bg-orange-500",
+    },
+    {
+      statSubtitle: "SALES",
+      statTitle: "Analysis",
+      statArrow: "down",
+      statPercent: "1.10",
+      statPercentColor: "text-orange-500",
+      statDescripiron: "Since yesterday",
+      statIconName: "fas fa-spinner",
+      statIconColor: "bg-pink-500",
+    },
+    {
+      statSubtitle: "PERFORMANCE",
+      statTitle: "Synthesis",
+      statArrow: "up",
+      statPercent: "12",
+      statPercentColor: "text-emerald-500",
+      statDescripiron: "Since last month",
+      statIconName: "fas fa-check-circle",
+      statIconColor: "bg-lightBlue-500",
+    },
+  ],
+};
+export default textProps;
