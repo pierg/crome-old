@@ -2,7 +2,7 @@ function _n(val, def) {
   return (typeof val === 'number') ? val : def;
 }
 
-let floor = Math.floor;
+var floor = Math.floor;
 
 function Node(x, y, backgroundColor) {
   this.x = x;
@@ -18,14 +18,15 @@ Node.prototype = {
 }
 
 function GridWorld(canvas, width, height, options) {
+
   options = options || {};
 
   this.canvas  = canvas;
   this.ctx     = canvas.getContext('2d');
-  this.width   = floor(width);
-  this.height  = floor(height);
+  this.width   = floor(width) * 2;
+  this.height  = floor(height) * 1.5 ;
 
-  let padding = options.padding;
+  var padding = options.padding;
 
   if (typeof padding === 'undefined') {
     padding = 0;
@@ -42,32 +43,32 @@ function GridWorld(canvas, width, height, options) {
     this.padding = padding;
   }
 
-  this.cellSize = _n(options.cellSize, 32);
-  this.cellSpacing = _n(options.cellSpacing, 1);
+  this.cellSize = _n(options.cellSize, 25);
+  this.cellSizeWall = _n(options.cellSize, 5);
+  this.cellSpacing = _n(options.cellSpacing, 2);
   this.drawBorder = !!options.drawBorder;
   this.borderColor = options.borderColor || 'black';
   this.backgroundColor = options.backgroundColor || 'white';
 
   if (options.resizeCanvas) {
-    let cw = this.padding.left + this.padding.right,
+    var cw = this.padding.left + this.padding.right,
         ch = this.padding.top + this.padding.bottom;
 
-    cw += (this.width * (this.cellSize + this.cellSpacing)) - this.cellSpacing;
-    ch += (this.height * (this.cellSize + this.cellSpacing)) - this.cellSpacing;
+    cw += (this.width * (this.cellSize + this.cellSizeWall + 2 * this.cellSpacing)) - 50 * this.cellSpacing;
+    ch += (this.height * (this.cellSize + this.cellSizeWall + 2 * this.cellSpacing)) - 85 * this.cellSpacing;
 
     if (this.drawBorder) {
       cw += (this.cellSpacing * 2);
       ch += (this.cellSpacing * 2);
     }
-
     this.canvas.width = cw;
     this.canvas.height = ch;
   }
 
   this.nodes = [];
-  for (let j = 0; j < this.height; ++j) {
-    for (let i = 0; i < this.width; ++i) {
-      this.nodes.push(new Node(i, j, null));
+  for (var j = 0; j < this.height; ++j) {
+    for (var i = 0; i < this.width; ++i) {
+      this.nodes.push(new Node( i,j, null));
     }
   }
 
@@ -75,7 +76,7 @@ function GridWorld(canvas, width, height, options) {
   // Event handling
   // TODO: support dragging
 
-  let self = this;
+  var self = this;
 
   this.onclick = options.onclick;
 
@@ -88,12 +89,28 @@ function GridWorld(canvas, width, height, options) {
       x -= (self.cellSpacing * 2);
       y -= (self.cellSpacing * 2);
     }
+    var tabx = [];
+    var a = 0;
+    for (var i = 0; i < 35; i+=2) {
+      a += 2 * self.cellSize;
+      tabx.push(a);
+      a += 2 * self.cellSizeWall + self.cellSpacing;
+      tabx.push(a);
+      a += self.cellSpacing;
+    }
 
-    x = floor(x / (self.cellSize + self.cellSpacing));
-    y = floor(y / (self.cellSize + self.cellSpacing));
+    var index = 0;
+    if (x > tabx[0]) {
+      index = 1;
+    }
+    while (x > tabx[index] ) {
+      index++;
+    }
+    y = floor(y / (2 * self.cellSize + self.cellSizeWall + 2 * self.cellSpacing));
 
-    if (x >= 0 && x < self.width && y >= 0 && y < self.height) {
-      return self.nodes[(y * self.width) + x];
+
+    if (index >= 0 && index < self.width && y >= 0 && y < self.height) {
+      return self.nodes[(y * self.width) + index];
     } else {
       return null;
     }
@@ -104,7 +121,7 @@ function GridWorld(canvas, width, height, options) {
     if (!self.onclick)
       return;
 
-    let node = p2n(evt.offsetX, evt.offsetY);
+    var node = p2n(evt.offsetX, evt.offsetY);
 
     if (node)
       self.onclick(node);
@@ -116,34 +133,60 @@ function GridWorld(canvas, width, height, options) {
 GridWorld.prototype = {
   draw: function() {
 
-    let csz   = this.cellSize,
+    var csz   = this.cellSize,
+        csz2   = this.cellSizeWall,
         csp   = this.cellSpacing,
         ctx   = this.ctx,
         w     = this.width,
         h     = this.height,
         ix    = 0;
 
-    let badj  = this.drawBorder ? this.cellSpacing : -this.cellSpacing,
+    var badj  = this.drawBorder ? this.cellSpacing : -this.cellSpacing,
         cadj  = this.drawBorder ? this.cellSpacing : 0;
 
     ctx.save();
-
     ctx.fillStyle = this.borderColor;
     ctx.fillRect(this.padding.left,
                  this.padding.top,
-                 ((csz + csp) * this.width) + badj,
-                 ((csz + csp) * this.height) + badj);
+                 ((csz + csz2 + 2 * csp) * this.width) + badj,
+                 ((csz + csz2 + 2 * csp) * this.height) + badj);
 
-    let cy = this.padding.top + cadj;
-    for (let j = 0; j < this.height; ++j) {
-      let cx = this.padding.left + cadj;
-      for (let i = 0; i < this.width; ++i) {
-        let n = this.nodes[ix++];
-        ctx.fillStyle = n.backgroundColor || this.backgroundColor;
-        ctx.fillRect(cx, cy, csz, csz);
-        cx += csz + csp;
+    var cy = this.padding.top + cadj;
+    for (var j = 0; j < this.height; ++j) {
+      var cx = this.padding.left + cadj;
+      for (var i = 0; i < this.width; ++i) {
+        if ( j % 2 == 0 ) {
+          var n = this.nodes[ix++];
+          ctx.fillStyle = n.backgroundColor || this.backgroundColor;
+
+          if (i % 2 == 0) {
+            ctx.fillRect(cx, cy, 2 *csz, 2 * csz);
+            cx += 2 *csz + csp;
+          }
+          else  {
+            ctx.fillRect(cx, cy,2 * csz2, 2 * csz);
+            cx += 2 *csz2 + csp;
+          }
+
+        }
+        else {
+          if (i % 2 == 0) {
+            ctx.fillRect(cx, cy, 2 *csz, csz2);
+            cx += 2 *csz + csp;
+          }
+          else  {
+            ctx.fillRect(cx, cy, 2 *csz2, csz2);
+            cx += 2 * csz2 + csp;
+          }
+
+        }
       }
-      cy += csz + csp;
+      if (j % 2 == 0) {
+        cy += 2 * csz + csp;
+      }
+      else {
+        cy += csz2 + csp;
+      }
     }
 
     ctx.restore();
@@ -180,7 +223,7 @@ GridWorld.prototype = {
 
   eachNodeNeighbour: function(node, callback) {
 
-    let x   = node.x,
+    var x   = node.x,
         y   = node.y,
         w   = this.width,
         h   = this.height,
