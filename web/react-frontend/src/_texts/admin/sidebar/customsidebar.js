@@ -29,6 +29,13 @@ const textProps = {
         href: "#/example",
       },
     },
+      {
+      icon: "fas fa-tools",
+      text: "Gridworld",
+      link: {
+        href: "#/gridworld",
+      },
+    },
     {
       divider: true,
     },

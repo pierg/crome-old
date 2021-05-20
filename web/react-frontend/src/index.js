@@ -106,6 +106,7 @@ ReactDOM.render(
       {/* Custom Routes added */}
       <Route path="/custom-d" component={CustomDashboard} />
       <Route path="/example" component={RunExample} />
+      <Route path="/gridworld" component={CreateEnvironment} />
       {/* Docs Routes - STOP */}
       <Redirect from="*" to="/custom-d" />
     </Switch>

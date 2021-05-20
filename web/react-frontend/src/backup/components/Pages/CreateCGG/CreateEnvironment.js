@@ -58,8 +58,10 @@ export default class CreateEnvironment extends React.Component {
 
 const ParentComponent = props => (
 
-    <div onLoad={props.init}>
-        <canvas id='canvas' width='920' height='640'/></div>
+    <div >
+        <canvas id='canvas' width='920' height='640'/>
+        <button onClick={props.init}>Test</button>
+    </div>
 
     );
 
