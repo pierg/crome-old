@@ -16,10 +16,10 @@ const textProps = {
     },
     {
       icon: "fas fa-tv",
-      text: "Components",
+      text: "Modeling",
       active: true,
       link: {
-        href: "#/components",
+        href: "#/custom-d",
       },
     },
     {
@@ -44,9 +44,9 @@ const textProps = {
     },
     {
       icon: "fas fa-map-marked",
-      text: "Page 1 for Section 2",
+      text: "Documentation (components)",
       link: {
-        href: "#pablo",
+        href: "#/components",
       },
     },
     {
