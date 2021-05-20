@@ -4,20 +4,20 @@ import classnames from "classnames";
 
 // components
 import GoalModeling from "../../views/custom/GoalModeling";
-import RunExample from "../../views/custom/RunExample";
 import CustomHeader from "../Headers/Admin/CustomHeader";
 import customheadercards from "../../_texts/admin/headers/customheadercards";
 import FooterAdmin from "../Footers/Admin/FooterAdmin";
 import footeradmin from "../../_texts/admin/footers/footeradmin";
+import WorldModeling from "../../views/custom/WorldModeling";
+import Analysis from "../../views/custom/Analysis";
+import Synthesis from "../../views/custom/Synthesis";
 
 export default function CustomPlayer({ items, defaultOpened }) {
   const [open, setOpen] = React.useState(defaultOpened);
   const [oldInTransition, setOldInTransition] = React.useState(false);
   const [newInTransition, setNewInTransition] = React.useState(false);
 
-  //const headerStates = [true, false, false, false];
   const [headerStates, setHeaderStates] = React.useState([true, false, false, false]);
-
 
   const toggleNew = (e, newOpen) => {
 
@@ -25,10 +25,8 @@ export default function CustomPlayer({ items, defaultOpened }) {
       headerStates[i] = false;
     }
     headerStates[newOpen] = true;
-
     setHeaderStates(headerStates);
 
-    console.log(headerStates);
     e.preventDefault();
     if (!newInTransition && !oldInTransition) {
       setOldInTransition(true);
@@ -69,36 +67,14 @@ export default function CustomPlayer({ items, defaultOpened }) {
                           key={key}
                       >
                         <div className="container mx-auto px-4">
-                          {/*<div className="flex flex-wrap -mx-4 ">
-                      {/*<div className="px-4 relative w-full md:w-6/12 flex items-center mx-auto">
-                        <div className="p-2">
-                          <h2 className="text-4xl font-bold leading-tight mt-0 mb-2">
-                            {prop.title}
-                          </h2>
-                          <p className="mt-4 mb-12 text-blueGray-500 text-lg leading-relaxed">
-                            {prop.description}
-                          </p>
-                          <Button {...prop.button} color={prop.color}></Button>
-                        </div>
-                      </div>
-
-                      <div className="px-12 py-12 relative w-full md:w-5/12">
-                        <div className="p-6">
-                          <img
-                            className="w-full rounded-lg shadow-xl"
-                            src={prop.image}
-                            alt="..."
-                          />
-                        </div>
-                      </div>*/}
-
                           {
                             {
-                              'world': <RunExample />,
-                              'goal': <GoalModeling />
+                              'world': <WorldModeling />,
+                              'goal': <GoalModeling />,
+                              'analysis': <Analysis />,
+                              'synthesis': <Synthesis />
                             }[prop.component]
                           }
-                          {/*}</div>*/}
                         </div>
                       </div>
                   );

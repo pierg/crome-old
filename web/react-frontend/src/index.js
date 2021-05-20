@@ -90,7 +90,7 @@ ReactDOM.render(
       <Route path="/custom-d" component={CustomDashboard} />
       <Route path="/example" component={RunExample} />
       {/* Docs Routes - STOP */}
-      <Redirect from="*" to="/components" />
+      <Redirect from="*" to="/custom-d" />
     </Switch>
   </HashRouter>,
   document.getElementById("root")

@@ -30,13 +30,6 @@ const textProps = {
       },
     },
     {
-      icon: "fas fa-table",
-      text: "Page 3 for Section 1",
-      link: {
-        href: "#pablo",
-      },
-    },
-    {
       divider: true,
     },
     {
