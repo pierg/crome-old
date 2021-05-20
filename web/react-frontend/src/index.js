@@ -46,9 +46,9 @@ import AboutUs from "views/presentation/AboutUs.js";
 import ContactUs from "views/presentation/ContactUs.js";
 import CustomDashboard from "./views/admin/CustomDashboard";
 import TabsF from "./components/Tabs/TabsF";
-import CreateEnvironment from "./backup/components/Pages/CreateCGG/CreateEnvironment";
 import WorldModeling from "./backup/components/Pages/CreateCGG/WorldModeling";
 import RunExample from "./backup/components/Pages/RunExample";
+import CreateEnvironment from "./components/Custom/CreateEnvironment";
 // Product Pages - STOP
 
 export const CreateCGG = () => {

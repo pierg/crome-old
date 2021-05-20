@@ -1,12 +1,24 @@
 import React from 'react';
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import "../../../assets/styles/tailwind.css";
 import "./indexEnvironment";
 import GridWorld from "./indexEnvironment";
 
 export default class CreateEnvironment extends React.Component {
-    init = () => {
-        let canvas= document.getElementById("canvas");
+
+    constructor(props) {
+        super(props);
+        this.myRef = React.createRef();
+    }
+
+    componentDidMount() {
+        // we can use this.inputRef.current to access DOM element
+        this.buildGrid(this.myRef.current);
+    }
+
+    buildGrid(canvas) {
+        // Update the document title using the browser API
+
+        //let canvas= myCanvas;
 
         let map = [
             [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -48,20 +60,14 @@ export default class CreateEnvironment extends React.Component {
         })
 
         world.draw();
-    };
+    }
     render() {
         return (
-            <ParentComponent init={this.init()}/>
+            <div>
+                <canvas ref={this.myRef} id='canvas' width='920' height='640'/>
+            </div>
         );
     }
 }
 
-const ParentComponent = props => (
-
-    <div >
-        <canvas id='canvas' width='920' height='640'/>
-        <button onClick={props.init}>Test</button>
-    </div>
-
-    );
 
