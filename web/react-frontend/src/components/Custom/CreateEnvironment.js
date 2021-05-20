@@ -45,32 +45,26 @@ export default class CreateEnvironment extends React.Component {
             drawBorder: true,
             onclick: function (node) {
                 console.log("you clicked on node: " + node);
-                console.log(this.mur)
-
-                if ("mur" + this.mur);
-                  if (node.x % 2 == 1) {
-                      world.setBackgroundColor(node.x, node.y, "black");
-                      world.setBlocked(node.x, node.y, true);
-                      console.log(world.nodes[(node.y * world.width) + node.x]["id"]);
-                  }
+                if (node.x % 2 === 1) {
+                    world.setBackgroundColor(node.x, node.y, "black");
+                    world.setBlocked(node.x, node.y, true);
+                    console.log(world.nodes[(node.y * world.width) + node.x]["id"]);
+                }
                 else {
-                  if (node.x % 2 == 0) {
-                      var selectcolor = document.getElementById("color");
-                      var choicecolor = selectcolor.selectedIndex  // Récupération de l'index du <option> choisi
+                    const selectColor = document.getElementById("color");
+                    const choiceColor = selectColor.selectedIndex;  // Take the index of the chosen <option>
 
-                      var color = selectcolor.options[choicecolor].text;
+                    const color = selectColor.options[choiceColor].text;
 
-                      var selectid = document.getElementById("id");
-                      var choiceid = selectid.selectedIndex  // Récupération de l'index du <option> choisi
-                      console.log(this.mur);
-                      var id = selectid.options[choiceid].text;
-                      world.setBackgroundColor(node.x, node.y, color);
-                      world.setBlocked(node.x, node.y, true);
-                      world.setAttribute(node.x, node.y, "id", id);
-                      console.log(world.nodes[(node.y * world.width) + node.x]["id"]);
-                  }
-              }
-            world.draw();
+                    const selectId = document.getElementById("id");
+                    const choiceId = selectId.selectedIndex;  // Take the index of the chosen <option>
+                    const id = selectId.options[choiceId].text;
+                    world.setBackgroundColor(node.x, node.y, color);
+                    world.setBlocked(node.x, node.y, true);
+                    world.setAttribute(node.x, node.y, "id", id);
+                    console.log(world.nodes[(node.y * world.width) + node.x]["id"]);
+                }
+                world.draw();
             }
         });
 
@@ -100,7 +94,7 @@ export default class CreateEnvironment extends React.Component {
                     <option>white</option>
                 </select>
                 <select id="id" name="id">
-                    <option></option>
+                    <option/>
                     <option>a1</option>
                     <option>a2</option>
                     <option>a3</option>

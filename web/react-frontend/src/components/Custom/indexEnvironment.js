@@ -2,7 +2,7 @@ function _n(val, def) {
   return (typeof val === 'number') ? val : def;
 }
 
-var floor = Math.floor;
+const floor = Math.floor;
 
 function Node(x, y, backgroundColor) {
   this.x = x;
@@ -26,7 +26,7 @@ function GridWorld(canvas, width, height, options) {
   this.width   = floor(width) * 2;
   this.height  = floor(height) * 1.5 ;
 
-  var padding = options.padding;
+  let padding = options.padding;
 
   if (typeof padding === 'undefined') {
     padding = 0;
@@ -51,7 +51,7 @@ function GridWorld(canvas, width, height, options) {
   this.backgroundColor = options.backgroundColor || 'white';
 
   if (options.resizeCanvas) {
-    var cw = this.padding.left + this.padding.right,
+    let cw = this.padding.left + this.padding.right,
         ch = this.padding.top + this.padding.bottom;
 
     cw += (this.width * (this.cellSize + this.cellSizeWall + 2 * this.cellSpacing)) - 50 * this.cellSpacing;
@@ -66,8 +66,8 @@ function GridWorld(canvas, width, height, options) {
   }
 
   this.nodes = [];
-  for (var j = 0; j < this.height; ++j) {
-    for (var i = 0; i < this.width; ++i) {
+  for (let j = 0; j < this.height; ++j) {
+    for (let i = 0; i < this.width; ++i) {
       this.nodes.push(new Node( i,j, null));
     }
   }
@@ -76,7 +76,7 @@ function GridWorld(canvas, width, height, options) {
   // Event handling
   // TODO: support dragging
 
-  var self = this;
+  const self = this;
 
   this.onclick = options.onclick;
 
@@ -89,21 +89,21 @@ function GridWorld(canvas, width, height, options) {
       x -= (self.cellSpacing * 2);
       y -= (self.cellSpacing * 2);
     }
-    var tabx = [];
-    var a = 0;
-    for (var i = 0; i < 35; i+=2) {
+    const tabX = [];
+    let a = 0;
+    for (let i = 0; i < 35; i+=2) {
       a += 2 * self.cellSize;
-      tabx.push(a);
+      tabX.push(a);
       a += 2 * self.cellSizeWall + self.cellSpacing;
-      tabx.push(a);
+      tabX.push(a);
       a += self.cellSpacing;
     }
 
-    var index = 0;
-    if (x > tabx[0]) {
+    let index = 0;
+    if (x > tabX[0]) {
       index = 1;
     }
-    while (x > tabx[index] ) {
+    while (x > tabX[index] ) {
       index++;
     }
     y = floor(y / (2 * self.cellSize + self.cellSizeWall + 2 * self.cellSpacing));
@@ -121,7 +121,7 @@ function GridWorld(canvas, width, height, options) {
     if (!self.onclick)
       return;
 
-    var node = p2n(evt.offsetX, evt.offsetY);
+    const node = p2n(evt.offsetX, evt.offsetY);
 
     if (node)
       self.onclick(node);
@@ -133,33 +133,33 @@ function GridWorld(canvas, width, height, options) {
 GridWorld.prototype = {
   draw: function() {
 
-    var csz   = this.cellSize,
-        csz2   = this.cellSizeWall,
-        csp   = this.cellSpacing,
-        ctx   = this.ctx,
-        w     = this.width,
-        h     = this.height,
-        ix    = 0;
+    let csz = this.cellSize,
+        csz2 = this.cellSizeWall,
+        csp = this.cellSpacing,
+        ctx = this.ctx,
+        w = this.width,
+        h = this.height,
+        ix = 0;
 
-    var badj  = this.drawBorder ? this.cellSpacing : -this.cellSpacing,
-        cadj  = this.drawBorder ? this.cellSpacing : 0;
+    const bAdj = this.drawBorder ? this.cellSpacing : -this.cellSpacing,
+        cAdj = this.drawBorder ? this.cellSpacing : 0;
 
     ctx.save();
     ctx.fillStyle = this.borderColor;
     ctx.fillRect(this.padding.left,
-                 this.padding.top,
-                 ((csz + csz2 + 2 * csp) * this.width) + badj,
-                 ((csz + csz2 + 2 * csp) * this.height) + badj);
+        this.padding.top,
+        ((csz + csz2 + 2 * csp) * this.width) + bAdj,
+        ((csz + csz2 + 2 * csp) * this.height) + bAdj);
 
-    var cy = this.padding.top + cadj;
-    for (var j = 0; j < this.height; ++j) {
-      var cx = this.padding.left + cadj;
-      for (var i = 0; i < this.width; ++i) {
-        if ( j % 2 == 0 ) {
-          var n = this.nodes[ix++];
+    let cy = this.padding.top + cAdj;
+    for (let j = 0; j < this.height; ++j) {
+      let cx = this.padding.left + cAdj;
+      for (let i = 0; i < this.width; ++i) {
+        if ( j % 2 === 0 ) {
+          const n = this.nodes[ix++];
           ctx.fillStyle = n.backgroundColor || this.backgroundColor;
 
-          if (i % 2 == 0) {
+          if (i % 2 === 0) {
             ctx.fillRect(cx, cy, 2 *csz, 2 * csz);
             cx += 2 *csz + csp;
           }
@@ -170,7 +170,7 @@ GridWorld.prototype = {
 
         }
         else {
-          if (i % 2 == 0) {
+          if (i % 2 === 0) {
             ctx.fillRect(cx, cy, 2 *csz, csz2);
             cx += 2 *csz + csp;
           }
@@ -181,7 +181,7 @@ GridWorld.prototype = {
 
         }
       }
-      if (j % 2 == 0) {
+      if (j % 2 === 0) {
         cy += 2 * csz + csp;
       }
       else {
@@ -223,12 +223,12 @@ GridWorld.prototype = {
 
   eachNodeNeighbour: function(node, callback) {
 
-    var x   = node.x,
-        y   = node.y,
-        w   = this.width,
-        h   = this.height,
-        ns  = this.nodes,
-        ix  = (y * w) + x,
+    let x = node.x,
+        y = node.y,
+        w = this.width,
+        h = this.height,
+        ns = this.nodes,
+        ix = (y * w) + x,
         nix = 0;
 
     if (x > 0   && !ns[ix-1].blocked) callback(ns[ix-1], nix++);
