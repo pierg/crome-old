@@ -54,7 +54,7 @@ export default function NavbarLinks({
   const navBg = {
     dark: "bg-blueGray-800 shadow-md",
     light: "bg-blueGray-200 shadow-md",
-    transparent: "lg:bg-transparent bg-white",
+    transparent: "lg:bg-transparent "+{/*bg-white"*/},
     white: "bg-white shadow-md",
     black: "bg-black shadow-md",
     blueGray: "bg-blueGray-500 shadow-md",

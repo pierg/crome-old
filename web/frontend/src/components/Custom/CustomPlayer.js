@@ -4,8 +4,8 @@ import classnames from "classnames";
 
 // components
 import GoalModeling from "../../views/custom/GoalModeling";
-import CustomHeader from "../Headers/Admin/CustomHeader";
-import customheadercards from "../../_texts/admin/headers/customheadercards";
+import CustomHeader from "./CustomHeader";
+import customheadercards from "../../_texts/custom/customheadercards";
 import FooterAdmin from "../Footers/Admin/FooterAdmin";
 import footeradmin from "../../_texts/admin/footers/footeradmin";
 import WorldModeling from "../../views/custom/WorldModeling";

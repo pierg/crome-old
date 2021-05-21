@@ -6,8 +6,8 @@ import Sidebar from "components/Sidebar/Sidebar.js";
 import CustomPlayer from "../../components/Custom/CustomPlayer";
 
 // texts as props
-import customsidebar from "../../_texts/admin/sidebar/customsidebar";
-import custommediaplayerteaminfo from "_texts/e-commerce/mediaplayers/custommediaplayerteaminfo.js";
+import customsidebar from "../../_texts/custom/customsidebar";
+import custommediaplayerteaminfo from "_texts/custom/custommediaplayerteaminfo.js";
 
 
 export default function CustomDashboard() {
