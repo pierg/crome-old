@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../assets/styles/tailwind.css";
+import EnvironmentsList from "../../components/Custom/EnvironmentsList";
+
 
 
 
@@ -14,11 +16,10 @@ function WorldModeling() {
     }, []);
 
     return (
-        <div className="App">
-            <header className="App-header">
-                <p>The current time is {currentTime}.</p>
-            </header>
-        </div>
+        <>
+        {currentTime}
+        <EnvironmentsList/>
+        </>
     );
 }
 
