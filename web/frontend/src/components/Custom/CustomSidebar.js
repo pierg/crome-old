@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
 
-export default function CustomSidebar({ brand, items, activeColor }) {
+export default function CustomSidebar({ brand, items, activeColor, currentRoute }) {
   const [sidebarShow, setSidebarShow] = React.useState("-translate-x-full");
   const activeColors = {
     red: "text-red-500 hover:text-red-700",
@@ -91,41 +91,45 @@ export default function CustomSidebar({ brand, items, activeColor }) {
                       className={classnames(
                         "text-xs uppercase py-3 font-bold block",
                         {
-                          [activeColors[activeColor]]: prop.active,
+                          [activeColors[activeColor]]: prop.link.href === currentRoute,
                           "text-blueGray-800 hover:text-blueGray-500":
-                            !prop.active || prop.active === undefined,
+                            prop.link.href !== currentRoute,
                         }
                       )}
                     >
                       <i
                         className={classnames(prop.icon, "mr-2 text-sm", {
-                          "opacity-75": prop.active,
+                          "opacity-75": prop.link.href === currentRoute,
                           "text-blueGray-400":
-                            !prop.active || prop.active === undefined,
+                            prop.link.href !== currentRoute,
                         })}
                       ></i>
                       {prop.text}
                     </Link>
                   );
                 } else {
+                    if(prop.link) {
+                    console.log(prop.link.href === currentRoute);
+                }
                   return (
                     <a
                       {...prop.link}
+
                       key={key}
                       className={classnames(
                         "text-xs uppercase py-3 font-bold block",
                         {
-                          [activeColors[activeColor]]: prop.active,
+                          [activeColors[activeColor]]: prop.link.href === currentRoute,
                           "text-blueGray-800 hover:text-blueGray-500":
-                            !prop.active || prop.active === undefined,
+                            prop.link.href !== currentRoute,
                         }
                       )}
                     >
                       <i
                         className={classnames(prop.icon, "mr-2 text-sm", {
-                          "opacity-75": prop.active,
+                          "opacity-75": prop.link.href === currentRoute,
                           "text-blueGray-400":
-                            !prop.active || prop.active === undefined,
+                            prop.link.href !== currentRoute,
                         })}
                       ></i>
                       {prop.text}

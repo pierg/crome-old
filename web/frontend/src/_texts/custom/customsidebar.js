@@ -24,7 +24,6 @@ const textProps = {
       {
       icon: "fas fa-tv",
       text: "Run CROME",
-      active: true,
       link: {
         href: "#/index",
       },

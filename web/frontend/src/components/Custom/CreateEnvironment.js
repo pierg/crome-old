@@ -4,6 +4,7 @@ import "./indexEnvironment";
 import GridWorld from "./indexEnvironment";
 import customsidebar from "../../_texts/custom/customsidebar";
 import CustomSidebar from "./CustomSidebar";
+import {useLocation} from "react-router-dom";
 
 export default class CreateEnvironment extends React.Component {
 
@@ -93,7 +94,7 @@ export default class CreateEnvironment extends React.Component {
     render() {
         return (
             <>
-                <CustomSidebar {...customsidebar} />
+                <CustomSidebar {...customsidebar} currentRoute={"#/gridworld"} /> {/* TODO */}
                 <div className="relative md:ml-64 bg-blueGray-100">
                     <div>
                         <div>

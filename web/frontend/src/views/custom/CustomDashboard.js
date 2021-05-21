@@ -17,7 +17,7 @@ export default function CustomDashboard() {
   }, [location]);
   return (
     <>
-      <CustomSidebar {...customsidebar} />
+      <CustomSidebar {...customsidebar} currentRoute={"#"+location.pathname}/>
       <div className="relative md:ml-64 bg-blueGray-100">
           <CustomPlayer {...custommediaplayerteaminfo} />
       </div>
