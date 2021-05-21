@@ -8,37 +8,38 @@ export default class CreateEnvironment extends React.Component {
     constructor(props) {
         super(props);
         this.myRef = React.createRef();
+        this.textInput = React.createRef();
+        this.colorComponent = React.createRef();
+        this.idComponent = React.createRef();
+        this.focusTextInput = this.focusTextInput.bind(this);
 
     }
 
-    componentDidMount() {
-        // we can use this.inputRef.current to access DOM element
-        this.buildGrid(this.myRef.current);
+    focusTextInput() {
+        // Donne explicitement le focus au champ texte en utilisant l’API DOM native.
+        // Remarque : nous utilisons `current` pour cibler le nœud DOM
+        this.textInput.current.focus();
+        this.buildGrid(this.myRef.current, this.textInput.current.value);
+        this.colorComponent.current.hidden = false;
+        this.idComponent.current.hidden = false;
     }
 
-    buildGrid(canvas) {
+    buildGrid(canvas, size) {
         // Update the document title using the browser API
 
         //let canvas= myCanvas;
+        console.log(size);
+        let map = [];
 
-        let map = [
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        ];
+        for (let i = 0; i < size; i++) {
+            map[i] = [];
+            for (let j = 0; j < size; j++) {
+
+                map[i].push(0);
+                console.log(map[i]);
+            }
+        }
+
         let world = new GridWorld(canvas, map[0].length, map.length, {
             padding: {top: 10, left: 10, right: 10, bottom: 60},
             resizeCanvas: true,
@@ -83,7 +84,7 @@ export default class CreateEnvironment extends React.Component {
         return (
             <div>
                 <canvas ref={this.myRef} id='canvas' width='920' height='640'/>
-                <select id="color" name="color">
+                <select ref={this.colorComponent} id="color" hidden={true} name="color">
                     <option>blue</option>
                     <option>green</option>
                     <option>red</option>
@@ -93,7 +94,7 @@ export default class CreateEnvironment extends React.Component {
                     <option>grey</option>
                     <option>white</option>
                 </select>
-                <select id="id" name="id">
+                <select ref={this.idComponent} id="id" hidden={true} name="id">
                     <option/>
                     <option>a1</option>
                     <option>a2</option>
@@ -128,7 +129,17 @@ export default class CreateEnvironment extends React.Component {
                     <option>r3</option>
                     <option>r4</option>
                 </select>
+                <div>
+                    <input
+                        type="text"
+                        ref={this.textInput} />    <input
+                    type="button"
+                    value="Size"
+                    onClick={this.focusTextInput}
+                />
+                </div>
             </div>
+
         );
     }
 }
