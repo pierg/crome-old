@@ -68,3 +68,7 @@ docs/_build/
 # PyBuilder
 target/
 /web/frontend/package-lock.json
+/web/frontend/node_modules/
+/web/frontend/build
+/web/frontend/.idea
+
