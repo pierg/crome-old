@@ -21,8 +21,6 @@ export default class CreateEnvironment extends React.Component {
     focusTextInput() {
         // Donne explicitement le focus au champ texte en utilisant l’API DOM native.
         // Remarque : nous utilisons `current` pour cibler le nœud DOM
-        const context = this.myRef.current.getContext('2d');
-        context.clearRect(0, 0, this.myRef.current.width, this.myRef.current.height);
         this.textInput.current.focus();
         this.buildGrid(this.myRef.current, this.textInput.current.value);
         this.colorComponent.current.hidden = false;
@@ -99,11 +97,8 @@ export default class CreateEnvironment extends React.Component {
                             <div> choose the size of the grid :
                                 <input
                                     type="text"
-                                    ref={this.textInput} />    <input
-                                type="button"
-                                value="Generate"
-                                onClick={this.focusTextInput}
-                            />
+                                    ref={this.textInput} />
+                                <button onClick={this.focusTextInput}>Generate</button>
                             </div>
                             <canvas ref={this.myRef} id='canvas'/>
                             <select ref={this.colorComponent} hidden={true} id="color" name="color">
