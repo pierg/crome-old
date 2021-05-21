@@ -3,9 +3,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./indexEnvironment";
 import GridWorld from "./indexEnvironment";
 import customsidebar from "../../_texts/custom/customsidebar";
-import Sidebar from "../Sidebar/Sidebar";
-import CustomPlayer from "./CustomPlayer";
-import custommediaplayerteaminfo from "../../_texts/custom/custommediaplayerteaminfo";
+import CustomSidebar from "./CustomSidebar";
 
 export default class CreateEnvironment extends React.Component {
 
@@ -15,7 +13,6 @@ export default class CreateEnvironment extends React.Component {
         this.textInput = React.createRef();
         this.colorComponent = React.createRef();
         this.focusTextInput = this.focusTextInput.bind(this);
-
     }
 
     focusTextInput() {
@@ -87,12 +84,9 @@ export default class CreateEnvironment extends React.Component {
     render() {
         return (
             <>
-                <Sidebar {...customsidebar} />
+                <CustomSidebar {...customsidebar} />
                 <div className="relative md:ml-64 bg-blueGray-100">
                     <div>
-                        <div>
-                            <Sidebar {...customsidebar} />
-                        </div>
                         <div>
                             <div> choose the size of the grid :
                                 <input
