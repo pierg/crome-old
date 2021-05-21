@@ -1,10 +1,8 @@
 import React, {useRef} from 'react'
 // import Input from "../../components/Elements/Input.js";
 import Button from "../../components/Elements/Button.js";
-
-import {Container, Form} from 'react-bootstrap'
+import {Form} from 'react-bootstrap'
 import {v4 as uuidV4} from 'uuid'
-import Header from "../../_docs/components/Header";
 
 export default function LoginSession({id, onIdSubmit}) {
     const idRef = useRef()
