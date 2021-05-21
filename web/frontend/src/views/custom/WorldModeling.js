@@ -1,13 +1,38 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../assets/styles/tailwind.css";
-import BasicForm from "components/Custom/BasicForm";
 
 
 
-export default class WorldModeling extends React.Component {
+function WorldModeling() {
+    const [currentTime, setCurrentTime] = useState(0);
 
-    render() {
-        return <BasicForm></BasicForm>;
-    }
+    useEffect(() => {
+        fetch('/time').then(res => res.json()).then(data => {
+            setCurrentTime(data.time);
+        });
+    }, []);
+
+    return (
+        <div className="App">
+            <header className="App-header">
+                <p>The current time is {currentTime}.</p>
+            </header>
+        </div>
+    );
 }
+
+export default WorldModeling;
+
+
+
+//
+// export default class WorldModeling extends React.Component {
+//
+//     render() {
+//
+//         return (
+//             Time()
+//         );
+//     }
+// }
