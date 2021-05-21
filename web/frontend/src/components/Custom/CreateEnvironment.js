@@ -90,11 +90,12 @@ export default class CreateEnvironment extends React.Component {
         })
 
         world.draw();
+
     }
     render() {
         return (
             <>
-                <CustomSidebar {...customsidebar} currentRoute={"#/gridworld"} /> {/* TODO */}
+                <CustomSidebar {...customsidebar} currentRoute={"#"+this.props.location} /> {/* TODO useLocation as in CustomDashboard */}
                 <div className="relative md:ml-64 bg-blueGray-100">
                     <div>
                         <div>
