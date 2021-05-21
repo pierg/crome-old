@@ -2,6 +2,6 @@ graphviz==0.16
 tabulate==0.8.9
 
 docker==5.0.0
-flask
+flask==2.0.0
 python-dotenv
 flask_cors
