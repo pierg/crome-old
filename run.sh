@@ -13,7 +13,7 @@ else
           ;;
         -w)
           echo "Launching the web-server..."
-          python3 ./web/webapp.py
+          python3 ./web/backend/app.py
           ;;
         -s)
           echo "Going to scripts folder..."
