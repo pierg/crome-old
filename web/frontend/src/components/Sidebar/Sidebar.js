@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 
 export default function Sidebar({ brand, items, activeColor }) {
   const [sidebarShow, setSidebarShow] = React.useState("-translate-x-full");
-    const [id, setId] = useLocalStorage('id')
 
     const activeColors = {
     red: "text-red-500 hover:text-red-700",
