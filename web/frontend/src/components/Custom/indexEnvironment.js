@@ -47,14 +47,14 @@ function GridWorld(canvas, width, height, options) {
   this.cellSizeWall = _n(options.cellSize, 5);
   this.cellSpacing = _n(options.cellSpacing, 2);
   this.drawBorder = !!options.drawBorder;
-  this.borderColor = options.borderColor || 'black';
+  this.borderColor = options.borderColor || 'lightgrey';
   this.backgroundColor = options.backgroundColor || 'white';
 
   if (options.resizeCanvas) {
     let cw = this.padding.left + this.padding.right,
         ch = this.padding.top + this.padding.bottom;
     cw += (this.width * (this.cellSize +  this.cellSizeWall + this.cellSpacing)) - this.cellSpacing - 2 * this.cellSizeWall;
-    ch += ((this.height - 2) * (this.cellSize + 0.5 * this.cellSizeWall + this.cellSpacing)) - this.cellSpacing;
+    ch += ((this.height - 2) * (this.cellSize + this.cellSizeWall + this.cellSpacing)) - this.cellSpacing;
 
     if (this.drawBorder) {
       cw += (this.cellSpacing * 2);
@@ -103,7 +103,7 @@ function GridWorld(canvas, width, height, options) {
 
       a += 2 * self.cellSizeWall + self.cellSpacing;
       tabX.push(a);
-      b += self.cellSizeWall + self.cellSpacing;
+      b += 2 * self.cellSizeWall + self.cellSpacing;
       tabY.push(b);
       a += self.cellSpacing;
       b += self.cellSpacing;
@@ -170,7 +170,7 @@ GridWorld.prototype = {
     ctx.fillRect(this.padding.left,
         this.padding.top,
         (( csz + csz2 + csp) * this.width) + bAdj,
-        ((csz + 0.5 * csz2 + csp) * this.height) + bAdj);
+        ((csz + csz2 + csp) * this.height) + bAdj);
 
     let cy = this.padding.top + cAdj;
     for (let j = 0; j < this.height; ++j) {
@@ -182,22 +182,22 @@ GridWorld.prototype = {
 
 
           if (i % 2 === 0) {
-            ctx.fillRect(cx, cy, 2 *csz, 2 * csz);
-            cx += 2 *csz + csp;
+            ctx.fillRect(cx, cy, 2 * csz, 2 * csz);
+            cx += 2 * csz + csp;
           }
           else  {
             ctx.fillRect(cx, cy,2 * csz2, 2 * csz);
-            cx += 2 *csz2 + csp;
+            cx += 2 * csz2 + csp;
           }
 
         }
         else {
           if (i % 2 === 0) {
-            ctx.fillRect(cx, cy, 2 *csz, csz2);
-            cx += 2 *csz + csp;
+            ctx.fillRect(cx, cy, 2 * csz, 2 * csz2);
+            cx += 2 * csz + csp;
           }
           else  {
-            ctx.fillRect(cx, cy, 2 *csz2, csz2);
+            ctx.fillRect(cx, cy, 2 * csz2, 2 * csz2);
             cx += 2 * csz2 + csp;
           }
 
@@ -207,7 +207,7 @@ GridWorld.prototype = {
         cy += 2 * csz + csp;
       }
       else {
-        cy += csz2 + csp;
+        cy += 2 * csz2 + csp;
       }
     }
 
