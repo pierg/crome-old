@@ -37,7 +37,6 @@ export default class CreateEnvironment extends React.Component {
         for (let i = 0; i < size; i++) {
             map[i] = [];
             for (let j = 0; j < size; j++) {
-
                 map[i].push(0);
             }
         }
@@ -61,6 +60,16 @@ export default class CreateEnvironment extends React.Component {
                     if (world.isBlocked(node.x, node.y)) {
                         world.setBackgroundColor(node.x, node.y, "white");
                         world.setBlocked(node.x, node.y, false);
+                    }
+                    else if (node.y % 2 == 1) {
+                        if (world.isBlocked(node.x, node.y)) {
+                            world.setBackgroundColor(node.x, node.y, "black");
+                            world.setBlocked(node.x, node.y, true);
+                        }
+                        else {
+                            world.setBackgroundColor(node.x, node.y, "black");
+                            world.setBlocked(node.x, node.y, true);
+                        }
                     }
                     else {
                         const selectColor = document.getElementById("color");

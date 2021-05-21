@@ -90,29 +90,49 @@ function GridWorld(canvas, width, height, options) {
       x -= (self.cellSpacing * 2);
       y -= (self.cellSpacing * 2);
     }
+    console.log("y : " + y);
     const tabX = [];
+    const tabY = [];
     let a = 0;
+    let b = 0;
     for (let i = 0; i < self.width; i+=2) {
       a += 2 * self.cellSize;
       tabX.push(a);
+      b += 2 * self.cellSize;
+      tabY.push(b);
+
       a += 2 * self.cellSizeWall + self.cellSpacing;
       tabX.push(a);
+      b += self.cellSizeWall + self.cellSpacing;
+      tabY.push(b);
       a += self.cellSpacing;
+      b += self.cellSpacing;
     }
+    console.log("0 : " + tabY[0]);
+    console.log("1 : " + tabY[1]);
+    console.log("2 : " + tabY[2]);
+    console.log("3 : " + tabY[3]);
+    console.log("4 : " + tabY[4]);
 
-    let index = 0;
+    let indexX = 0;
     if (x > tabX[0]) {
-      index = 1;
+      indexX = 1;
     }
-    while (x > tabX[index] ) {
-      index++;
+    while (x >= tabX[indexX] ) {
+      indexX++;
     }
-    y = floor(y / (2 * self.cellSize + self.cellSizeWall + 2 * self.cellSpacing));
+    let indexY = 0;
+    if (y > tabY[0]) {
+      indexY = 1;
+    }
+    while (y >= tabY[indexY] ) {
+      indexY++;
+    }
 
-
-    if (index >= 0 && index < self.width && y >= 0 && y < self.height) {
-      return self.nodes[(y * self.width) + index];
-    } else {
+    if (indexX >= 0 && indexX < self.width && indexY >= 0 && indexY < self.height) {
+      return self.nodes[(indexY * self.width) + indexX];
+    }
+    else {
       return null;
     }
   }
@@ -156,9 +176,10 @@ GridWorld.prototype = {
     for (let j = 0; j < this.height; ++j) {
       let cx = this.padding.left + cAdj;
       for (let i = 0; i < this.width; ++i) {
+        const n = this.nodes[ix++];
+        ctx.fillStyle = n.backgroundColor || this.backgroundColor;
         if ( j % 2 === 0 ) {
-          const n = this.nodes[ix++];
-          ctx.fillStyle = n.backgroundColor || this.backgroundColor;
+
 
           if (i % 2 === 0) {
             ctx.fillRect(cx, cy, 2 *csz, 2 * csz);
