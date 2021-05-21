@@ -1,17 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
-
-
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "assets/styles/tailwind.min.css";
 import "assets/styles/docs.css";
-
 // Docs Routes - START - you can delete these when you no longer need our docs
 import Components from "_docs/layouts/Components.js";
 import Documentation from "_docs/layouts/Documentation.js";
 // Docs Routes -  STOP
-
 // Product Pages - START
 // // admin
 import Dashboard from "views/admin/Dashboard.js";
@@ -45,24 +41,10 @@ import Landing2 from "views/presentation/Landing2.js";
 import AboutUs from "views/presentation/AboutUs.js";
 import ContactUs from "views/presentation/ContactUs.js";
 import CustomDashboard from "./views/admin/CustomDashboard";
-import TabsF from "./components/Tabs/TabsF";
-import WorldModeling from "./backup/components/Pages/CreateCGG/WorldModeling";
-import RunExample from "./backup/components/Pages/RunExample";
+import RunExample from "./views/custom/RunExample";
 import CreateEnvironment from "./components/Custom/CreateEnvironment";
 // Product Pages - STOP
 
-export const CreateCGG = () => {
-    return (
-        <React.StrictMode>
-            <TabsF firstMenu={"Environment"} secondMenu={"World Modeling"} thirdMenu={"Goal Modeling"} fourthMenu={"Analysis"} fifthMenu={"Synthesis"}
-                   firstPage={<></>}
-                   secondPage={<WorldModeling firstCategory={"Actions"} secondCategory={"Sensors"} thirdCategory={"Context"}/>}
-                   thirdPage={<></>}
-                   fourthPage={<RunExample/>}
-                   fifthPage={<></>}/>
-        </React.StrictMode>
-    );
-};
 
 ReactDOM.render(
   <HashRouter>

@@ -23,8 +23,8 @@ function GridWorld(canvas, width, height, options) {
 
   this.canvas  = canvas;
   this.ctx     = canvas.getContext('2d');
-  this.width   = floor(width) * 2;
-  this.height  = floor(height) * 1.5 ;
+  this.width   = floor(width) * 2 ;
+  this.height  = floor(height) * 2 ;
 
   let padding = options.padding;
 
@@ -53,9 +53,8 @@ function GridWorld(canvas, width, height, options) {
   if (options.resizeCanvas) {
     let cw = this.padding.left + this.padding.right,
         ch = this.padding.top + this.padding.bottom;
-
-    cw += (this.width * (this.cellSize + this.cellSizeWall + 2 * this.cellSpacing)) - 50 * this.cellSpacing;
-    ch += (this.height * (this.cellSize + this.cellSizeWall + 2 * this.cellSpacing)) - 85 * this.cellSpacing;
+    cw += (this.width * (this.cellSize +  this.cellSizeWall + this.cellSpacing)) - this.cellSpacing - 2 * this.cellSizeWall;
+    ch += ((this.height - 2) * (this.cellSize + 0.5 * this.cellSizeWall + this.cellSpacing)) - this.cellSpacing;
 
     if (this.drawBorder) {
       cw += (this.cellSpacing * 2);
@@ -66,6 +65,8 @@ function GridWorld(canvas, width, height, options) {
   }
 
   this.nodes = [];
+  console.log(this.width);
+  console.log(this.height);
   for (let j = 0; j < this.height; ++j) {
     for (let i = 0; i < this.width; ++i) {
       this.nodes.push(new Node( i,j, null));
@@ -91,7 +92,7 @@ function GridWorld(canvas, width, height, options) {
     }
     const tabX = [];
     let a = 0;
-    for (let i = 0; i < 35; i+=2) {
+    for (let i = 0; i < self.width; i+=2) {
       a += 2 * self.cellSize;
       tabX.push(a);
       a += 2 * self.cellSizeWall + self.cellSpacing;
@@ -148,8 +149,8 @@ GridWorld.prototype = {
     ctx.fillStyle = this.borderColor;
     ctx.fillRect(this.padding.left,
         this.padding.top,
-        ((csz + csz2 + 2 * csp) * this.width) + bAdj,
-        ((csz + csz2 + 2 * csp) * this.height) + bAdj);
+        (( csz + csz2 + csp) * this.width) + bAdj,
+        ((csz + 0.5 * csz2 + csp) * this.height) + bAdj);
 
     let cy = this.padding.top + cAdj;
     for (let j = 0; j < this.height; ++j) {
@@ -202,7 +203,7 @@ GridWorld.prototype = {
   },
 
   setBackgroundColor: function(x, y, color) {
-    this.nodes[(y * this.width) + x].backgroundColor = color || null;
+    this.nodes[(y * this.width) + x].backgroundColor = color;
   },
 
   isBlocked: function(x, y) {
