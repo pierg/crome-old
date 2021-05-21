@@ -98,7 +98,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "npm run build:tailwind && react-scripts build",
     "test": "react-scripts test",
     "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm run build:tailwind",
     "build:tailwind": "tailwind build src/assets/styles/index.css -o src/assets/styles/tailwind.css"
