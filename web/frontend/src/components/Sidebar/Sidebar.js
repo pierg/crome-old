@@ -2,10 +2,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
+import LoginSession from "../Custom/LoginSession";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 export default function Sidebar({ brand, items, activeColor }) {
   const [sidebarShow, setSidebarShow] = React.useState("-translate-x-full");
-  const activeColors = {
+    const [id, setId] = useLocalStorage('id')
+
+    const activeColors = {
     red: "text-red-500 hover:text-red-700",
     orange: "text-orange-500 hover:text-orange-700",
     amber: "text-amber-500 hover:text-amber-700",
@@ -70,7 +74,10 @@ export default function Sidebar({ brand, items, activeColor }) {
                 {brand && brand.text && <span>{brand.text}</span>}
               </a>
             )}
-            <div className="md:flex-col md:min-w-full flex flex-col list-none">
+              <div className="md:flex-col md:min-w-full flex flex-col list-none">
+                <LoginSession id={id} onIdSubmit={setId}/>
+              </div>
+              <div className="md:flex-col md:min-w-full flex flex-col list-none">
               {items.map((prop, key) => {
                 if (prop.divider) {
                   return <hr key={key} className="my-4 md:min-w-full" />;
