@@ -1,7 +1,12 @@
 from flask import Flask, Blueprint, request, jsonify
 from flask_cors import CORS
+from os import path
 
-app = Flask(__name__, static_folder='../frontend/build', static_url_path='/')
+if path.exists('../frontend/build'):
+    app = Flask(__name__, static_folder='../frontend/build', static_url_path='/')
+else:
+    app = Flask(__name__)
+
 CORS(app)
 api = Blueprint('api', __name__)
 
@@ -33,4 +38,4 @@ def handle_submit():
 app.register_blueprint(api, url_prefix='/api')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True, port=5050)
+    app.run(host='0.0.0.0', debug=True, port=5000)
