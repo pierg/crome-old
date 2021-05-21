@@ -29,7 +29,7 @@ export default function NavbarComponents() {
           </div>
           <div
             className={
-              "lg:flex flex-grow items-center bg-white lg:bg-transparent lg:shadow-none" +
+              "lg:flex flex-grow items-center " + {/*bg-white*/} + "lg:bg-transparent lg:shadow-none" +
               (navbarOpen ? " block rounded lg:shadow-lg" : " hidden")
             }
           >

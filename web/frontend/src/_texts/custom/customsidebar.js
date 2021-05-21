@@ -3,7 +3,7 @@ const textProps = {
     text: "NAME",
     image: require("assets/img/brand/tim_60x61.png").default,
     link: {
-      href: "#/custom-d",
+      href: "#/index",
     },
   },
   activeColor: "lightBlue",
@@ -26,7 +26,27 @@ const textProps = {
       text: "Run CROME",
       active: true,
       link: {
+        href: "#/index",
+      },
+      },
+    {
+      divider: true,
+    },
+    {
+      title: "Documentation",
+    },
+    {
+      icon: "fas fa-puzzle-piece",
+      text: "Components",
+      link: {
         href: "#/components",
+      },
+    },
+    {
+      icon: "fas fa-file-alt",
+      text: "Overview",
+      link: {
+        href: "#/documentation",
       },
     },
     {

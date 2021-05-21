@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 // components
-import CustomCardMini from "../../Cards/Admin/CustomCardMini";
+import CustomCardMini from "./CustomCardMini";
 
 export default function CustomHeader({ cards, color, states }) {
 

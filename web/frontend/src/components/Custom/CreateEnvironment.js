@@ -2,10 +2,10 @@ import React from 'react';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./indexEnvironment";
 import GridWorld from "./indexEnvironment";
-import customsidebar from "../../_texts/admin/sidebar/customsidebar";
+import customsidebar from "../../_texts/custom/customsidebar";
 import Sidebar from "../Sidebar/Sidebar";
 import CustomPlayer from "./CustomPlayer";
-import custommediaplayerteaminfo from "../../_texts/e-commerce/mediaplayers/custommediaplayerteaminfo";
+import custommediaplayerteaminfo from "../../_texts/custom/custommediaplayerteaminfo";
 
 export default class CreateEnvironment extends React.Component {
 

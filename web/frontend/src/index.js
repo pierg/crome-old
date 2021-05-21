@@ -40,7 +40,7 @@ import Landing1 from "views/presentation/Landing1.js";
 import Landing2 from "views/presentation/Landing2.js";
 import AboutUs from "views/presentation/AboutUs.js";
 import ContactUs from "views/presentation/ContactUs.js";
-import CustomDashboard from "./views/admin/CustomDashboard";
+import CustomDashboard from "./views/custom/CustomDashboard";
 import RunExample from "./views/custom/RunExample";
 import CreateEnvironment from "./components/Custom/CreateEnvironment";
 // Product Pages - STOP
@@ -85,12 +85,12 @@ ReactDOM.render(
       {/* Docs Routes - START - you can delete these when you no longer need our docs */}
       <Route path="/components" component={Components} />
       <Route path="/documentation" component={Documentation} />
+      {/* Docs Routes - STOP */}
       {/* Custom Routes added */}
-      <Route path="/custom-d" component={CustomDashboard} />
+      <Route path="/index" component={CustomDashboard} />
       <Route path="/example" component={RunExample} />
       <Route path="/gridworld" component={CreateEnvironment} />
-      {/* Docs Routes - STOP */}
-      <Redirect from="*" to="/custom-d" />
+      <Redirect from="*" to="/index" />
     </Switch>
   </HashRouter>,
   document.getElementById("root")
