@@ -3,9 +3,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./indexEnvironment";
 import GridWorld from "./indexEnvironment";
 import customsidebar from "../../_texts/custom/customsidebar";
-import Sidebar from "../Sidebar/Sidebar";
-import CustomPlayer from "./CustomPlayer";
-import custommediaplayerteaminfo from "../../_texts/custom/custommediaplayerteaminfo";
+import CustomSidebar from "./CustomSidebar";
 
 export default class CreateEnvironment extends React.Component {
 
@@ -15,7 +13,6 @@ export default class CreateEnvironment extends React.Component {
         this.textInput = React.createRef();
         this.colorComponent = React.createRef();
         this.focusTextInput = this.focusTextInput.bind(this);
-
     }
 
     focusTextInput() {
@@ -35,7 +32,6 @@ export default class CreateEnvironment extends React.Component {
         for (let i = 0; i < size; i++) {
             map[i] = [];
             for (let j = 0; j < size; j++) {
-
                 map[i].push(0);
             }
         }
@@ -59,6 +55,16 @@ export default class CreateEnvironment extends React.Component {
                     if (world.isBlocked(node.x, node.y)) {
                         world.setBackgroundColor(node.x, node.y, "white");
                         world.setBlocked(node.x, node.y, false);
+                    }
+                    else if (node.y % 2 == 1) {
+                        if (world.isBlocked(node.x, node.y)) {
+                            world.setBackgroundColor(node.x, node.y, "black");
+                            world.setBlocked(node.x, node.y, true);
+                        }
+                        else {
+                            world.setBackgroundColor(node.x, node.y, "black");
+                            world.setBlocked(node.x, node.y, true);
+                        }
                     }
                     else {
                         const selectColor = document.getElementById("color");
@@ -87,12 +93,9 @@ export default class CreateEnvironment extends React.Component {
     render() {
         return (
             <>
-                <Sidebar {...customsidebar} />
+                <CustomSidebar {...customsidebar} />
                 <div className="relative md:ml-64 bg-blueGray-100">
                     <div>
-                        <div>
-                            <Sidebar {...customsidebar} />
-                        </div>
                         <div>
                             <div> choose the size of the grid :
                                 <input

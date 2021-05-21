@@ -2,7 +2,7 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 
 // components
-import Sidebar from "components/Sidebar/Sidebar.js";
+import CustomSidebar from "components/Custom/CustomSidebar";
 import CustomPlayer from "../../components/Custom/CustomPlayer";
 
 // texts as props
@@ -17,7 +17,7 @@ export default function CustomDashboard() {
   }, [location]);
   return (
     <>
-      <Sidebar {...customsidebar} />
+      <CustomSidebar {...customsidebar} />
       <div className="relative md:ml-64 bg-blueGray-100">
           <CustomPlayer {...custommediaplayerteaminfo} />
       </div>

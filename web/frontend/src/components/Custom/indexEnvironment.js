@@ -47,14 +47,14 @@ function GridWorld(canvas, width, height, options) {
   this.cellSizeWall = _n(options.cellSize, 5);
   this.cellSpacing = _n(options.cellSpacing, 2);
   this.drawBorder = !!options.drawBorder;
-  this.borderColor = options.borderColor || 'black';
+  this.borderColor = options.borderColor || 'lightgrey';
   this.backgroundColor = options.backgroundColor || 'white';
 
   if (options.resizeCanvas) {
     let cw = this.padding.left + this.padding.right,
         ch = this.padding.top + this.padding.bottom;
     cw += (this.width * (this.cellSize +  this.cellSizeWall + this.cellSpacing)) - this.cellSpacing - 2 * this.cellSizeWall;
-    ch += ((this.height - 2) * (this.cellSize + 0.5 * this.cellSizeWall + this.cellSpacing)) - this.cellSpacing;
+    ch += ((this.height - 2) * (this.cellSize + this.cellSizeWall + this.cellSpacing)) - this.cellSpacing;
 
     if (this.drawBorder) {
       cw += (this.cellSpacing * 2);
@@ -90,29 +90,49 @@ function GridWorld(canvas, width, height, options) {
       x -= (self.cellSpacing * 2);
       y -= (self.cellSpacing * 2);
     }
+    console.log("y : " + y);
     const tabX = [];
+    const tabY = [];
     let a = 0;
+    let b = 0;
     for (let i = 0; i < self.width; i+=2) {
       a += 2 * self.cellSize;
       tabX.push(a);
+      b += 2 * self.cellSize;
+      tabY.push(b);
+
       a += 2 * self.cellSizeWall + self.cellSpacing;
       tabX.push(a);
+      b += 2 * self.cellSizeWall + self.cellSpacing;
+      tabY.push(b);
       a += self.cellSpacing;
+      b += self.cellSpacing;
     }
+    console.log("0 : " + tabY[0]);
+    console.log("1 : " + tabY[1]);
+    console.log("2 : " + tabY[2]);
+    console.log("3 : " + tabY[3]);
+    console.log("4 : " + tabY[4]);
 
-    let index = 0;
+    let indexX = 0;
     if (x > tabX[0]) {
-      index = 1;
+      indexX = 1;
     }
-    while (x > tabX[index] ) {
-      index++;
+    while (x >= tabX[indexX] ) {
+      indexX++;
     }
-    y = floor(y / (2 * self.cellSize + self.cellSizeWall + 2 * self.cellSpacing));
+    let indexY = 0;
+    if (y > tabY[0]) {
+      indexY = 1;
+    }
+    while (y >= tabY[indexY] ) {
+      indexY++;
+    }
 
-
-    if (index >= 0 && index < self.width && y >= 0 && y < self.height) {
-      return self.nodes[(y * self.width) + index];
-    } else {
+    if (indexX >= 0 && indexX < self.width && indexY >= 0 && indexY < self.height) {
+      return self.nodes[(indexY * self.width) + indexX];
+    }
+    else {
       return null;
     }
   }
@@ -150,33 +170,34 @@ GridWorld.prototype = {
     ctx.fillRect(this.padding.left,
         this.padding.top,
         (( csz + csz2 + csp) * this.width) + bAdj,
-        ((csz + 0.5 * csz2 + csp) * this.height) + bAdj);
+        ((csz + csz2 + csp) * this.height) + bAdj);
 
     let cy = this.padding.top + cAdj;
     for (let j = 0; j < this.height; ++j) {
       let cx = this.padding.left + cAdj;
       for (let i = 0; i < this.width; ++i) {
+        const n = this.nodes[ix++];
+        ctx.fillStyle = n.backgroundColor || this.backgroundColor;
         if ( j % 2 === 0 ) {
-          const n = this.nodes[ix++];
-          ctx.fillStyle = n.backgroundColor || this.backgroundColor;
+
 
           if (i % 2 === 0) {
-            ctx.fillRect(cx, cy, 2 *csz, 2 * csz);
-            cx += 2 *csz + csp;
+            ctx.fillRect(cx, cy, 2 * csz, 2 * csz);
+            cx += 2 * csz + csp;
           }
           else  {
             ctx.fillRect(cx, cy,2 * csz2, 2 * csz);
-            cx += 2 *csz2 + csp;
+            cx += 2 * csz2 + csp;
           }
 
         }
         else {
           if (i % 2 === 0) {
-            ctx.fillRect(cx, cy, 2 *csz, csz2);
-            cx += 2 *csz + csp;
+            ctx.fillRect(cx, cy, 2 * csz, 2 * csz2);
+            cx += 2 * csz + csp;
           }
           else  {
-            ctx.fillRect(cx, cy, 2 *csz2, csz2);
+            ctx.fillRect(cx, cy, 2 * csz2, 2 * csz2);
             cx += 2 * csz2 + csp;
           }
 
@@ -186,7 +207,7 @@ GridWorld.prototype = {
         cy += 2 * csz + csp;
       }
       else {
-        cy += csz2 + csp;
+        cy += 2 * csz2 + csp;
       }
     }
 
