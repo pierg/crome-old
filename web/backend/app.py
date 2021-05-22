@@ -9,19 +9,33 @@ if path.exists('../frontend/build'):
 else:
     app = Flask(__name__)
 
-app.config['SECRET_KEY'] = 'secret!'
-
-# Set this variable to None, "threading", "eventlet" or "gevent"
-socketio = SocketIO(app, async_mode=None)
+# socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, cors_allowed_origins='http://localhost:3000')
 
 
-@socketio.on('get-environments')
-def on_connect():
-    print('-----------------------')
-    print('Client connected - %s' + request.sid)
-    print('-----------------------')
-    emit('receive-environments',
-         {'type': "success", 'content': "New goal created"})
+@socketio.on('connect')
+def connected():
+    print('Connected')
+    print(request.args)
+    print(f'ID {request.args.get("id")}')
+
+
+@socketio.on('disconnect')
+def disconnected():
+    print('Disconnected')
+    print(request.args)
+    print(f'ID {request.args.get("id")}')
+
+
+@socketio.on('get-message')
+def get_message_test():
+    print('GET ENVIRONMENTS')
+    print(request.args)
+    print(f'ID {request.args.get("id")}')
+    emit("receive-message", {'data': "Message from Server"})
+    time.sleep(3)
+    emit("receive-message", {'data': "Message after 3 seconds from the first"})
+
 
 
 @app.route('/')

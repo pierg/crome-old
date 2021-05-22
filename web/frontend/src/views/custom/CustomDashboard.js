@@ -21,7 +21,7 @@ export default function CustomDashboard() {
     }, [location]);
     return (
         <SocketProvider id={id}>
-            <CustomSidebar {...customsidebar} currentRoute={"#" + location.pathname}/>
+            <CustomSidebar {...customsidebar} currentRoute={"#" + location.pathname} id={id} setId={setId}/>
             <div className="relative md:ml-64 bg-blueGray-100">
                 <CustomPlayer {...custommediaplayerteaminfo} />
             </div>

@@ -1,30 +1,20 @@
-import React, { useState, useEffect } from 'react';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../assets/styles/tailwind.css";
-import EnvironmentsList from "../../components/Custom/EnvironmentsList";
-
-
+import SocketIoMessage from "../../components/Custom/Examples/SocketIoMessage";
+import FetchTime from "../../components/Custom/Examples/FetchTime";
 
 
 function WorldModeling() {
-    const [currentTime, setCurrentTime] = useState(0);
-
-    useEffect(() => {
-        fetch('/time').then(res => res.json()).then(data => {
-            setCurrentTime(data.time);
-        });
-    }, []);
 
     return (
         <>
-        {currentTime}
-        <EnvironmentsList/>
+            <FetchTime/>
+            <SocketIoMessage/>
         </>
     );
 }
 
 export default WorldModeling;
-
 
 
 //
