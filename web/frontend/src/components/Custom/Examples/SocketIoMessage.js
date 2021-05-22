@@ -10,8 +10,6 @@ function SocketIoMessage(props) {
 
 
     const setMessageFunction = useCallback((msg) => {
-        console.log("DATA RECEIVED ")
-        console.log(msg.data)
         setMessage(msg.data);
     }, [setMessage])
 
