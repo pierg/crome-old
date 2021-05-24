@@ -2,10 +2,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
+import LoginSession from "./LoginSession";
 
-export default function CustomSidebar({ brand, items, activeColor }) {
+export default function CustomSidebar({ brand, items, activeColor, currentRoute, id, setId}) {
   const [sidebarShow, setSidebarShow] = React.useState("-translate-x-full");
-  const activeColors = {
+
+    const activeColors = {
     red: "text-red-500 hover:text-red-700",
     orange: "text-orange-500 hover:text-orange-700",
     amber: "text-amber-500 hover:text-amber-700",
@@ -70,6 +72,9 @@ export default function CustomSidebar({ brand, items, activeColor }) {
                 {brand && brand.text && <span>{brand.text}</span>}
               </a>
             )}
+              <div className="md:flex-col md:min-w-full flex flex-col list-none">
+                  <LoginSession id={id} onIdSubmit={setId}/>
+              </div>
             <div className="md:flex-col md:min-w-full flex flex-col list-none">
               {items.map((prop, key) => {
                 if (prop.divider) {
@@ -91,41 +96,45 @@ export default function CustomSidebar({ brand, items, activeColor }) {
                       className={classnames(
                         "text-xs uppercase py-3 font-bold block",
                         {
-                          [activeColors[activeColor]]: prop.active,
+                          [activeColors[activeColor]]: prop.link.href === currentRoute,
                           "text-blueGray-800 hover:text-blueGray-500":
-                            !prop.active || prop.active === undefined,
+                            prop.link.href !== currentRoute,
                         }
                       )}
                     >
                       <i
                         className={classnames(prop.icon, "mr-2 text-sm", {
-                          "opacity-75": prop.active,
+                          "opacity-75": prop.link.href === currentRoute,
                           "text-blueGray-400":
-                            !prop.active || prop.active === undefined,
+                            prop.link.href !== currentRoute,
                         })}
                       ></i>
                       {prop.text}
                     </Link>
                   );
                 } else {
+                    if(prop.link) {
+                    console.log(prop.link.href === currentRoute);
+                }
                   return (
                     <a
                       {...prop.link}
+
                       key={key}
                       className={classnames(
                         "text-xs uppercase py-3 font-bold block",
                         {
-                          [activeColors[activeColor]]: prop.active,
+                          [activeColors[activeColor]]: prop.link.href === currentRoute,
                           "text-blueGray-800 hover:text-blueGray-500":
-                            !prop.active || prop.active === undefined,
+                            prop.link.href !== currentRoute,
                         }
                       )}
                     >
                       <i
                         className={classnames(prop.icon, "mr-2 text-sm", {
-                          "opacity-75": prop.active,
+                          "opacity-75": prop.link.href === currentRoute,
                           "text-blueGray-400":
-                            !prop.active || prop.active === undefined,
+                            prop.link.href !== currentRoute,
                         })}
                       ></i>
                       {prop.text}
