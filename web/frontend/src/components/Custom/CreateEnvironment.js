@@ -125,8 +125,6 @@ export default class CreateEnvironment extends React.Component {
     render() {
         return (
             <>
-                <CustomSidebar {...customsidebar} currentRoute={"#"+this.props.location} /> {/* TODO useLocation as in CustomDashboard */}
-                <div className="relative md:ml-64 bg-blueGray-100">
                     <div>
                         <div>
                             <div> choose the size of the grid :
@@ -148,7 +146,6 @@ export default class CreateEnvironment extends React.Component {
                             </select>
                         </div>
                     </div>
-                </div>
             </>
         );
     }
