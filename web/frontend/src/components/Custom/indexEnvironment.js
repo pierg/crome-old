@@ -125,13 +125,15 @@ function GridWorld(canvas, width, height, options) {
       indexY++;
     }
 
-    if (indexX >= 0 && indexX < self.width && indexY >= 0 && indexY < self.height) {
+    if (indexX >= 0 && indexX < self.width + 3 * self.cellSizeWall && indexY >= 0 && indexY < self.height + 3 * self.cellSizeWall) {
       return self.nodes[(indexY * (self.width + 1)) + indexX];
     }
     else {
       return null;
     }
   }
+  let start =[];
+  let end =[];
 
   canvas.addEventListener('click', function(evt) {
 
@@ -140,8 +142,25 @@ function GridWorld(canvas, width, height, options) {
 
     const node = p2n(evt.offsetX, evt.offsetY);
 
-    if (node)
-      self.onclick(node);
+    if (node) {
+      if (node.x % 2 === 1 && node.y % 2 === 1) {
+        if (start.length === 0) {
+          start.push(node.x);
+          start.push(node.y);
+          self.onclick(node, start, end);
+
+        } else {
+          end.push(node.x);
+          end.push(node.y);
+          self.onclick(node, start, end);
+          start = [];
+          end = [];
+        }
+      }
+      else {
+        self.onclick(node, start, end);
+      }
+    }
 
   });
 
@@ -154,8 +173,6 @@ GridWorld.prototype = {
         csz2 = this.cellSizeWall,
         csp = this.cellSpacing,
         ctx = this.ctx,
-        w = this.width,
-        h = this.height,
         ix = 0;
 
     const bAdj = this.drawBorder ? this.cellSpacing : -this.cellSpacing,
@@ -183,7 +200,6 @@ GridWorld.prototype = {
             ctx.fillRect(cx, cy,2 * csz2, 2 * csz);
             cx += 2 * csz2 + csp;
           }
-
         }
         else {
           if (i % 2 === 1) {
