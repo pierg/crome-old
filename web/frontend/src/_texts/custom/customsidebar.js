@@ -18,7 +18,7 @@ const textProps = {
       icon: "fas fa-tools",
       text: "Environment Builder",
       link: {
-        href: "#/gridworld",
+        href: "#/world",
       },
     },
       {

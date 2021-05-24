@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
+import {HashRouter, Route, Switch, Redirect, Link} from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "assets/styles/tailwind.min.css";
 import "assets/styles/docs.css";
@@ -87,9 +87,16 @@ ReactDOM.render(
       <Route path="/documentation" component={Documentation} />
       {/* Docs Routes - STOP */}
       {/* Custom Routes added */}
-      <Route path="/index" component={CustomDashboard} />
-      <Route path="/example" component={RunExample} />
-      <Route path="/gridworld" component={CreateEnvironment} />
+      <Route path="/index" render={() => (<CustomDashboard page="index" />)}/>
+      <Route path="/world" render={() => (<CustomDashboard page="world" />)}/>
+      {/* TODO
+      * Refactor the 2 Routes above, to have only one Route that calls CustomDashboard
+      * A prop must be passed to the component depending on the path
+      * The 2 lines below are some tries, the solution should be something like this
+      */}
+      {/*<Route path="/index/:page" component={CustomDashboard} />*/}
+      {/*<Route path="/index" render={(props) => (<CustomDashboard id={props.match.params.id} />)}/>*/}
+
       <Redirect from="*" to="/index" />
     </Switch>
   </HashRouter>,

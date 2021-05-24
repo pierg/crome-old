@@ -77,9 +77,6 @@ export default function CustomSidebar({ brand, items, activeColor, currentRoute,
               </div>
             <div className="md:flex-col md:min-w-full flex flex-col list-none">
               {items.map((prop, key) => {
-                  if (currentRoute) {
-                      console.log("route "+currentRoute);
-                  }
                 if (prop.divider) {
                   return <hr key={key} className="my-4 md:min-w-full" />;
                 } else if (prop.title) {
@@ -116,9 +113,6 @@ export default function CustomSidebar({ brand, items, activeColor, currentRoute,
                     </Link>
                   );
                 } else {
-                    if(prop.link) {
-                    console.log(prop.link.href === currentRoute);
-                }
                   return (
                     <a
                       {...prop.link}
