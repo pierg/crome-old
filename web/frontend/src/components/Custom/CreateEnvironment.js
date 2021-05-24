@@ -41,7 +41,7 @@ export default class CreateEnvironment extends React.Component {
             drawBorder: true,
             onclick: function (node) {
                 console.log("you clicked on node: " + node);
-                if (node.x % 2 === 1) {
+                if (node.x % 2 === 0) {
                     if (world.isBlocked(node.x, node.y)) {
                         world.setBackgroundColor(node.x, node.y, "white");
                         world.setBlocked(node.x, node.y, false);
@@ -56,7 +56,7 @@ export default class CreateEnvironment extends React.Component {
                         world.setBackgroundColor(node.x, node.y, "white");
                         world.setBlocked(node.x, node.y, false);
                     }
-                    else if (node.y % 2 == 1) {
+                    else if (node.y % 2 == 0) {
                         if (world.isBlocked(node.x, node.y)) {
                             world.setBackgroundColor(node.x, node.y, "black");
                             world.setBlocked(node.x, node.y, true);
