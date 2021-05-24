@@ -5,11 +5,5 @@
     "size": [
         { "width": "10", "height": "10" }
     ],
-    "age": 24,
-    "address": {
-        "streetAddress": "126",
-        "city": "San Jone",
-        "state": "CA",
-        "postalCode": "394221"
-    },
+    "grid": {}
 }
