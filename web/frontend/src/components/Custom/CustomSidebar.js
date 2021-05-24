@@ -3,11 +3,9 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
 import LoginSession from "./LoginSession";
-import useLocalStorage from "../../hooks/useLocalStorage";
 
-export default function CustomSidebar({ brand, items, activeColor, currentRoute }) {
+export default function CustomSidebar({ brand, items, activeColor, currentRoute, id, setId}) {
   const [sidebarShow, setSidebarShow] = React.useState("-translate-x-full");
-  const [id, setId] = useLocalStorage('id')
 
     const activeColors = {
     red: "text-red-500 hover:text-red-700",
