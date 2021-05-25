@@ -3,14 +3,14 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 
 // components
-import GoalModeling from "../../views/custom/GoalModeling";
-import CustomHeader from "./CustomHeader";
+import GoalModeling from "./GoalModeling";
+import CustomHeader from "../../components/Crome/CustomHeader";
 import customheadercards from "../../_texts/custom/customheadercards";
-import FooterAdmin from "../Footers/Admin/FooterAdmin";
+import FooterAdmin from "../../components/Footers/Admin/FooterAdmin";
 import footeradmin from "../../_texts/admin/footers/footeradmin";
-import WorldModeling from "../../views/custom/WorldModeling";
-import Analysis from "../../views/custom/Analysis";
-import Synthesis from "../../views/custom/Synthesis";
+import WorldModeling from "./WorldModeling";
+import Analysis from "./Analysis";
+import Synthesis from "./Synthesis";
 
 export default function CustomPlayer({ items, defaultOpened }) {
   const [open, setOpen] = React.useState(defaultOpened);

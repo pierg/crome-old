@@ -41,8 +41,6 @@ import Landing2 from "views/presentation/Landing2.js";
 import AboutUs from "views/presentation/AboutUs.js";
 import ContactUs from "views/presentation/ContactUs.js";
 import CustomDashboard from "./views/custom/CustomDashboard";
-import RunExample from "./views/custom/RunExample";
-import CreateEnvironment from "./components/Custom/CreateEnvironment";
 // Product Pages - STOP
 
 

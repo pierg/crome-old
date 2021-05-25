@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
-import LoginSession from "./LoginSession";
+import LoginSession from "../Custom/LoginSession";
 
 export default function CustomSidebar({ brand, items, activeColor, currentRoute, id, setId}) {
   const [sidebarShow, setSidebarShow] = React.useState("-translate-x-full");

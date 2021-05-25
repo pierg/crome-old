@@ -5,10 +5,10 @@
   "proxy": "http://localhost:5000",
   "dependencies": {
     "@babel/core": "7.12.3",
-    "@fortawesome/fontawesome-free": "5.15.1",
+    "@fortawesome/fontawesome-free": "5.15.3",
     "@notus-pro/react": "1.0.1",
     "@pmmmwh/react-refresh-webpack-plugin": "0.4.3",
-    "@popperjs/core": "2.5.4",
+    "@popperjs/core": "2.9.1",
     "@svgr/webpack": "5.5.0",
     "@tailwindcss/forms": "0.3.2",
     "@testing-library/jest-dom": "^5.11.4",
