@@ -1,16 +1,16 @@
 import React from "react";
-import {useLocation, useParams} from "react-router-dom";
+import {useLocation} from "react-router-dom";
 
 // components
-import CustomSidebar from "components/Custom/CustomSidebar";
-import CustomPlayer from "../../components/Custom/CustomPlayer";
+import CustomSidebar from "components/Crome/CustomSidebar";
+import CustomPlayer from "./CustomPlayer";
 
 // texts as props
 import customsidebar from "../../_texts/custom/customsidebar";
-import custommediaplayerteaminfo from "_texts/custom/custommediaplayerteaminfo.js";
+import custommediaplayerteaminfo from "_texts/custom/customplayerinfo.js";
 import {SocketProvider} from "../../contexts/SocketProvider";
 import useLocalStorage from "../../hooks/useLocalStorage";
-import CreateEnvironment from "../../components/Custom/CreateEnvironment";
+import CreateEnvironment from "./CreateEnvironment";
 
 export default function CustomDashboard(props) {
     const location = useLocation();

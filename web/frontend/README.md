@@ -68,3 +68,73 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `yarn build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+### Custom Pages
+
+Location : src/views/custom
+
+- CustomDashboard
+    - Description : Main Page with a sidebar and a content depending on the page variable 
+    - Requires : 
+      - page : component to call
+
+- CustomPlayer
+    - Description : Player allowing to navigate between the 4 following components
+        - WorldModeling
+        - GoalModeling
+            - Description : Displays goals
+        - Analysis
+        - Synthesis
+    
+- CreateEnvironment
+    - Description : Page built with Gridworld allowing to build or modify an environment
+    - Requires :
+        - JSON of coordinates with existing rooms (to be determined)
+    - Produces :
+        - JSON of coordinates with created rooms (to be determined)
+
+### Crome Components
+
+Location : src/components/Crome
+
+- CustomHeader
+    - Description : Displays the 4 parts of the CustomPlayer
+    - Requires :
+        - List of titles, icons and colors (see customheadercards in Custom Data)
+- CustomSidebar
+    - Description : Sidebar with every custom page
+    - Requires :
+        - List of titles, colors, links and more (see customheadercards in Custom Data)
+        - Current page to know what title to highlight
+- IndexEnvironment
+    - Description : Gridworld file
+    - Requires :
+        - Canvas to draw the grid, width, height and options of the grid
+        - JSON of coordinates, given by CreateEnvironment (to be determined)
+- Goal
+    - Description : Shows goal information
+    - Requires :
+        - JSON {goal, description, context, contract}
+- GoalEdit
+    - Description : Displays a modal to edit a Goal component
+    - Requires :
+        - List of available patterns ('get-patterns' API)
+    - Produces :
+        - JSON {goal, description, context, contract}
+
+### Custom Components
+
+Location : src/components/Custom
+
+- AddGoal
+- ChildComponent
+- CustomCardMini
+- LoginSession
+
+### Custom Data
+
+Location : src/_texts/custom
+
+- customheadercards
+- customplayerinfo
+- customsidebar

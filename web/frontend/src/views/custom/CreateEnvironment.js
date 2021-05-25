@@ -1,9 +1,7 @@
 import React from 'react';
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import "./indexEnvironment";
-import GridWorld from "./indexEnvironment";
-import customsidebar from "../../_texts/custom/customsidebar";
-import CustomSidebar from "./CustomSidebar";
+import "../../components/Crome/IndexEnvironment";
+import GridWorld from "../../components/Crome/IndexEnvironment";
 
 export default class CreateEnvironment extends React.Component {
 
