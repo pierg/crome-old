@@ -113,9 +113,6 @@ export default function CustomSidebar({ brand, items, activeColor, currentRoute,
                     </Link>
                   );
                 } else {
-                    if(prop.link) {
-                    console.log(prop.link.href === currentRoute);
-                }
                   return (
                     <a
                       {...prop.link}
