@@ -17,11 +17,6 @@ export default function LoginSession({id, onIdSubmit}) {
         onIdSubmit(uuidV4())
     }
 
-
-    if(id==null){
-        createNewId()
-    }
-
     return (
         <>
             {/*TODO: Fix style*/}
