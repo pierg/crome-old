@@ -153,11 +153,22 @@ function GridWorld(canvas, width, height, options) {
           self.onclick(node, start, end, startWall, endWall);
 
         } else {
-          end.push(node.x);
-          end.push(node.y);
-          self.onclick(node, start, end, startWall, endWall);
-          start = [];
-          end = [];
+          if (startWall.length !== 0) {
+            self.setBackgroundColor(start[0],start[1], "white");
+            self.setBackgroundColor(startWall[0],startWall[1], "white");
+            self.setBlocked(start[0],start[1], false);
+            self.setBlocked(startWall[0],startWall[1], false);
+            self.draw();
+            start = [];
+            startWall = [];
+          }
+          else {
+            end.push(node.x);
+            end.push(node.y);
+            self.onclick(node, start, end, startWall, endWall);
+            start = [];
+            end = [];
+          }
         }
       }
       else if ((node.x % 2 === 1 && node.y % 2 === 0) || (node.x % 2 === 0 && node.y % 2 === 1)) {
@@ -167,11 +178,23 @@ function GridWorld(canvas, width, height, options) {
           self.onclick(node, start, end, startWall, endWall);
 
         } else {
-          endWall.push(node.x);
-          endWall.push(node.y);
-          self.onclick(node, start, end, startWall, endWall);
-          startWall = [];
-          endWall = [];
+          if (start.length !== 0) {
+            self.setBackgroundColor(start[0],start[1], "white");
+            self.setBackgroundColor(startWall[0],startWall[1], "white");
+            self.setBlocked(start[0],start[1], false);
+            self.setBlocked(startWall[0],startWall[1], false);
+            self.draw();
+            start = [];
+            startWall = [];
+            console.log("test");
+          }
+          else {
+            endWall.push(node.x);
+            endWall.push(node.y);
+            self.onclick(node, start, end, startWall, endWall);
+            startWall = [];
+            endWall = [];
+          }
         }
       }
     }

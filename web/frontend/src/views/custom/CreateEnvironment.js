@@ -117,7 +117,7 @@ export default class CreateEnvironment extends React.Component {
                                 const choiceColor = selectColor.selectedIndex;  // Take the index of the chosen <option>
 
                                 const color = selectColor.options[choiceColor].text;
-                                if (world.getBackgroundColor(i, j) !== color) {
+                                if (world.getBackgroundColor(i, j) !== color || world.getBackgroundColor(i, j) !== null) {
                                     if (world.getBackgroundColor(i + 1, j) !== color) {
                                         world.setBackgroundColor(i + 1, j, "white");
                                         world.setBlocked(i + 1, j, false);
@@ -170,7 +170,7 @@ export default class CreateEnvironment extends React.Component {
                                 min = endWall[1];
                                 max = startWall[1];
                             }
-                            for (let i = min; i < max + 1; i += 2) {
+                            for (let i = min; i < max + 1; i += 1) {
                                 if (world.isBlocked(startWall[0], i) && world.getBackgroundColor(startWall[0], i) === "black") {
                                     world.setBackgroundColor(startWall[0], i, "white");
                                     world.setBlocked(startWall[0], i, false);
@@ -191,7 +191,7 @@ export default class CreateEnvironment extends React.Component {
                                 min = endWall[0];
                                 max = startWall[0];
                             }
-                            for (let i = min; i < max + 1; i += 2) {
+                            for (let i = min; i < max + 1; i += 1) {
                                 if (world.isBlocked(i, startWall[1]) && world.getBackgroundColor(i, startWall[1]) === "black") {
                                     world.setBackgroundColor(i, startWall[1], "white");
                                     world.setBlocked(i, startWall[1], false);
