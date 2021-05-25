@@ -8,7 +8,7 @@ export default function useLocalStorage(key, initialValue) {
     const [value, setValue] = useState(() => {
         const jsonValue = localStorage.getItem(prefixedKey)
         if (jsonValue === "undefined"){
-            var new_id = uuidV4()
+            const new_id = uuidV4();
             localStorage.setItem(key, JSON.stringify(new_id))
             return new_id
         }
