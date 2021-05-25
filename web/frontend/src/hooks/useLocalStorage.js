@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react'
 import {v4 as uuidV4} from 'uuid'
 
-const PREFIX = 'whatsapp-clone-'
+const PREFIX = 'CROME-'
 
 export default function useLocalStorage(key, initialValue) {
     const prefixedKey = PREFIX + key
