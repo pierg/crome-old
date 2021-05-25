@@ -40,6 +40,8 @@ class Persistence:
 
         output_file = f"{output_folder}/goals.dat"
 
+        output_file = Path(output_file)
+
         if not os.path.exists(output_folder):
             os.makedirs(output_folder)
 
@@ -107,6 +109,8 @@ class Persistence:
             output_folder = f"{Persistence.output_folder}"
 
         file = f"{output_folder}/goals.dat"
+
+        output_file = Path(file)
 
         file = open(file, 'rb')
         set_goals = pickle.load(file)
