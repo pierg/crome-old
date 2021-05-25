@@ -134,6 +134,9 @@ function GridWorld(canvas, width, height, options) {
   }
   let start =[];
   let end =[];
+  let startWall =[];
+  let endWall =[];
+
 
   canvas.addEventListener('click', function(evt) {
 
@@ -147,18 +150,29 @@ function GridWorld(canvas, width, height, options) {
         if (start.length === 0) {
           start.push(node.x);
           start.push(node.y);
-          self.onclick(node, start, end);
+          self.onclick(node, start, end, startWall, endWall);
 
         } else {
           end.push(node.x);
           end.push(node.y);
-          self.onclick(node, start, end);
+          self.onclick(node, start, end, startWall, endWall);
           start = [];
           end = [];
         }
       }
-      else {
-        self.onclick(node, start, end);
+      else if ((node.x % 2 === 1 && node.y % 2 === 0) || (node.x % 2 === 0 && node.y % 2 === 1)) {
+        if (startWall.length === 0) {
+          startWall.push(node.x);
+          startWall.push(node.y);
+          self.onclick(node, start, end, startWall, endWall);
+
+        } else {
+          endWall.push(node.x);
+          endWall.push(node.y);
+          self.onclick(node, start, end, startWall, endWall);
+          startWall = [];
+          endWall = [];
+        }
       }
     }
 
