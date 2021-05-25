@@ -1,0 +1,25 @@
+{
+  "name": "register_person",
+  "description": "During context day => if see a person, register in the next step, Only if see a person, register in the next step",
+  "context": [
+    "day"
+  ],
+  "contract": {
+    "assumptions": [
+      {
+        "type": "LTL",
+        "ltl_value": "true"
+      }
+    ],
+    "guarantees": [
+      {
+        "type": "pattern",
+        "pattern_name": "BoundDelay",
+        "pattern_inputs": {
+          "trigger": "person",
+          "reaction": "delay"
+        }
+      }
+    ]
+  }
+}

@@ -11,7 +11,7 @@ w = RunningExample()
 
 try:
 
-    """Modeling the set of goals using robotic patterns"""
+    """Modeling the set of goals using robotic patterns.json"""
     set_of_goals = {
         Node(name="day_patrol_12",
              description="During context day => start from r1, patrol r1, r2 in strict order,\n"

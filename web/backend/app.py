@@ -13,6 +13,14 @@ else:
 socketio = SocketIO(app, cors_allowed_origins='http://localhost:3000')
 
 
+@socketio.on('get-patterns')
+def get_patterns():
+    print('Get patterns')
+    print(request.args)
+    print(f'ID {request.args.get("id")}')
+    emit("receive-patterns", {'data': "Message from Server"})
+
+
 @socketio.on('connect')
 def connected():
     print('Connected')
