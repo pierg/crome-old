@@ -1,9 +1,20 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {HashRouter, Route, Switch, Redirect, Link} from "react-router-dom";
+import {HashRouter, Route, Switch, Redirect} from "react-router-dom";
+// styles from Now UI template
+
+// styles from Notus template
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "assets/styles/tailwind.min.css";
 import "assets/styles/docs.css";
+
+import "assets/styles/bootstrap.min.css";
+import "assets/scss/now-ui-kit.css";
+
+import "assets/demo/demo.css";
+import "assets/demo/react-demo.css";
+import "assets/demo/nucleo-icons-page-styles.css";
+
 // Docs Routes - START - you can delete these when you no longer need our docs
 import Components from "_docs/layouts/Components.js";
 import Documentation from "_docs/layouts/Documentation.js";
@@ -41,6 +52,7 @@ import Landing2 from "views/presentation/Landing2.js";
 import AboutUs from "views/presentation/AboutUs.js";
 import ContactUs from "views/presentation/ContactUs.js";
 import CustomDashboard from "./views/custom/CustomDashboard";
+import CustomJavascript from "./components/NowUI/CustomJavaScript";
 // Product Pages - STOP
 
 
@@ -88,12 +100,14 @@ ReactDOM.render(
       <Route path="/index" render={() => (<CustomDashboard page="index" />)}/>
       <Route path="/world" render={() => (<CustomDashboard page="world" />)}/>
       {/* TODO
-      * Refactor the 2 Routes above, to have only one Route that calls CustomDashboard
+      * Refactor te 2 Routes above, to have only one Route that calls CustomDashboard
       * A prop must be passed to the component depending on the path
       * The 2 lines below are some tries, the solution should be something like this
       */}
       {/*<Route path="/index/:page" component={CustomDashboard} />*/}
       {/*<Route path="/index" render={(props) => (<CustomDashboard id={props.match.params.id} />)}/>*/}
+
+      <Route path="/test" component={CustomJavascript}/>
 
       <Redirect from="*" to="/index" />
     </Switch>

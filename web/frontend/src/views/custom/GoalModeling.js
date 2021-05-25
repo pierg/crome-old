@@ -51,7 +51,7 @@ const ParentComponent = props => (
                             statIconName="fas fa-plus-square"
                             statIconColor="text-lightBlue-700"
                         /></div></div>
-                <div className="flex flex-wrap justify-center" id={"container"}>
+                <div className="flex flex-wrap justify-center">
                     {/*<div onClick={props.addChild} className="w-full lg:w-6/12 xl:w-3/12 m-4 px-4 bg-lightBlue-600 text-blueGray-700 rounded border border-solid border-blueGray-100">*/}
                     {props.children}
                     {/*}</div>*/}

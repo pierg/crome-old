@@ -73,7 +73,7 @@ export default function CustomSidebar({ brand, items, activeColor, currentRoute,
               </a>
             )}
               <div className="md:flex-col md:min-w-full flex flex-col list-none">
-                  {/*  <LoginSession id={id} onIdSubmit={setId}/> */}
+                  <LoginSession id={id} onIdSubmit={setId}/>
               </div>
             <div className="md:flex-col md:min-w-full flex flex-col list-none">
               {items.map((prop, key) => {

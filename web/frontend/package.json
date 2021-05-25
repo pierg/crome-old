@@ -58,6 +58,17 @@
     "jest-resolve": "26.6.0",
     "jest-watch-typeahead": "0.6.1",
     "mini-css-extract-plugin": "0.11.3",
+
+    "moment": "2.29.1",
+    "node-sass": "6.0.0",
+    "nouislider": "15.1.0",
+    "react-bootstrap-switch": "15.5.3",
+    "react-datetime": "3.0.4",
+    "react-select": "4.3.1",
+    "react-tagsinput": "3.19.0",
+    "reactstrap": "8.9.0",
+    "rellax": "1.12.1",
+
     "optimize-css-assets-webpack-plugin": "5.0.4",
     "pnp-webpack-plugin": "1.6.4",
     "postcss": "^8.2.15",
