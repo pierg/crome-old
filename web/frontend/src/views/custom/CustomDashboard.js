@@ -12,9 +12,11 @@ import {SocketProvider} from "../../contexts/SocketProvider";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import CreateEnvironment from "./CreateEnvironment";
 
+
 export default function CustomDashboard(props) {
     const location = useLocation();
     const [id, setId] = useLocalStorage('id');
+
 
     React.useEffect(() => {
         window.scrollTo(0, 0);
@@ -26,7 +28,7 @@ export default function CustomDashboard(props) {
                 {
                     {
                         'index': <CustomPlayer {...custommediaplayerteaminfo} />,
-                        'world': <CreateEnvironment />
+                        'world': <CreateEnvironment/>
                     }[props.page]
                 }
             </div>

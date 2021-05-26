@@ -1,27 +1,28 @@
 {
-  "name": "day_patrol_12",
-  "description": "During context day => start from r1, patrol r1, r2 in strict order, Strict Ordered Patrolling Location r1, r2"
-  "context": [
-    "day"
-  ],
-  "contract": {
-    "assumptions": [
-      {
-        "type": "LTL",
-        "ltl_value": "true"
-      }
-    ],
-    "guarantees": [
-      {
-        "type": "pattern",
-        "pattern_name": "StrictOrderPatrolling",
-        "pattern_inputs": {
-          "list_locations": [
-            "r3",
-            "r4"
-          ]
-        }
-      }
-    ]
-  }
+	"name": "day_patrol_12",
+	"description": "During context day => start from r1, patrol r1, r2 in strict order, Strict Ordered Patrolling Location r1, r2",
+	"context": [
+		"day"
+	],
+	"contract": {
+		"assumptions": [{
+			"type": "LTL",
+			"ltl_value": "true"
+		}],
+		"guarantees": [{
+			"type": "pattern",
+			"content": {
+				"name": "StrictOrderPatrolling",
+				"arguments": [{
+					"name": "locations",
+					"format": "list",
+					"type": "location",
+					"value": [
+						"r1",
+						"r2"
+					]
+				}]
+			}
+		}]
+	}
 }
