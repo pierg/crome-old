@@ -2,18 +2,17 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {HashRouter, Route, Switch, Redirect} from "react-router-dom";
 // styles from Now UI template
-
-// styles from Notus template
-import "@fortawesome/fontawesome-free/css/all.min.css";
-import "assets/styles/tailwind.min.css";
-import "assets/styles/docs.css";
-
 import "assets/styles/bootstrap.min.css";
 import "assets/scss/now-ui-kit.css";
 
 import "assets/demo/demo.css";
 import "assets/demo/react-demo.css";
 import "assets/demo/nucleo-icons-page-styles.css";
+
+// styles from Notus template
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import "assets/styles/tailwind.min.css";
+import "assets/styles/docs.css";
 
 // Docs Routes - START - you can delete these when you no longer need our docs
 import Components from "_docs/layouts/Components.js";

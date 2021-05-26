@@ -36,7 +36,7 @@ export default function CustomSidebar({ brand, items, activeColor, currentRoute,
             }
           }}
         >
-          <i className="fas fa-ellipsis-v"></i>
+          <i className="fas fa-ellipsis-v"/>
         </button>
         {/* Collapse */}
         <div className="flex-col min-h-full px-0 flex flex-wrap items-center justify-between w-full mx-auto overflow-y-auto overflow-x-hidden">
@@ -102,14 +102,14 @@ export default function CustomSidebar({ brand, items, activeColor, currentRoute,
                         }
                       )}
                     >
-                      <i
-                        className={classnames(prop.icon, "mr-2 text-sm", {
-                          "opacity-75": prop.link.href === currentRoute,
-                          "text-blueGray-400":
-                            prop.link.href !== currentRoute,
-                        })}
-                      ></i>
-                      {prop.text}
+                        <i
+                            className={classnames(prop.icon, "mr-2 text-sm", {
+                                "opacity-75": prop.link.href === currentRoute,
+                                "text-blueGray-400":
+                                    prop.link.href !== currentRoute,
+                            })}
+                        />
+                        {prop.text}
                     </Link>
                   );
                 } else {
@@ -127,14 +127,14 @@ export default function CustomSidebar({ brand, items, activeColor, currentRoute,
                         }
                       )}
                     >
-                      <i
-                        className={classnames(prop.icon, "mr-2 text-sm", {
-                          "opacity-75": prop.link.href === currentRoute,
-                          "text-blueGray-400":
-                            prop.link.href !== currentRoute,
-                        })}
-                      ></i>
-                      {prop.text}
+                        <i
+                            className={classnames(prop.icon, "mr-2 text-sm", {
+                                "opacity-75": prop.link.href === currentRoute,
+                                "text-blueGray-400":
+                                    prop.link.href !== currentRoute,
+                            })}
+                        />
+                        {prop.text}
                     </a>
                   );
                 }
