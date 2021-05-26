@@ -11,20 +11,16 @@ export default class CreateEnvironment extends React.Component {
         this.textInput = React.createRef();
         this.colorComponent = React.createRef();
         this.focusTextInput = this.focusTextInput.bind(this);
+        this.id = React.createRef();
     }
 
     focusTextInput() {
-        // Donne explicitement le focus au champ texte en utilisant l’API DOM native.
-        // Remarque : nous utilisons `current` pour cibler le nœud DOM
         this.textInput.current.focus();
-        this.buildGrid(this.myRef.current, this.textInput.current.value,this.map);
+        this.buildGrid(this.myRef.current, this.textInput.current.value,this.id.current);
         this.colorComponent.current.hidden = false;
     }
 
-    buildGrid(canvas, size) {
-        // Update the document title using the browser API
-
-        //let canvas= myCanvas;
+    buildGrid(canvas, size, idInput) {
         let map = [];
         if (map.length === 0) {
             for (let i = 0; i < size; i++) {
@@ -89,145 +85,188 @@ export default class CreateEnvironment extends React.Component {
             padding: {top: 10, left: 10, right: 10, bottom: 60},
             resizeCanvas: true,
             drawBorder: true,
-            onclick: function (node, start, end ,startWall, endWall) {
+            onclick: function (node, start, end ,startWall, endWall, previousStartColor, previousEndColor, previousColorWall) {
                 console.log("you clicked on node: " + node);
+                let id = idInput.value;
+                const selectColor = document.getElementById("color");
+                const choiceColor = selectColor.selectedIndex;  // Take the index of the chosen <option>
+                const color = selectColor.options[choiceColor].text;
                 if (node.x % 2 === 1 && node.y % 2 === 1) { // if the user click on a cell
                     if (end.length !== 0) { // when it's the second click, draw a square
-                        let minX;
-                        let maxX;
-                        let maxY;
-                        let minY;
-                        if (start[0] < end[0]) {
-                            minX = start[0];
-                            maxX = end[0];
-                        } else {
-                            minX = end[0];
-                            maxX = start[0];
+                        if (id === "") { // when the user didn't input an id
+                            console.log("test2");
+                            world.setBackgroundColor(start[0],start[1], previousStartColor);
+                            world.setBackgroundColor(startWall[0],startWall[1], previousColorWall);
+                            world.draw();
+                            return false;
                         }
-                        if (start[1] < end[1]) {
-                            minY = start[1];
-                            maxY = end[1];
-                        } else {
-                            minY = end[1];
-                            maxY = start[1];
+                        else if (world.isAttribute(id, color) === true) { // when the user input an id that is already use
+                            console.log("already use");
+                            world.setBackgroundColor(start[0],start[1], previousStartColor);
+                            world.draw();
+                            return ;
                         }
-                        for (let i = minX; i < maxX + 1; i += 1) {
-                            for (let j = minY; j < maxY + 1; j += 1) {
-                                const selectColor = document.getElementById("color");
-                                const choiceColor = selectColor.selectedIndex;  // Take the index of the chosen <option>
+                        else {
+                            let minX; // these variables allow to create only one loop for
+                            let maxX;
+                            let maxY;
+                            let minY;
+                            if (start[0] < end[0]) {
+                                minX = start[0];
+                                maxX = end[0];
+                            } else {
+                                minX = end[0];
+                                maxX = start[0];
+                            }
+                            if (start[1] < end[1]) {
+                                minY = start[1];
+                                maxY = end[1];
+                            } else {
+                                minY = end[1];
+                                maxY = start[1];
+                            }
+                            for (let i = minX; i < maxX + 1; i += 1) {
+                                for (let j = minY; j < maxY + 1; j += 1) {
 
-                                const color = selectColor.options[choiceColor].text;
-                                if (world.getBackgroundColor(i, j) !== color || world.getBackgroundColor(i, j) !== null) {
-                                    if (world.getBackgroundColor(i + 1, j) !== color) {
-                                        world.setBackgroundColor(i + 1, j, "white");
-                                        world.setBlocked(i + 1, j, false);
+                                    if (world.getBackgroundColor(i, j) !== color || world.getBackgroundColor(i, j) !== null) { //if the cell has already a color, color his neighbors in white
+                                        if (world.getBackgroundColor(i + 1, j) !== color) {
+                                            world.setBackgroundColor(i + 1, j, "white");
+                                            world.setBlocked(i + 1, j, false);
+                                        }
+                                        if (world.getBackgroundColor(i - 1, j) !== color) {
+                                            world.setBackgroundColor(i - 1, j, "white");
+                                            world.setBlocked(i - 1, j, false);
+                                        }
+                                        if (world.getBackgroundColor(i, j - 1) !== color) {
+                                            world.setBackgroundColor(i, j - 1, "white");
+                                            world.setBlocked(i, j - 1, false);
+                                        }
+                                        if (world.getBackgroundColor(i, j + 1) !== color) {
+                                            world.setBackgroundColor(i, j + 1, "white");
+                                            world.setBlocked(i, j + 1, false);
+                                        }
                                     }
-                                    if (world.getBackgroundColor(i - 1, j) !== color) {
-                                        world.setBackgroundColor(i - 1, j, "white");
-                                        world.setBlocked(i - 1, j, false);
-                                    }
-                                    if (world.getBackgroundColor(i, j - 1) !== color) {
-                                        world.setBackgroundColor(i, j - 1, "white");
-                                        world.setBlocked(i, j - 1, false);
-                                    }
-                                    if (world.getBackgroundColor(i, j + 1) !== color) {
-                                        world.setBackgroundColor(i, j + 1, "white");
-                                        world.setBlocked(i, j + 1, false);
-                                    }
+
+                                    world.setBackgroundColor(i, j, color); // color the cell with the color choose by the user
+                                    world.setBlocked(i, j, true);
+                                    world.setAttribute(i, j, "id", id); // the cell has a attribute id which have a value of the input of the user
+                                    map[Math.trunc(i / 2)][Math.trunc(j / 2)] = color; // later : allow to save the environment when you generate with a different size
                                 }
-
-                                world.setBackgroundColor(i, j, color);
-                                world.setBlocked(i, j, true);
-                                map[Math.trunc(i / 2)][Math.trunc(j / 2)] = color;
                             }
                         }
-                    } else { // when it's the first click, color the cell with a "light" color
-                        const selectColor = document.getElementById("color");
-                        const choiceColor = selectColor.selectedIndex;  // Take the index of the chosen <option>
-
-                        const color = selectColor.options[choiceColor].text;
-                        if (color === "red") {
-                            world.setBackgroundColor(node.x, node.y, "#fd6969");
-                            world.setBlocked(node.x, node.y, true);
-                        } else if (color === "purple") {
-                            world.setBackgroundColor(node.x, node.y, "#e785ff");
-                            world.setBlocked(node.x, node.y, true);
+                    } else { // when it's the first click, color the cell with a "light" color so the user know that he needs to click on a other cell
+                        if (id === "") { // when the user didn't input an id
+                            console.log("test1");
+                            if (startWall.length !== 0) {
+                                world.setBackgroundColor(startWall[0],startWall[1], previousColorWall);
+                            }
+                            world.draw();
+                            return false;
                         } else {
-                            const lightColor = "light" + color;
-                            world.setBackgroundColor(node.x, node.y, lightColor);
-                            world.setBlocked(node.x, node.y, true);
+                            const selectColor = document.getElementById("color");
+                            const choiceColor = selectColor.selectedIndex;  // Take the index of the chosen <option>
+
+                            const color = selectColor.options[choiceColor].text;
+                            if (color === "red") {
+                                world.setBackgroundColor(node.x, node.y, "#fd6969");
+                                world.setBlocked(node.x, node.y, true);
+                            } else if (color === "purple") {
+                                world.setBackgroundColor(node.x, node.y, "#e785ff");
+                                world.setBlocked(node.x, node.y, true);
+                            } else {
+                                const lightColor = "light" + color;
+                                world.setBackgroundColor(node.x, node.y, lightColor);
+                                world.setBlocked(node.x, node.y, true);
+                            }
                         }
                     }
                 } else { // when you click on wall cell
                     if (endWall.length !== 0) { // when it's the second click
                         let min;
                         let max;
-                        if (startWall[0] === endWall[0]) {
-                            if (startWall[1] < endWall[1]) {
-                                min = startWall[1];
-                                max = endWall[1];
-                            } else {
-                                min = endWall[1];
-                                max = startWall[1];
+                        if (startWall[0] === endWall[0] && startWall[1] === endWall[1]) { // when you double-click on a wall
+                            if (previousColorWall === "black") { // if the wall was black the background color will be white
+                                world.setBackgroundColor(startWall[0], startWall[1], "white");
+                                world.setBlocked(startWall[0], startWall[1], false);
+                                world.draw();
+                                return ;
+                            } else if (previousColorWall === "white" || previousColorWall === null) { // if the wall was white the background color will be black
+                                world.setBackgroundColor(startWall[0], startWall[1], "black");
+                                world.setBlocked(startWall[0], startWall[1], true);
+                                world.draw();
+                                return ;
+                            } else { // if the wall was neither black nor white, you can't change the background color
+                                console.log("impossible");
                             }
-                            for (let i = min; i < max + 1; i += 1) {
-                                if (world.isBlocked(startWall[0], i) && world.getBackgroundColor(startWall[0], i) === "black") {
-                                    world.setBackgroundColor(startWall[0], i, "white");
-                                    world.setBlocked(startWall[0], i, false);
+                        } else if (startWall[0] === endWall[0]) {
+                            if (startWall[0] % 2 === 1) { // when he clicks on a case that he can't choose
+                                console.log("impossible");
+                                world.setBackgroundColor(startWall[0], startWall[1], previousColorWall);
+                            } else {
+                                if (startWall[1] < endWall[1]) {
+                                    min = startWall[1];
+                                    max = endWall[1];
+                                } else {
+                                    min = endWall[1];
+                                    max = startWall[1];
                                 }
-                                else if (world.isBlocked(startWall[0], i) && world.getBackgroundColor(startWall[0], i) !== "black") {
-                                    console.log("Impossible");
-                                }
-                                else {
-                                    world.setBackgroundColor(startWall[0], i, "black");
-                                    world.setBlocked(startWall[0], i, true);
+                                for (let i = min; i < max + 1; i += 1) {
+                                    if (previousColorWall === "black") {
+                                        world.setBackgroundColor(startWall[0], i, "white");
+                                        world.setBlocked(startWall[0], i, false);
+                                    } else if (world.isBlocked(startWall[0], i) && previousColorWall !== "black") { // when he clicks on a case that he can't choose
+                                        console.log("Impossible");
+                                    } else {
+                                        world.setBackgroundColor(startWall[0], i, "black");
+                                        world.setBlocked(startWall[0], i, true);
+                                    }
                                 }
                             }
                         } else if (startWall[1] === endWall[1]) {
-                            if (startWall[0] < endWall[0]) {
-                                min = startWall[0];
-                                max = endWall[0];
+                            if (startWall[1] % 2 === 1) { // when he clicks on a case that he can't choose
+                                console.log("impossible");
+                                world.setBackgroundColor(startWall[0], startWall[1], previousColorWall);
                             } else {
-                                min = endWall[0];
-                                max = startWall[0];
+                                if (startWall[0] < endWall[0]) {
+                                    min = startWall[0];
+                                    max = endWall[0];
+                                } else {
+                                    min = endWall[0];
+                                    max = startWall[0];
+                                }
+                                for (let i = min; i < max + 1; i += 1) {
+                                    if (previousColorWall === "black") {
+                                        world.setBackgroundColor(i, startWall[1], "white");
+                                        world.setBlocked(i, startWall[1], false);
+                                    } else if (world.isBlocked(i, startWall[1]) && previousColorWall !== "black") { // when he clicks on a case that he can't choose
+                                        console.log("Impossible");
+                                    } else {
+                                        world.setBackgroundColor(i, startWall[1], "black");
+                                        world.setBlocked(i, startWall[1], true);
+                                    }
+                                }
                             }
-                            for (let i = min; i < max + 1; i += 1) {
-                                if (world.isBlocked(i, startWall[1]) && world.getBackgroundColor(i, startWall[1]) === "black") {
-                                    world.setBackgroundColor(i, startWall[1], "white");
-                                    world.setBlocked(i, startWall[1], false);
-                                }
-                                else if (world.isBlocked(i, startWall[1]) && world.getBackgroundColor(i, startWall[1]) !== "black") {
-                                    console.log("Impossible");
-                                }
-                                else {
-                                    world.setBackgroundColor(i, startWall[1], "black");
-                                    world.setBlocked(i, startWall[1], true);
-                                }
-                            }
-                        }
-                        else {
+                        } else {
                             world.setBackgroundColor(startWall[0], startWall[1], "white");
                         }
-                    } else {
+                    } else { // when it's the first click, color the cell with a "light" color so the user know that he needs to click on a other cell
                         if (world.getBackgroundColor(node.x, node.y) === "white" || world.getBackgroundColor(node.x, node.y) === "black" || world.getBackgroundColor(node.x, node.y) === null) {
                             world.setBackgroundColor(node.x, node.y, "lightgray");
-                        }
-                        else {
+                            console.log("start 0 :" + startWall[0]);
+                            console.log("start 1 :" + startWall[1]);
+                        } else { // when he clicks on a case that he can't choose
                             console.log("Impossible");
                         }
-
                     }
-
                 }
                 world.draw();
-
             }
         });
-
+        world.clearAttributeTable();
         map.forEach(function (row, y) {
             row.forEach(function (cell, x) {
                 if (cell) {
-                    world.setBackgroundColor(x, y, map[x][y]);
+                    world.setBackgroundColor(x, y, "black");
                     world.setBlocked(x, y, true);
                 }
             })
@@ -258,6 +297,7 @@ export default class CreateEnvironment extends React.Component {
                                 <option>grey</option>
                                 <option>white</option>
                             </select>
+                            <input ref={this.id}/>
                         </div>
                     </div>
             </>

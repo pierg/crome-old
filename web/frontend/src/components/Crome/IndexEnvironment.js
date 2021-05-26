@@ -65,14 +65,11 @@ function GridWorld(canvas, width, height, options) {
   }
 
   this.nodes = [];
-  console.log(this.width);
-  console.log(this.height);
   for (let j = 0; j < this.height + 1; ++j) {
     for (let i = 0; i < this.width + 1; ++i) {
       this.nodes.push(new Node( i,j, null));
     }
   }
-  console.log("node : " +this.nodes.length);
 
   //
   // Event handling
@@ -91,41 +88,36 @@ function GridWorld(canvas, width, height, options) {
       x -= (self.cellSpacing * 2);
       y -= (self.cellSpacing * 2);
     }
-    console.log("y : " + y);
     let a = 2 * self.cellSpacing + 2 * self.cellSizeWall;
-    let b = a;
-    const tabX = [a];
-    const tabY = [b];
+    const tabX = [a]; // array that gives the pixel from which we change nodes from the x-coordinate
+    const tabY = [a]; // array that gives the pixel from which we change nodes from the y-coordinate
 
-    for (let i = 0; i < self.width; i+=2) {
+    for (let i = 0; i < self.width; i += 2) {
       a += 2 * self.cellSize;
       tabX.push(a);
-      b += 2 * self.cellSize;
-      tabY.push(b);
+      tabY.push(a);
 
       a += 2 * self.cellSizeWall + self.cellSpacing;
       tabX.push(a);
-      b += 2 * self.cellSizeWall + self.cellSpacing;
-      tabY.push(b);
+      tabY.push(a);
       a += self.cellSpacing;
-      b += self.cellSpacing;
     }
     let indexX = 0;
     if (x > tabX[0]) {
       indexX = 1;
     }
-    while (x >= tabX[indexX] ) {
+    while (x >= tabX[indexX] ) { // find out in which interval the clicked pixel is located from the x-coordinate
       indexX++;
     }
     let indexY = 0;
     if (y > tabY[0]) {
       indexY = 1;
     }
-    while (y >= tabY[indexY] ) {
+    while (y >= tabY[indexY] ) { // find out in which interval the clicked pixel is located from the y-coordinate
       indexY++;
     }
 
-    if (indexX >= 0 && indexX < self.width + 3 * self.cellSizeWall && indexY >= 0 && indexY < self.height + 3 * self.cellSizeWall) {
+    if (indexX >= 0 && indexX < self.width + 3 * self.cellSizeWall && indexY >= 0 && indexY < self.height + 3 * self.cellSizeWall) { // associates the clicked pixel with a node
       return self.nodes[(indexY * (self.width + 1)) + indexX];
     }
     else {
@@ -136,6 +128,9 @@ function GridWorld(canvas, width, height, options) {
   let end =[];
   let startWall =[];
   let endWall =[];
+  let previousColorWall;
+  let previousStartColor;
+  let previousEndColor;
 
 
   canvas.addEventListener('click', function(evt) {
@@ -146,63 +141,73 @@ function GridWorld(canvas, width, height, options) {
     const node = p2n(evt.offsetX, evt.offsetY);
 
     if (node) {
-      if (node.x % 2 === 1 && node.y % 2 === 1) {
-        if (start.length === 0) {
+      if (node.x % 2 === 1 && node.y % 2 === 1) { // when you click on a cell
+        if (start.length === 0) {// if it's the first click on a cell, push into start table which represent the coordinated of the first click
+          previousStartColor = self.getBackgroundColor(node.x, node.y); // save the color a the clicked cell
           start.push(node.x);
           start.push(node.y);
-          self.onclick(node, start, end, startWall, endWall);
-
-        } else {
-          if (startWall.length !== 0) {
-            self.setBackgroundColor(start[0],start[1], "white");
-            self.setBackgroundColor(startWall[0],startWall[1], "white");
-            self.setBlocked(start[0],start[1], false);
-            self.setBlocked(startWall[0],startWall[1], false);
+          if (self.onclick(node, start, end, startWall, endWall, previousStartColor, previousEndColor, previousColorWall) === false) { // if the user does anything that is not allowed
+            start = [];
+            end = [];
+            startWall = [];
+            endWall = [];
+          }
+        }
+        else { // if it's the second click
+          previousEndColor = self.getBackgroundColor(node.x, node.y); // save the color a the clicked cell
+          if (startWall.length !== 0) { // if he clicks on a cell then a wall, it's not possible, the program cancel the actions
+            console.log("cell then wall");
+            self.setBackgroundColor(start[0],start[1], previousStartColor);
+            self.setBackgroundColor(startWall[0],startWall[1], previousColorWall);
             self.draw();
             start = [];
             startWall = [];
+
           }
           else {
             end.push(node.x);
             end.push(node.y);
-            self.onclick(node, start, end, startWall, endWall);
+            if (self.onclick(node, start, end, startWall, endWall, previousStartColor, previousEndColor, previousColorWall) === false) { // if the user does anything that is not allowed
+              start = [];
+              end = [];
+              startWall = [];
+              endWall = [];
+            }
             start = [];
             end = [];
           }
         }
       }
       else if ((node.x % 2 === 1 && node.y % 2 === 0) || (node.x % 2 === 0 && node.y % 2 === 1)) {
-        if (startWall.length === 0) {
+        if (startWall.length === 0) { // if it's the first click on a wall, push into start table which represent the coordinated of the first click
           startWall.push(node.x);
           startWall.push(node.y);
-          self.onclick(node, start, end, startWall, endWall);
+          previousColorWall = self.getBackgroundColor(node.x, node.y); // save the color a the clicked wall
+          self.onclick(node, start, end, startWall, endWall, previousStartColor, previousEndColor, previousColorWall);
 
         } else {
-          if (start.length !== 0) {
-            self.setBackgroundColor(start[0],start[1], "white");
-            self.setBackgroundColor(startWall[0],startWall[1], "white");
-            self.setBlocked(start[0],start[1], false);
-            self.setBlocked(startWall[0],startWall[1], false);
+          if (start.length !== 0) { // if he clicks on a wall then a cell, it's not possible, the program cancel the actions
+            self.setBackgroundColor(start[0],start[1], previousStartColor);
+            self.setBackgroundColor(startWall[0],startWall[1], previousColorWall);
             self.draw();
             start = [];
             startWall = [];
-            console.log("test");
           }
           else {
             endWall.push(node.x);
             endWall.push(node.y);
-            self.onclick(node, start, end, startWall, endWall);
+            self.onclick(node, start, end, startWall, endWall, previousStartColor, previousEndColor, previousColorWall);
             startWall = [];
             endWall = [];
           }
         }
       }
     }
-
   });
 
 }
 
+let idTable = [];
 GridWorld.prototype = {
   draw: function() {
 
@@ -225,7 +230,7 @@ GridWorld.prototype = {
     let cy = this.padding.top + cAdj;
     for (let j = 0; j < this.height + 1; ++j) {
       let cx = this.padding.left + cAdj;
-      for (let i = 0; i < this.width + 1; ++i) {
+      for (let i = 0; i < this.width + 1; ++i) { // draw a wall and then a cell (size times) each wall or cell represent one node
         const n = this.nodes[ix++];
         ctx.fillStyle = n.backgroundColor || this.backgroundColor;
         if ( j % 2 === 1 ) {
@@ -284,6 +289,31 @@ GridWorld.prototype = {
 
   setAttribute: function(x, y, key, value) {
     this.nodes[(y * (this.width + 1)) + x][key] = value;
+    if (this.isAttribute(value) === false) { // if the value entered by the user has not already been selected, this value is added to the array :idTable
+      idTable.push([value,this.getBackgroundColor(x,y)]);
+    }
+  },
+  isAttribute: function(value, color) { // checks if an id is in the array : idTable
+       for (let i = 0; i < idTable.length ; i++) {
+          if (idTable[i][0] === value && idTable[i][1] !== color) {
+            return true;
+          }
+       }
+       return false;
+  },
+  clearAttribute: function(value) {
+      const index = idTable.indexOf(value);
+      if (index > -1) {
+        idTable.slice(index,1);
+      }
+  },
+
+  getAttribute: function(x, y, key) {
+     return this.nodes[(y * (this.width + 1)) + x][key];
+  },
+
+  clearAttributeTable: function () {
+    idTable = [];
   },
 
   eachNeighbour: function(x, y, callback) {
