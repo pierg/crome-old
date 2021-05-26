@@ -20,25 +20,27 @@ socketio = SocketIO(app, cors_allowed_origins='http://localhost:3000')
 
 
 @socketio.on('get-goals')
-def get_goals():
+def get_goals(data):
+    print(data)
     print('Getting Goals')
     print(request.args)
     print(f'ID {request.args.get("id")}')
     print(f'Session {request.args.get("session")}')
 
-    goals_folder = Path(os.path.join(storage_folder, f"/crome/sessions/{request.args.get('session')}"))
+    goals_folder = Path(os.path.join(storage_folder, f"sessions/{data['session']}/goals"))
 
     """Retrieving files"""
-    files = []
-    for (dirpath, dirnames, filenames) in walk(goals_folder):
-        files.extend(filenames)
-        break
+    files_paths = []
+    dirpath, dirnames, filenames = next(walk(goals_folder))
+    for file in filenames:
+        files_paths.append(Path(os.path.join(dirpath, file)))
 
     list_of_goals = []
-    for file in files:
+    for file in files_paths:
         with open(file) as json_file:
-            goals = json.load(json_file)
-            list_of_goals.append(json.dumps(goals))
+            json_obj = json.load(json_file)
+            json_str = json.dumps(json_obj)
+            list_of_goals.append(json_str)
 
     emit("receive-goals", list_of_goals)
 
