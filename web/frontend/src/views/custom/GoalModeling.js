@@ -3,13 +3,17 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../assets/styles/tailwind.css";
 import ChildComponent from "../../components/Custom/ChildComponent";
 import AddGoal from "../../components/Custom/AddGoal";
+import {Button, Modal, ModalFooter} from "reactstrap";
 
 
 
 export default class GoalModeling extends React.Component {
 
+
+
     state = {
-        numChildren: 0
+        numChildren: 0,
+        modalClassic: false
     }
 
     render() {
@@ -26,15 +30,66 @@ export default class GoalModeling extends React.Component {
                   statIconColor="bg-lightBlue-600" />);
         }
         return (
-            <ParentComponent addChild={this.onAddChild}>
-                {children}
-            </ParentComponent>
+            <>
+                <ParentComponent addChild={this.onAddChild}>
+                    {children}
+                </ParentComponent>
+                <Button
+                    color="info"
+                    className="mr-1"
+                    onClick={() => this.setModalClassic(true)}
+                >
+                    <i className="now-ui-icons files_single-copy-04"/> Classic
+                </Button>
+                <Modal
+                    isOpen={this.state.modalClassic}
+                    toggle={() => this.setModalClassic(false)}
+                >
+                    <div className="modal-header justify-content-center">
+                        <button
+                            aria-hidden={true}
+                            className="close"
+                            onClick={() => this.setModalClassic(false)}
+                            type="button"
+                        >
+                            <i className="now-ui-icons ui-1_simple-remove"/>
+                        </button>
+                        <h4 className="title title-up">Modal title</h4>
+                    </div>
+                    <div className="modal-body">
+                        <p>
+                            Far far away, behind the word mountains, far from the
+                            countries Vokalia and Consonantia, there live the blind
+                            texts. Separated they live in Bookmarksgrove right at the
+                            coast of the Semantics, a large language ocean. A small
+                            river named Duden flows by their place and supplies it with
+                            the necessary regelialia. It is a paradisematic country, in
+                            which roasted parts of sentences fly into your mouth.
+                        </p>
+                    </div>
+                    <ModalFooter>
+                        <Button color="default" type="button">
+                            Nice Button
+                        </Button>
+                        <Button color="danger" onClick={() => this.setModalClassic(false)}>
+                            Close
+                        </Button>
+                    </ModalFooter>
+                </Modal>
+            </>
         );
     }
 
     onAddChild = () => {
         this.setState({
             numChildren: this.state.numChildren + 1
+        });
+        this.setModalClassic(true);
+    }
+
+    setModalClassic = (bool) => {
+        this.setState({
+            modalClassic: bool
         });
     }
 }
