@@ -47,7 +47,7 @@ keep_free_hands = GF(~w["hold"])
 
 try:
 
-    """Modeling the set of goals using robotic patterns.json"""
+    """Modeling the set of goals using robotic robotic.json"""
     set_of_goals = {
         Node(name="cleanup",
              description="Inside the living room are some misplaced objects. "

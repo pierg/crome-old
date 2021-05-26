@@ -1,5 +1,4 @@
 import React, {useRef} from 'react'
-// import Input from "../../components/Elements/Input.js";
 import Button from "../../components/Elements/Button.js";
 import {Form} from 'react-bootstrap'
 import {v4 as uuidV4} from 'uuid'
@@ -15,11 +14,6 @@ export default function LoginSession({id, onIdSubmit}) {
 
     function createNewId() {
         onIdSubmit(uuidV4())
-    }
-
-
-    if(id==null){
-        createNewId()
     }
 
     return (
