@@ -14,10 +14,22 @@
     "guarantees": [
       {
         "type": "pattern",
-        "pattern_name": "BoundDelay",
-        "pattern_inputs": {
-          "trigger": "person",
-          "reaction": "delay"
+        "content": {
+          "name": "BoundDelay",
+          "arguments": [
+            {
+              "name": "trigger",
+              "format": "value",
+              "type": "any",
+              "value": "person"
+            },
+            {
+              "name": "reaction",
+              "format": "value",
+              "type": "any",
+              "value": "register"
+            }
+          ]
         }
       }
     ]

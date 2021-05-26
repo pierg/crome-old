@@ -14,11 +14,18 @@
     "guarantees": [
       {
         "type": "pattern",
-        "pattern_name": "StrictOrderPatrolling",
-        "pattern_inputs": {
-          "list_locations": [
-            "r3",
-            "r4"
+        "content": {
+          "name": "StrictOrderPatrolling",
+          "arguments": [
+            {
+              "name": "locations",
+              "format": "list",
+              "type": "location",
+              "value": [
+                "r1",
+                "r2"
+              ]
+            }
           ]
         }
       }
