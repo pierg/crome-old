@@ -18,7 +18,6 @@ export default function CustomDashboard(props) {
     const [id, setId] = useLocalStorage('id');
 
 
-
     React.useEffect(() => {
         window.scrollTo(0, 0);
     }, [location]);
@@ -29,7 +28,7 @@ export default function CustomDashboard(props) {
                 {
                     {
                         'index': <CustomPlayer {...custommediaplayerteaminfo} />,
-                        'world': <CreateEnvironment />
+                        'world': <CreateEnvironment/>
                     }[props.page]
                 }
             </div>
