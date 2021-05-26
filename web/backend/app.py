@@ -1,5 +1,5 @@
 import os
-from os import path
+from os import path, walk
 
 import time
 from pathlib import Path
@@ -17,6 +17,30 @@ storage_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '
 
 # socketio = SocketIO(app, cors_allowed_origins="*")
 socketio = SocketIO(app, cors_allowed_origins='http://localhost:3000')
+
+
+@socketio.on('get-goals')
+def get_goals():
+    print('Getting Goals')
+    print(request.args)
+    print(f'ID {request.args.get("id")}')
+    print(f'Session {request.args.get("session")}')
+
+    goals_folder = Path(os.path.join(storage_folder, f"/crome/sessions/{request.args.get('session')}"))
+
+    """Retrieving files"""
+    files = []
+    for (dirpath, dirnames, filenames) in walk(goals_folder):
+        files.extend(filenames)
+        break
+
+    list_of_goals = []
+    for file in files:
+        with open(file) as json_file:
+            goals = json.load(json_file)
+            list_of_goals.append(json.dumps(goals))
+
+    emit("receive-goals", list_of_goals)
 
 
 @socketio.on('get-patterns')
