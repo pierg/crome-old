@@ -24,9 +24,9 @@ export default class GoalModeling extends React.Component {
 
         for (let i = 0; i < this.state.numChildren; i += 1) {
             children.push(<ChildComponent key={i} number={i}
-                  statTitle={this.state.goals[i].name}
-                  statDescription={this.state.goals[i].description}
-                  statContext="Context of the goal"
+                  title={this.state.goals[i].name}
+                  description={this.state.goals[i].description}
+                  context={this.state.goals[i].context}
                   statObjectives="Objectives of the goal"
                   statIconName="fas fa-pen-square"
                   statSecondIconName="fas fa-trash-alt"
