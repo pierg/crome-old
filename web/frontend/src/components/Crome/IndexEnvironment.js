@@ -132,7 +132,6 @@ function GridWorld(canvas, width, height, options) {
   let previousStartColor;
   let previousEndColor;
 
-
   canvas.addEventListener('click', function(evt) {
 
     if (!self.onclick)
@@ -156,7 +155,6 @@ function GridWorld(canvas, width, height, options) {
         else { // if it's the second click
           previousEndColor = self.getBackgroundColor(node.x, node.y); // save the color a the clicked cell
           if (startWall.length !== 0) { // if he clicks on a cell then a wall, it's not possible, the program cancel the actions
-            console.log("cell then wall");
             self.setBackgroundColor(start[0],start[1], previousStartColor);
             self.setBackgroundColor(startWall[0],startWall[1], previousColorWall);
             self.draw();
@@ -208,6 +206,7 @@ function GridWorld(canvas, width, height, options) {
 }
 
 let idTable = [];
+
 GridWorld.prototype = {
   draw: function() {
 
@@ -293,6 +292,22 @@ GridWorld.prototype = {
       idTable.push([value,this.getBackgroundColor(x,y)]);
     }
   },
+
+  removeAttribute: function(value) {
+    if (this.isID(value)) {
+      for (let i = 0; i < this.width; i++) {
+        for (let j = 0; j < this.height; j++) {
+          if (this.getAttribute(i, j, "id") === value) {
+            this.setBackgroundColor(i, j, "white");
+            this.setBlocked(i, j, false);
+          }
+        }
+      }
+      this.clearAttribute(value);
+      this.draw();
+    }
+  },
+
   isAttribute: function(value, color) { // checks if an id is in the array : idTable
        for (let i = 0; i < idTable.length ; i++) {
           if (idTable[i][0] === value && idTable[i][1] !== color) {
@@ -301,11 +316,26 @@ GridWorld.prototype = {
        }
        return false;
   },
+
+  isID : function(value) { // checks if an id is in the array : idTable
+       for (let i = 0; i < idTable.length ; i++) {
+          if (idTable[i][0] === value) {
+            return true;
+          }
+       }
+       return false;
+  },
   clearAttribute: function(value) {
-      const index = idTable.indexOf(value);
-      if (index > -1) {
-        idTable.slice(index,1);
+      let index = -1;
+      for (let i = 0; i < idTable.length; i++) {
+        if (idTable[i][0] === value) {
+          index = i;
+        }
       }
+      let a = idTable[index];
+      idTable[index] = idTable[idTable.length - 1];
+      idTable[idTable.length - 1] = a;
+      idTable.pop();
   },
 
   getAttribute: function(x, y, key) {

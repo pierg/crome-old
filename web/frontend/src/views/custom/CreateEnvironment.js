@@ -12,15 +12,18 @@ export default class CreateEnvironment extends React.Component {
         this.colorComponent = React.createRef();
         this.focusTextInput = this.focusTextInput.bind(this);
         this.id = React.createRef();
+        this.idBlock = React.createRef();
+        this.divId = React.createRef();
     }
 
     focusTextInput() {
         this.textInput.current.focus();
-        this.buildGrid(this.myRef.current, this.textInput.current.value,this.id.current);
         this.colorComponent.current.hidden = false;
+        this.divId.current.hidden = false;
+        this.buildGrid(this.myRef.current, this.textInput.current.value,this.id.current, this.idBlock.current,);
     }
 
-    buildGrid(canvas, size, idInput) {
+    buildGrid(canvas, size, idInput, idBlock) {
         let map = [];
         if (map.length === 0) {
             for (let i = 0; i < size; i++) {
@@ -86,7 +89,14 @@ export default class CreateEnvironment extends React.Component {
             resizeCanvas: true,
             drawBorder: true,
             onclick: function (node, start, end ,startWall, endWall, previousStartColor, previousEndColor, previousColorWall) {
-                console.log("you clicked on node: " + node);
+                const idToRemove = document.getElementById("idToRemove").value;
+                if (idToRemove !== "") {
+                    world.removeAttribute(idToRemove);
+                    document.getElementById(idToRemove).innerHTML = "" ;
+                    document.getElementById("idToRemove").value = "";
+                    return false;
+
+                }
                 let id = idInput.value;
                 const selectColor = document.getElementById("color");
                 const choiceColor = selectColor.selectedIndex;  // Take the index of the chosen <option>
@@ -94,14 +104,14 @@ export default class CreateEnvironment extends React.Component {
                 if (node.x % 2 === 1 && node.y % 2 === 1) { // if the user click on a cell
                     if (end.length !== 0) { // when it's the second click, draw a square
                         if (id === "") { // when the user didn't input an id
-                            console.log("test2");
+                            console.log("you need to put an id");
                             world.setBackgroundColor(start[0],start[1], previousStartColor);
                             world.setBackgroundColor(startWall[0],startWall[1], previousColorWall);
                             world.draw();
                             return false;
                         }
                         else if (world.isAttribute(id, color) === true) { // when the user input an id that is already use
-                            console.log("already use");
+                            console.log("id already use");
                             world.setBackgroundColor(start[0],start[1], previousStartColor);
                             world.draw();
                             return ;
@@ -153,10 +163,13 @@ export default class CreateEnvironment extends React.Component {
                                     map[Math.trunc(i / 2)][Math.trunc(j / 2)] = color; // later : allow to save the environment when you generate with a different size
                                 }
                             }
+                            if (document.getElementById(id) === null || document.getElementById(id).innerHTML === "") {
+                                idBlock.innerHTML += "<div id=" + id + ">Color : " + color + " id :" + id + "</div>";
+                            }
                         }
                     } else { // when it's the first click, color the cell with a "light" color so the user know that he needs to click on a other cell
                         if (id === "") { // when the user didn't input an id
-                            console.log("test1");
+                            console.log("you need to put an id");
                             if (startWall.length !== 0) {
                                 world.setBackgroundColor(startWall[0],startWall[1], previousColorWall);
                             }
@@ -252,8 +265,6 @@ export default class CreateEnvironment extends React.Component {
                     } else { // when it's the first click, color the cell with a "light" color so the user know that he needs to click on a other cell
                         if (world.getBackgroundColor(node.x, node.y) === "white" || world.getBackgroundColor(node.x, node.y) === "black" || world.getBackgroundColor(node.x, node.y) === null) {
                             world.setBackgroundColor(node.x, node.y, "lightgray");
-                            console.log("start 0 :" + startWall[0]);
-                            console.log("start 1 :" + startWall[1]);
                         } else { // when he clicks on a case that he can't choose
                             console.log("Impossible");
                         }
@@ -263,6 +274,7 @@ export default class CreateEnvironment extends React.Component {
             }
         });
         world.clearAttributeTable();
+        idBlock.innerHTML = "";
         map.forEach(function (row, y) {
             row.forEach(function (cell, x) {
                 if (cell) {
@@ -278,28 +290,34 @@ export default class CreateEnvironment extends React.Component {
     render() {
         return (
             <>
+                <div>
                     <div>
-                        <div>
-                            <div> choose the size of the grid :
-                                <input
-                                    type="text"
-                                    ref={this.textInput} />
-                                <button onClick={this.focusTextInput}>Generate</button>
-                            </div>
-                            <canvas ref={this.myRef} id='canvas'/>
-                            <select ref={this.colorComponent} hidden={true} id="color" name="color">
-                                <option>blue</option>
-                                <option>green</option>
-                                <option>red</option>
-                                <option>pink</option>
-                                <option>purple</option>
-                                <option>yellow</option>
-                                <option>grey</option>
-                                <option>white</option>
-                            </select>
-                            <input ref={this.id}/>
+                        <div> choose the size of the grid :
+                            <input
+                                type="text"
+                                ref={this.textInput}
+                            />
+                            <button onClick={this.focusTextInput}>Generate</button>
                         </div>
+                        <canvas ref={this.myRef} id='canvas'/>
+                        <select ref={this.colorComponent} hidden={true} id="color" name="color">
+                            <option>blue</option>
+                            <option>green</option>
+                            <option>red</option>
+                            <option>pink</option>
+                            <option>purple</option>
+                            <option>yellow</option>
+                            <option>grey</option>
+                            <option>white</option>
+                        </select>
+                        <input ref={this.id}/>
+                        <div ref={this.divId} hidden={true}> choose an id to remove :
+                            <input id={"idToRemove"}
+                                   type="text"/>
+                        </div>
+                        <div ref={this.idBlock}/>
                     </div>
+                </div>
             </>
         );
     }
