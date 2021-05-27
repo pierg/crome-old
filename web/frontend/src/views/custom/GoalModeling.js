@@ -27,6 +27,8 @@ export default class GoalModeling extends React.Component {
                   title={this.state.goals[i].name}
                   description={this.state.goals[i].description}
                   context={this.state.goals[i].context}
+                  assumptions={this.state.goals[i].contract.assumptions}
+                  guarantees={this.state.goals[i].contract.guarantees}
                   statObjectives="Objectives of the goal"
                   statIconName="fas fa-pen-square"
                   statSecondIconName="fas fa-trash-alt"
@@ -80,6 +82,10 @@ export default class GoalModeling extends React.Component {
         console.log(this.state.goals)
     }
 }
+
+GoalModeling.defaultProps = {
+  contract : ""
+};
 
 const ParentComponent = props => (
     <section className="md:mt-2 pt-20 relative">
