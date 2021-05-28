@@ -132,6 +132,13 @@ function GridWorld(canvas, width, height, options) {
   let previousStartColor;
   let previousEndColor;
 
+  function reset(x,y ,color) {
+    self.setBackgroundColor(x, y, color);
+    start = [];
+    end = [];
+    startWall = [];
+    endWall = [];
+  }
   canvas.addEventListener('click', function(evt) {
 
     if (!self.onclick)
@@ -145,11 +152,8 @@ function GridWorld(canvas, width, height, options) {
           previousStartColor = self.getBackgroundColor(node.x, node.y); // save the color a the clicked cell
           start.push(node.x);
           start.push(node.y);
-          if (self.onclick(node, start, end, startWall, endWall, previousStartColor, previousEndColor, previousColorWall) === false) { // if the user does anything that is not allowed
-            start = [];
-            end = [];
-            startWall = [];
-            endWall = [];
+          if (self.onclick(node, start, end, startWall, endWall, previousStartColor, previousEndColor, previousColorWall) === false) {// if the user does anything that is not allowed
+            reset(start[0], start[1], previousStartColor);
           }
         }
         else { // if it's the second click
@@ -166,10 +170,8 @@ function GridWorld(canvas, width, height, options) {
             end.push(node.x);
             end.push(node.y);
             if (self.onclick(node, start, end, startWall, endWall, previousStartColor, previousEndColor, previousColorWall) === false) { // if the user does anything that is not allowed
-              start = [];
-              end = [];
-              startWall = [];
-              endWall = [];
+              reset(start[0], start[1], previousStartColor);
+
             }
             start = [];
             end = [];
@@ -181,7 +183,9 @@ function GridWorld(canvas, width, height, options) {
           startWall.push(node.x);
           startWall.push(node.y);
           previousColorWall = self.getBackgroundColor(node.x, node.y); // save the color a the clicked wall
-          self.onclick(node, start, end, startWall, endWall, previousStartColor, previousEndColor, previousColorWall);
+          if (self.onclick(node, start, end, startWall, endWall, previousStartColor, previousEndColor, previousColorWall) === false) { // if the user does anything that is not allowed
+              reset(startWall[0], startWall[1], previousColorWall);
+            }
 
         } else {
           if (start.length !== 0) { // if he clicks on a wall then a cell, it's not possible, the program cancel the actions
@@ -347,32 +351,49 @@ GridWorld.prototype = {
   },
 
   checkNeighbour: function (i, j, color) {
+    let corner = [];
     if (this.getBackgroundColor(i, j) !== color) {
-      if (this.getBackgroundColor(i + 1, j) !== color && this.getBackgroundColor(i + 1, j) !== "black") {
-        console.log(" i : " + i + " j : " + j + " in i+1 : " + this.getBackgroundColor( i + 1, j));
-        this.setBackgroundColor(i + 1, j, "white");
-        this.setBlocked(i + 1, j, false);
+      console.log("i : " + i + ", j :" + j);
+      if (this.getBackgroundColor(i + 1, j) !== color && this.getBackgroundColor(i + 1, j) !== "black" && this.getBackgroundColor(i + 1, j) !== "white") {
+        this.setColorIdBlocked(i + 1, j, "white", false, null);
+        corner.push(i+1);
 
       }
-      if (this.getBackgroundColor(i - 1, j) !== color && this.getBackgroundColor(i - 1, j) !== "black") {
-        console.log(" i : " + i + " j : " + j + " in i-1 : " +this.getBackgroundColor(i - 1, j));
-        this.setBackgroundColor(i - 1, j, "white");
-        this.setBlocked(i - 1, j, false);
+      if (this.getBackgroundColor(i - 1, j) !== color && this.getBackgroundColor(i - 1, j) !== "black" && this.getBackgroundColor(i - 1, j) !== "white") {
+        this.setColorIdBlocked(i - 1, j, "white", false, null);
+        corner.push(i-1);
 
       }
-      if (this.getBackgroundColor(i, j - 1) !== color && this.getBackgroundColor(i, j - 1) !== "black") {
-        console.log(" i : " + i + " j : " + j + " in j-1 : " +  this.getBackgroundColor(i, j - 1));
-        this.setBackgroundColor(i, j - 1, "white");
-        this.setBlocked(i, j - 1, false);
+      if (this.getBackgroundColor(i, j - 1) !== color && this.getBackgroundColor(i, j - 1) !== "black" && this.getBackgroundColor(i, j - 1) !== "white") {
+        this.setColorIdBlocked(i, j - 1, "white", false, null);
+        corner.push(j-1);
 
       }
-      if (this.getBackgroundColor(i, j + 1) !== color && this.getBackgroundColor(i, j + 1) !== "black") {
-        console.log(" i : " + i + " j : " + j + " in j+1 : " +this.getBackgroundColor(i, j + 1));
-        this.setBackgroundColor(i, j + 1, "white");
-        this.setBlocked(i, j + 1, false);
+      if (this.getBackgroundColor(i, j + 1) !== color && this.getBackgroundColor(i, j + 1) !== "black" && this.getBackgroundColor(i, j + 1) !== "white") {
+        this.setColorIdBlocked(i, j + 1, "white", false, null);
+        corner.push(j+1);
+      }
 
+      if (corner.length === 2) {
+        console.log("corner 0: " +corner[0]);
+        console.log("corner 1: " +corner[1]);
+        console.log("stop");
+        this.setColorIdBlocked(corner[0], corner[1], "white", false, null);
+      }
+      if (corner.length === 4) {
+        console.log("corner 0: " +corner[0]);
+        console.log("corner 1: " +corner[1]);
+        console.log("corner 2: " +corner[2]);
+        console.log("corner 3: " +corner[3]);
+        console.log("stop");
+
+        this.setColorIdBlocked(corner[0], corner[2], "white", false, null);
+        this.setColorIdBlocked(corner[1], corner[3], "white", false, null);
+        this.setColorIdBlocked(corner[0], corner[3], "white", false, null);
+        this.setColorIdBlocked(corner[1], corner[2], "white", false, null);
       }
     }
+
   },
 
   setColorIdBlocked :function(i, j, color, blocked, id) {
