@@ -29,7 +29,7 @@ function ChildComponent(props) {
                 <span className="font-bold text-xl uppercase text-blueGray-700">
                 {props.title}</span>
                 </div>
-                <div onClick={() => props.modify(true)} className="relative w-full pl-4 flex justify-end flex-initial">
+                <div onClick={() => props.modify(true, props.number)} className="relative w-full pl-4 flex justify-end flex-initial">
                     <div
                         className={
                             "text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full " +

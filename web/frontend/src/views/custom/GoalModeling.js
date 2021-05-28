@@ -7,7 +7,7 @@ import {Modal} from "reactstrap";
 import GoalEdit from "../../components/Crome/GoalEdit";
 import SocketIoGaols from "../../components/Custom/Examples/GetGoals";
 import Button from "../../components/Elements/Button";
-
+import defaultgoal from "_texts/custom/defaultgoal.js";
 
 
 
@@ -16,7 +16,8 @@ export default class GoalModeling extends React.Component {
     state = {
         numChildren: 0,
         modalClassic: false,
-        goals: []
+        goals: [],
+        currentGoalIndex: 0
     }
 
     render() {
@@ -46,6 +47,8 @@ export default class GoalModeling extends React.Component {
                     isOpen={this.state.modalClassic}
                     toggle={() => this.setModalClassic(false)}>
                     <GoalEdit
+                        goal={this.state.goals[this.state.currentGoalIndex]}
+                        save={this.setCurrentGoal}
                         close={() => this.setModalClassic(false)}/>
                 </Modal>
             </>
@@ -53,15 +56,46 @@ export default class GoalModeling extends React.Component {
     }
 
     onAddChild = () => {
+        //const defaultProps = `${JSON.stringify(...defaultgoal)}`;
+        //const defaultProps = `${JSON.stringify(...defaultgoal)}`;
+
+        for (let i=0; i<this.state.goals.length; i++) {
+            let tmpArray = this.state.goals
+            tmpArray.push(defaultgoal)
+            this.setState({
+                goals: tmpArray,
+            })
+        }
         this.setState({
             numChildren: this.state.numChildren + 1
         })
     }
 
-    setModalClassic = (bool) => {
+    setModalClassic = (bool, key = false) => {
+        console.log("KEY : "+key)
         this.setState({
             modalClassic: bool
         })
+        if (key) {
+            this.setState({
+                currentGoalIndex: key
+            })
+        }
+    }
+
+    setCurrentGoal = (newGoal) => {
+        this.setState( state => {
+            const goals = state.goals.map((item, j) => {
+                if (j === this.state.currentGoalIndex) {
+                    return newGoal;
+                } else {
+                    return item;
+                }
+            });
+            return {
+                goals,
+            };
+        });
     }
 
     getGoals = (list) => {
@@ -70,7 +104,6 @@ export default class GoalModeling extends React.Component {
             tmpArray.push(JSON.parse(list[i]))
             this.setState({
                 goals: tmpArray,
-                //goals: [...this.state.goals, JSON.parse(list[i])]
             })
         }
         this.setState({
