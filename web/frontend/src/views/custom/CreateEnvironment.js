@@ -94,7 +94,7 @@ export default class CreateEnvironment extends React.Component {
                     world.removeAttribute(idToRemove);
                     document.getElementById(idToRemove).innerHTML = "" ;
                     document.getElementById("idToRemove").value = "";
-                    return false;
+                    return false; // allow to reset start, end, startWall, endWall
 
                 }
                 let id = idInput.value;
@@ -108,7 +108,7 @@ export default class CreateEnvironment extends React.Component {
                             world.setBackgroundColor(start[0],start[1], previousStartColor);
                             world.setBackgroundColor(startWall[0],startWall[1], previousColorWall);
                             world.draw();
-                            return false;
+                            return false; // allow to reset start, end, startWall, endWall
                         }
                         else if (world.isAttribute(id, color) === true) { // when the user input an id that is already use
                             console.log("id already use");
@@ -117,52 +117,19 @@ export default class CreateEnvironment extends React.Component {
                             return ;
                         }
                         else {
-                            let minX; // these variables allow to create only one loop for
-                            let maxX;
-                            let maxY;
-                            let minY;
-                            if (start[0] < end[0]) {
-                                minX = start[0];
-                                maxX = end[0];
-                            } else {
-                                minX = end[0];
-                                maxX = start[0];
-                            }
-                            if (start[1] < end[1]) {
-                                minY = start[1];
-                                maxY = end[1];
-                            } else {
-                                minY = end[1];
-                                maxY = start[1];
-                            }
+                            let minX = world.min(start[0],end[0])[0]; // these variables allow to create only one loop for
+                            let maxX = world.min(start[0],end[0])[1];
+                            let maxY = world.min(start[1],end[1])[1];
+                            let minY = world.min(start[1],end[1])[0];
                             for (let i = minX; i < maxX + 1; i += 1) {
                                 for (let j = minY; j < maxY + 1; j += 1) {
 
-                                    if (world.getBackgroundColor(i, j) !== color || world.getBackgroundColor(i, j) !== null) { //if the cell has already a color, color his neighbors in white
-                                        if (world.getBackgroundColor(i + 1, j) !== color) {
-                                            world.setBackgroundColor(i + 1, j, "white");
-                                            world.setBlocked(i + 1, j, false);
-                                        }
-                                        if (world.getBackgroundColor(i - 1, j) !== color) {
-                                            world.setBackgroundColor(i - 1, j, "white");
-                                            world.setBlocked(i - 1, j, false);
-                                        }
-                                        if (world.getBackgroundColor(i, j - 1) !== color) {
-                                            world.setBackgroundColor(i, j - 1, "white");
-                                            world.setBlocked(i, j - 1, false);
-                                        }
-                                        if (world.getBackgroundColor(i, j + 1) !== color) {
-                                            world.setBackgroundColor(i, j + 1, "white");
-                                            world.setBlocked(i, j + 1, false);
-                                        }
-                                    }
-
-                                    world.setBackgroundColor(i, j, color); // color the cell with the color choose by the user
-                                    world.setBlocked(i, j, true);
-                                    world.setAttribute(i, j, "id", id); // the cell has a attribute id which have a value of the input of the user
+                                    world.checkNeighbour(i, j, color); //if the cell has already a color, color his neighbors in white except if there is a wall
+                                    world.setColorIdBlocked(i, j, color, true, id);
                                     map[Math.trunc(i / 2)][Math.trunc(j / 2)] = color; // later : allow to save the environment when you generate with a different size
                                 }
                             }
+                            document.getElementById("id").value = "";
                             if (document.getElementById(id) === null || document.getElementById(id).innerHTML === "") {
                                 idBlock.innerHTML += "<div id=" + id + ">Color : " + color + " id :" + id + "</div>";
                             }
@@ -174,22 +141,15 @@ export default class CreateEnvironment extends React.Component {
                                 world.setBackgroundColor(startWall[0],startWall[1], previousColorWall);
                             }
                             world.draw();
-                            return false;
+                            return false; // allow to reset start, end, startWall, endWall
                         } else {
-                            const selectColor = document.getElementById("color");
-                            const choiceColor = selectColor.selectedIndex;  // Take the index of the chosen <option>
-
-                            const color = selectColor.options[choiceColor].text;
                             if (color === "red") {
                                 world.setBackgroundColor(node.x, node.y, "#fd6969");
-                                world.setBlocked(node.x, node.y, true);
                             } else if (color === "purple") {
                                 world.setBackgroundColor(node.x, node.y, "#e785ff");
-                                world.setBlocked(node.x, node.y, true);
                             } else {
                                 const lightColor = "light" + color;
                                 world.setBackgroundColor(node.x, node.y, lightColor);
-                                world.setBlocked(node.x, node.y, true);
                             }
                         }
                     }
@@ -199,13 +159,11 @@ export default class CreateEnvironment extends React.Component {
                         let max;
                         if (startWall[0] === endWall[0] && startWall[1] === endWall[1]) { // when you double-click on a wall
                             if (previousColorWall === "black") { // if the wall was black the background color will be white
-                                world.setBackgroundColor(startWall[0], startWall[1], "white");
-                                world.setBlocked(startWall[0], startWall[1], false);
+                                world.setColorIdBlocked(startWall[0], startWall[1], "white", false, null);
                                 world.draw();
                                 return ;
                             } else if (previousColorWall === "white" || previousColorWall === null) { // if the wall was white the background color will be black
-                                world.setBackgroundColor(startWall[0], startWall[1], "black");
-                                world.setBlocked(startWall[0], startWall[1], true);
+                                world.setColorIdBlocked(startWall[0], startWall[1], "black", true, null);
                                 world.draw();
                                 return ;
                             } else { // if the wall was neither black nor white, you can't change the background color
@@ -216,22 +174,17 @@ export default class CreateEnvironment extends React.Component {
                                 console.log("impossible");
                                 world.setBackgroundColor(startWall[0], startWall[1], previousColorWall);
                             } else {
-                                if (startWall[1] < endWall[1]) {
-                                    min = startWall[1];
-                                    max = endWall[1];
-                                } else {
-                                    min = endWall[1];
-                                    max = startWall[1];
-                                }
+                                min = world.min(startWall[1],endWall[1])[0];
+                                max = world.min(startWall[1],endWall[1])[1];
                                 for (let i = min; i < max + 1; i += 1) {
                                     if (previousColorWall === "black") {
                                         world.setBackgroundColor(startWall[0], i, "white");
                                         world.setBlocked(startWall[0], i, false);
+                                        world.setColorIdBlocked(startWall[0], i, "white", false, null);
                                     } else if (world.isBlocked(startWall[0], i) && previousColorWall !== "black") { // when he clicks on a case that he can't choose
                                         console.log("Impossible");
                                     } else {
-                                        world.setBackgroundColor(startWall[0], i, "black");
-                                        world.setBlocked(startWall[0], i, true);
+                                        world.setColorIdBlocked(startWall[0], i, "black", true, null);
                                     }
                                 }
                             }
@@ -240,22 +193,15 @@ export default class CreateEnvironment extends React.Component {
                                 console.log("impossible");
                                 world.setBackgroundColor(startWall[0], startWall[1], previousColorWall);
                             } else {
-                                if (startWall[0] < endWall[0]) {
-                                    min = startWall[0];
-                                    max = endWall[0];
-                                } else {
-                                    min = endWall[0];
-                                    max = startWall[0];
-                                }
+                                min = world.min(startWall[0],endWall[0])[0];
+                                max = world.min(startWall[0],endWall[0])[1];
                                 for (let i = min; i < max + 1; i += 1) {
                                     if (previousColorWall === "black") {
-                                        world.setBackgroundColor(i, startWall[1], "white");
-                                        world.setBlocked(i, startWall[1], false);
+                                        world.setColorIdBlocked(i, startWall[1], "white", false, null);
                                     } else if (world.isBlocked(i, startWall[1]) && previousColorWall !== "black") { // when he clicks on a case that he can't choose
                                         console.log("Impossible");
                                     } else {
-                                        world.setBackgroundColor(i, startWall[1], "black");
-                                        world.setBlocked(i, startWall[1], true);
+                                        world.setColorIdBlocked(i, startWall[1], "black", true, null);
                                     }
                                 }
                             }
@@ -310,7 +256,7 @@ export default class CreateEnvironment extends React.Component {
                             <option>grey</option>
                             <option>white</option>
                         </select>
-                        <input ref={this.id}/>
+                        <input id={"id"} ref={this.id}/>
                         <div ref={this.divId} hidden={true}> choose an id to remove :
                             <input id={"idToRemove"}
                                    type="text"/>

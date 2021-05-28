@@ -310,7 +310,7 @@ GridWorld.prototype = {
 
   isAttribute: function(value, color) { // checks if an id is in the array : idTable
        for (let i = 0; i < idTable.length ; i++) {
-          if (idTable[i][0] === value && idTable[i][1] !== color) {
+          if ((idTable[i][0] === value && idTable[i][1] !== color) || (idTable[i][0] !== value && idTable[i][1] === color)) {
             return true;
           }
        }
@@ -344,6 +344,60 @@ GridWorld.prototype = {
 
   clearAttributeTable: function () {
     idTable = [];
+  },
+
+  checkNeighbour: function (i, j, color) {
+    if (this.getBackgroundColor(i, j) !== color) {
+      if (this.getBackgroundColor(i + 1, j) !== color && this.getBackgroundColor(i + 1, j) !== "black") {
+        console.log(" i : " + i + " j : " + j + " in i+1 : " + this.getBackgroundColor( i + 1, j));
+        this.setBackgroundColor(i + 1, j, "white");
+        this.setBlocked(i + 1, j, false);
+
+      }
+      if (this.getBackgroundColor(i - 1, j) !== color && this.getBackgroundColor(i - 1, j) !== "black") {
+        console.log(" i : " + i + " j : " + j + " in i-1 : " +this.getBackgroundColor(i - 1, j));
+        this.setBackgroundColor(i - 1, j, "white");
+        this.setBlocked(i - 1, j, false);
+
+      }
+      if (this.getBackgroundColor(i, j - 1) !== color && this.getBackgroundColor(i, j - 1) !== "black") {
+        console.log(" i : " + i + " j : " + j + " in j-1 : " +  this.getBackgroundColor(i, j - 1));
+        this.setBackgroundColor(i, j - 1, "white");
+        this.setBlocked(i, j - 1, false);
+
+      }
+      if (this.getBackgroundColor(i, j + 1) !== color && this.getBackgroundColor(i, j + 1) !== "black") {
+        console.log(" i : " + i + " j : " + j + " in j+1 : " +this.getBackgroundColor(i, j + 1));
+        this.setBackgroundColor(i, j + 1, "white");
+        this.setBlocked(i, j + 1, false);
+
+      }
+    }
+  },
+
+  setColorIdBlocked :function(i, j, color, blocked, id) {
+    this.setBackgroundColor(i, j, color); // color the cell with the color choose by the user
+    this.setBlocked(i, j, blocked);
+    if (id !== null) {
+      this.setAttribute(i, j, "id", id); // the cell has a attribute id which have a value of the input of the user
+    }
+  },
+
+  min :function(x, y) {
+    let min;
+    let max;
+    let answer = [];
+    if (x < y) {
+      min = x;
+      max = y
+    }
+    else {
+      min = y;
+      max = x;
+    }
+    answer.push(min);
+    answer.push(max);
+    return answer;
   },
 
   eachNeighbour: function(x, y, callback) {
