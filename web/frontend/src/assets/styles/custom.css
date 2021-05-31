@@ -1,0 +1,28 @@
+.custom-modal-dialog {
+    max-width: 40%;
+    margin: 6.75rem auto;
+}
+
+@media (min-width: 640px) {
+    .sm\:c-m-70 {
+        max-width: 70%;
+    }
+}
+
+@media (min-width: 768px) {
+    .md\:c-m-60 {
+        max-width: 60%;
+    }
+}
+
+@media (min-width: 1024px) {
+    .lg\:c-m-50 {
+        max-width: 50%;
+    }
+}
+
+@media (min-width: 1280px) {
+    .xl\:c-m-w-40 {
+        max-width: 40%;
+    }
+}

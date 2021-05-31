@@ -1,12 +1,12 @@
 import React from 'react';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../assets/styles/tailwind.css";
+import "../../assets/styles/custom.css";
 import ChildComponent from "../../components/Custom/ChildComponent";
 import AddGoal from "../../components/Custom/AddGoal";
 import {Modal} from "reactstrap";
 import GoalEdit from "../../components/Crome/GoalEdit";
 import SocketIoGaols from "../../components/Custom/Examples/GetGoals";
-import Button from "../../components/Elements/Button";
 import defaultgoal from "_texts/custom/defaultgoal.js";
 
 
@@ -14,15 +14,15 @@ import defaultgoal from "_texts/custom/defaultgoal.js";
 export default class GoalModeling extends React.Component {
 
     state = {
-        numChildren: 0,
         modalClassic: false,
         goals: [],
-        currentGoalIndex: 0
+        editedGoals: [],
+        currentGoalIndex: 0,
+        numChildren: 0
     }
 
     render() {
         const children = [];
-
         for (let i = 0; i < this.state.numChildren; i += 1) {
             children.push(<ChildComponent key={i} number={i}
                   title={this.state.goals[i].name}
@@ -30,7 +30,6 @@ export default class GoalModeling extends React.Component {
                   context={this.state.goals[i].context}
                   assumptions={this.state.goals[i].contract.assumptions}
                   guarantees={this.state.goals[i].contract.guarantees}
-                  statObjectives="Objectives of the goal"
                   statIconName="fas fa-pen-square"
                   statSecondIconName="fas fa-trash-alt"
                   statIconColor="bg-lightBlue-600"
@@ -40,18 +39,18 @@ export default class GoalModeling extends React.Component {
         }
         return (
             <>
-                <Button onClick={this.displayGoals}>Console Log Goals</Button>
                 <SocketIoGaols goals={this.getGoals} />
                 <ParentComponent addChild={this.onAddChild}>
                     {children}
                 </ParentComponent>
                 <Modal
                     isOpen={this.state.modalClassic}
-                    toggle={() => this.setModalClassic(false)}>
+                    toggle={() => this.setModalClassic(false)}
+                    className={"custom-modal-dialog sm:c-m-w-40 md:c-m-w-40 lg:c-m-w-40 xl:c-m-w-w-40"}>
                     <GoalEdit
-                        check={this.displayGoals}
-                        goal={this.state.goals[this.state.currentGoalIndex]}
-                        save={this.setCurrentGoal}
+                        goal={this.state.editedGoals[this.state.currentGoalIndex]}
+                        edit={this.editCurrentGoal}
+                        save={this.saveCurrentGoal}
                         close={() => this.setModalClassic(false)}/>
                 </Modal>
             </>
@@ -64,13 +63,15 @@ export default class GoalModeling extends React.Component {
 
         this.setState({
             goals: tmpGoals,
+            editedGoals: tmpGoals,
             numChildren: this.state.numChildren + 1
         })
     }
 
     setModalClassic = (bool, key = -1) => {
         this.setState({
-            modalClassic: bool
+            modalClassic: bool,
+            editedGoals: this.state.goals
         })
         if (key !== -1) {
             this.setState({
@@ -84,11 +85,27 @@ export default class GoalModeling extends React.Component {
         tmpGoals.splice(key, 1)
         this.setState({
             goals: tmpGoals,
+            editedGoals: tmpGoals,
             numChildren: this.state.numChildren - 1
         })
     }
 
-    setCurrentGoal = (newGoal) => {
+    editCurrentGoal = (newGoal) => {
+        this.setState( state => {
+            const editedGoals = state.editedGoals.map((item, j) => {
+                if (j === this.state.currentGoalIndex) {
+                    return newGoal;
+                } else {
+                    return item;
+                }
+            });
+            return {
+                editedGoals,
+            };
+        });
+    }
+
+    saveCurrentGoal = (newGoal) => {
         this.setState( state => {
             const goals = state.goals.map((item, j) => {
                 if (j === this.state.currentGoalIndex) {
@@ -101,6 +118,10 @@ export default class GoalModeling extends React.Component {
                 goals,
             };
         });
+        this.setState({
+            editedGoals: this.state.goals
+        })
+        this.setModalClassic(false)
     }
 
     getGoals = (list) => {
@@ -109,15 +130,12 @@ export default class GoalModeling extends React.Component {
             tmpArray.push(JSON.parse(list[i]))
             this.setState({
                 goals: tmpArray,
+                editedGoals: tmpArray
             })
         }
         this.setState({
             numChildren: list.length
         })
-    }
-
-    displayGoals = () => {
-        console.log(this.state.goals)
     }
 }
 
@@ -126,7 +144,7 @@ GoalModeling.defaultProps = {
 };
 
 const ParentComponent = props => (
-    <section className="md:mt-2 pt-20 relative">
+    <section className="md:mt-2 pt-2 relative">
         <div className="px-4 md:px-10 mx-auto w-full">
             <div>
                 <div className="flex justify-center">

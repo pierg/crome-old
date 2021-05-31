@@ -5,20 +5,16 @@ import Checkbox from "../Elements/Checkbox";
 
 function GoalEdit(props) {
 
-
-
-    const [goal] = React.useState(props.goal);
+    const [goal] = React.useState(JSON.parse(JSON.stringify(props.goal)));
 
     function changeParameter(e) {
-        props.check()
         switch (e.target.name) {
             case "name": goal.name = e.target.value; break;
             case "description": goal.description = e.target.value; break;
             case "context-day": case "context-night" : goal.context = writeContext(e.target.name); break;
             default: break;
         }
-
-        props.save(goal)
+        props.edit(goal)
     }
 
     function parseContext(context) {
@@ -45,16 +41,18 @@ function GoalEdit(props) {
                 </button>
                 <h4 className="title title-up">Edit a Goal</h4>
             </div>
-            <Input type="text" placeholder="Name" name="name" value={goal.name} onChange={changeParameter}/>
-            <Input type="text" placeholder="Description" name="description" value={goal.description} onChange={changeParameter}/>
-            <Checkbox label="Day" name="context-day" checked={parseContext(goal.context)[0]} onChange={changeParameter}/>
-            <Checkbox label="Night" name="context-night" checked={parseContext(goal.context)[1]} onChange={changeParameter}/>
+            <div className="modal-body justify-content-center">
+                <Input type="text" placeholder="Name" name="name" value={goal.name} onChange={changeParameter}/>
+                <Input type="textarea" placeholder="Description" name="description" value={goal.description} onChange={changeParameter}/>
+                <Checkbox label="Day" name="context-day" checked={parseContext(goal.context)[0]} onChange={changeParameter}/>
+                <Checkbox label="Night" name="context-night" checked={parseContext(goal.context)[1]} onChange={changeParameter}/>
+            </div>
             <ModalFooter>
-                <Button color="default" type="button">
-                    Nice Button
-                </Button>
                 <Button color="danger" onClick={props.close}>
-                    Close
+                    Cancel
+                </Button>
+                <Button color="info" onClick={() => props.save(goal)}>
+                    Save
                 </Button>
             </ModalFooter>
         </>
