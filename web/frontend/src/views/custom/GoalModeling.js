@@ -46,7 +46,7 @@ export default class GoalModeling extends React.Component {
                 <Modal
                     isOpen={this.state.modalClassic}
                     toggle={() => this.setModalClassic(false)}
-                    className={"custom-modal-dialog sm:c-m-w-40 md:c-m-w-40 lg:c-m-w-40 xl:c-m-w-w-40"}>
+                    className={"custom-modal-dialog sm:c-m-w-70 md:c-m-w-60 lg:c-m-w-50 xl:c-m-w-40"}>
                     <GoalEdit
                         goal={this.state.editedGoals[this.state.currentGoalIndex]}
                         edit={this.editCurrentGoal}
