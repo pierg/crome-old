@@ -18,11 +18,10 @@ function GoalEdit(props) {
             default: break;
         }
 
-        //props.save(goal)
+        props.save(goal)
     }
 
     function parseContext(context) {
-        //console.log(context === undefined ? ["",""] : [context.includes("day") ? "checked" : "", context.includes("night") ? "checked" : ""])
         return context === undefined ? ["",""] : [context.includes("day") ? "checked" : "", context.includes("night") ? "checked" : ""]
     }
 
@@ -50,31 +49,6 @@ function GoalEdit(props) {
             <Input type="text" placeholder="Description" name="description" value={goal.description} onChange={changeParameter}/>
             <Checkbox label="Day" name="context-day" checked={parseContext(goal.context)[0]} onChange={changeParameter}/>
             <Checkbox label="Night" name="context-night" checked={parseContext(goal.context)[1]} onChange={changeParameter}/>
-            {/*<ChildComponent key={i} number={i}
-                  title={this.state.goals[i].name}
-                  description={this.state.goals[i].description}
-                  context={this.state.goals[i].context}
-                  assumptions={this.state.goals[i].contract.assumptions}
-                  guarantees={this.state.goals[i].contract.guarantees}
-                  statObjectives="Objectives of the goal"
-                  statIconName="fas fa-pen-square"
-                  statSecondIconName="fas fa-trash-alt"
-                  statIconColor="bg-lightBlue-600"
-                  modify={this.setModalClassic} />
-
-
-            {/*
-            <div className="modal-body">
-                <p>
-                    Far far away, behind the word mountains, far from the
-                    countries Vokalia and Consonantia, there live the blind
-                    texts. Separated they live in Bookmarksgrove right at the
-                    coast of the Semantics, a large language ocean. A small
-                    river named Duden flows by their place and supplies it with
-                    the necessary regelialia. It is a paradisematic country, in
-                    which roasted parts of sentences fly into your mouth.
-                </p>
-            </div>*/}
             <ModalFooter>
                 <Button color="default" type="button">
                     Nice Button

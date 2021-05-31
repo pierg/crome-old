@@ -17,6 +17,7 @@ export default class GoalModeling extends React.Component {
         numChildren: 0,
         modalClassic: false,
         goals: [],
+        goalsDisplay: [],
         currentGoalIndex: 0
     }
 
@@ -34,7 +35,10 @@ export default class GoalModeling extends React.Component {
                   statIconName="fas fa-pen-square"
                   statSecondIconName="fas fa-trash-alt"
                   statIconColor="bg-lightBlue-600"
-                  modify={this.setModalClassic} />);
+                  modify={this.setModalClassic}
+                  delete={this.deleteGoal}
+                  isDisplayed={this.state.goalsDisplay[i]}
+            />);
         }
         return (
             <>
@@ -57,18 +61,20 @@ export default class GoalModeling extends React.Component {
     }
 
     onAddChild = () => {
-        //const defaultProps = `${JSON.stringify(...defaultgoal)}`;
-        //const defaultProps = `${JSON.stringify(...defaultgoal)}`;
-        let tmpArray = this.state.goals
-        tmpArray.push(defaultgoal)
+        let tmpGoals = this.state.goals
+        tmpGoals.push(JSON.parse(JSON.stringify(defaultgoal)))
+
+        let tmpDisplay = this.state.goalsDisplay
+        tmpDisplay.push("")
+
         this.setState({
-            goals: tmpArray,
+            goals: tmpGoals,
+            goalsDisplay: tmpDisplay,
             numChildren: this.state.numChildren + 1
         })
     }
 
     setModalClassic = (bool, key = false) => {
-        //console.log("KEY : "+key)
         this.setState({
             modalClassic: bool
         })
@@ -77,6 +83,14 @@ export default class GoalModeling extends React.Component {
                 currentGoalIndex: key
             })
         }
+    }
+
+    deleteGoal = (key = false) => {
+        let tmpDisplay = this.state.goalsDisplay
+        tmpDisplay[key] = "hidden"
+        this.setState({
+            goalsDisplay: tmpDisplay
+        })
     }
 
     setCurrentGoal = (newGoal) => {
@@ -92,16 +106,17 @@ export default class GoalModeling extends React.Component {
                 goals,
             };
         });
-        /*console.log("currentGoal : ")
-        console.log(this.state.goals)*/
     }
 
     getGoals = (list) => {
         for (let i=0; i<list.length; i++) {
             let tmpArray = this.state.goals
             tmpArray.push(JSON.parse(list[i]))
+            let tmpDisplay = this.state.goalsDisplay
+            tmpDisplay.push("")
             this.setState({
                 goals: tmpArray,
+                goalsDisplay: tmpDisplay
             })
         }
         this.setState({
@@ -122,7 +137,6 @@ const ParentComponent = props => (
     <section className="md:mt-2 pt-20 relative">
         <div className="px-4 md:px-10 mx-auto w-full">
             <div>
-                {/* Card stats */}
                 <div className="flex justify-center">
                     <div onClick={props.addChild} className="w-full lg:w-6/12 xl:w-3/12 mt-8 ml-4 mr-4 px-4 relative flex flex-col min-w-0 break-words bg-lightBlue-600 rounded mb-6 xl:mb-0 shadow-lg opacity-1 transform duration-300 transition-all ease-in-out">
                         <AddGoal
@@ -131,9 +145,7 @@ const ParentComponent = props => (
                             statIconColor="text-lightBlue-700"
                         /></div></div>
                 <div className="flex flex-wrap justify-center">
-                    {/*<div onClick={props.addChild} className="w-full lg:w-6/12 xl:w-3/12 m-4 px-4 bg-lightBlue-600 text-blueGray-700 rounded border border-solid border-blueGray-100">*/}
                     {props.children}
-                    {/*}</div>*/}
                 </div>
             </div>
         </div>
