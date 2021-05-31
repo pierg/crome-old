@@ -47,6 +47,7 @@ export default class GoalModeling extends React.Component {
                     isOpen={this.state.modalClassic}
                     toggle={() => this.setModalClassic(false)}>
                     <GoalEdit
+                        check={this.displayGoals}
                         goal={this.state.goals[this.state.currentGoalIndex]}
                         save={this.setCurrentGoal}
                         close={() => this.setModalClassic(false)}/>
@@ -58,21 +59,16 @@ export default class GoalModeling extends React.Component {
     onAddChild = () => {
         //const defaultProps = `${JSON.stringify(...defaultgoal)}`;
         //const defaultProps = `${JSON.stringify(...defaultgoal)}`;
-
-        for (let i=0; i<this.state.goals.length; i++) {
-            let tmpArray = this.state.goals
-            tmpArray.push(defaultgoal)
-            this.setState({
-                goals: tmpArray,
-            })
-        }
+        let tmpArray = this.state.goals
+        tmpArray.push(defaultgoal)
         this.setState({
+            goals: tmpArray,
             numChildren: this.state.numChildren + 1
         })
     }
 
     setModalClassic = (bool, key = false) => {
-        console.log("KEY : "+key)
+        //console.log("KEY : "+key)
         this.setState({
             modalClassic: bool
         })
@@ -96,6 +92,8 @@ export default class GoalModeling extends React.Component {
                 goals,
             };
         });
+        /*console.log("currentGoal : ")
+        console.log(this.state.goals)*/
     }
 
     getGoals = (list) => {

@@ -10,17 +10,19 @@ function GoalEdit(props) {
     const [goal] = React.useState(props.goal);
 
     function changeParameter(e) {
+        props.check()
         switch (e.target.name) {
             case "name": goal.name = e.target.value; break;
             case "description": goal.description = e.target.value; break;
-            case "context-day": case "context-night" : console.log(e); goal.context = writeContext(e.target.name); break;
+            case "context-day": case "context-night" : goal.context = writeContext(e.target.name); break;
             default: break;
         }
-        props.save(goal)
+
+        //props.save(goal)
     }
 
     function parseContext(context) {
-        console.log(context === undefined ? ["",""] : [context.includes("day") ? "checked" : "", context.includes("night") ? "checked" : ""])
+        //console.log(context === undefined ? ["",""] : [context.includes("day") ? "checked" : "", context.includes("night") ? "checked" : ""])
         return context === undefined ? ["",""] : [context.includes("day") ? "checked" : "", context.includes("night") ? "checked" : ""]
     }
 
