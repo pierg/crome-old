@@ -17,7 +17,6 @@ export default class GoalModeling extends React.Component {
         numChildren: 0,
         modalClassic: false,
         goals: [],
-        goalsDisplay: [],
         currentGoalIndex: 0
     }
 
@@ -37,7 +36,6 @@ export default class GoalModeling extends React.Component {
                   statIconColor="bg-lightBlue-600"
                   modify={this.setModalClassic}
                   delete={this.deleteGoal}
-                  isDisplayed={this.state.goalsDisplay[i]}
             />);
         }
         return (
@@ -64,32 +62,29 @@ export default class GoalModeling extends React.Component {
         let tmpGoals = this.state.goals
         tmpGoals.push(JSON.parse(JSON.stringify(defaultgoal)))
 
-        let tmpDisplay = this.state.goalsDisplay
-        tmpDisplay.push("")
-
         this.setState({
             goals: tmpGoals,
-            goalsDisplay: tmpDisplay,
             numChildren: this.state.numChildren + 1
         })
     }
 
-    setModalClassic = (bool, key = false) => {
+    setModalClassic = (bool, key = -1) => {
         this.setState({
             modalClassic: bool
         })
-        if (key) {
+        if (key !== -1) {
             this.setState({
                 currentGoalIndex: key
             })
         }
     }
 
-    deleteGoal = (key = false) => {
-        let tmpDisplay = this.state.goalsDisplay
-        tmpDisplay[key] = "hidden"
+    deleteGoal = (key) => {
+        let tmpGoals = this.state.goals
+        tmpGoals.splice(key, 1)
         this.setState({
-            goalsDisplay: tmpDisplay
+            goals: tmpGoals,
+            numChildren: this.state.numChildren - 1
         })
     }
 
@@ -112,11 +107,8 @@ export default class GoalModeling extends React.Component {
         for (let i=0; i<list.length; i++) {
             let tmpArray = this.state.goals
             tmpArray.push(JSON.parse(list[i]))
-            let tmpDisplay = this.state.goalsDisplay
-            tmpDisplay.push("")
             this.setState({
                 goals: tmpArray,
-                goalsDisplay: tmpDisplay
             })
         }
         this.setState({
