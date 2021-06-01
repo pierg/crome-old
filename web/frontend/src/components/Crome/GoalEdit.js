@@ -2,6 +2,8 @@ import React from 'react';
 import {Button, ModalFooter} from "reactstrap";
 import Input from "../Elements/Input";
 import Checkbox from "../Elements/Checkbox";
+//import CustomTable from "../NowUI/CustomTable";
+import ContractContentEditor from "../Custom/ContractContentEditor";
 
 function GoalEdit(props) {
 
@@ -46,6 +48,8 @@ function GoalEdit(props) {
                 <Input type="textarea" placeholder="Description" name="description" value={goal.description} onChange={changeParameter}/>
                 <Checkbox label="Day" name="context-day" checked={parseContext(goal.context)[0]} onChange={changeParameter}/>
                 <Checkbox label="Night" name="context-night" checked={parseContext(goal.context)[1]} onChange={changeParameter}/>
+                <h4 className="title title-up">Assumptions</h4><ContractContentEditor items={goal.contract.assumptions} color="lightBlue"/>
+                <h4 className="title title-up">Guarantees</h4><ContractContentEditor items={goal.contract.guarantees} color="lightBlue"/>
             </div>
             <ModalFooter>
                 <Button color="danger" onClick={props.close}>

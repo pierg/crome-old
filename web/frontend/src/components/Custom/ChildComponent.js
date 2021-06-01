@@ -29,10 +29,11 @@ function ChildComponent(props) {
                 <span className="font-bold text-xl uppercase text-blueGray-700">
                 {props.title}</span>
                 </div>
-                <div onClick={() => props.modify(true, props.number)} className="relative w-full pl-4 flex justify-end flex-initial">
+                <div className="relative w-full pl-4 flex justify-end flex-initial">
                     <div
+                        onClick={() => props.modify(true, props.number)}
                         className={
-                            "text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full " +
+                            "text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full cursor-pointer " +
                             props.statIconColor
                         }
                     >
@@ -59,13 +60,13 @@ function ChildComponent(props) {
                     {contract[1]}
                 </div>
             </div>
-            <div onClick={() => props.delete(props.number)} className="flex flex-wrap mt-16">
-                <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
-                </div>
+            <div className="flex flex-wrap mt-16">
+                <div className="relative w-full pr-4 max-w-full flex-grow flex-1"/>
                 <div className="relative w-auto pl-4 flex-initial">
                     <div
+                        onClick={() => props.delete(props.number)}
                         className={
-                            "text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full " +
+                            "text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full cursor-pointer " +
                             props.statIconColor
                         }
                     >
