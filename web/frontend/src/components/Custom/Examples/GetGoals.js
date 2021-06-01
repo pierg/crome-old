@@ -26,16 +26,19 @@ function SocketIoGaols(props) {
         return () => socket.off('receive-goals')
     }, [socket, setMessageFunction])
 
+    useEffect(() => {
+        props.goals(message)
+    }, [message])  // eslint-disable-line react-hooks/exhaustive-deps
+
     function sendMessage() {
         socket.emit('get-goals', {session: "default/simple"})
     }
 
-
     return (
         <>
             <Button onClick={sendMessage}>Get Goals Default/Simple</Button>
-            <h1>Response:</h1>
-            <p>{message}</p>
+            {/*<h1>Response:</h1>
+            <p>{message}</p>*/}
         </>);
 }
 

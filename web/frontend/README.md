@@ -128,6 +128,7 @@ Location : src/components/Custom
 
 - AddGoal
 - ChildComponent
+- ContractContentComponent
 - CustomCardMini
 - LoginSession
 
