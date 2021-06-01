@@ -10,102 +10,136 @@ export default class CreateEnvironment extends React.Component {
         this.myRef = React.createRef();
         this.textInput = React.createRef();
         this.colorComponent = React.createRef();
-        this.focusTextInput = this.focusTextInput.bind(this);
+        this.generateGridworld = this.generateGridworld.bind(this);
         this.id = React.createRef();
         this.idBlock = React.createRef();
         this.divId = React.createRef();
+        this.map = [];
     }
 
-    focusTextInput() {
+    generateGridworld() {
+        const context = this.myRef.current.getContext('2d');
+        context.clearRect(0, 0, this.myRef.current.width, this.myRef.current.height);
         this.textInput.current.focus();
         this.colorComponent.current.hidden = false;
         this.divId.current.hidden = false;
-        this.buildGrid(this.myRef.current, this.textInput.current.value,this.id.current, this.idBlock.current,);
+        this.buildGrid(this.myRef.current, this.textInput.current.value,this.id.current, this.idBlock.current, this.map);
     }
 
-    buildGrid(canvas, size, idInput, idBlock) {
-        let map = [];
-        if (map.length === 0) {
-            for (let i = 0; i < size; i++) {
-                map[i] = [];
-                for (let j = 0; j < size; j++) {
-                    map[i].push(0);
-                }
+    buildMap(map, size) {
+        for (let i = 0; i < size * 2 + 1; i++) {
+            map[i] = [];
+            for (let j = 0; j < size * 2 + 1; j++) {
+                map[i].push(0);
             }
         }
-        /*else {
+    }
+
+    inf(x, i, color, bool) {
+        if (bool) {
+            if (x[0] === i && color !== "black") {
+                x[0] = i;
+                x[1] = color;
+            } else if (x[0] === i && color === "black") {
+
+            } else {
+                x[0] = i;
+                x[1] = color;
+        }
+    }
+    return x;
+    }
+
+
+    buildGrid(canvas, size, idInput, idBlock, map) {
+        if (map.length === 0) {
+            this.buildMap(map, size);
+        }
+        else {
             let map2 = map;
-            let maxIdX = 0;
-            let minIdX = map.length;
-            let minIdY = map[0].length;
-            let maxIdY = 0;
+            let maxIdX = [0,null];
+            let minIdX = [map.length, null];
+            let minIdY = [map[0].length, null];
+            let maxIdY = [0, null];
             for (let i = 0; i < map.length; i++) {
                 for (let j = 0; j < map[0].length; j++) {
-                    if (map[i][j] !== 0) {
-                        if (minIdX > i) {
-                            minIdX = i;
-                        }
-                        else if (maxIdX < i) {
-                            maxIdX = i;
-                        }
-                        else if (minIdY > j) {
-                            minIdY = j;
-                        }
-                        else if (maxIdY < j) {
-                            maxIdY = j;
-                        }
+                    if (map[i][j][0] !== "white") {
+                        minIdX = this.inf(minIdX, i, map[i][j][0], minIdX[0] >= i);
+                        minIdY = this.inf(minIdY, j, map[i][j][0], minIdY[0] >= i);
+                        maxIdX = this.inf(maxIdX, i, map[i][j][0], maxIdX[0] <= i);
+                        maxIdY = this.inf(maxIdY, j, map[i][j][0], maxIdY[0] <= i);
                     }
                 }
             }
-            maxIdX = map.length - maxIdX;
-            maxIdY = map.length - maxIdY;
+            let oldSizeX = maxIdX[0] - minIdX[0] + 1;
+            let oldSizeY = maxIdY[0] - minIdY[0] + 1;
+            let isInX = (size * 2 + 1) - oldSizeX;
+            let isInY = (size * 2 + 1) - oldSizeY;
 
-            if (minIdX < maxIdX) {
-                let minX = minIdX
+            if (isInX < 0 || isInY < 0) {
+                console.log("test");
             }
             else {
-                let minX =maxIdX;
-            }
-            if (minIdX < maxIdX) {
-                let minX = minIdX
-            }
-            else {
-                let minX =maxIdX;
-            }
 
-            map = [];
-            for (let i = 0; i < size; i++) {
-                map[i] = [];
-                for (let j = 0; j < size; j++) {
-                    if (map2[i  ])
-                    map[i].push(0);
+                let leftBorderX = Math.trunc(isInX / 2);
+                let topBorderY = Math.trunc(isInY / 2);
+                console.log("X : " + leftBorderX + "color : " + minIdX[1]);
+                console.log("y :" + topBorderY + "color : " + minIdY[1]);
+                if (leftBorderX % 2 === 1 && minIdX[1] === "black") {
+                    console.log("test1");
+                    leftBorderX++;
+                }
+                else if (leftBorderX % 2 === 0 && minIdX[1] !== "black") {
+                    console.log("test2");
+                    leftBorderX++;
+                }
+                if (topBorderY % 2 === 1 && minIdY[1] === "black") {
+                    console.log("test3");
+                    topBorderY++;
+                }
+                else if (topBorderY % 2 === 0 && minIdY[1] !== "black") {
+                    console.log("test4");
+                    topBorderY++;
+                }
+                map = [];
+
+                this.buildMap(map, size);
+
+                for (let i = leftBorderX; i < leftBorderX + oldSizeX; i++) {
+                    for (let j = topBorderY; j < topBorderY + oldSizeY; j++) {
+                        map[i][j] = map2[minIdX[0] + i - leftBorderX][minIdY[0] + j - topBorderY];
+                    }
                 }
             }
 
-
-        }*/
-        let world = new GridWorld(canvas, map[0].length, map.length, {
+        }
+        let world = new GridWorld(canvas, size, size, {
             padding: {top: 10, left: 10, right: 10, bottom: 60},
             resizeCanvas: true,
             drawBorder: true,
-            onclick: function (node, start, end ,startWall, endWall, previousStartColor, previousEndColor, previousColorWall) {
+            onclick: function (node, start, end ,startWall, endWall, previousStartColor, previousColorWall) {
                 /*
                 start is an array where the coordinates of the first click are stored if it is a cell
                 end is an array where the coordinates of the second click are stored if it is a cell
                 startWall is an array where the coordinates of the first click are stored if it is a wall
                 endWall is an array where the coordinates of the first click are stored if it is a wall
                 previousStartColor is a variable where the colour before the first click is stored if it is a cell
-                previousEndColor is a variable where the colour before the second click is stored if it is a cell
                 previousColorWall is a variable where the colour before the first click is stored if it is a wall
                 */
                 const idToRemove = document.getElementById("idToRemove").value;
                 document.getElementById("comment").innerHTML = "";
                 if (idToRemove !== "") {
-                    world.removeAttribute(idToRemove);
-                    document.getElementById(idToRemove).innerHTML = "" ;
-                    document.getElementById("idToRemove").value = "";
-                    return false; // allow to reset start, end, startWall, endWall
-
+                    if (world.removeAttribute(idToRemove)) {
+                        idBlock.removeChild(document.getElementById(idToRemove));
+                        document.getElementById("idToRemove").value = "";
+                        document.getElementById("id").value = "";
+                        return false; // allow to reset start, end, startWall, endWall
+                    }
+                    else {
+                        document.getElementById("comment").innerHTML = "this id don't exist";
+                        document.getElementById("idToRemove").value = "";
+                        return false; // allow to reset start, end, startWall, endWall
+                    }
                 }
                 let id = idInput.value;
                 const selectColor = document.getElementById("color");
@@ -116,7 +150,6 @@ export default class CreateEnvironment extends React.Component {
                         if (id === "") { // when the user didn't input an id
                             document.getElementById("comment").innerHTML = "you need to put an id";
                             world.setBackgroundColor(start[0],start[1], previousStartColor);
-                            world.setBackgroundColor(startWall[0],startWall[1], previousColorWall);
                             world.draw();
                             return false; // allow to reset start, end, startWall, endWall
                         }
@@ -136,7 +169,6 @@ export default class CreateEnvironment extends React.Component {
 
                                     world.checkNeighbour(i, j, color); //if the cell has already a color, color his neighbors in white except if there is a wall
                                     world.setColorIdBlocked(i, j, color, true, id);
-                                    map[Math.trunc(i / 2)][Math.trunc(j / 2)] = color; // later : allow to save the environment when you generate with a different size
                                 }
                             }
                             if (document.getElementById(id) === null || document.getElementById(id).innerHTML === "") {
@@ -183,6 +215,7 @@ export default class CreateEnvironment extends React.Component {
                             if (startWall[0] % 2 === 1) { // when he clicks on a case that he can't choose
                                 document.getElementById("comment").innerHTML = "you have to select a row/column to change the colour of the walls";
                                 world.setBackgroundColor(startWall[0], startWall[1], previousColorWall);
+                                return false;
                             } else {
                                 min = world.min(startWall[1],endWall[1])[0];
                                 max = world.min(startWall[1],endWall[1])[1];
@@ -238,20 +271,33 @@ export default class CreateEnvironment extends React.Component {
                     }
                 }
                 world.draw();
+
+                for (let i = 0; i < map.length; i++) {
+                    for (let j = 0; j < map[0].length; j++) {
+                        map[i][j] = [world.getBackgroundColor(i, j), world.isBlocked(i, j), world.getAttribute(i, j, "id")];
+                    }
+                }
             }
         });
         world.clearAttributeTable();
         idBlock.innerHTML = "";
         document.getElementById("comment").innerHTML = "";
+        while (idBlock.firstChild) {
+            idBlock.removeChild(idBlock.lastChild);
+        }
 
-        map.forEach(function (row, y) {
-            row.forEach(function (cell, x) {
-                if (cell) {
-                    world.setBackgroundColor(x, y, "black");
-                    world.setBlocked(x, y, true);
+        for (let i = 0; i < size * 2 + 1; i++) {
+            for (let j = 0; j < size * 2 + 1; j++) {
+                if (map[i][j].length === 3) {
+                    world.setColorIdBlocked(i, j, map[i][j][0], map[i][j][1], map[i][j][2]);
                 }
-            })
-        })
+                else {
+                    map[i][j] = ["white", false, null];
+                    world.setColorIdBlocked(i, j, "white", false, null);
+                }
+
+            }
+        }
 
         world.draw();
 
@@ -260,13 +306,13 @@ export default class CreateEnvironment extends React.Component {
         return (
             <>
                 <div>
-                    <div>
+                    <div id =  "body">
                         <div> choose the size of the grid :
                             <input
                                 type="text"
                                 ref={this.textInput}
                             />
-                            <button onClick={this.focusTextInput}>Generate</button>
+                            <button onClick={this.generateGridworld}>Generate</button>
                         </div>
                         <canvas ref={this.myRef} id='canvas'/>
                         <select ref={this.colorComponent} hidden={true} id="color" name="color">
@@ -292,5 +338,3 @@ export default class CreateEnvironment extends React.Component {
         );
     }
 }
-
-
