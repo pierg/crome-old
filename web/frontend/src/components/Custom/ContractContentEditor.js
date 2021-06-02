@@ -2,15 +2,15 @@ import React from "react";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import {Button, Card, CardBody, Table} from "reactstrap";
-import Select from "../Elements/Select";
 import Input from "../Elements/Input";
+import CustomSelect from "./CustomSelect";
 
 function makeStringOf(list) {
     if (typeof list === "string") return list
 
     let str = ""
     for (let i=0; i<list.length-1; i++) {
-        str += list[i] + ", "
+        str += list[i] + ","
     }
 
     str += list[list.length-1]
@@ -23,6 +23,9 @@ const AccordionItem = ({
   content,
   defaultOpened,
   setOpen,
+  changeParameter,
+  addContent,
+  deleteContent
 }) => {
   const [collapseOpen, setCollapseOpen] = React.useState(defaultOpened);
   const [rotate, setRotate] = React.useState(defaultOpened);
@@ -138,28 +141,42 @@ const AccordionItem = ({
                     {content.map((prop, key) => (
                         <tr key={key}>
                             <td>
-                                <Input placeholder={"Name"} value={prop.name} />
+                                <Input placeholder={"Name"} value={prop.name} name="subName" onChange={(e) => changeParameter(e, key)}/>
                             </td>
                             <td>
-                                <Input placeholder={"Format"} value={prop.format} />
+                                <Input placeholder={"Format"} value={prop.format} name="subFormat" onChange={(e) => changeParameter(e, key)}/>
                             </td>
                             <td>
-                                <Input placeholder={"Type"} value={prop.type} />
+                                <Input placeholder={"Type"} value={prop.type} name="subType" onChange={(e) => changeParameter(e, key)}/>
                             </td>
                             <td>
-                                <Input placeholder={"Value"} value={makeStringOf(prop.value)} />
+                                <Input placeholder={"Value"} value={makeStringOf(prop.value)} name="subValue" onChange={(e) => changeParameter(e, key)}/>
                             </td>
                             <td>
                                 <Button
                                     className="btn-icon"
                                     color="danger"
                                     size="sm"
-                                    type="button">
+                                    type="button"
+                                    onClick={() => deleteContent(key)}>
                                     <i className="now-ui-icons ui-1_simple-remove"/>
                                 </Button>
                             </td>
                         </tr>
                     ))}
+                    <tr>
+                        <td colSpan="6" className="text-center">
+                            <Button
+                                className="btn-icon"
+                                color="info"
+                                size="sm"
+                                type="button"
+                                onClick={addContent}
+                            >
+                                <i className="now-ui-icons ui-1_simple-add"/>
+                            </Button>
+                        </td>
+                    </tr>
                     </tbody>
               </Table>
           </div>
@@ -173,7 +190,7 @@ AccordionItem.defaultProps = {
   setOpen: () => {},
 };
 
-export default function ContractContentEditor({ items, color, changeParameter, assumptions }) {
+export default function ContractContentEditor({ items, color, changeParameter, deleteContent, addContent, assumptions }) {
     /*console.log("ITEMS")
     console.log(items)*/
   const [open, setOpen] = React.useState();
@@ -200,16 +217,16 @@ export default function ContractContentEditor({ items, color, changeParameter, a
                             <tr key={key}>
                                 <td className="text-center">{key+1}</td>
                                 <td>
-                                    <Select items={["LTL", "pattern"]} defaultValue={prop.type} name="type" onSelect={(e) => changeParameter(e, assumptions, key)}/>
+                                    <CustomSelect items={["LTL", "pattern"]} defaultValue={prop.type} name="type" changeSelector={(e, value) => changeParameter(e, assumptions, key, value)}/>
                                 </td>
                                 <td>
                                     <Input placeholder={"LTL Value"} value={prop.ltl_value} name="ltl_value" onChange={(e) => changeParameter(e, assumptions, key)}/>
                                 </td>
                                 <td className="text-center">
-                                    <Input placeholder={"Name"} value={prop.content!==undefined ? prop.content.name : ""} name="contentName" onChange={(e) => changeParameter(e, assumptions, key)}/>
+                                    {prop.type === "pattern" && (<Input placeholder={"Name"} value={prop.content!==undefined ? prop.content.name : ""} name="contentName" onChange={(e) => changeParameter(e, assumptions, key)}/>)}
                                 </td>
                                 <td className="text-center">
-                                    {prop.content!==undefined && (
+                                    {prop.type === "pattern" && prop.content!==undefined && (
                                     <div
                                         className="overflow-hidden relative flex flex-col min-w-0 break-words bg-white w-full mb-5 border-b border-blueGray-200">
                                         <AccordionItem
@@ -217,6 +234,9 @@ export default function ContractContentEditor({ items, color, changeParameter, a
                                             content={prop.content.arguments}
                                             color={color}
                                             setOpen={() => callBackAction(key)}
+                                            changeParameter={(e, subKey) => changeParameter(e, assumptions, key, false, subKey)}
+                                            addContent={() => addContent(assumptions, key)}
+                                            deleteContent={(subKey) => deleteContent(key, assumptions, subKey)}
                                             defaultOpened={
                                                 key === open || (Array.isArray(open) && open.includes(key))
                                             }/>
@@ -228,12 +248,27 @@ export default function ContractContentEditor({ items, color, changeParameter, a
                                         className="btn-icon"
                                         color="danger"
                                         size="sm"
-                                        type="button">
+                                        type="button"
+                                        onClick={() => deleteContent(key, assumptions)}
+                                    >
                                         <i className="now-ui-icons ui-1_simple-remove"/>
                                     </Button>
                                 </td>
                             </tr>
                         ))}
+                        <tr>
+                            <td colSpan="6" className="text-center">
+                                <Button
+                                    className="btn-icon"
+                                    color="info"
+                                    size="sm"
+                                    type="button"
+                                    onClick={() => addContent(assumptions)}
+                                >
+                                    <i className="now-ui-icons ui-1_simple-add"/>
+                                </Button>
+                            </td>
+                        </tr>
                     </tbody>
                 </Table>
             </CardBody>
