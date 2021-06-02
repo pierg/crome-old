@@ -83,6 +83,8 @@ export default class CreateEnvironment extends React.Component {
             let isInY = (size * 2 + 1) - oldSizeY;
 
             if (isInX < 0 || isInY < 0) {
+                console.log("the retracted size is too small compared to the block, choose another size or clear before");
+                size = Math.trunc(map.length/2);
             }
             else {
 
@@ -110,7 +112,6 @@ export default class CreateEnvironment extends React.Component {
                     }
                 }
             }
-
         }
         let world = new GridWorld(canvas, size, size, {
             padding: {top: 10, left: 10, right: 10, bottom: 60},
