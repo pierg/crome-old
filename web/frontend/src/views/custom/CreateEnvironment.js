@@ -58,7 +58,6 @@ export default class CreateEnvironment extends React.Component {
 
 
     buildGrid(canvas, size, idInput, idBlock, map) {
-        console.log("map :" + map);
         if (map.length === 0) {
             this.buildMap(map, size);
         }
@@ -78,38 +77,27 @@ export default class CreateEnvironment extends React.Component {
                     }
                 }
             }
-            console.log("minIdX :" + minIdX);
-            console.log("maxIdX :" + maxIdX);
-            console.log("minIdY :" + minIdY);
-            console.log("maxIdY :" + maxIdY);
             let oldSizeX = maxIdX[0] - minIdX[0] + 1;
             let oldSizeY = maxIdY[0] - minIdY[0] + 1;
             let isInX = (size * 2 + 1) - oldSizeX;
             let isInY = (size * 2 + 1) - oldSizeY;
 
             if (isInX < 0 || isInY < 0) {
-                console.log("test");
             }
             else {
 
                 let leftBorderX = Math.trunc(isInX / 2);
                 let topBorderY = Math.trunc(isInY / 2);
-                console.log("X : " + leftBorderX + "color : " + minIdX[1]);
-                console.log("y :" + topBorderY + "color : " + minIdY[1]);
                 if (leftBorderX % 2 === 1 && minIdX[1] === "black") {
-                    console.log("test1");
                     leftBorderX++;
                 }
                 else if (leftBorderX % 2 === 0 && minIdX[1] !== "black") {
-                    console.log("test2");
                     leftBorderX++;
                 }
                 if (topBorderY % 2 === 1 && minIdY[1] === "black") {
-                    console.log("test3");
                     topBorderY++;
                 }
                 else if (topBorderY % 2 === 0 && minIdY[1] !== "black") {
-                    console.log("test4");
                     topBorderY++;
                 }
                 map = [];
