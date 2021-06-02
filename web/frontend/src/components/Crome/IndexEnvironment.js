@@ -63,8 +63,8 @@ function GridWorld(canvas, width, height, options) {
     this.canvas.width = cw;
     this.canvas.height = ch;
   }
-
   this.nodes = [];
+
   for (let j = 0; j < this.height + 1; ++j) {
     for (let i = 0; i < this.width + 1; ++i) {
       this.nodes.push(new Node( i,j, null));
@@ -80,7 +80,6 @@ function GridWorld(canvas, width, height, options) {
   this.onclick = options.onclick;
 
   function p2n(x, y) {
-
     x -= self.padding.left;
     y -= self.padding.top;
 
@@ -96,7 +95,6 @@ function GridWorld(canvas, width, height, options) {
       a += 2 * self.cellSize;
       tabX.push(a);
       tabY.push(a);
-
       a += 2 * self.cellSizeWall + self.cellSpacing;
       tabX.push(a);
       tabY.push(a);
@@ -116,7 +114,6 @@ function GridWorld(canvas, width, height, options) {
     while (y >= tabY[indexY] ) { // find out in which interval the clicked pixel is located from the y-coordinate
       indexY++;
     }
-
     if (indexX >= 0 && indexX < self.width + 3 * self.cellSizeWall && indexY >= 0 && indexY < self.height + 3 * self.cellSizeWall) { // associates the clicked pixel with a node
       return self.nodes[(indexY * (self.width + 1)) + indexX];
     }
@@ -130,8 +127,23 @@ function GridWorld(canvas, width, height, options) {
   let endWall =[];
   let previousColorWall;
   let previousStartColor;
-  let previousEndColor;
 
+  function reset(x,y ,color) {
+    self.setBackgroundColor(x, y, color);
+    start = [];
+    end = [];
+    startWall = [];
+    endWall = [];
+    self.draw();
+  }
+
+  function resetCellWall(x1, y1, x2, y2, color1, color2) {
+    self.setBackgroundColor(x1, y1, color1);
+    self.setBackgroundColor(x2, y2, color2);
+    self.draw();
+    start = [];
+    startWall = [];
+  }
   canvas.addEventListener('click', function(evt) {
 
     if (!self.onclick)
@@ -145,31 +157,20 @@ function GridWorld(canvas, width, height, options) {
           previousStartColor = self.getBackgroundColor(node.x, node.y); // save the color a the clicked cell
           start.push(node.x);
           start.push(node.y);
-          if (self.onclick(node, start, end, startWall, endWall, previousStartColor, previousEndColor, previousColorWall) === false) { // if the user does anything that is not allowed
-            start = [];
-            end = [];
-            startWall = [];
-            endWall = [];
+          if (self.onclick(node, start, end, startWall, endWall, previousStartColor, previousColorWall) === false) {// if the user does anything that is not allowed
+            reset(start[0], start[1], "white");
           }
         }
-        else { // if it's the second click
-          previousEndColor = self.getBackgroundColor(node.x, node.y); // save the color a the clicked cell
-          if (startWall.length !== 0) { // if he clicks on a cell then a wall, it's not possible, the program cancel the actions
-            self.setBackgroundColor(start[0],start[1], previousStartColor);
-            self.setBackgroundColor(startWall[0],startWall[1], previousColorWall);
-            self.draw();
-            start = [];
-            startWall = [];
 
+        else { // if it's the second click
+          if (startWall.length !== 0) { // if he clicks on a wall then a cell, it's not possible, the program cancel the actions
+            resetCellWall(start[0], start[1], startWall[0], startWall[1], previousStartColor, previousColorWall);
           }
           else {
             end.push(node.x);
             end.push(node.y);
-            if (self.onclick(node, start, end, startWall, endWall, previousStartColor, previousEndColor, previousColorWall) === false) { // if the user does anything that is not allowed
-              start = [];
-              end = [];
-              startWall = [];
-              endWall = [];
+            if (self.onclick(node, start, end, startWall, endWall, previousStartColor, previousColorWall) === false) { // if the user does anything that is not allowed
+              reset(start[0], start[1], previousStartColor);
             }
             start = [];
             end = [];
@@ -181,20 +182,23 @@ function GridWorld(canvas, width, height, options) {
           startWall.push(node.x);
           startWall.push(node.y);
           previousColorWall = self.getBackgroundColor(node.x, node.y); // save the color a the clicked wall
-          self.onclick(node, start, end, startWall, endWall, previousStartColor, previousEndColor, previousColorWall);
-
-        } else {
-          if (start.length !== 0) { // if he clicks on a wall then a cell, it's not possible, the program cancel the actions
-            self.setBackgroundColor(start[0],start[1], previousStartColor);
-            self.setBackgroundColor(startWall[0],startWall[1], previousColorWall);
-            self.draw();
-            start = [];
-            startWall = [];
+          if (self.onclick(node, start, end, startWall, endWall, previousStartColor, previousColorWall) === false) {// if the user does anything that is not allowed
+            if (start.length !== 0) {// if he clicks on a cell then a wall, it's not possible, the program cancel the actions
+              resetCellWall(start[0], start[1], startWall[0], startWall[1], previousStartColor, previousColorWall);
+            }
+            else {
+              reset(startWall[0], startWall[1], previousColorWall);
+            }
+          }
+        }
+        else {
+          if (start.length !== 0) {// if he clicks on a cell then a wall, it's not possible, the program cancel the actions
+            resetCellWall(start[0], start[1], startWall[0], startWall[1], previousStartColor, previousColorWall);
           }
           else {
             endWall.push(node.x);
             endWall.push(node.y);
-            self.onclick(node, start, end, startWall, endWall, previousStartColor, previousEndColor, previousColorWall);
+            self.onclick(node, start, end, startWall, endWall, previousStartColor, previousColorWall);
             startWall = [];
             endWall = [];
           }
@@ -209,7 +213,6 @@ let idTable = [];
 
 GridWorld.prototype = {
   draw: function() {
-
     let csz = this.cellSize,
         csz2 = this.cellSizeWall,
         csp = this.cellSpacing,
@@ -298,19 +301,20 @@ GridWorld.prototype = {
       for (let i = 0; i < this.width; i++) {
         for (let j = 0; j < this.height; j++) {
           if (this.getAttribute(i, j, "id") === value) {
-            this.setBackgroundColor(i, j, "white");
-            this.setBlocked(i, j, false);
+            this.setColorIdBlocked(i, j, "white", false, null);
           }
         }
       }
       this.clearAttribute(value);
       this.draw();
+      return true;
     }
+    return false;
   },
 
   isAttribute: function(value, color) { // checks if an id is in the array : idTable
        for (let i = 0; i < idTable.length ; i++) {
-          if (idTable[i][0] === value && idTable[i][1] !== color) {
+          if ((idTable[i][0] === value && idTable[i][1] !== color) || (idTable[i][0] !== value && idTable[i][1] === color)) {
             return true;
           }
        }
@@ -346,6 +350,68 @@ GridWorld.prototype = {
     idTable = [];
   },
 
+  checkNeighbour: function (i, j, color) {
+    let corner = [];
+    if (this.getBackgroundColor(i, j) !== color) {
+      if (this.getBackgroundColor(i + 1, j) !== color && this.getBackgroundColor(i + 1, j) !== "black" && this.getBackgroundColor(i + 1, j) !== "white") {
+        this.setColorIdBlocked(i + 1, j, "white", false, null);
+        corner.push(i+1);
+
+      }
+      if (this.getBackgroundColor(i - 1, j) !== color && this.getBackgroundColor(i - 1, j) !== "black" && this.getBackgroundColor(i - 1, j) !== "white") {
+        this.setColorIdBlocked(i - 1, j, "white", false, null);
+        corner.push(i-1);
+
+      }
+      if (this.getBackgroundColor(i, j - 1) !== color && this.getBackgroundColor(i, j - 1) !== "black" && this.getBackgroundColor(i, j - 1) !== "white") {
+        this.setColorIdBlocked(i, j - 1, "white", false, null);
+        corner.push(j-1);
+
+      }
+      if (this.getBackgroundColor(i, j + 1) !== color && this.getBackgroundColor(i, j + 1) !== "black" && this.getBackgroundColor(i, j + 1) !== "white") {
+        this.setColorIdBlocked(i, j + 1, "white", false, null);
+        corner.push(j+1);
+      }
+      if (corner.length === 2) {
+        this.setColorIdBlocked(corner[0], corner[1], "white", false, null);
+      }
+      if (corner.length === 4) {
+        this.setColorIdBlocked(corner[0], corner[2], "white", false, null);
+        this.setColorIdBlocked(corner[1], corner[3], "white", false, null);
+        this.setColorIdBlocked(corner[0], corner[3], "white", false, null);
+        this.setColorIdBlocked(corner[1], corner[2], "white", false, null);
+      }
+    }
+  },
+
+  setColorIdBlocked :function(i, j, color, blocked, id) {
+    this.setBackgroundColor(i, j, color); // color the cell with the color choose by the user
+    this.setBlocked(i, j, blocked);
+    if (id !== null) {
+      this.setAttribute(i, j, "id", id); // the cell has a attribute id which have a value of the input of the user
+    }
+    else {
+      this.setAttribute(i, j, "id", "");
+    }
+  },
+
+  min :function(x, y) {
+    let min;
+    let max;
+    let answer = [];
+    if (x < y) {
+      min = x;
+      max = y
+    }
+    else {
+      min = y;
+      max = x;
+    }
+    answer.push(min);
+    answer.push(max);
+    return answer;
+  },
+
   eachNeighbour: function(x, y, callback) {
     return this.eachNodeNeighbour(this.nodes[(y *  (this.width + 1)) + x], callback);
   },
@@ -372,6 +438,5 @@ GridWorld.prototype = {
   }
 
 };
-
 
 export default GridWorld;
