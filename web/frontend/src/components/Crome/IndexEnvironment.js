@@ -236,25 +236,10 @@ GridWorld.prototype = {
         const n = this.nodes[ix++];
         ctx.fillStyle = n.backgroundColor || this.backgroundColor;
         if ( j % 2 === 1 ) {
-          if (i % 2 === 1) {
-            ctx.fillRect(cx, cy, 2 * csz, 2 * csz);
-            cx += 2 * csz + csp;
-          }
-          else  {
-            ctx.fillRect(cx, cy,2 * csz2, 2 * csz);
-            cx += 2 * csz2 + csp;
-          }
+          cx = this.drawNode(i, ctx, cx, cy, csp, 2 * csz, 2 * csz, 2 * csz2, 2 * csz);
         }
         else {
-          if (i % 2 === 1) {
-            ctx.fillRect(cx, cy, 2 * csz, 2 * csz2);
-            cx += 2 * csz + csp;
-          }
-          else  {
-            ctx.fillRect(cx, cy, 2 * csz2, 2 * csz2);
-            cx += 2 * csz2 + csp;
-          }
-
+          cx = this.drawNode(i, ctx, cx, cy, csp, 2 * csz, 2 * csz2, 2 * csz2, 2 * csz2);
         }
       }
       if (j % 2 === 1) {
@@ -265,8 +250,18 @@ GridWorld.prototype = {
       }
     }
 
-    ctx.restore();
+  },
 
+  drawNode(i, ctx, cx, cy, csp, w1, h1, w2, h2) {
+    if (i % 2 === 1) {
+      ctx.fillRect(cx, cy, w1, h1);
+      cx += w1 + csp;
+    }
+    else  {
+      ctx.fillRect(cx, cy,w2, h2);
+      cx += w2 + csp;
+    }
+    return cx;
   },
 
   get: function(x, y) {
@@ -279,6 +274,15 @@ GridWorld.prototype = {
 
   setBackgroundColor: function(x, y, color) {
     this.nodes[(y *  (this.width + 1)) + x].backgroundColor = color;
+    this.draw();
+  },
+
+  setBackgroundColorWall: function(x, y, previousColorWall) {
+    if (previousColorWall === "black") {
+      this.setColorIdBlocked(x, y, "white", false, null);
+    } else {
+      this.setColorIdBlocked(x, y, "black", true, null);
+    }
   },
 
   isBlocked: function(x, y) {
@@ -393,6 +397,12 @@ GridWorld.prototype = {
     else {
       this.setAttribute(i, j, "id", "");
     }
+    this.draw();
+  },
+
+  errorMessage: function(comment, start, previousColor, message) {
+    comment.innerHTML = message;
+    this.setBackgroundColor(start[0], start[1], previousColor);
   },
 
   min :function(x, y) {
@@ -412,30 +422,13 @@ GridWorld.prototype = {
     return answer;
   },
 
-  eachNeighbour: function(x, y, callback) {
-    return this.eachNodeNeighbour(this.nodes[(y *  (this.width + 1)) + x], callback);
+  updateMap : function(map) {
+    for (let i = 0; i < map.length; i++) {
+      for (let j = 0; j < map[0].length; j++) {
+        map[i][j] = [this.getBackgroundColor(i, j), this.isBlocked(i, j), this.getAttribute(i, j, "id")];
+      }
+    }
   },
-
-  eachNodeNeighbour: function(node, callback) {
-
-    let x = node.x,
-        y = node.y,
-        w = this.width,
-        h = this.height,
-        ns = this.nodes,
-        ix = (y * w) + x,
-        nix = 0;
-
-    if (x > 0   && !ns[ix-1].blocked) callback(ns[ix-1], nix++);
-    if (x < w-1 && !ns[ix+1].blocked) callback(ns[ix+1], nix++);
-    if (y > 0   && !ns[ix-w].blocked) callback(ns[ix-w], nix++);
-    if (y < h-1 && !ns[ix+w].blocked) callback(ns[ix+w], nix++);
-
-  },
-
-  eachNode: function(callback) {
-    this.nodes.forEach(callback);
-  }
 
 };
 
