@@ -154,26 +154,14 @@ const AccordionItem = ({
                                     className="btn-icon"
                                     color="danger"
                                     size="sm"
-                                    type="button"
-                                >
+                                    type="button">
                                     <i className="now-ui-icons ui-1_simple-remove"/>
                                 </Button>
                             </td>
                         </tr>
                     ))}
-
                     </tbody>
               </Table>
-              {/*typeof description === "string" && (
-            <p className="last:mb-2">{description}</p>
-          )}
-          {Array.isArray(description) &&
-            description.map((descriptionProp, descriptionKey) => (
-              <p key={descriptionKey} className="last:mb-2">
-                {descriptionProp}
-              </p>
-            ))*/}
-
           </div>
       </div>
     </>
@@ -185,12 +173,12 @@ AccordionItem.defaultProps = {
   setOpen: () => {},
 };
 
-export default function ContractContentEditor({ items, color, defaultOpened }) {
-  const [open, setOpen] = React.useState(defaultOpened);
+export default function ContractContentEditor({ items, color, changeParameter, assumptions }) {
+    /*console.log("ITEMS")
+    console.log(items)*/
+  const [open, setOpen] = React.useState();
   let callBackAction = (key) => {
-    if (!Array.isArray(defaultOpened)) {
       setOpen(key);
-    }
   };
   return (
     <>
@@ -212,13 +200,13 @@ export default function ContractContentEditor({ items, color, defaultOpened }) {
                             <tr key={key}>
                                 <td className="text-center">{key+1}</td>
                                 <td>
-                                    <Select items={["LTL", "pattern"]} defaultValue={prop.type}/>
+                                    <Select items={["LTL", "pattern"]} defaultValue={prop.type} name="type" onSelect={(e) => changeParameter(e, assumptions, key)}/>
                                 </td>
                                 <td>
-                                    <Input placeholder={"LTL Value"} value={prop.ltl_value} />
+                                    <Input placeholder={"LTL Value"} value={prop.ltl_value} name="ltl_value" onChange={(e) => changeParameter(e, assumptions, key)}/>
                                 </td>
                                 <td className="text-center">
-                                    <Input placeholder={"Name"} value={prop.content!==undefined ? prop.content.name : ""} />
+                                    <Input placeholder={"Name"} value={prop.content!==undefined ? prop.content.name : ""} name="contentName" onChange={(e) => changeParameter(e, assumptions, key)}/>
                                 </td>
                                 <td className="text-center">
                                     {prop.content!==undefined && (
@@ -240,11 +228,9 @@ export default function ContractContentEditor({ items, color, defaultOpened }) {
                                         className="btn-icon"
                                         color="danger"
                                         size="sm"
-                                        type="button"
-                                    >
+                                        type="button">
                                         <i className="now-ui-icons ui-1_simple-remove"/>
                                     </Button>
-
                                 </td>
                             </tr>
                         ))}
