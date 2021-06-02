@@ -15,6 +15,8 @@ export default class CreateEnvironment extends React.Component {
         this.idBlock = React.createRef();
         this.divId = React.createRef();
         this.map = [];
+        this.clearGridworld = this.clearGridworld.bind(this);
+        this.clearButton = React.createRef();
     }
 
     generateGridworld() {
@@ -23,6 +25,12 @@ export default class CreateEnvironment extends React.Component {
         this.textInput.current.focus();
         this.colorComponent.current.hidden = false;
         this.divId.current.hidden = false;
+        this.clearButton.current.hidden = false;
+        this.buildGrid(this.myRef.current, this.textInput.current.value,this.id.current, this.idBlock.current, this.map);
+    }
+
+    clearGridworld() {
+        this.map = [];
         this.buildGrid(this.myRef.current, this.textInput.current.value,this.id.current, this.idBlock.current, this.map);
     }
 
@@ -30,7 +38,7 @@ export default class CreateEnvironment extends React.Component {
         for (let i = 0; i < size * 2 + 1; i++) {
             map[i] = [];
             for (let j = 0; j < size * 2 + 1; j++) {
-                map[i].push(0);
+                map[i].push(["white", false, null]);
             }
         }
     }
@@ -50,6 +58,7 @@ export default class CreateEnvironment extends React.Component {
 
 
     buildGrid(canvas, size, idInput, idBlock, map) {
+        console.log("map :" + map);
         if (map.length === 0) {
             this.buildMap(map, size);
         }
@@ -290,14 +299,7 @@ export default class CreateEnvironment extends React.Component {
 
         for (let i = 0; i < size * 2 + 1; i++) {
             for (let j = 0; j < size * 2 + 1; j++) {
-                if (map[i][j].length === 3) {
-                    world.setColorIdBlocked(i, j, map[i][j][0], map[i][j][1], map[i][j][2]);
-                }
-                else {
-                    map[i][j] = ["white", false, null];
-                    world.setColorIdBlocked(i, j, "white", false, null);
-                }
-
+                world.setColorIdBlocked(i, j, map[i][j][0], map[i][j][1], map[i][j][2]);
             }
         }
 
@@ -315,6 +317,7 @@ export default class CreateEnvironment extends React.Component {
                                 ref={this.textInput}
                             />
                             <button onClick={this.generateGridworld}>Generate</button>
+                            <button ref={this.clearButton} hidden={true} onClick={this.clearGridworld}>Clear</button>
                         </div>
                         <canvas ref={this.myRef} id='canvas'/>
                         <select ref={this.colorComponent} hidden={true} id="color" name="color">
