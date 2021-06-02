@@ -34,20 +34,18 @@ export default class CreateEnvironment extends React.Component {
             }
         }
     }
-
     inf(x, i, color, bool) {
         if (bool) {
             if (x[0] === i && color !== "black") {
                 x[0] = i;
                 x[1] = color;
-            } else if (x[0] === i && color === "black") {
-
-            } else {
+            } else if (x[0] === i && color === "black") {}
+            else {
                 x[0] = i;
                 x[1] = color;
+            }
         }
-    }
-    return x;
+        return x;
     }
 
 
@@ -65,12 +63,16 @@ export default class CreateEnvironment extends React.Component {
                 for (let j = 0; j < map[0].length; j++) {
                     if (map[i][j][0] !== "white") {
                         minIdX = this.inf(minIdX, i, map[i][j][0], minIdX[0] >= i);
-                        minIdY = this.inf(minIdY, j, map[i][j][0], minIdY[0] >= i);
+                        minIdY = this.inf(minIdY, j, map[i][j][0], minIdY[0] >= j);
                         maxIdX = this.inf(maxIdX, i, map[i][j][0], maxIdX[0] <= i);
-                        maxIdY = this.inf(maxIdY, j, map[i][j][0], maxIdY[0] <= i);
+                        maxIdY = this.inf(maxIdY, j, map[i][j][0], maxIdY[0] <= j);
                     }
                 }
             }
+            console.log("minIdX :" + minIdX);
+            console.log("maxIdX :" + maxIdX);
+            console.log("minIdY :" + minIdY);
+            console.log("maxIdY :" + maxIdY);
             let oldSizeX = maxIdX[0] - minIdX[0] + 1;
             let oldSizeY = maxIdY[0] - minIdY[0] + 1;
             let isInX = (size * 2 + 1) - oldSizeX;
