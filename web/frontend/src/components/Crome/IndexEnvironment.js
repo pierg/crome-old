@@ -128,24 +128,19 @@ function GridWorld(canvas, width, height, options) {
   let previousColorWall;
   let previousStartColor;
 
-  function reset(x,y ,color) {
-    self.setBackgroundColor(x, y, color);
+  function resetCellWall(x1, y1, x2, y2, color1, color2) {
+    self.setBackgroundColor(x1, y1, color1);
+    if (x2 !== null && y2 !== null) {
+      self.setBackgroundColor(x2, y2, color2);
+    }
+    self.draw();
     start = [];
     end = [];
     startWall = [];
     endWall = [];
-    self.draw();
   }
 
-  function resetCellWall(x1, y1, x2, y2, color1, color2) {
-    self.setBackgroundColor(x1, y1, color1);
-    self.setBackgroundColor(x2, y2, color2);
-    self.draw();
-    start = [];
-    startWall = [];
-  }
   canvas.addEventListener('click', function(evt) {
-
     if (!self.onclick)
       return;
 
@@ -158,10 +153,9 @@ function GridWorld(canvas, width, height, options) {
           start.push(node.x);
           start.push(node.y);
           if (self.onclick(node, start, end, startWall, endWall, previousStartColor, previousColorWall) === false) {// if the user does anything that is not allowed
-            reset(start[0], start[1], "white");
+            resetCellWall(start[0], start[1], null, null, "white", null);
           }
         }
-
         else { // if it's the second click
           if (startWall.length !== 0) { // if he clicks on a wall then a cell, it's not possible, the program cancel the actions
             resetCellWall(start[0], start[1], startWall[0], startWall[1], previousStartColor, previousColorWall);
@@ -169,8 +163,9 @@ function GridWorld(canvas, width, height, options) {
           else {
             end.push(node.x);
             end.push(node.y);
+
             if (self.onclick(node, start, end, startWall, endWall, previousStartColor, previousColorWall) === false) { // if the user does anything that is not allowed
-              reset(start[0], start[1], previousStartColor);
+              resetCellWall(start[0], start[1],null, null, previousStartColor, null);
             }
             start = [];
             end = [];
@@ -182,12 +177,13 @@ function GridWorld(canvas, width, height, options) {
           startWall.push(node.x);
           startWall.push(node.y);
           previousColorWall = self.getBackgroundColor(node.x, node.y); // save the color a the clicked wall
+
           if (self.onclick(node, start, end, startWall, endWall, previousStartColor, previousColorWall) === false) {// if the user does anything that is not allowed
             if (start.length !== 0) {// if he clicks on a cell then a wall, it's not possible, the program cancel the actions
               resetCellWall(start[0], start[1], startWall[0], startWall[1], previousStartColor, previousColorWall);
             }
             else {
-              reset(startWall[0], startWall[1], previousColorWall);
+              resetCellWall(startWall[0], startWall[1],null, null, previousColorWall, null);
             }
           }
         }
@@ -198,7 +194,9 @@ function GridWorld(canvas, width, height, options) {
           else {
             endWall.push(node.x);
             endWall.push(node.y);
+
             self.onclick(node, start, end, startWall, endWall, previousStartColor, previousColorWall);
+
             startWall = [];
             endWall = [];
           }
@@ -206,7 +204,6 @@ function GridWorld(canvas, width, height, options) {
       }
     }
   });
-
 }
 
 let idTable = [];
@@ -293,6 +290,15 @@ GridWorld.prototype = {
     this.nodes[(y *  (this.width + 1)) + x].blocked = !!blocked;
   },
 
+  isID : function(value) { // checks if an id is in the array : idTable
+       for (let i = 0; i < idTable.length ; i++) {
+          if (idTable[i][0] === value) {
+            return true;
+          }
+       }
+       return false;
+  },
+
   setAttribute: function(x, y, key, value) {
     this.nodes[(y * (this.width + 1)) + x][key] = value;
     if (this.isAttribute(value) === false) { // if the value entered by the user has not already been selected, this value is added to the array :idTable
@@ -325,14 +331,6 @@ GridWorld.prototype = {
        return false;
   },
 
-  isID : function(value) { // checks if an id is in the array : idTable
-       for (let i = 0; i < idTable.length ; i++) {
-          if (idTable[i][0] === value) {
-            return true;
-          }
-       }
-       return false;
-  },
   clearAttribute: function(value) {
       let index = -1;
       for (let i = 0; i < idTable.length; i++) {

@@ -133,6 +133,11 @@ export default class CreateEnvironment extends React.Component {
                 */
                 const idToRemove = document.getElementById("idToRemove").value;
                 document.getElementById("comment").innerHTML = "";
+                const id = idInput.value;
+                const selectColor = document.getElementById("color");
+                const choiceColor = selectColor.selectedIndex;  // Take the index of the chosen <option>
+                const color = selectColor.options[choiceColor].text;
+
                 if (idToRemove !== "") {
                     if (world.removeAttribute(idToRemove)) {
                         idBlock.removeChild(document.getElementById(idToRemove));
@@ -147,11 +152,6 @@ export default class CreateEnvironment extends React.Component {
                         return false; // allow to reset start, end, startWall, endWall
                     }
                 }
-
-                const id = idInput.value;
-                const selectColor = document.getElementById("color");
-                const choiceColor = selectColor.selectedIndex;  // Take the index of the chosen <option>
-                const color = selectColor.options[choiceColor].text;
 
                 if (node.x % 2 === 1 && node.y % 2 === 1) { // if the user click on a cell
                     if (end.length !== 0) { // when it's the second click, draw a square
