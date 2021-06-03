@@ -102,14 +102,11 @@ function GoalEdit(props) {
 export default GoalEdit;
 
 function makeListOf(str) {
-    console.log("STR")
-    console.log(str)
     if (Array.isArray(str)) return str
 
     let list = [""]
     let index = 0
     for (let i=0; i<str.length; i++) {
-        console.log("I : "+str[i])
         if (str[i] === ",") {
            index++
             list[index] = ""
@@ -119,7 +116,5 @@ function makeListOf(str) {
         }
         else list[index] += str[i]
     }
-    console.log("LIST")
-    console.log(list)
     return list
 }

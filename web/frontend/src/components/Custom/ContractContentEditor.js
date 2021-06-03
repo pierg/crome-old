@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import {Button, Card, CardBody, Table} from "reactstrap";
-import Input from "../Elements/Input";
 import CustomSelect from "./CustomSelect";
+import {Button, Card, CardBody, Table, UncontrolledTooltip} from "reactstrap";
+import Input from "../Elements/Input";
 
 function makeStringOf(list) {
     if (typeof list === "string") return list
@@ -32,6 +32,7 @@ const AccordionItem = ({
   const [collapseStyle, setCollapseStyle] = React.useState(undefined);
   const [animation, setAnimation] = React.useState(false);
   const collapseRef = React.useRef(null);
+  const [contentState] = React.useState(content);
   const openAnimation = () => {
     setOpen();
     if (!collapseOpen && collapseStyle === undefined) {
@@ -84,6 +85,7 @@ const AccordionItem = ({
       }, 310);
     }
   }, [defaultOpened]);
+
   const colors = {
     blueGray: "text-blueGray-700 hover:text-blueGray-900",
     red: "text-red-500 hover:text-red-700",
@@ -96,6 +98,13 @@ const AccordionItem = ({
     purple: "text-purple-500 hover:text-purple-700",
     pink: "text-pink-500 hover:text-pink-700",
   };
+
+  const modifyArgument = (add, key) => {
+      add ? addContent() : deleteContent(key)
+      setTimeout(function () {
+        setCollapseStyle(collapseRef.current.scrollHeight)
+      }, 30);
+  }
 
   return (
     <>
@@ -123,7 +132,8 @@ const AccordionItem = ({
           hidden: !collapseOpen,
         })}
         style={{
-          height: collapseStyle,
+            height: "auto",
+            maxHeight: collapseStyle,
         }}
         ref={collapseRef}
       >
@@ -138,7 +148,7 @@ const AccordionItem = ({
                     </tr>
                     </thead>
                     <tbody>
-                    {content.map((prop, key) => (
+                    {contentState.map((prop, key) => (
                         <tr key={key}>
                             <td>
                                 <Input placeholder={"Name"} value={prop.name} name="subName" onChange={(e) => changeParameter(e, key)}/>
@@ -150,7 +160,14 @@ const AccordionItem = ({
                                 <Input placeholder={"Type"} value={prop.type} name="subType" onChange={(e) => changeParameter(e, key)}/>
                             </td>
                             <td>
-                                <Input placeholder={"Value"} value={makeStringOf(prop.value)} name="subValue" onChange={(e) => changeParameter(e, key)}/>
+                                <Input id="tooltipValues" autoComplete="off" placeholder={"Value"} value={makeStringOf(prop.value)} name="subValue" onChange={(e) => changeParameter(e, key)}/>
+                                <UncontrolledTooltip
+                                    delay={100}
+                                    placement="bottom"
+                                    target="tooltipValues"
+                                >
+                                    To enter several values, separate them with ","
+                                </UncontrolledTooltip>
                             </td>
                             <td>
                                 <Button
@@ -158,7 +175,7 @@ const AccordionItem = ({
                                     color="danger"
                                     size="sm"
                                     type="button"
-                                    onClick={() => deleteContent(key)}>
+                                    onClick={() => modifyArgument(false, key)}>
                                     <i className="now-ui-icons ui-1_simple-remove"/>
                                 </Button>
                             </td>
@@ -171,7 +188,7 @@ const AccordionItem = ({
                                 color="info"
                                 size="sm"
                                 type="button"
-                                onClick={addContent}
+                                onClick={() => modifyArgument(true)}
                             >
                                 <i className="now-ui-icons ui-1_simple-add"/>
                             </Button>
@@ -191,8 +208,6 @@ AccordionItem.defaultProps = {
 };
 
 export default function ContractContentEditor({ items, color, changeParameter, deleteContent, addContent, assumptions }) {
-    /*console.log("ITEMS")
-    console.log(items)*/
   const [open, setOpen] = React.useState();
   let callBackAction = (key) => {
       setOpen(key);
