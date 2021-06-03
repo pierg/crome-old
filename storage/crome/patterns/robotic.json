@@ -1,7 +1,7 @@
 [
   {
     "name": "Patrolling",
-    "description": "",
+    "description": "test_descriptionPatrollin",
     "ltl_example": "",
     "arguments": [
       {
@@ -12,8 +12,8 @@
     ]
   },
   {
-    "name": "OrderedPatrolling",
-    "description": "",
+    "name": "OrderedPatrollingOrderPatrol",
+    "description": "test_description",
     "ltl_example": "",
     "arguments": [
       {
@@ -25,7 +25,7 @@
   },
   {
     "name": "StrictOrderedPatrolling",
-    "description": "",
+    "description": "test_description",
     "ltl_example": "",
     "arguments": [
       {
@@ -37,7 +37,7 @@
   },
   {
     "name": "Visit",
-    "description": "",
+    "description": "test_description",
     "ltl_example": "",
     "arguments": [
       {
@@ -49,7 +49,7 @@
   },
   {
     "name": "InstantaneousReaction",
-    "description": "",
+    "description": "test_description",
     "ltl_example": "",
     "arguments": [
       {
@@ -66,7 +66,7 @@
   },
   {
     "name": "BoundReaction",
-    "description": "",
+    "description": "test_description",
     "ltl_example": "",
     "arguments": [
       {
@@ -83,7 +83,7 @@
   },
   {
     "name": "BoundDelay",
-    "description": "",
+    "description": "test_description",
     "ltl_example": "",
     "arguments": [
       {
@@ -100,7 +100,7 @@
   },
   {
     "name": "PromptReaction",
-    "description": "",
+    "description": "test_description",
     "ltl_example": "",
     "arguments": [
       {
@@ -117,7 +117,7 @@
   },
   {
     "name": "DelayedReaction",
-    "description": "",
+    "description": "test_description",
     "ltl_example": "",
     "arguments": [
       {
@@ -134,7 +134,7 @@
   },
   {
     "name": "Wait",
-    "description": "",
+    "description": "test_description",
     "ltl_example": "",
     "arguments": [
       {
