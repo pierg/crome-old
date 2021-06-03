@@ -25,7 +25,8 @@ const AccordionItem = ({
   setOpen,
   changeParameter,
   addContent,
-  deleteContent
+  deleteContent,
+  number
 }) => {
   const [collapseOpen, setCollapseOpen] = React.useState(defaultOpened);
   const [rotate, setRotate] = React.useState(defaultOpened);
@@ -160,11 +161,11 @@ const AccordionItem = ({
                                 <Input placeholder={"Type"} value={prop.type} name="subType" onChange={(e) => changeParameter(e, key)}/>
                             </td>
                             <td>
-                                <Input id="tooltipValues" autoComplete="off" placeholder={"Value"} value={makeStringOf(prop.value)} name="subValue" onChange={(e) => changeParameter(e, key)}/>
+                                <Input id={"tooltipValues"+number+key} autoComplete="off" placeholder={"Value"} value={makeStringOf(prop.value)} name="subValue" onChange={(e) => changeParameter(e, key)}/>
                                 <UncontrolledTooltip
                                     delay={100}
                                     placement="bottom"
-                                    target="tooltipValues"
+                                    target={"tooltipValues"+number+key}
                                 >
                                     To enter several values, separate them with ","
                                 </UncontrolledTooltip>
@@ -252,6 +253,7 @@ export default function ContractContentEditor({ items, color, changeParameter, d
                                             changeParameter={(e, subKey) => changeParameter(e, assumptions, key, false, subKey)}
                                             addContent={() => addContent(assumptions, key)}
                                             deleteContent={(subKey) => deleteContent(key, assumptions, subKey)}
+                                            number={key}
                                             defaultOpened={
                                                 key === open || (Array.isArray(open) && open.includes(key))
                                             }/>

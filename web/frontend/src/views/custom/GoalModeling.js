@@ -8,6 +8,7 @@ import {Modal} from "reactstrap";
 import GoalEdit from "../../components/Crome/GoalEdit";
 import SocketIoGaols from "../../components/Custom/Examples/GetGoals";
 import defaultgoal from "_texts/custom/defaultgoal.js";
+import SocketIoPatterns from "../../components/Custom/Examples/GetPatterns";
 
 
 
@@ -18,7 +19,8 @@ export default class GoalModeling extends React.Component {
         goals: [],
         editedGoals: [],
         currentGoalIndex: 0,
-        numChildren: 0
+        numChildren: 0,
+        patterns: []
     }
 
     render() {
@@ -40,6 +42,7 @@ export default class GoalModeling extends React.Component {
         return (
             <>
                 <SocketIoGaols goals={this.getGoals} />
+                <SocketIoPatterns patterns={this.getPatterns} />
                 <ParentComponent addChild={this.onAddChild}>
                     {children}
                 </ParentComponent>
@@ -71,6 +74,7 @@ export default class GoalModeling extends React.Component {
     }
 
     setModalClassic = (bool, key = -1) => {
+        console.log(this.state.patterns)
         this.setState({
             modalClassic: bool,
             editedGoals: this.state.goals
@@ -127,16 +131,20 @@ export default class GoalModeling extends React.Component {
     }
 
     getGoals = (list) => {
+        let tmpArray = this.state.goals
         for (let i=0; i<list.length; i++) {
-            let tmpArray = this.state.goals
             tmpArray.push(JSON.parse(list[i]))
-            this.setState({
-                goals: tmpArray,
-                editedGoals: tmpArray
-            })
         }
         this.setState({
+            goals: tmpArray,
+            editedGoals: tmpArray,
             numChildren: list.length
+        })
+    }
+
+    getPatterns = (list) => {
+        this.setState({
+            patterns: JSON.parse(list)
         })
     }
 }
