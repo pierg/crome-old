@@ -17,13 +17,14 @@ export default class CreateEnvironment extends React.Component {
         this.map = [];
         this.clearGridworld = this.clearGridworld.bind(this);
         this.clearButton = React.createRef();
+        this.world = null;
     }
 
     generateGridworld() {
         this.colorComponent.current.hidden = false;
         this.divId.current.hidden = false;
         this.clearButton.current.hidden = false;
-        this.buildGrid(this.myRef.current, this.textInput.current.value,this.id.current, this.idBlock.current, this.map);
+        this.world = this.buildGrid(this.myRef.current, this.textInput.current.value,this.id.current, this.idBlock.current, this.map);
     }
 
     clearGridworld() {
@@ -46,26 +47,14 @@ export default class CreateEnvironment extends React.Component {
         }
     }
     end(a, i, color, bool) {
-        if (bool) { // if there are several points corresponding to one end, the one that does not have the colour black is chosen
-            if (a[0] === i && color !== "black") {
-                a[0] = i;
-                a[1] = color;
-            } else if (a[0] === i && color === "black") {}
-            else {
-                a[0] = i;
-                a[1] = color;
-            }
+        if (bool && (a !== i || color !== "black")) { // if there are several points corresponding to one end, the one that does not have the colour black is chosen
+            a = i;
         }
         return a;
     }
 
     shift(border, index) {
-        if (border % 2 === 1 && index[1] === "black") {
-            border++;
-        }
-        else if (border % 2 === 0 && index[1] !== "black") {
-            border++;
-        }
+        if (border % 2 !== index % 2) border++;
         return border;
     }
 
@@ -75,22 +64,22 @@ export default class CreateEnvironment extends React.Component {
         }
         else {
             let map2 = map;
-            let maxIdX = [0,null]; // table corresponding to the node with the largest x as abscissa and its colour
-            let minIdX = [map.length, null]; // table corresponding to the node with the smallest x abscissa and its colour
-            let minIdY = [map[0].length, null]; // table corresponding to the node with the smallest y and its colour as ordinates
-            let maxIdY = [0, null]; // table corresponding to the node with the largest x and its colour as ordinates
+            let maxIdX = 0; // table corresponding to the node with the largest x as abscissa and its colour
+            let minIdX = map.length; // table corresponding to the node with the smallest x abscissa and its colour
+            let minIdY = map[0].length; // table corresponding to the node with the smallest y and its colour as ordinates
+            let maxIdY = 0; // table corresponding to the node with the largest x and its colour as ordinates
             for (let i = 0; i < map.length; i++) {
                 for (let j = 0; j < map[0].length; j++) { // if the colour of the node is not white check if it is the point corresponding to one of the 4 ends
                     if (map[i][j][0] !== "white") {
-                        minIdX = this.end(minIdX, i, map[i][j][0], minIdX[0] >= i);
-                        minIdY = this.end(minIdY, j, map[i][j][0], minIdY[0] >= j);
-                        maxIdX = this.end(maxIdX, i, map[i][j][0], maxIdX[0] <= i);
-                        maxIdY = this.end(maxIdY, j, map[i][j][0], maxIdY[0] <= j);
+                        minIdX = this.end(minIdX, i, map[i][j][0], minIdX >= i);
+                        minIdY = this.end(minIdY, j, map[i][j][0], minIdY >= j);
+                        maxIdX = this.end(maxIdX, i, map[i][j][0], maxIdX <= i);
+                        maxIdY = this.end(maxIdY, j, map[i][j][0], maxIdY <= j);
                     }
                 }
             }
-            let oldSizeX = maxIdX[0] - minIdX[0] + 1;
-            let oldSizeY = maxIdY[0] - minIdY[0] + 1;
+            let oldSizeX = maxIdX - minIdX + 1;
+            let oldSizeY = maxIdY - minIdY + 1;
             let isInX = (size * 2 + 1) - oldSizeX;
             let isInY = (size * 2 + 1) - oldSizeY;
 
@@ -118,7 +107,7 @@ export default class CreateEnvironment extends React.Component {
 
                 for (let i = leftBorderX; i < leftBorderX + oldSizeX; i++) {
                     for (let j = topBorderY; j < topBorderY + oldSizeY; j++) {
-                        map[i][j] = map2[minIdX[0] + i - leftBorderX][minIdY[0] + j - topBorderY];
+                        map[i][j] = map2[minIdX + i - leftBorderX][minIdY + j - topBorderY];
                     }
                 }
             }
@@ -127,8 +116,9 @@ export default class CreateEnvironment extends React.Component {
         let world = new GridWorld(canvas, size, size, {
             padding: {top: 10, left: 10, right: 10, bottom: 60},
             resizeCanvas: true,
-            drawBorder: true,
-            onclick: function (node, start, end ,startWall, endWall, previousStartColor, previousColorWall) {
+            drawBorder: true});
+
+        world.onclick = function (node, start, end ,startWall, endWall, previousStartColor, previousColorWall) {
                 /*
                 start is an array where the coordinates of the first click are stored if it is a cell
                 end is an array where the coordinates of the second click are stored if it is a cell
@@ -256,11 +246,10 @@ export default class CreateEnvironment extends React.Component {
                         } else {
                             world.setBackgroundColor(startWall[0], startWall[1], "white");
                             document.getElementById("comment").innerHTML = "select a line or a column when you want to put wall";
-
                         }
                     }
                     else { // when it's the first click, color the cell with a "light" color so the user know that he needs to click on a other cell
-                        if (world.getBackgroundColor(node.x, node.y) === "white" || world.getBackgroundColor(node.x, node.y) === "black" || world.getBackgroundColor(node.x, node.y) === null) {
+                        if (world.getBackgroundColor(node.x, node.y) === "white" || world.getBackgroundColor(node.x, node.y) === "black") {
                             world.setBackgroundColor(node.x, node.y, "lightgray");
                         } else { // when he clicks on a case that he can't choose
                             document.getElementById("comment").innerHTML = "you cannot select a wall within a block";
@@ -270,7 +259,9 @@ export default class CreateEnvironment extends React.Component {
                 }
                 world.updateMap(map);
             }
-        });
+
+
+
         world.clearAttributeTable();
         document.getElementById("comment").innerHTML = "";
 
@@ -279,6 +270,8 @@ export default class CreateEnvironment extends React.Component {
                 world.setColorIdBlocked(i, j, map[i][j][0], map[i][j][1], map[i][j][2]);
             }
         }
+
+        return world;
     }
 
     render() {

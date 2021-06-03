@@ -140,6 +140,10 @@ function GridWorld(canvas, width, height, options) {
     endWall = [];
   }
 
+  function testAlert() {
+    alert("test")
+  }
+
   canvas.addEventListener('click', function(evt) {
     if (!self.onclick)
       return;
