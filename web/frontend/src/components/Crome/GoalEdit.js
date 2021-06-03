@@ -9,20 +9,35 @@ function GoalEdit(props) {
 
     const [goal] = React.useState(JSON.parse(JSON.stringify(props.goal)));
 
-    function changeParameter(e, assumptions = false, index = 0) {
-        console.log("CHANGE PARAMETER")
-        console.log(e)
-        console.log(e.target.name)
-        console.log(e.target.value)
+    function changeParameter(e, assumptions = false, index = 0, propValue = false, subKey = -1) {
+        const value = propValue || e.target.value
+        const contractTypeIndex = assumptions ? goal.contract.assumptions[index] : goal.contract.guarantees[index]
         switch (e.target.name) {
-            case "name": goal.name = e.target.value; break;
-            case "description": goal.description = e.target.value; break;
+            case "name": goal.name = value; break;
+            case "description": goal.description = value; break;
             case "context-day": case "context-night" : goal.context = writeContext(e.target.name); break;
-            case "ltl_value": assumptions ? goal.contract.assumptions[index].ltl_value = e.target.value :  goal.contract.guarantees[index].ltl_value = e.target.value; break;
-            case "contentName": assumptions ? goal.contract.assumptions[index].content.name = e.target.value :  goal.contract.guarantees[index].content.name = e.target.value; break;
-            case "type": assumptions ? goal.contract.assumptions[index].type = e.target.value :  goal.contract.guarantees[index].type = e.target.value; break;
+            case "ltl_value": contractTypeIndex.ltl_value = value; break;
+            case "contentName": contractTypeIndex.content.name = value; break;
+            case "type": contractTypeIndex.type = value;
+                if(value==="pattern" && contractTypeIndex.content===undefined) contractTypeIndex.content={name: "", arguments: []}; break;
+            case "subName": contractTypeIndex.content.arguments[subKey].name = value; break;
+            case "subFormat": contractTypeIndex.content.arguments[subKey].format = value; break;
+            case "subType": contractTypeIndex.content.arguments[subKey].type = value; break;
+            case "subValue": contractTypeIndex.content.arguments[subKey].value = makeListOf(value); break;
             default: break;
         }
+        props.edit(goal)
+    }
+
+    function deleteContractContent(key, assumptions, subKey = -1) {
+        const contractType = assumptions ? goal.contract.assumptions : goal.contract.guarantees
+        subKey === -1 ? contractType.splice(key, 1) : contractType[key].content.arguments.splice(subKey, 1)
+        props.edit(goal)
+    }
+
+    function addContractContent(assumptions, key = -1) {
+        const contractType = assumptions ? goal.contract.assumptions : goal.contract.guarantees
+        key === -1 ? contractType.push({type: "LTL"}) : contractType[key].content.arguments.push({name: "", format: "", type: "", value: ""})
         props.edit(goal)
     }
 
@@ -55,8 +70,22 @@ function GoalEdit(props) {
                 <Input type="textarea" placeholder="Description" name="description" value={goal.description} onChange={changeParameter}/>
                 <Checkbox label="Day" name="context-day" checked={parseContext(goal.context)[0]} onChange={changeParameter}/>
                 <Checkbox label="Night" name="context-night" checked={parseContext(goal.context)[1]} onChange={changeParameter}/>
-                <h4 className="title title-up">Assumptions</h4><ContractContentEditor items={goal.contract.assumptions} color="lightBlue" changeParameter={changeParameter} assumptions={true}/>
-                <h4 className="title title-up">Guarantees</h4><ContractContentEditor items={goal.contract.guarantees} color="lightBlue" changeParameter={changeParameter} assumptions={false}/>
+                <h4 className="title title-up">Assumptions</h4>
+                <ContractContentEditor
+                    items={goal.contract.assumptions}
+                    color="lightBlue"
+                    changeParameter={changeParameter}
+                    deleteContent={deleteContractContent}
+                    addContent={addContractContent}
+                    assumptions={true}/>
+                <h4 className="title title-up">Guarantees</h4>
+                <ContractContentEditor
+                    items={goal.contract.guarantees}
+                    color="lightBlue"
+                    changeParameter={changeParameter}
+                    deleteContent={deleteContractContent}
+                    addContent={addContractContent}
+                    assumptions={false}/>
             </div>
             <ModalFooter>
                 <Button color="danger" onClick={props.close}>
@@ -71,3 +100,21 @@ function GoalEdit(props) {
 }
 
 export default GoalEdit;
+
+function makeListOf(str) {
+    if (Array.isArray(str)) return str
+
+    let list = [""]
+    let index = 0
+    for (let i=0; i<str.length; i++) {
+        if (str[i] === ",") {
+           index++
+            list[index] = ""
+           if (i !== str.length - 1 && str[i+1] === " ") {
+                i++
+           }
+        }
+        else list[index] += str[i]
+    }
+    return list
+}

@@ -6,12 +6,10 @@
 	],
 	"contract": {
 		"assumptions": [{
-			"type": "LTL",
 			"ltl_value": "true"
 		}],
 		"guarantees": [{
-			"type": "pattern",
-			"content": {
+			"pattern": {
 				"name": "StrictOrderPatrolling",
 				"arguments": [{
 					"name": "locations",
@@ -22,7 +20,8 @@
 						"r2"
 					]
 				}]
-			}
+			},
+			"ltl_value": "GF(r1) & GF(r2)"
 		}]
 	}
 }

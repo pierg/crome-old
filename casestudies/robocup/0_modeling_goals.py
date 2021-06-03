@@ -10,10 +10,7 @@ from specification.formula import Formula
 from tools.persistence import Persistence
 
 """We import the environment"""
-w_types = RobocupHome()
-w = w_types.get_atoms()
-
-"""Elements used in the goals"""
+w = RobocupHome()
 
 """if the robot has the object, then disable the sensor for new objects"""
 no_objects_when_hold = PromptReaction(w["hold"], ~w["object_recognized"])
