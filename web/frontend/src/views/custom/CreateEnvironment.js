@@ -103,8 +103,14 @@ export default class CreateEnvironment extends React.Component {
                 let leftBorderX = Math.trunc(isInX / 2);
                 let topBorderY = Math.trunc(isInY / 2);
 
+                console.log("leftBorderX : " + leftBorderX);
+                console.log("topBorderX :" + topBorderY);
+
                 leftBorderX = this.shift(leftBorderX, minIdX);
                 topBorderY = this.shift(topBorderY, minIdY);
+
+                console.log("leftBorderX : " + leftBorderX);
+                console.log("topBorderX :" + topBorderY);
 
                 map = [];
 
