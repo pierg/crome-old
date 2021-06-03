@@ -66,6 +66,8 @@ export default class GoalModeling extends React.Component {
             editedGoals: tmpGoals,
             numChildren: this.state.numChildren + 1
         })
+
+        this.setModalClassic(true, tmpGoals.length - 1)
     }
 
     setModalClassic = (bool, key = -1) => {
