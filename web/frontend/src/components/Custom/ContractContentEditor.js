@@ -105,13 +105,6 @@ const AccordionItem = ({
     pink: "text-pink-500 hover:text-pink-700",
   };
 
-    /*const modifyArgument = (add, key) => {
-      add ? addContent() : deleteContent(key)
-      setTimeout(function () {
-        setCollapseStyle(collapseRef.current.scrollHeight)
-      }, 30);
-  }*/
-
   return (
     <>
       <div className="bg-transparent first:rounded-t px-4 py-3">
@@ -197,14 +190,9 @@ export default function ContractContentEditor({ items, patterns, color, changePa
     for (let i=0; i<patterns.length; i++) {
         if (patterns[i].name === content.name) {
             let patternArgs = patterns[i].arguments
-            console.log("patternArgs")
-            console.log(patternArgs)
             for (let j=0; j<patternArgs.length; j++) {
-                console.log("J : "+j)
-                console.log(content)
                 patternArgs[j].value = content.arguments[j] === undefined ? "" : content.arguments[j].value
             }
-            console.log(patternArgs)
             return patternArgs
         }
     }
@@ -224,9 +212,7 @@ export default function ContractContentEditor({ items, patterns, color, changePa
                     <tr>
                         <th className="text-center">#</th>
                         <th>Type</th>
-                        <th>LTL Value</th>
-                        <th className="text-center">Name</th>
-                        <th className="text-center">Arguments</th>
+                        <th>Value</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -234,33 +220,31 @@ export default function ContractContentEditor({ items, patterns, color, changePa
                             <tr key={key}>
                                 <td className="text-center">{key+1}</td>
                                 <td>
-                                    <CustomSelect items={["LTL", "pattern"]} defaultValue={prop.type} name="type" changeSelector={(e, value) => changeParameter(e, assumptions, key, value)}/>
+                                    <CustomSelect items={["LTL", "Pattern"]} placeholder="Pattern" defaultValue={prop.pattern === undefined ? "LTL" : "Pattern"} name="type" changeSelector={(e, value) => changeParameter(e, assumptions, key, value)}/>
                                 </td>
                                 <td>
-                                    <Input placeholder={"LTL Value"} value={prop.ltl_value} name="ltl_value" onChange={(e) => changeParameter(e, assumptions, key)}/>
+                                    {prop.pattern === undefined && (<Input placeholder={"LTL Value"} value={prop.ltl_value} name="ltl_value" onChange={(e) => changeParameter(e, assumptions, key)}/>)}
+                                    {prop.pattern !== undefined && (<CustomSelect items={NamesOf(patterns)} defaultValue={prop.pattern.name} name="contentName" changeSelector={(e, value) => changeParameter(e, assumptions, key, value)}/>)}
                                 </td>
                                 <td className="text-center">
-                                    {/*prop.type === "pattern" && (<Input placeholder={"Name"} value={prop.content!==undefined ? prop.content.name : ""} name="contentName" onChange={(e) => changeParameter(e, assumptions, key)}/>)*/}
-                                    {prop.type === "pattern" && (<CustomSelect items={NamesOf(patterns)} defaultValue={prop.content.name} name="contentName" changeSelector={(e, value) => changeParameter(e, assumptions, key, value)}/>)}
-                                </td>
-                                <td className="text-center">
-                                    {prop.type === "pattern" && prop.content!==undefined && (
+                                    {prop.pattern !== undefined && (
                                     <div
                                         className="overflow-hidden relative flex flex-col min-w-0 break-words bg-white w-full mb-5 border-b border-blueGray-200">
                                         <AccordionItem
                                             title="See Arguments"
-                                            content={searchPatterns(prop.content)}
+                                            content={searchPatterns(prop.pattern)}
                                             color={color}
                                             setOpen={() => callBackAction(key)}
                                             changeParameter={(e, subKey) => changeParameter(e, assumptions, key, false, subKey)}
-                                            addContent={() => addContent(assumptions, key)}
-                                            deleteContent={(subKey) => deleteContent(key, assumptions, subKey)}
                                             number={key}
                                             defaultOpened={
                                                 key === open || (Array.isArray(open) && open.includes(key))
                                             }/>
                                     </div>
                                     )}
+                                </td>
+                                <td>
+                                    {prop.pattern !== undefined && (<Input placeholder={"Optional LTL Value"} value={prop.ltl_value} name="ltl_value" onChange={(e) => changeParameter(e, assumptions, key)}/>)}
                                 </td>
                                 <td>
                                     <Button

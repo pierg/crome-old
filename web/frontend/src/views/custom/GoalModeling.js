@@ -75,7 +75,6 @@ export default class GoalModeling extends React.Component {
     }
 
     setModalClassic = (bool, key = -1) => {
-        console.log(this.state.patterns)
         this.setState({
             modalClassic: bool,
             editedGoals: this.state.goals

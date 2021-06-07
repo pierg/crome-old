@@ -18,27 +18,21 @@ function GoalEdit(props) {
             case "description": goal.description = value; break;
             case "context-day": case "context-night" : goal.context = writeContext(e.target.name); break;
             case "ltl_value": contractTypeIndex.ltl_value = value; break;
-            case "contentName": contractTypeIndex.content.name = value; console.log(value); break;
-            case "type": contractTypeIndex.type = value;
-                if(value==="pattern" && contractTypeIndex.content===undefined) { contractTypeIndex.content={name: "", arguments: []}; console.log("reset")} break;
-            case "subName": contractTypeIndex.content.arguments[subKey].name = value; break;
-            case "subFormat": contractTypeIndex.content.arguments[subKey].format = value; break;
-            case "subType": contractTypeIndex.content.arguments[subKey].type = value; break;
-            case "subValue": contractTypeIndex.content.arguments[subKey].value = makeListOf(value); break;
+            case "contentName": contractTypeIndex.pattern.name = value; break;
+            case "type": if(value === "Pattern") { contractTypeIndex.pattern={name: "", arguments: []} } else { delete contractTypeIndex.pattern } break;
+            case "subValue": contractTypeIndex.pattern.arguments[subKey] = {"value": makeListOf(value)}; break;
             default: break;
         }
         props.edit(goal)
     }
 
-    function deleteContractContent(key, assumptions, subKey = -1) {
-        const contractType = assumptions ? goal.contract.assumptions : goal.contract.guarantees
-        subKey === -1 ? contractType.splice(key, 1) : contractType[key].content.arguments.splice(subKey, 1)
+    function deleteContractContent(key, assumptions) {
+        assumptions ? goal.contract.assumptions.splice(key, 1) : goal.contract.guarantees.splice(key, 1)
         props.edit(goal)
     }
 
     function addContractContent(assumptions, key = -1) {
-        const contractType = assumptions ? goal.contract.assumptions : goal.contract.guarantees
-        key === -1 ? contractType.push({type: "LTL"}) : contractType[key].content.arguments.push({name: "", format: "", type: "", value: ""})
+        assumptions ? goal.contract.assumptions.push({ltl_value: ""}) : goal.contract.guarantees.push({ltl_value: ""})
         props.edit(goal)
     }
 
@@ -112,12 +106,12 @@ function makeListOf(str) {
     for (let i=0; i<str.length; i++) {
         if (str[i] === ",") {
            index++
-            list[index] = ""
+           list[index] = ""
            if (i !== str.length - 1 && str[i+1] === " ") {
                 i++
            }
         }
         else list[index] += str[i]
     }
-    return list
+    return index === 0 ? list[0] : list
 }
