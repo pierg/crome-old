@@ -10,6 +10,7 @@ function GoalEdit(props) {
     const [goal] = React.useState(JSON.parse(JSON.stringify(props.goal)));
 
     function changeParameter(e, assumptions = false, index = 0, propValue = false, subKey = -1) {
+
         const value = propValue || e.target.value
         const contractTypeIndex = assumptions ? goal.contract.assumptions[index] : goal.contract.guarantees[index]
         switch (e.target.name) {
@@ -17,9 +18,9 @@ function GoalEdit(props) {
             case "description": goal.description = value; break;
             case "context-day": case "context-night" : goal.context = writeContext(e.target.name); break;
             case "ltl_value": contractTypeIndex.ltl_value = value; break;
-            case "contentName": contractTypeIndex.content.name = value; break;
+            case "contentName": contractTypeIndex.content.name = value; console.log(value); break;
             case "type": contractTypeIndex.type = value;
-                if(value==="pattern" && contractTypeIndex.content===undefined) contractTypeIndex.content={name: "", arguments: []}; break;
+                if(value==="pattern" && contractTypeIndex.content===undefined) { contractTypeIndex.content={name: "", arguments: []}; console.log("reset")} break;
             case "subName": contractTypeIndex.content.arguments[subKey].name = value; break;
             case "subFormat": contractTypeIndex.content.arguments[subKey].format = value; break;
             case "subType": contractTypeIndex.content.arguments[subKey].type = value; break;
@@ -73,6 +74,7 @@ function GoalEdit(props) {
                 <h4 className="title title-up">Assumptions</h4>
                 <ContractContentEditor
                     items={goal.contract.assumptions}
+                    patterns={props.patterns}
                     color="lightBlue"
                     changeParameter={changeParameter}
                     deleteContent={deleteContractContent}
@@ -81,6 +83,7 @@ function GoalEdit(props) {
                 <h4 className="title title-up">Guarantees</h4>
                 <ContractContentEditor
                     items={goal.contract.guarantees}
+                    patterns={props.patterns}
                     color="lightBlue"
                     changeParameter={changeParameter}
                     deleteContent={deleteContractContent}

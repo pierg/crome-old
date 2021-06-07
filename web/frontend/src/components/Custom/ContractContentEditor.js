@@ -17,6 +17,14 @@ function makeStringOf(list) {
     return str
 }
 
+function NamesOf(obj) {
+    let list = []
+    for (let i=0; i<obj.length; i++) {
+        list.push(obj[i].name)
+    }
+    return list
+}
+
 const AccordionItem = ({
   title,
   color,
@@ -24,8 +32,6 @@ const AccordionItem = ({
   defaultOpened,
   setOpen,
   changeParameter,
-  addContent,
-  deleteContent,
   number
 }) => {
   const [collapseOpen, setCollapseOpen] = React.useState(defaultOpened);
@@ -33,7 +39,6 @@ const AccordionItem = ({
   const [collapseStyle, setCollapseStyle] = React.useState(undefined);
   const [animation, setAnimation] = React.useState(false);
   const collapseRef = React.useRef(null);
-  const [contentState] = React.useState(content);
   const openAnimation = () => {
     setOpen();
     if (!collapseOpen && collapseStyle === undefined) {
@@ -100,12 +105,12 @@ const AccordionItem = ({
     pink: "text-pink-500 hover:text-pink-700",
   };
 
-  const modifyArgument = (add, key) => {
+    /*const modifyArgument = (add, key) => {
       add ? addContent() : deleteContent(key)
       setTimeout(function () {
         setCollapseStyle(collapseRef.current.scrollHeight)
       }, 30);
-  }
+  }*/
 
   return (
     <>
@@ -149,16 +154,16 @@ const AccordionItem = ({
                     </tr>
                     </thead>
                     <tbody>
-                    {contentState.map((prop, key) => (
+                    {content.map((prop, key) => (
                         <tr key={key}>
                             <td>
-                                <Input placeholder={"Name"} value={prop.name} name="subName" onChange={(e) => changeParameter(e, key)}/>
+                                <Input placeholder={"Name"} readOnly value={prop.name}/>
                             </td>
                             <td>
-                                <Input placeholder={"Format"} value={prop.format} name="subFormat" onChange={(e) => changeParameter(e, key)}/>
+                                <Input placeholder={"Format"} readOnly value={prop.format}/>
                             </td>
                             <td>
-                                <Input placeholder={"Type"} value={prop.type} name="subType" onChange={(e) => changeParameter(e, key)}/>
+                                <Input placeholder={"Type"} readOnly value={prop.type}/>
                             </td>
                             <td>
                                 <Input id={"tooltipValues"+number+key} autoComplete="off" placeholder={"Value"} value={makeStringOf(prop.value)} name="subValue" onChange={(e) => changeParameter(e, key)}/>
@@ -170,31 +175,8 @@ const AccordionItem = ({
                                     To enter several values, separate them with ","
                                 </UncontrolledTooltip>
                             </td>
-                            <td>
-                                <Button
-                                    className="btn-icon"
-                                    color="danger"
-                                    size="sm"
-                                    type="button"
-                                    onClick={() => modifyArgument(false, key)}>
-                                    <i className="now-ui-icons ui-1_simple-remove"/>
-                                </Button>
-                            </td>
                         </tr>
                     ))}
-                    <tr>
-                        <td colSpan="6" className="text-center">
-                            <Button
-                                className="btn-icon"
-                                color="info"
-                                size="sm"
-                                type="button"
-                                onClick={() => modifyArgument(true)}
-                            >
-                                <i className="now-ui-icons ui-1_simple-add"/>
-                            </Button>
-                        </td>
-                    </tr>
                     </tbody>
               </Table>
           </div>
@@ -208,8 +190,27 @@ AccordionItem.defaultProps = {
   setOpen: () => {},
 };
 
-export default function ContractContentEditor({ items, color, changeParameter, deleteContent, addContent, assumptions }) {
+export default function ContractContentEditor({ items, patterns, color, changeParameter, deleteContent, addContent, assumptions }) {
   const [open, setOpen] = React.useState();
+
+  function searchPatterns(content) {
+    for (let i=0; i<patterns.length; i++) {
+        if (patterns[i].name === content.name) {
+            let patternArgs = patterns[i].arguments
+            console.log("patternArgs")
+            console.log(patternArgs)
+            for (let j=0; j<patternArgs.length; j++) {
+                console.log("J : "+j)
+                console.log(content)
+                patternArgs[j].value = content.arguments[j] === undefined ? "" : content.arguments[j].value
+            }
+            console.log(patternArgs)
+            return patternArgs
+        }
+    }
+    return []
+  }
+
   let callBackAction = (key) => {
       setOpen(key);
   };
@@ -239,7 +240,8 @@ export default function ContractContentEditor({ items, color, changeParameter, d
                                     <Input placeholder={"LTL Value"} value={prop.ltl_value} name="ltl_value" onChange={(e) => changeParameter(e, assumptions, key)}/>
                                 </td>
                                 <td className="text-center">
-                                    {prop.type === "pattern" && (<Input placeholder={"Name"} value={prop.content!==undefined ? prop.content.name : ""} name="contentName" onChange={(e) => changeParameter(e, assumptions, key)}/>)}
+                                    {/*prop.type === "pattern" && (<Input placeholder={"Name"} value={prop.content!==undefined ? prop.content.name : ""} name="contentName" onChange={(e) => changeParameter(e, assumptions, key)}/>)*/}
+                                    {prop.type === "pattern" && (<CustomSelect items={NamesOf(patterns)} defaultValue={prop.content.name} name="contentName" changeSelector={(e, value) => changeParameter(e, assumptions, key, value)}/>)}
                                 </td>
                                 <td className="text-center">
                                     {prop.type === "pattern" && prop.content!==undefined && (
@@ -247,7 +249,7 @@ export default function ContractContentEditor({ items, color, changeParameter, d
                                         className="overflow-hidden relative flex flex-col min-w-0 break-words bg-white w-full mb-5 border-b border-blueGray-200">
                                         <AccordionItem
                                             title="See Arguments"
-                                            content={prop.content.arguments}
+                                            content={searchPatterns(prop.content)}
                                             color={color}
                                             setOpen={() => callBackAction(key)}
                                             changeParameter={(e, subKey) => changeParameter(e, assumptions, key, false, subKey)}
