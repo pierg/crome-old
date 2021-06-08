@@ -65,21 +65,22 @@ function GoalEdit(props) {
                 <Input type="textarea" placeholder="Description" name="description" value={goal.description} onChange={changeParameter}/>
                 <Checkbox label="Day" name="context-day" checked={parseContext(goal.context)[0]} onChange={changeParameter}/>
                 <Checkbox label="Night" name="context-night" checked={parseContext(goal.context)[1]} onChange={changeParameter}/>
-                <h4 className="title title-up">Assumptions</h4>
+                {/* TODO map */}
+                <h4 className="title title-up">{props.infos.contract[0].title}</h4>
                 <ContractContentEditor
                     items={goal.contract.assumptions}
                     patterns={props.patterns}
-                    color="lightBlue"
+                    color={props.infos.contract[0].color}
                     changeParameter={changeParameter}
                     deleteContent={deleteContractContent}
                     addContent={addContractContent}
                     assumptions={true}
                     {...contracteditorinfo}/>
-                <h4 className="title title-up">Guarantees</h4>
+                <h4 className="title title-up">{props.infos.contract[1].title}</h4>
                 <ContractContentEditor
                     items={goal.contract.guarantees}
                     patterns={props.patterns}
-                    color="lightBlue"
+                    color={props.infos.contract[1].color}
                     changeParameter={changeParameter}
                     deleteContent={deleteContractContent}
                     addContent={addContractContent}
