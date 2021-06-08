@@ -8,6 +8,7 @@ import {Modal} from "reactstrap";
 import GoalEdit from "../../components/Crome/GoalEdit";
 import SocketIoGaols from "../../components/Custom/Examples/GetGoals";
 import defaultgoal from "_texts/custom/defaultgoal.js";
+import goaleditinfo from "_texts/custom/goaleditinfo.js";
 import SocketIoPatterns from "../../components/Custom/Examples/GetPatterns";
 
 
@@ -55,7 +56,8 @@ export default class GoalModeling extends React.Component {
                         patterns={this.state.patterns}
                         edit={this.editCurrentGoal}
                         save={this.saveCurrentGoal}
-                        close={() => this.setModalClassic(false)}/>
+                        close={() => this.setModalClassic(false)}
+                        {...goaleditinfo}/>
                 </Modal>
             </>
         );

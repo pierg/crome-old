@@ -125,6 +125,7 @@ Location : src/components/Custom
 
 - AddGoal
 - ChildComponent
+- ContractAccordionItem  
 - ContractContentComponent
 - ContractContentEditor
 - CustomCardMini
@@ -135,8 +136,10 @@ Location : src/components/Custom
 
 Location : src/_texts/custom
 
+- contracteditorinfo
 - customaccordion
 - customheadercards
 - customplayerinfo
 - customsidebar
 - defaultgoal
+- goaleditinfo

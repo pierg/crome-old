@@ -2,15 +2,15 @@ import React from 'react';
 import {Button, ModalFooter} from "reactstrap";
 import Input from "../Elements/Input";
 import Checkbox from "../Elements/Checkbox";
-//import CustomTable from "../NowUI/CustomTable";
 import ContractContentEditor from "../Custom/ContractContentEditor";
+import contracteditorinfo from "_texts/custom/contracteditorinfo.js";
+import makeListOf from "hooks/stringToListConversion.js";
 
 function GoalEdit(props) {
 
     const [goal] = React.useState(JSON.parse(JSON.stringify(props.goal)));
 
     function changeParameter(e, assumptions = false, index = 0, propValue = false, subKey = -1) {
-
         const value = propValue || e.target.value
         const contractTypeIndex = assumptions ? goal.contract.assumptions[index] : goal.contract.guarantees[index]
         switch (e.target.name) {
@@ -56,9 +56,9 @@ function GoalEdit(props) {
                     onClick={props.close}
                     type="button"
                 >
-                    <i className="now-ui-icons ui-1_simple-remove"/>
+                    <i className={props.infos.modal.close}/>
                 </button>
-                <h4 className="title title-up">Edit a Goal</h4>
+                <h4 className="title title-up">{props.infos.title}</h4>
             </div>
             <div className="modal-body justify-content-center">
                 <Input type="text" placeholder="Name" name="name" value={goal.name} onChange={changeParameter}/>
@@ -73,7 +73,8 @@ function GoalEdit(props) {
                     changeParameter={changeParameter}
                     deleteContent={deleteContractContent}
                     addContent={addContractContent}
-                    assumptions={true}/>
+                    assumptions={true}
+                    {...contracteditorinfo}/>
                 <h4 className="title title-up">Guarantees</h4>
                 <ContractContentEditor
                     items={goal.contract.guarantees}
@@ -82,14 +83,15 @@ function GoalEdit(props) {
                     changeParameter={changeParameter}
                     deleteContent={deleteContractContent}
                     addContent={addContractContent}
-                    assumptions={false}/>
+                    assumptions={false}
+                    {...contracteditorinfo}/>
             </div>
             <ModalFooter>
-                <Button color="danger" onClick={props.close}>
-                    Cancel
+                <Button color={props.infos.modal.cancelColor} onClick={props.close}>
+                    {props.infos.modal.cancelText}
                 </Button>
-                <Button color="info" onClick={() => props.save(goal)}>
-                    Save
+                <Button color={props.infos.modal.saveColor} onClick={() => props.save(goal)}>
+                    {props.infos.modal.saveText}
                 </Button>
             </ModalFooter>
         </>
@@ -97,21 +99,3 @@ function GoalEdit(props) {
 }
 
 export default GoalEdit;
-
-function makeListOf(str) {
-    if (Array.isArray(str)) return str
-
-    let list = [""]
-    let index = 0
-    for (let i=0; i<str.length; i++) {
-        if (str[i] === ",") {
-           index++
-           list[index] = ""
-           if (i !== str.length - 1 && str[i+1] === " ") {
-                i++
-           }
-        }
-        else list[index] += str[i]
-    }
-    return index === 0 ? list[0] : list
-}
