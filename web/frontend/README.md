@@ -124,12 +124,12 @@ Location : src/components/Crome
 Location : src/components/Custom
 
 - AddGoal
-- ChildComponent
 - ContractAccordionItem  
 - ContractContentComponent
 - ContractContentEditor
 - CustomCardMini
 - CustomSelect
+- GoalView
 - LoginSession
 
 ### Custom Data
@@ -143,3 +143,4 @@ Location : src/_texts/custom
 - customsidebar
 - defaultgoal
 - goaleditinfo
+- goalmodelinginfo

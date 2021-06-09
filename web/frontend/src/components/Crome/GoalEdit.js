@@ -10,9 +10,9 @@ function GoalEdit(props) {
 
     const [goal] = React.useState(JSON.parse(JSON.stringify(props.goal)));
 
-    function changeParameter(e, assumptions = false, index = 0, propValue = false, subKey = -1) {
+    function changeParameter(e, contractType = false, index = 0, propValue = false, subKey = -1) {
         const value = propValue || e.target.value
-        const contractTypeIndex = assumptions ? goal.contract.assumptions[index] : goal.contract.guarantees[index]
+        const contractTypeIndex = contractType ? goal.contract[contractType][index] : false
         switch (e.target.name) {
             case "name": goal.name = value; break;
             case "description": goal.description = value; break;
@@ -26,13 +26,13 @@ function GoalEdit(props) {
         props.edit(goal)
     }
 
-    function deleteContractContent(key, assumptions) {
-        assumptions ? goal.contract.assumptions.splice(key, 1) : goal.contract.guarantees.splice(key, 1)
+    function deleteContractContent(key, contractType) {
+        goal.contract[contractType].splice(key, 1)
         props.edit(goal)
     }
 
-    function addContractContent(assumptions, key = -1) {
-        assumptions ? goal.contract.assumptions.push({ltl_value: ""}) : goal.contract.guarantees.push({ltl_value: ""})
+    function addContractContent(contractType, key = -1) {
+        goal.contract[contractType].push({ltl_value: ""})
         props.edit(goal)
     }
 
@@ -56,43 +56,34 @@ function GoalEdit(props) {
                     onClick={props.close}
                     type="button"
                 >
-                    <i className={props.infos.modal.close}/>
+                    <i className={props.info.modal.close}/>
                 </button>
-                <h4 className="title title-up">{props.infos.title}</h4>
+                <h4 className="title title-up">{props.info.title}</h4>
             </div>
             <div className="modal-body justify-content-center">
                 <Input type="text" placeholder="Name" name="name" value={goal.name} onChange={changeParameter}/>
                 <Input type="textarea" placeholder="Description" name="description" value={goal.description} onChange={changeParameter}/>
                 <Checkbox label="Day" name="context-day" checked={parseContext(goal.context)[0]} onChange={changeParameter}/>
                 <Checkbox label="Night" name="context-night" checked={parseContext(goal.context)[1]} onChange={changeParameter}/>
-                {/* TODO map */}
-                <h4 className="title title-up">{props.infos.contract[0].title}</h4>
-                <ContractContentEditor
-                    items={goal.contract.assumptions}
-                    patterns={props.patterns}
-                    color={props.infos.contract[0].color}
-                    changeParameter={changeParameter}
-                    deleteContent={deleteContractContent}
-                    addContent={addContractContent}
-                    assumptions={true}
-                    {...contracteditorinfo}/>
-                <h4 className="title title-up">{props.infos.contract[1].title}</h4>
-                <ContractContentEditor
-                    items={goal.contract.guarantees}
-                    patterns={props.patterns}
-                    color={props.infos.contract[1].color}
-                    changeParameter={changeParameter}
-                    deleteContent={deleteContractContent}
-                    addContent={addContractContent}
-                    assumptions={false}
-                    {...contracteditorinfo}/>
+                {props.info.contract.map((prop, key) => (
+                    <><h4 className="title title-up">{prop.title}</h4>
+                    <ContractContentEditor
+                        items={goal.contract[prop.title]}
+                        patterns={props.patterns}
+                        color={prop.color}
+                        changeParameter={changeParameter}
+                        deleteContent={deleteContractContent}
+                        addContent={addContractContent}
+                        contractType={prop.title}
+                        {...contracteditorinfo}/></>
+                ))}
             </div>
             <ModalFooter>
-                <Button color={props.infos.modal.cancelColor} onClick={props.close}>
-                    {props.infos.modal.cancelText}
+                <Button color={props.info.modal.cancelColor} onClick={props.close}>
+                    {props.info.modal.cancelText}
                 </Button>
-                <Button color={props.infos.modal.saveColor} onClick={() => props.save(goal)}>
-                    {props.infos.modal.saveText}
+                <Button color={props.info.modal.saveColor} onClick={() => props.save(goal)}>
+                    {props.info.modal.saveText}
                 </Button>
             </ModalFooter>
         </>

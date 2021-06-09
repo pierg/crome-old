@@ -13,7 +13,7 @@ function NamesOf(obj) {
     return list
 }
 
-export default function ContractContentEditor({ items, patterns, color, changeParameter, deleteContent, addContent, assumptions, infos }) {
+export default function ContractContentEditor({ items, patterns, color, changeParameter, deleteContent, addContent, contractType, infos }) {
   const [open, setOpen] = React.useState();
 
   function searchPatterns(content) {
@@ -54,19 +54,19 @@ export default function ContractContentEditor({ items, patterns, color, changePa
                                         items={infos.types}
                                         defaultValue={prop.pattern === undefined ? infos.types[0] : infos.types[1]}
                                         name="type"
-                                        changeSelector={(e, value) => changeParameter(e, assumptions, key, value)}/>
+                                        changeSelector={(e, value) => changeParameter(e, contractType, key, value)}/>
                                 </td>
                                 <td>
                                     {prop.pattern === undefined && (<Input
                                                                         value={prop.ltl_value}
                                                                         name="ltl_value"
-                                                                        onChange={(e) => changeParameter(e, assumptions, key)}/>)}
+                                                                        onChange={(e) => changeParameter(e, contractType, key)}/>)}
                                     {prop.pattern !== undefined && (<CustomSelect
                                                                         items={NamesOf(patterns)}
                                                                         placeholder={infos.placeholders.pattern}
                                                                         defaultValue={prop.pattern.name}
                                                                         name="contentName"
-                                                                        changeSelector={(e, value) => changeParameter(e, assumptions, key, value)}/>)}
+                                                                        changeSelector={(e, value) => changeParameter(e, contractType, key, value)}/>)}
                                 </td>
                                 <td className="text-center">
                                     {prop.pattern !== undefined && (
@@ -77,7 +77,7 @@ export default function ContractContentEditor({ items, patterns, color, changePa
                                             content={searchPatterns(prop.pattern)}
                                             color={color}
                                             setOpen={() => callBackAction(key)}
-                                            changeParameter={(e, subKey) => changeParameter(e, assumptions, key, false, subKey)}
+                                            changeParameter={(e, subKey) => changeParameter(e, contractType, key, false, subKey)}
                                             number={key}
                                             defaultOpened={key === open}/>
                                     </div>
@@ -88,7 +88,7 @@ export default function ContractContentEditor({ items, patterns, color, changePa
                                                                         placeholder={infos.placeholders.optLTL}
                                                                         value={prop.ltl_value}
                                                                         name="ltl_value"
-                                                                        onChange={(e) => changeParameter(e, assumptions, key)}/>)}
+                                                                        onChange={(e) => changeParameter(e, contractType, key)}/>)}
                                 </td>
                                 <td>
                                     <Button
@@ -96,7 +96,7 @@ export default function ContractContentEditor({ items, patterns, color, changePa
                                         color={infos.deleteButton.color}
                                         size="sm"
                                         type="button"
-                                        onClick={() => deleteContent(key, assumptions)}
+                                        onClick={() => deleteContent(key, contractType)}
                                     >
                                         <i className={infos.deleteButton.icon}/>
                                     </Button>
@@ -110,7 +110,7 @@ export default function ContractContentEditor({ items, patterns, color, changePa
                                     color={infos.addRowButton.color}
                                     size="sm"
                                     type="button"
-                                    onClick={() => addContent(assumptions)}
+                                    onClick={() => addContent(contractType)}
                                 >
                                     <i className={infos.addRowButton.icon}/>
                                 </Button>

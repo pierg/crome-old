@@ -2,18 +2,31 @@ import React from 'react';
 import Checkbox from "../Elements/Checkbox";
 import ContractContentComponent from "./ContractContentComponent";
 
-function ChildComponent(props) {
+function GoalView(props) {
 
     const contract = []
-    const contractNames = [props.assumptions, props.guarantees]
 
-    for (let i = 0; i < contractNames.length; i++) {
+    /*for (let i = 0; i < props.contract.length; i++) {
         contract[i] = []
-        for (let j = 0; j < contractNames[i].length; j++) {
-            contract[i].push(<ContractContentComponent key={i*contractNames[i].length+j}
-                type={contractNames[i][j].type}
-                ltl_value={contractNames[i][j].ltl_value}
-                content={contractNames[i][j].content}/>)
+        console.log(props.contract[i])
+        for (const property in props.contract[i]) {
+            console.log("prop")
+            console.log(property)
+            contract[i].push(<ContractContentComponent key={i*props.contract[i].length+j}
+                type={contract[i][property].type}
+                ltl_value={contract[i][property].ltl_value}
+                content={contract[i][property].content}/>)
+        }
+    }*/
+
+    for (const property in props.contract) {
+        contract[Object.keys(props.contract).indexOf(property)] = []
+        for (let i = 0; i < props.contract[property].length; i++) {
+            contract[Object.keys(props.contract).indexOf(property)]["title"]=property
+            contract[Object.keys(props.contract).indexOf(property)].push(<ContractContentComponent /*key={i*props.contract[i].length+j}*/
+                type={props.contract[property][i].type}
+                ltl_value={props.contract[property][i].ltl_value}
+                content={props.contract[property][i].content}/>)
         }
     }
 
@@ -51,14 +64,11 @@ function ChildComponent(props) {
                     <Checkbox label="Day" readOnly checked={parseContext(props.context)[0]}/>
                     <Checkbox label="Night" readOnly checked={parseContext(props.context)[1]}/>
                 </div>
-                <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
-                    <h2>Assumptions :</h2>
-                    {contract[0]}
-                </div>
-                <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
-                    <h2>Guarantees :</h2>
-                    {contract[1]}
-                </div>
+                    {contract.map((prop, key) => (
+                        <div key={key} className="relative w-full pr-4 max-w-full flex-grow flex-1">
+                            <h2>{prop.title}</h2>
+                        </div>
+                    ))}
             </div>
             <div className="flex flex-wrap mt-16">
                 <div className="relative w-full pr-4 max-w-full flex-grow flex-1"/>
@@ -78,4 +88,4 @@ function ChildComponent(props) {
     </div>);
 }
 
-export default ChildComponent;
+export default GoalView;

@@ -2,7 +2,7 @@ import React from 'react';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../assets/styles/tailwind.css";
 import "../../assets/styles/custom.css";
-import ChildComponent from "../../components/Custom/ChildComponent";
+import GoalView from "../../components/Custom/GoalView";
 import AddGoal from "../../components/Custom/AddGoal";
 import {Modal} from "reactstrap";
 import GoalEdit from "../../components/Crome/GoalEdit";
@@ -27,17 +27,16 @@ export default class GoalModeling extends React.Component {
     render() {
         const children = [];
         for (let i = 0; i < this.state.numChildren; i += 1) {
-            children.push(<ChildComponent key={i} number={i}
-                  title={this.state.goals[i].name}
-                  description={this.state.goals[i].description}
-                  context={this.state.goals[i].context}
-                  assumptions={this.state.goals[i].contract.assumptions}
-                  guarantees={this.state.goals[i].contract.guarantees}
-                  statIconName="fas fa-pen-square"
-                  statSecondIconName="fas fa-trash-alt"
-                  statIconColor="bg-lightBlue-600"
-                  modify={this.setModalClassic}
-                  delete={this.deleteGoal}
+            children.push(<GoalView key={i} number={i}
+                                    title={this.state.goals[i].name}
+                                    description={this.state.goals[i].description}
+                                    context={this.state.goals[i].context}
+                                    contract={this.state.goals[i].contract}
+                                    statIconName={this.props.info.goalComponent.editIconName}
+                                    statSecondIconName={this.props.info.goalComponent.deleteIconName}
+                                    statIconColor={this.props.info.goalComponent.iconColor}
+                                    modify={this.setModalClassic}
+                                    delete={this.deleteGoal}
             />);
         }
         return (

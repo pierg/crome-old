@@ -1,6 +1,11 @@
 const textProps = {
     info: {
         title: "Edit a Goal",
+        goalComponent: {
+            editIconName: "fas fa-pen-square",
+            deleteIconName: "fas fa-trash-alt" ,
+            iconColor: "bg-lightBlue-600",
+        },
         contract: [
             {
                 title: "assumptions",
