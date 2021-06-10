@@ -124,7 +124,7 @@ Location : src/components/Crome
 Location : src/components/Custom
 
 - AddGoal
-- ContractAccordionItem  
+- ContractAccordionEdit  
 - ContractContentComponent
 - ContractContentEditor
 - CustomCardMini

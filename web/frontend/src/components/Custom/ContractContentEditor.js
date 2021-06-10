@@ -1,9 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import CustomSelect from "./CustomSelect";
-import ContractAccordionItem from "./ContractAccordionItem.js";
+import ContractAccordionEdit from "./ContractAccordionEdit.js";
 import {Button, Card, CardBody, Table} from "reactstrap";
 import Input from "../Elements/Input";
+import searchPatterns from "hooks/searchPatterns.js";
 
 function NamesOf(obj) {
     let list = []
@@ -15,19 +16,6 @@ function NamesOf(obj) {
 
 export default function ContractContentEditor({ items, patterns, color, changeParameter, deleteContent, addContent, contractType, infos }) {
   const [open, setOpen] = React.useState();
-
-  function searchPatterns(content) {
-    for (let i=0; i<patterns.length; i++) {
-        if (patterns[i].name === content.name) {
-            let patternArgs = patterns[i].arguments
-            for (let j=0; j<patternArgs.length; j++) {
-                patternArgs[j].value = content.arguments[j] === undefined ? "" : content.arguments[j].value
-            }
-            return patternArgs
-        }
-    }
-    return []
-  }
 
   let callBackAction = (key) => {
       setOpen(key);
@@ -72,9 +60,9 @@ export default function ContractContentEditor({ items, patterns, color, changePa
                                     {prop.pattern !== undefined && (
                                     <div
                                         className="overflow-hidden relative flex flex-col min-w-0 break-words bg-white w-full mb-5 border-b border-blueGray-200">
-                                        <ContractAccordionItem
+                                        <ContractAccordionEdit
                                             title={infos.details}
-                                            content={searchPatterns(prop.pattern)}
+                                            content={searchPatterns(prop.pattern, patterns)}
                                             color={color}
                                             setOpen={() => callBackAction(key)}
                                             changeParameter={(e, subKey) => changeParameter(e, contractType, key, false, subKey)}

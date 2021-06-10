@@ -1,16 +1,17 @@
 import React from "react";
 import classnames from "classnames";
-import {Table} from "reactstrap";
+import {Table, UncontrolledTooltip} from "reactstrap";
+import Input from "../Elements/Input";
 import makeStringOf from "hooks/listToStringConversion.js";
-import searchPatterns from "hooks/searchPatterns.js";
 
-const ContractAccordionItem = ({
+const ContractAccordionEdit = ({
   title,
   color,
   content,
   defaultOpened,
   setOpen,
-  patterns
+  changeParameter,
+  number
 }) => {
   const [collapseOpen, setCollapseOpen] = React.useState(defaultOpened);
   const [rotate, setRotate] = React.useState(defaultOpened);
@@ -118,25 +119,35 @@ const ContractAccordionItem = ({
               <Table responsive>
                     <thead>
                     <tr>
-                        <th className={"title-up"}>LTL Value</th>
-                        <th className={"title-up"}>Pattern</th>
+                        <th className="text-center">Name</th>
+                        <th className="text-center">Format</th>
+                        <th className="text-center">Type</th>
+                        <th className="text-center">Value</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {/*console.log(content)*/}
                     {content.map((prop, key) => (
-
                         <tr key={key}>
-                            {/*(key===0) ? console.log(content) : ""*/}
-                            <td colSpan={prop.pattern !== undefined ? 1 : 2}><p>{prop.ltl_value}</p></td>
-                            {prop.pattern !== undefined && (
-                                <td>
-                                    <p>{prop.pattern.name}</p>
-                                    {searchPatterns(prop.pattern, patterns).map((arg, subKey) => (
-                                        <p key={subKey}>{arg.name+" : "+makeStringOf(arg.value)}</p>
-                                    ))}
-                                </td>
-                            )}
+
+                            <td>
+                                <Input placeholder={"Name"} readOnly value={prop.name}/>
+                            </td>
+                            <td>
+                                <Input placeholder={"Format"} readOnly value={prop.format}/>
+                            </td>
+                            <td>
+                                <Input placeholder={"Type"} readOnly value={prop.type}/>
+                            </td>
+                            <td>
+                                <Input id={"tooltipValues"+number+key} autoComplete="off" placeholder={"Value"} value={makeStringOf(prop.value)} name="subValue" onChange={(e) => changeParameter(e, key)}/>
+                                <UncontrolledTooltip
+                                    delay={100}
+                                    placement="bottom"
+                                    target={"tooltipValues"+number+key}
+                                >
+                                    To enter several values, separate them with ","
+                                </UncontrolledTooltip>
+                            </td>
                         </tr>
                     ))}
                     </tbody>
@@ -147,9 +158,9 @@ const ContractAccordionItem = ({
   );
 };
 
-ContractAccordionItem.defaultProps = {
+ContractAccordionEdit.defaultProps = {
   defaultOpened: false,
   setOpen: () => {},
 };
 
-export default ContractAccordionItem;
+export default ContractAccordionEdit;

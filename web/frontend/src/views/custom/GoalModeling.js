@@ -32,6 +32,7 @@ export default class GoalModeling extends React.Component {
                                     description={this.state.goals[i].description}
                                     context={this.state.goals[i].context}
                                     contract={this.state.goals[i].contract}
+                                    patterns={this.state.patterns}
                                     statIconName={this.props.info.goalComponent.editIconName}
                                     statSecondIconName={this.props.info.goalComponent.deleteIconName}
                                     statIconColor={this.props.info.goalComponent.iconColor}

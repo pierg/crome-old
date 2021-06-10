@@ -66,7 +66,7 @@ function GoalEdit(props) {
                 <Checkbox label="Day" name="context-day" checked={parseContext(goal.context)[0]} onChange={changeParameter}/>
                 <Checkbox label="Night" name="context-night" checked={parseContext(goal.context)[1]} onChange={changeParameter}/>
                 {props.info.contract.map((prop, key) => (
-                    <><h4 className="title title-up">{prop.title}</h4>
+                    <div key={key}><h4 className="title title-up">{prop.title}</h4>
                     <ContractContentEditor
                         items={goal.contract[prop.title]}
                         patterns={props.patterns}
@@ -75,7 +75,7 @@ function GoalEdit(props) {
                         deleteContent={deleteContractContent}
                         addContent={addContractContent}
                         contractType={prop.title}
-                        {...contracteditorinfo}/></>
+                        {...contracteditorinfo}/></div>
                 ))}
             </div>
             <ModalFooter>
