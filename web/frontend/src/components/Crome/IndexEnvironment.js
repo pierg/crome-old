@@ -121,28 +121,6 @@ function GridWorld(canvas, width, height, options) {
       return null;
     }
   }
-  let start =[];
-  let end =[];
-  let startWall =[];
-  let endWall =[];
-  let previousColorWall;
-  let previousStartColor;
-
-  function resetCellWall(x1, y1, x2, y2, color1, color2) {
-    self.setBackgroundColor(x1, y1, color1);
-    if (x2 !== null && y2 !== null) {
-      self.setBackgroundColor(x2, y2, color2);
-    }
-    self.draw();
-    start = [];
-    end = [];
-    startWall = [];
-    endWall = [];
-  }
-
-  function testAlert() {
-    alert("test")
-  }
 
   canvas.addEventListener('click', function(evt) {
     if (!self.onclick)
@@ -151,66 +129,18 @@ function GridWorld(canvas, width, height, options) {
     const node = p2n(evt.offsetX, evt.offsetY);
 
     if (node) {
-      if (node.x % 2 === 1 && node.y % 2 === 1) { // when you click on a cell
-        if (start.length === 0) {// if it's the first click on a cell, push into start table which represent the coordinated of the first click
-          previousStartColor = self.getBackgroundColor(node.x, node.y); // save the color a the clicked cell
-          start.push(node.x);
-          start.push(node.y);
-          if (self.onclick(node, start, end, startWall, endWall, previousStartColor, previousColorWall) === false) {// if the user does anything that is not allowed
-            resetCellWall(start[0], start[1], null, null, "white", null);
-          }
-        }
-        else { // if it's the second click
-          if (startWall.length !== 0) { // if he clicks on a wall then a cell, it's not possible, the program cancel the actions
-            resetCellWall(start[0], start[1], startWall[0], startWall[1], previousStartColor, previousColorWall);
-          }
-          else {
-            end.push(node.x);
-            end.push(node.y);
-
-            if (self.onclick(node, start, end, startWall, endWall, previousStartColor, previousColorWall) === false) { // if the user does anything that is not allowed
-              resetCellWall(start[0], start[1],null, null, previousStartColor, null);
-            }
-            start = [];
-            end = [];
-          }
-        }
+      self.onclick(node);
       }
-      else if ((node.x % 2 === 1 && node.y % 2 === 0) || (node.x % 2 === 0 && node.y % 2 === 1)) {
-        if (startWall.length === 0) { // if it's the first click on a wall, push into start table which represent the coordinated of the first click
-          startWall.push(node.x);
-          startWall.push(node.y);
-          previousColorWall = self.getBackgroundColor(node.x, node.y); // save the color a the clicked wall
-
-          if (self.onclick(node, start, end, startWall, endWall, previousStartColor, previousColorWall) === false) {// if the user does anything that is not allowed
-            if (start.length !== 0) {// if he clicks on a cell then a wall, it's not possible, the program cancel the actions
-              resetCellWall(start[0], start[1], startWall[0], startWall[1], previousStartColor, previousColorWall);
-            }
-            else {
-              resetCellWall(startWall[0], startWall[1],null, null, previousColorWall, null);
-            }
-          }
-        }
-        else {
-          if (start.length !== 0) {// if he clicks on a cell then a wall, it's not possible, the program cancel the actions
-            resetCellWall(start[0], start[1], startWall[0], startWall[1], previousStartColor, previousColorWall);
-          }
-          else {
-            endWall.push(node.x);
-            endWall.push(node.y);
-
-            self.onclick(node, start, end, startWall, endWall, previousStartColor, previousColorWall);
-
-            startWall = [];
-            endWall = [];
-          }
-        }
-      }
-    }
   });
 }
 
 let idTable = [];
+let start =[];
+let end =[];
+let startWall =[];
+let endWall =[];
+let previousColorWall;
+let previousStartColor;
 
 GridWorld.prototype = {
   draw: function() {
@@ -269,8 +199,37 @@ GridWorld.prototype = {
     return this.nodes[(y * (this.width + 1)) + x];
   },
 
+  getStart: function () {
+    return start;
+  },
+  getStartWall: function () {
+    return startWall;
+  },
+  getEnd: function () {
+    return end;
+  },
+  getEndWall: function () {
+    return endWall;
+  },
+
+  getPreviousStartColor :function () {
+    return previousStartColor;
+  },
+
+  getPreviousColorWall :function () {
+    return previousColorWall;
+  },
+
   getBackgroundColor: function(x, y) {
     return this.nodes[(y *  (this.width + 1)) + x].backgroundColor;
+  },
+
+  setPreviousStartColor: function (color) {
+    previousStartColor = color;
+  },
+
+  setPreviousColorWall: function (color) {
+    previousColorWall = color;
   },
 
   setBackgroundColor: function(x, y, color) {
@@ -422,6 +381,22 @@ GridWorld.prototype = {
     answer.push(min);
     answer.push(max);
     return answer;
+  },
+
+  resetCellWall: function(x1, x2, color1, color2) {
+    this.setBackgroundColor(x1[0], x1[1], color1);
+    if (x2 !== null) {
+      this.setBackgroundColor(x2[0], x2[1], color2);
+    }
+    this.draw();
+    this.reset();
+  },
+
+  reset : function () {
+    start = [];
+    end = [];
+    startWall = [];
+    endWall = [];
   },
 
   updateMap : function(map) {
