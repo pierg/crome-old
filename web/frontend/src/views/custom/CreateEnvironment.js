@@ -19,22 +19,12 @@ export default class CreateEnvironment extends React.Component {
         this.clearGridworld = this.clearGridworld.bind(this);
         this.removeId = this.removeId.bind(this);
         this.clearButton = React.createRef();
-        this.world = null;
-        this.launchRobot = this.launchRobot.bind(this);
-        this.robot = this.robot.bind(this);
-        this.robotButton = React.createRef();
-        this.i = 0;
-        this.t = null;
-        this.tab = [[1,5],[1,3],[1,1],[3,1],[3,3],[5,3],[5,1],[7,1],[9,1],[9,3],[7,3],[5,3],[5,5],[3,5],[1,5]];
-        this.x = null;
-        this.y = null;
     }
 
     generateGridworld() {
         this.colorComponent.current.hidden = false;
         this.divId.current.hidden = false;
         this.clearButton.current.hidden = false;
-        this.robotButton.current.hidden = false;
         this.world = this.buildGrid(this.myCanvas.current, this.textInputSize.current.value,this.id.current, this.idBlock.current, this.map);
     }
 
@@ -47,32 +37,6 @@ export default class CreateEnvironment extends React.Component {
             this.idBlock.current.removeChild(this.idBlock.current.lastChild);
         }
         this.buildGrid(this.myCanvas.current, this.textInputSize.current.value,this.id.current, this.idBlock.current, this.map);
-    }
-    launchRobot() {
-        this.t = setInterval(this.robot, 1000);
-    }
-    robot() {
-        const ctx = document.getElementById('canvas').getContext('2d');
-        if (this.i === this.tab.length) {
-            clearInterval(this.t);
-            this.i = 0;
-            return;
-        }
-        else if (this.i > 0) {
-            ctx.fillRect(this.x, this.y, 50, 50);
-            this.world.setBackgroundColor(this.tab[this.i - 1][0],this.tab[this.i - 1][1],this.map[this.tab[this.i - 1][0]][this.tab[this.i - 1][1]][0]);
-        }
-        this.drawRobot();
-        this.i++;
-    }
-
-    drawRobot() {
-        const image = new Image();
-        image.src = img;
-        const ctx = document.getElementById('canvas').getContext('2d');
-        this.x = Math.trunc(this.tab[this.i][0]/ 2 ) * 64 + 24;
-        this.y = Math.trunc(this.tab[this.i][1]/ 2 ) * 64 + 24;
-        ctx.drawImage(image, this.x, this.y, 50, 50);
     }
 
     removeId(idToRemove) {
@@ -336,7 +300,6 @@ export default class CreateEnvironment extends React.Component {
         }
 
         world.clearAttributeTable();
-        this.drawRobot();
         document.getElementById("comment").innerHTML = "";
 
         for (let i = 0; i < size * 2 + 1; i++) {
@@ -357,7 +320,6 @@ export default class CreateEnvironment extends React.Component {
                             <input type="text" ref={this.textInputSize} />
                             <button onClick={this.generateGridworld}>Generate</button>
                             <button ref={this.clearButton} hidden={true} onClick={this.clearGridworld}>Clear</button>
-                            <button ref={this.robotButton} hidden={true} onClick={this.launchRobot}>Robot</button>
                         </div>
                         <canvas ref={this.myCanvas} id='canvas'/>
                         <select ref={this.colorComponent} hidden={true} id="color" name="color">
