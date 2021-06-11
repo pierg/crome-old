@@ -176,6 +176,7 @@ export default class CreateEnvironment extends React.Component {
                     }
                     else if (world.isAttribute(id, color) === true) { // when the user input an id that is already use
                         world.errorMessage(document.getElementById("comment"), start, previousStartColor, "id or color already use");
+                        world.resetCellWall(start, null, previousStartColor, null);
                         return;
                     }
                     else {
@@ -206,6 +207,7 @@ export default class CreateEnvironment extends React.Component {
                             world.resetCellWall(startWall, null, previousColorWall, null);
                             return;
                         }
+                        world.reset();
                     } else {
                         if (color === "red") {
                             world.setBackgroundColor(node.x, node.y, "#fd6969");
