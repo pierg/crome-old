@@ -1,3 +1,11 @@
+.first-child-no-border-top:first-child > td {
+    border-top: 0;
+}
+
+.overflow-x-initial > div:first-child {
+    overflow-x: initial;
+}
+
 .custom-modal-dialog {
     max-width: 75%;
     margin: 6.75rem auto;

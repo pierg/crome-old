@@ -24,7 +24,7 @@ export default function ContractContentEditor({ items, patterns, color, changePa
     <>
       <div>
         <Card className="card-plain">
-            <CardBody>
+            <CardBody className="overflow-x-initial">
                 <Table responsive>
                     <thead>
                     <tr>
@@ -56,10 +56,8 @@ export default function ContractContentEditor({ items, patterns, color, changePa
                                                                         name="contentName"
                                                                         changeSelector={(e, value) => changeParameter(e, contractType, key, value)}/>)}
                                 </td>
-                                <td className="text-center">
+                                <td>
                                     {prop.pattern !== undefined && (
-                                    <div
-                                        className="overflow-hidden relative flex flex-col min-w-0 break-words bg-white w-full mb-5 border-b border-blueGray-200">
                                         <ContractAccordionEdit
                                             title={infos.details}
                                             content={searchPatterns(prop.pattern, patterns)}
@@ -68,15 +66,7 @@ export default function ContractContentEditor({ items, patterns, color, changePa
                                             changeParameter={(e, subKey) => changeParameter(e, contractType, key, false, subKey)}
                                             number={key}
                                             defaultOpened={key === open}/>
-                                    </div>
                                     )}
-                                </td>
-                                <td>
-                                    {prop.pattern !== undefined && (<Input
-                                                                        placeholder={infos.placeholders.optLTL}
-                                                                        value={prop.ltl_value}
-                                                                        name="ltl_value"
-                                                                        onChange={(e) => changeParameter(e, contractType, key)}/>)}
                                 </td>
                                 <td>
                                     <Button
@@ -92,7 +82,7 @@ export default function ContractContentEditor({ items, patterns, color, changePa
                             </tr>
                         ))}
                         <tr>
-                            <td colSpan="6" className="text-center">
+                            <td colSpan="5" className="text-center">
                                 <Button
                                     className="btn-icon"
                                     color={infos.addRowButton.color}
