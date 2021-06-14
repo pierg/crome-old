@@ -64,7 +64,6 @@ export default class CreateEnvironment extends React.Component {
     }
 
     generateGridworld() {
-        this.divId.current.hidden = false;
         this.clearButton.current.hidden = false;
         this.robotButton.current.hidden = false;
         this.world = this.buildGrid(this.myCanvas.current, this.textInputSize.current.value, this.map, this.onAddLocation);
@@ -131,7 +130,6 @@ export default class CreateEnvironment extends React.Component {
     removeId(idToRemove) {
         console.log("remove")
         this.world.removeAttribute(idToRemove);
-        document.getElementById("idToRemove").value = "";
         this.world.updateMap(this.map);
         this.world.reset();
     }
@@ -226,23 +224,7 @@ export default class CreateEnvironment extends React.Component {
             let endWall = world.getEndWall();
             let previousStartColor = world.getPreviousStartColor();
             let previousColorWall = world.getPreviousColorWall();
-            const idToRemove = document.getElementById("idToRemove").value;
 
-            if (idToRemove !== "") {
-                if (world.removeAttribute(idToRemove)) {
-                    document.getElementById("idToRemove").value = "";
-                    document.getElementById("id").value = "";
-                    world.updateMap(map);
-                    world.reset();
-                    return ; // allow to reset start, end, startWall, endWall
-                }
-                else {
-                    document.getElementById("comment").innerHTML = "this id doesn't exist";
-                    document.getElementById("idToRemove").value = "";
-                    world.reset();
-                    return; // allow to reset start, end, startWall, endWall
-                }
-            }
             if (startWall.length !== 0 && start.length !== 0) {
                 world.resetCellWall(start, startWall, previousStartColor, previousColorWall);
                 return;
@@ -389,10 +371,7 @@ export default class CreateEnvironment extends React.Component {
                             <button ref={this.robotButton} hidden={true} onClick={this.launchRobot}>Robot</button>
                         </div>
                         <canvas ref={this.myCanvas} id='canvas'/>
-                        <div ref={this.divId} hidden={true}> choose an id to remove :
-                            <input id={"idToRemove"} type="text"/>
-                            <div className="flex flex-wrap justify-center">{children}</div>
-                        </div>
+                        <div className="flex flex-wrap justify-center">{children}</div>
                         <div id={"comment"}/>
                     </div>
                 </div>
