@@ -18,7 +18,8 @@ const Input = React.forwardRef(
     inputClasses = borders[border] + " " + inputClasses;
     let leftAddon = null;
     let rightAddon = null;
-    let wrapperClasses = "mb-3 pt-0";
+    //let wrapperClasses = "mb-3 pt-0";
+    let wrapperClasses = "mb-2 mt-2 ml-2 pt-0";
     if (leftIcon) {
       inputClasses = inputClasses + "pl-10 ";
       wrapperClasses = "relative flex w-full flex-wrap items-stretch mb-3";

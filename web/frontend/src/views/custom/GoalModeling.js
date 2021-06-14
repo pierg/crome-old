@@ -2,12 +2,14 @@ import React from 'react';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../assets/styles/tailwind.css";
 import "../../assets/styles/custom.css";
-import ChildComponent from "../../components/Custom/ChildComponent";
+import GoalView from "../../components/Custom/GoalView";
 import AddGoal from "../../components/Custom/AddGoal";
 import {Modal} from "reactstrap";
 import GoalEdit from "../../components/Crome/GoalEdit";
 import SocketIoGaols from "../../components/Custom/Examples/GetGoals";
 import defaultgoal from "_texts/custom/defaultgoal.js";
+import goaleditinfo from "_texts/custom/goaleditinfo.js";
+import SocketIoPatterns from "../../components/Custom/Examples/GetPatterns";
 
 
 
@@ -18,28 +20,30 @@ export default class GoalModeling extends React.Component {
         goals: [],
         editedGoals: [],
         currentGoalIndex: 0,
-        numChildren: 0
+        numChildren: 0,
+        patterns: []
     }
 
     render() {
         const children = [];
         for (let i = 0; i < this.state.numChildren; i += 1) {
-            children.push(<ChildComponent key={i} number={i}
-                  title={this.state.goals[i].name}
-                  description={this.state.goals[i].description}
-                  context={this.state.goals[i].context}
-                  assumptions={this.state.goals[i].contract.assumptions}
-                  guarantees={this.state.goals[i].contract.guarantees}
-                  statIconName="fas fa-pen-square"
-                  statSecondIconName="fas fa-trash-alt"
-                  statIconColor="bg-lightBlue-600"
-                  modify={this.setModalClassic}
-                  delete={this.deleteGoal}
+            children.push(<GoalView key={i} number={i}
+                                    title={this.state.goals[i].name}
+                                    description={this.state.goals[i].description}
+                                    context={this.state.goals[i].context}
+                                    contract={this.state.goals[i].contract}
+                                    patterns={this.state.patterns}
+                                    statIconName={this.props.info.goalComponent.editIconName}
+                                    statSecondIconName={this.props.info.goalComponent.deleteIconName}
+                                    statIconColor={this.props.info.goalComponent.iconColor}
+                                    modify={this.setModalClassic}
+                                    delete={this.deleteGoal}
             />);
         }
         return (
             <>
                 <SocketIoGaols goals={this.getGoals} />
+                <SocketIoPatterns patterns={this.getPatterns} />
                 <ParentComponent addChild={this.onAddChild}>
                     {children}
                 </ParentComponent>
@@ -49,9 +53,11 @@ export default class GoalModeling extends React.Component {
                     className={"custom-modal-dialog sm:c-m-w-70 md:c-m-w-60 lg:c-m-w-50 xl:c-m-w-40"}>
                     <GoalEdit
                         goal={this.state.editedGoals[this.state.currentGoalIndex]}
+                        patterns={this.state.patterns}
                         edit={this.editCurrentGoal}
                         save={this.saveCurrentGoal}
-                        close={() => this.setModalClassic(false)}/>
+                        close={() => this.setModalClassic(false)}
+                        {...goaleditinfo}/>
                 </Modal>
             </>
         );
@@ -127,16 +133,20 @@ export default class GoalModeling extends React.Component {
     }
 
     getGoals = (list) => {
+        let tmpArray = this.state.goals
         for (let i=0; i<list.length; i++) {
-            let tmpArray = this.state.goals
             tmpArray.push(JSON.parse(list[i]))
-            this.setState({
-                goals: tmpArray,
-                editedGoals: tmpArray
-            })
         }
         this.setState({
+            goals: tmpArray,
+            editedGoals: tmpArray,
             numChildren: list.length
+        })
+    }
+
+    getPatterns = (list) => {
+        this.setState({
+            patterns: JSON.parse(list)
         })
     }
 }

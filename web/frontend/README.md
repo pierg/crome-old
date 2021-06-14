@@ -111,13 +111,10 @@ Location : src/components/Crome
     - Requires :
         - Canvas to draw the grid, width, height and options of the grid
         - JSON of coordinates, given by CreateEnvironment (to be determined)
-- Goal
-    - Description : Shows goal information
-    - Requires :
-        - JSON {goal, description, context, contract}
 - GoalEdit
     - Description : Displays a modal to edit a Goal component
     - Requires :
+        - List of goals ('get-goals' API)
         - List of available patterns ('get-patterns' API)
     - Produces :
         - JSON {goal, description, context, contract}
@@ -127,15 +124,23 @@ Location : src/components/Crome
 Location : src/components/Custom
 
 - AddGoal
-- ChildComponent
+- ContractEditArguments  
 - ContractContentComponent
+- ContractContentEditor
 - CustomCardMini
+- CustomSelect
+- GoalView
 - LoginSession
 
 ### Custom Data
 
 Location : src/_texts/custom
 
+- contracteditorinfo
+- customaccordion
 - customheadercards
 - customplayerinfo
 - customsidebar
+- defaultgoal
+- goaleditinfo
+- goalmodelinginfo

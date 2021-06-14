@@ -10,7 +10,7 @@
 		}],
 		"guarantees": [{
 			"pattern": {
-				"name": "StrictOrderPatrolling",
+				"name": "StrictOrderedPatrolling",
 				"arguments": [{
 					"name": "locations",
 					"format": "list",

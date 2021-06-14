@@ -1,214 +1,22 @@
 import React from "react";
 import PropTypes from "prop-types";
-import classnames from "classnames";
 import CustomSelect from "./CustomSelect";
-import {Button, Card, CardBody, Table, UncontrolledTooltip} from "reactstrap";
+import ContractEditArguments from "./ContractEditArguments.js";
+import {Button, Card, CardBody, Table} from "reactstrap";
 import Input from "../Elements/Input";
+import searchPatterns from "hooks/searchPatterns.js";
 
-function makeStringOf(list) {
-    if (typeof list === "string") return list
-
-    let str = ""
-    for (let i=0; i<list.length-1; i++) {
-        str += list[i] + ","
+function NamesOf(obj) {
+    let list = []
+    for (let i=0; i<obj.length; i++) {
+        list.push(obj[i].name)
     }
-
-    str += list[list.length-1]
-    return str
+    return list
 }
 
-const AccordionItem = ({
-  title,
-  color,
-  content,
-  defaultOpened,
-  setOpen,
-  changeParameter,
-  addContent,
-  deleteContent
-}) => {
-  const [collapseOpen, setCollapseOpen] = React.useState(defaultOpened);
-  const [rotate, setRotate] = React.useState(defaultOpened);
-  const [collapseStyle, setCollapseStyle] = React.useState(undefined);
-  const [animation, setAnimation] = React.useState(false);
-  const collapseRef = React.useRef(null);
-  const [contentState] = React.useState(content);
-  const openAnimation = () => {
-    setOpen();
-    if (!collapseOpen && collapseStyle === undefined) {
-      setCollapseStyle(0);
-    }
-    setCollapseOpen(true);
-    setTimeout(function () {
-      setCollapseStyle(collapseRef.current.scrollHeight);
-    }, 10);
-    setTimeout(function () {
-      setAnimation(false);
-    }, 310);
-  };
-  const closeAnimation = () => {
-    let timeOutTime = 0;
-    if (collapseOpen && collapseStyle === undefined) {
-      setCollapseStyle(collapseRef.current.scrollHeight);
-      timeOutTime = 10;
-    }
-    setTimeout(function () {
-      setCollapseStyle(0);
-    }, timeOutTime);
-    setTimeout(function () {
-      setAnimation(false);
-      setCollapseOpen(false);
-    }, 310);
-  };
-  const startAnitmation = (e) => {
-    e.preventDefault();
-    if (!animation) {
-      setAnimation(true);
-      setRotate(!rotate);
-      if (collapseOpen) {
-        closeAnimation();
-      } else {
-        openAnimation();
-      }
-    }
-  };
-  React.useEffect(() => {
-    if (!defaultOpened) {
-      setCollapseStyle(collapseRef.current.scrollHeight);
-      setRotate(false);
-      setTimeout(function () {
-        setCollapseStyle(0);
-      }, 10);
-      setTimeout(function () {
-        setAnimation(false);
-        setCollapseOpen(false);
-      }, 310);
-    }
-  }, [defaultOpened]);
-
-  const colors = {
-    blueGray: "text-blueGray-700 hover:text-blueGray-900",
-    red: "text-red-500 hover:text-red-700",
-    orange: "text-orange-500 hover:text-orange-700",
-    amber: "text-amber-500 hover:text-amber-700",
-    emerald: "text-emerald-500 hover:text-emerald-700",
-    teal: "text-teal-500 hover:text-teal-700",
-    lightBlue: "text-lightBlue-500 hover:text-lightBlue-700",
-    indigo: "text-indigo-500 hover:text-indigo-700",
-    purple: "text-purple-500 hover:text-purple-700",
-    pink: "text-pink-500 hover:text-pink-700",
-  };
-
-  const modifyArgument = (add, key) => {
-      add ? addContent() : deleteContent(key)
-      setTimeout(function () {
-        setCollapseStyle(collapseRef.current.scrollHeight)
-      }, 30);
-  }
-
-  return (
-    <>
-      <div className="bg-transparent first:rounded-t px-4 py-3">
-        <a href="#openCollapse" onClick={startAnitmation}>
-          <h5
-            className={
-              colors[color] +
-              " mb-0 font-semibold duration-300 transition-all ease-in-out"
-            }
-          >
-            {title}
-              <i
-                  className={classnames(
-                      "text-sm mr-2 float-right fas fa-chevron-down duration-300 transition-all ease-in-out transform",
-                      {"rotate-180": rotate}
-                  )}
-              />
-          </h5>
-        </a>
-      </div>
-      <div
-        className={classnames("duration-300 transition-all ease-in-out", {
-          block: collapseOpen,
-          hidden: !collapseOpen,
-        })}
-        style={{
-            height: "auto",
-            maxHeight: collapseStyle,
-        }}
-        ref={collapseRef}
-      >
-          <div className="text-blueGray-500 px-4 py-5 flex-auto leading-relaxed">
-              <Table responsive>
-                    <thead>
-                    <tr>
-                        <th className="text-center">Name</th>
-                        <th className="text-center">Format</th>
-                        <th className="text-center">Type</th>
-                        <th className="text-center">Value</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {contentState.map((prop, key) => (
-                        <tr key={key}>
-                            <td>
-                                <Input placeholder={"Name"} value={prop.name} name="subName" onChange={(e) => changeParameter(e, key)}/>
-                            </td>
-                            <td>
-                                <Input placeholder={"Format"} value={prop.format} name="subFormat" onChange={(e) => changeParameter(e, key)}/>
-                            </td>
-                            <td>
-                                <Input placeholder={"Type"} value={prop.type} name="subType" onChange={(e) => changeParameter(e, key)}/>
-                            </td>
-                            <td>
-                                <Input id="tooltipValues" autoComplete="off" placeholder={"Value"} value={makeStringOf(prop.value)} name="subValue" onChange={(e) => changeParameter(e, key)}/>
-                                <UncontrolledTooltip
-                                    delay={100}
-                                    placement="bottom"
-                                    target="tooltipValues"
-                                >
-                                    To enter several values, separate them with ","
-                                </UncontrolledTooltip>
-                            </td>
-                            <td>
-                                <Button
-                                    className="btn-icon"
-                                    color="danger"
-                                    size="sm"
-                                    type="button"
-                                    onClick={() => modifyArgument(false, key)}>
-                                    <i className="now-ui-icons ui-1_simple-remove"/>
-                                </Button>
-                            </td>
-                        </tr>
-                    ))}
-                    <tr>
-                        <td colSpan="6" className="text-center">
-                            <Button
-                                className="btn-icon"
-                                color="info"
-                                size="sm"
-                                type="button"
-                                onClick={() => modifyArgument(true)}
-                            >
-                                <i className="now-ui-icons ui-1_simple-add"/>
-                            </Button>
-                        </td>
-                    </tr>
-                    </tbody>
-              </Table>
-          </div>
-      </div>
-    </>
-  );
-};
-
-AccordionItem.defaultProps = {
-  defaultOpened: false,
-  setOpen: () => {},
-};
-
-export default function ContractContentEditor({ items, color, changeParameter, deleteContent, addContent, assumptions }) {
+export default function ContractContentEditor({ items, patterns, color, changeParameter, deleteContent, addContent, contractType, infos }) {
   const [open, setOpen] = React.useState();
+
   let callBackAction = (key) => {
       setOpen(key);
   };
@@ -216,71 +24,75 @@ export default function ContractContentEditor({ items, color, changeParameter, d
     <>
       <div>
         <Card className="card-plain">
-            <CardBody>
+            <CardBody className="overflow-x-initial">
                 <Table responsive>
                     <thead>
                     <tr>
-                        <th className="text-center">#</th>
-                        <th>Type</th>
-                        <th>LTL Value</th>
-                        <th className="text-center">Name</th>
-                        <th className="text-center">Arguments</th>
+                        {infos.titles.map((prop, key) => (
+                            <th key={key}>{prop}</th>
+                        ))}
                     </tr>
                     </thead>
                     <tbody>
                         {items.map((prop, key) => (
                             <tr key={key}>
-                                <td className="text-center">{key+1}</td>
+                                <td>{key+1}</td>
                                 <td>
-                                    <CustomSelect items={["LTL", "pattern"]} defaultValue={prop.type} name="type" changeSelector={(e, value) => changeParameter(e, assumptions, key, value)}/>
+                                    <CustomSelect
+                                        items={infos.types}
+                                        defaultValue={prop.pattern === undefined ? infos.types[0] : infos.types[1]}
+                                        name="type"
+                                        changeSelector={(e, value) => changeParameter(e, contractType, key, value)}/>
                                 </td>
                                 <td>
-                                    <Input placeholder={"LTL Value"} value={prop.ltl_value} name="ltl_value" onChange={(e) => changeParameter(e, assumptions, key)}/>
+                                    {prop.pattern === undefined && (<Input
+                                                                        value={prop.ltl_value}
+                                                                        name="ltl_value"
+                                                                        placeholder={infos.placeholders.ltl}
+                                                                        onChange={(e) => changeParameter(e, contractType, key)}/>)}
+                                    {prop.pattern !== undefined && (<CustomSelect
+                                                                        items={NamesOf(patterns)}
+                                                                        placeholder={infos.placeholders.pattern}
+                                                                        defaultValue={prop.pattern.name}
+                                                                        name="contentName"
+                                                                        changeSelector={(e, value) => changeParameter(e, contractType, key, value)}/>)}
                                 </td>
-                                <td className="text-center">
-                                    {prop.type === "pattern" && (<Input placeholder={"Name"} value={prop.content!==undefined ? prop.content.name : ""} name="contentName" onChange={(e) => changeParameter(e, assumptions, key)}/>)}
-                                </td>
-                                <td className="text-center">
-                                    {prop.type === "pattern" && prop.content!==undefined && (
-                                    <div
-                                        className="overflow-hidden relative flex flex-col min-w-0 break-words bg-white w-full mb-5 border-b border-blueGray-200">
-                                        <AccordionItem
-                                            title="See Arguments"
-                                            content={prop.content.arguments}
+                                <td>
+                                    {prop.pattern !== undefined && (
+                                        <ContractEditArguments
+                                            title={infos.details}
+                                            content={searchPatterns(prop.pattern, patterns)}
                                             color={color}
                                             setOpen={() => callBackAction(key)}
-                                            changeParameter={(e, subKey) => changeParameter(e, assumptions, key, false, subKey)}
-                                            addContent={() => addContent(assumptions, key)}
-                                            deleteContent={(subKey) => deleteContent(key, assumptions, subKey)}
-                                            defaultOpened={
-                                                key === open || (Array.isArray(open) && open.includes(key))
-                                            }/>
-                                    </div>
+                                            changeParameter={(e, subKey) => changeParameter(e, contractType, key, false, subKey)}
+                                            number={key}
+                                            infos={infos}
+                                            defaultOpened={key === open}/>
                                     )}
                                 </td>
                                 <td>
                                     <Button
                                         className="btn-icon"
-                                        color="danger"
+                                        color={infos.deleteButton.color}
                                         size="sm"
                                         type="button"
-                                        onClick={() => deleteContent(key, assumptions)}
+                                        onClick={() => deleteContent(key, contractType)}
                                     >
-                                        <i className="now-ui-icons ui-1_simple-remove"/>
+                                        <i className={infos.deleteButton.icon}/>
                                     </Button>
                                 </td>
                             </tr>
                         ))}
                         <tr>
-                            <td colSpan="6" className="text-center">
+                            <td colSpan="5" className="text-center">
                                 <Button
                                     className="btn-icon"
-                                    color="info"
+                                    color={infos.addRowButton.color}
                                     size="sm"
                                     type="button"
-                                    onClick={() => addContent(assumptions)}
+                                    onClick={() => addContent(contractType)}
                                 >
-                                    <i className="now-ui-icons ui-1_simple-add"/>
+                                    <i className={infos.addRowButton.icon}/>
                                 </Button>
                             </td>
                         </tr>

@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 export default function Checkbox({ label, ...rest }) {
   return (
     <>
-      <label className="inline-flex items-center cursor-pointer">
+      <label className="inline-flex mr-4 items-center cursor-pointer">
         <input
           {...rest}
           type="checkbox"

@@ -18,6 +18,7 @@ export default function CustomSelect({
   changeSelector,
   assumptions,
   key,
+  name,
   ...rest
 }) {
   const [menuClasses, setMenuClasses] = React.useState("");
@@ -107,7 +108,7 @@ export default function CustomSelect({
                   <a
                     href="#pablo"
                     key={key}
-                    name="type"
+                    name={name}
                     className={
                       (prop === defaultValue ? "bg-lightBlue-100 " : "") +
                       "text-sm px-3 py-2 font-normal block w-full whitespace-nowrap transition-all duration-200 hover:bg-blueGray-100 rounded"

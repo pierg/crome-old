@@ -1,6 +1,5 @@
 import React, {useEffect, useCallback, useState} from 'react'
 import {useSocket} from "../../../contexts/SocketProvider";
-import Button from "../../Elements/Button";
 
 function SocketIoPatterns(props) {
 
@@ -10,7 +9,7 @@ function SocketIoPatterns(props) {
 
 
     const setMessageFunction = useCallback((msg) => {
-        console.log(msg)
+        //console.log(msg)
         setMessage(msg.robotic);
     }, [setMessage])
 
@@ -18,22 +17,18 @@ function SocketIoPatterns(props) {
     useEffect(() => {
         if (socket == null) return
 
+        socket.emit('get-patterns')
         socket.on('receive-patterns', setMessageFunction)
 
         return () => socket.off('receive-patterns')
     }, [socket, setMessageFunction])
 
-    function sendMessage() {
-        socket.emit('get-patterns')
-    }
+    useEffect(() => {
+        if (props.patterns !== undefined) props.patterns(message)
+    }, [message])  // eslint-disable-line react-hooks/exhaustive-deps
 
 
-    return (
-        <>
-            <Button onClick={sendMessage}>Get Patterns</Button>
-            <h1>Response:</h1>
-            <p>{message}</p>
-        </>);
+    return (<></>);
 }
 
 export default SocketIoPatterns;
