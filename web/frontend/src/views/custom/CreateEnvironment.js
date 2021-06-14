@@ -3,7 +3,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../components/Crome/IndexEnvironment";
 import GridWorld from "../../components/Crome/IndexEnvironment";
 import img from "./robot1.png";
-import * as json from "./environment_alt.json";
+//import * as json from "./environment_alt.json";
 
 export default class CreateEnvironment extends React.Component {
 
@@ -12,7 +12,7 @@ export default class CreateEnvironment extends React.Component {
         this.myCanvas = React.createRef();
         this.textInputSize = React.createRef();
         this.generateGridworld = this.generateGridworld.bind(this);
-        this.generateGridworldWithJSON = this.generateGridworldWithJSON.bind(this);
+        //this.generateGridworldWithJSON = this.generateGridworldWithJSON.bind(this);
         this.idBlock = React.createRef();
         this.divId = React.createRef();
         this.map = [];
@@ -37,7 +37,7 @@ export default class CreateEnvironment extends React.Component {
         this.world = this.buildGrid(this.myCanvas.current, this.textInputSize.current.value, this.idBlock.current, this.map);
     }
 
-    generateGridworldWithJSON() {
+    /*generateGridworldWithJSON() {
         this.divId.current.hidden = false;
         this.clearButton.current.hidden = false;
         this.robotButton.current.hidden = false;
@@ -59,7 +59,7 @@ export default class CreateEnvironment extends React.Component {
             this.map[x][y] = ["black", true, null];
         }
         this.world = this.buildGrid(this.myCanvas.current, (json.size[0].width / 2), this.idBlock.current, this.map);
-    }
+    }*/
 
     clearGridworld() {
         this.map = [];
