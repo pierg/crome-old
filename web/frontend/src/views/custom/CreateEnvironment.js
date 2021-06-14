@@ -2,10 +2,43 @@ import React from 'react';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../components/Crome/IndexEnvironment";
 import GridWorld from "../../components/Crome/IndexEnvironment";
+import Location from "../../components/Custom/Location";
 import img from "./robot1.png";
 import * as json from "./environment_example.json";
 
 export default class CreateEnvironment extends React.Component {
+
+    state = {
+        locations: [],
+        numChildren: 0
+    }
+
+    onAddLocation = (id) => {
+        let tmpLocations = this.state.locations
+        if (!tmpLocations.includes(id)) {
+            tmpLocations.push(id)
+
+            this.setState({
+                locations: tmpLocations,
+                numChildren: this.state.numChildren + 1
+            })
+        }
+
+
+    }
+
+    deleteLocation = (key) => {
+        console.log(this.state.locations)
+        let tmpLocations = this.state.locations
+        tmpLocations.splice(tmpLocations.indexOf(key), 1)
+
+        this.setState({
+            locations: tmpLocations,
+            numChildren: this.state.numChildren - 1
+        })
+
+        this.removeId(key)
+    }
 
     constructor(props) {
         super(props);
@@ -13,7 +46,7 @@ export default class CreateEnvironment extends React.Component {
         this.textInputSize = React.createRef();
         this.generateGridworld = this.generateGridworld.bind(this);
         this.generateGridworldWithJSON = this.generateGridworldWithJSON.bind(this);
-        this.idBlock = React.createRef();
+        this.id = React.createRef();
         this.divId = React.createRef();
         this.map = [];
         this.clearGridworld = this.clearGridworld.bind(this);
@@ -34,7 +67,7 @@ export default class CreateEnvironment extends React.Component {
         this.divId.current.hidden = false;
         this.clearButton.current.hidden = false;
         this.robotButton.current.hidden = false;
-        this.world = this.buildGrid(this.myCanvas.current, this.textInputSize.current.value, this.idBlock.current, this.map);
+        this.world = this.buildGrid(this.myCanvas.current, this.textInputSize.current.value, this.map, this.onAddLocation);
     }
 
     generateGridworldWithJSON() {
@@ -58,18 +91,14 @@ export default class CreateEnvironment extends React.Component {
             y = ((walls[i].left.y * 2 - 1) + (walls[i].right.y * 2 - 1)) / 2 ;
             this.map[x][y] = ["black", true, null];
         }
-        this.world = this.buildGrid(this.myCanvas.current, (json.size[0].width / 2), this.idBlock.current, this.map);
+        this.world = this.buildGrid(this.myCanvas.current, (json.size[0].width / 2), this.map, this.onAddLocation);
     }
 
     clearGridworld() {
         this.map = [];
         const context = this.myCanvas.current.getContext('2d');
         context.clearRect(0, 0, this.myCanvas.current.width, this.myCanvas.current.height);
-        this.idBlock.current.innerHTML = "";
-        while (this.idBlock.current.firstChild) {
-            this.idBlock.current.removeChild(this.idBlock.current.lastChild);
-        }
-        this.buildGrid(this.myCanvas.current, this.textInputSize.current.value, this.idBlock.current, this.map);
+        this.buildGrid(this.myCanvas.current, this.textInputSize.current.value, this.map, this.onAddLocation);
     }
 
     launchRobot() {
@@ -100,9 +129,8 @@ export default class CreateEnvironment extends React.Component {
     }
 
     removeId(idToRemove) {
-        console.log("test");
+        console.log("remove")
         this.world.removeAttribute(idToRemove);
-        this.idBlock.current.removeChild(document.getElementById(idToRemove));
         document.getElementById("idToRemove").value = "";
         this.world.updateMap(this.map);
         this.world.reset();
@@ -128,7 +156,7 @@ export default class CreateEnvironment extends React.Component {
         return border;
     }
 
-    buildGrid(canvas, size, idBlock, map) {
+    buildGrid(canvas, size, map, addLocation) {
         if (map.length === 0) {
             this.buildMap(map, size);
         }
@@ -202,7 +230,6 @@ export default class CreateEnvironment extends React.Component {
 
             if (idToRemove !== "") {
                 if (world.removeAttribute(idToRemove)) {
-                    idBlock.removeChild(document.getElementById(idToRemove));
                     document.getElementById("idToRemove").value = "";
                     document.getElementById("id").value = "";
                     world.updateMap(map);
@@ -236,10 +263,10 @@ export default class CreateEnvironment extends React.Component {
                     }
                     const answer = world.askToColor(minX, maxX, maxY, minY);
                     if (answer !== false) {
-                        const color = answer[0];
+                        //const color = answer[0];
                         const  id = answer[1];
                         if (document.getElementById(id) === null || document.getElementById(id).innerHTML === "") {
-                            idBlock.innerHTML += "<div id=" + id + ">Color : " + color + " , id :" + id + "<button onClick = {this.removeId( " + id + ")}>Remove</button></div>";
+                            addLocation(id)
                         }
                     }
 
@@ -344,6 +371,12 @@ export default class CreateEnvironment extends React.Component {
     }
 
     render() {
+        const children = [];
+        for (let i = 0; i < this.state.numChildren; i += 1) {
+            children.push(<Location key={i}
+                                    number={i}
+                                    onClick={() => this.deleteLocation(this.state.locations[i])}/>);
+        }
         return (
             <>
                 <div>
@@ -358,9 +391,9 @@ export default class CreateEnvironment extends React.Component {
                         <canvas ref={this.myCanvas} id='canvas'/>
                         <div ref={this.divId} hidden={true}> choose an id to remove :
                             <input id={"idToRemove"} type="text"/>
+                            <div className="flex flex-wrap justify-center">{children}</div>
                         </div>
                         <div id={"comment"}/>
-                        <div ref={this.idBlock}/>
                     </div>
                 </div>
             </>
