@@ -225,12 +225,6 @@ export default class CreateEnvironment extends React.Component {
                 if (start.length !== 0) { // when it's the second click, draw a square
                     end.push(node.x);
                     end.push(node.y);
-                    /*else if (world.isAttribute(id, color) === true) { // when the user input an id that is already use
-                        world.errorMessage(document.getElementById("comment"), start, previousStartColor, "id or color already use");
-                        world.resetCellWall(start, null, previousStartColor, null);
-                        return;
-                    }*/
-
                     let minX = world.min(start[0], end[0])[0]; // these variables allow to create only one loop for
                     let maxX = world.min(start[0], end[0])[1];
                     let maxY = world.min(start[1], end[1])[1];
