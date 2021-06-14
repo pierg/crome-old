@@ -3,6 +3,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../components/Crome/IndexEnvironment";
 import GridWorld from "../../components/Crome/IndexEnvironment";
 import Location from "../../components/Custom/Location";
+import {Card, CardBody, Table} from "reactstrap";
 import img from "./robot1.png";
 import * as json from "./environment_example.json";
 
@@ -356,13 +357,13 @@ export default class CreateEnvironment extends React.Component {
         const children = [];
         for (let i = 0; i < this.state.numChildren; i += 1) {
             children.push(<Location key={i}
-                                    number={i}
+                                    name={this.state.locations[i]}
                                     onClick={() => this.deleteLocation(this.state.locations[i])}/>);
         }
         return (
             <>
                 <div>
-                    <div id ="body" onLoad={this.generateGridworld}>
+                    <div id="body" className="flex" onLoad={this.generateGridworld}>
                         <div> choose the size of the grid :
                             <input type="text" ref={this.textInputSize} />
                             <button onClick={this.generateGridworld}>Generate</button>
@@ -371,7 +372,19 @@ export default class CreateEnvironment extends React.Component {
                             <button ref={this.robotButton} hidden={true} onClick={this.launchRobot}>Robot</button>
                         </div>
                         <canvas ref={this.myCanvas} id='canvas'/>
-                        <div className="flex flex-wrap justify-center">{children}</div>
+                        <div className="container mx-auto px-4">
+                            <div className={"w-full lg:w-6/12 xl:w-5/12 mt-8 ml-4 mr-4 px-4 relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg opacity-1 transform duration-300 transition-all ease-in-out"}>
+                                <Card className="card-plain">
+                                    <CardBody className="overflow-x-initial">
+                                        <Table responsive>
+                                            <tbody>
+                                            {children}
+                                            </tbody>
+                                        </Table>
+                                    </CardBody>
+                                </Card>
+                            </div>
+                        </div>
                         <div id={"comment"}/>
                     </div>
                 </div>
