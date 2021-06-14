@@ -135,6 +135,8 @@ function GridWorld(canvas, width, height, options) {
 }
 
 let idTable = [];
+let colorTable = ["blue","red","green","yellow","purple","pink","orange","grey", "brown", "gold"];
+let isColorTable = [false, false, false, false, false, false, false, false, false, false];
 let start =[];
 let end =[];
 let startWall =[];
@@ -245,6 +247,65 @@ GridWorld.prototype = {
     }
   },
 
+  chooseBackgroundColor: function () {
+    for (let i = 0; i < isColorTable.length; i++) {
+      if (isColorTable[i] === false) {
+        isColorTable[i] = true;
+        return colorTable[i];
+      }
+    }
+    return false;
+  },
+
+  resetInColorTable() {
+    for (let i = 0; i < isColorTable.length; i++) {
+      isColorTable[i] = false;
+    }
+  },
+
+  getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  },
+
+  askToColor(minX, maxX, maxY, minY) {
+    let id = window.prompt("Enter an id");
+    if (id === null) {
+      for (let i = minX; i < maxX + 1; i += 1) {
+        for (let j = minY; j < maxY + 1; j += 1) {
+          this.setBackgroundColor(i, j, "white");
+        }
+      }
+      this.reset();
+      return false;
+    }
+    else {
+      let color;
+      let index = this.isAttribute(id);
+      if (index !== false) {
+        color = idTable[index][1];
+      }
+      else {
+        color = this.chooseBackgroundColor();
+        if (color === false) {
+          color = this.getRandomColor();
+        }
+      }
+      for (let i = minX; i < maxX + 1; i += 1) {
+        for (let j = minY; j < maxY + 1; j += 1) {
+          this.checkNeighbour(i, j, color); //if the cell has already a color, color his neighbors in white except if there is a wall
+          this.setColorIdBlocked(i, j, color, true, id);
+        }
+      }
+      this.reset();
+      return [color, id];
+    }
+  },
+
   isBlocked: function(x, y) {
     return this.nodes[(y *  (this.width + 1)) + x].blocked;
   },
@@ -285,10 +346,10 @@ GridWorld.prototype = {
     return false;
   },
 
-  isAttribute: function(value, color) { // checks if an id is in the array : idTable
+  isAttribute: function(value) { // checks if an id is in the array : idTable
        for (let i = 0; i < idTable.length ; i++) {
-          if ((idTable[i][0] === value && idTable[i][1] !== color) || (idTable[i][0] !== value && idTable[i][1] === color)) {
-            return true;
+          if (idTable[i][0] === value) {
+            return i;
           }
        }
        return false;

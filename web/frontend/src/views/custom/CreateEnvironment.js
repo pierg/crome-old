@@ -11,10 +11,8 @@ export default class CreateEnvironment extends React.Component {
         super(props);
         this.myCanvas = React.createRef();
         this.textInputSize = React.createRef();
-        this.colorComponent = React.createRef();
         this.generateGridworld = this.generateGridworld.bind(this);
         this.generateGridworldWithJSON = this.generateGridworldWithJSON.bind(this);
-        this.id = React.createRef();
         this.idBlock = React.createRef();
         this.divId = React.createRef();
         this.map = [];
@@ -33,15 +31,13 @@ export default class CreateEnvironment extends React.Component {
     }
 
     generateGridworld() {
-        this.colorComponent.current.hidden = false;
         this.divId.current.hidden = false;
         this.clearButton.current.hidden = false;
         this.robotButton.current.hidden = false;
-        this.world = this.buildGrid(this.myCanvas.current, this.textInputSize.current.value,this.id.current, this.idBlock.current, this.map);
+        this.world = this.buildGrid(this.myCanvas.current, this.textInputSize.current.value, this.idBlock.current, this.map);
     }
 
     generateGridworldWithJSON() {
-        this.colorComponent.current.hidden = false;
         this.divId.current.hidden = false;
         this.clearButton.current.hidden = false;
         this.robotButton.current.hidden = false;
@@ -62,7 +58,7 @@ export default class CreateEnvironment extends React.Component {
             y = ((walls[i].left.y * 2 - 1) + (walls[i].right.y * 2 - 1)) / 2 ;
             this.map[x][y] = ["black", true, null];
         }
-        this.world = this.buildGrid(this.myCanvas.current, (json.size[0].width / 2),this.id.current, this.idBlock.current, this.map);
+        this.world = this.buildGrid(this.myCanvas.current, (json.size[0].width / 2), this.idBlock.current, this.map);
     }
 
     clearGridworld() {
@@ -73,7 +69,7 @@ export default class CreateEnvironment extends React.Component {
         while (this.idBlock.current.firstChild) {
             this.idBlock.current.removeChild(this.idBlock.current.lastChild);
         }
-        this.buildGrid(this.myCanvas.current, this.textInputSize.current.value,this.id.current, this.idBlock.current, this.map);
+        this.buildGrid(this.myCanvas.current, this.textInputSize.current.value, this.idBlock.current, this.map);
     }
 
     launchRobot() {
@@ -108,7 +104,6 @@ export default class CreateEnvironment extends React.Component {
         this.world.removeAttribute(idToRemove);
         this.idBlock.current.removeChild(document.getElementById(idToRemove));
         document.getElementById("idToRemove").value = "";
-        document.getElementById("id").value = "";
         this.world.updateMap(this.map);
         this.world.reset();
     }
@@ -133,7 +128,7 @@ export default class CreateEnvironment extends React.Component {
         return border;
     }
 
-    buildGrid(canvas, size, idInput, idBlock, map) {
+    buildGrid(canvas, size, idBlock, map) {
         if (map.length === 0) {
             this.buildMap(map, size);
         }
@@ -204,10 +199,6 @@ export default class CreateEnvironment extends React.Component {
             let previousStartColor = world.getPreviousStartColor();
             let previousColorWall = world.getPreviousColorWall();
             const idToRemove = document.getElementById("idToRemove").value;
-            const id = idInput.value;
-            const selectColor = document.getElementById("color");
-            const choiceColor = selectColor.selectedIndex;  // Take the index of the chosen <option>
-            const color = selectColor.options[choiceColor].text;
 
             if (idToRemove !== "") {
                 if (world.removeAttribute(idToRemove)) {
@@ -234,55 +225,36 @@ export default class CreateEnvironment extends React.Component {
                 if (start.length !== 0) { // when it's the second click, draw a square
                     end.push(node.x);
                     end.push(node.y);
-                    if (id === "") { // when the user didn't input an id
-                        world.errorMessage(document.getElementById("comment"), start, previousStartColor, "you need to put an id");
-                        world.resetCellWall(start, null, previousStartColor, null);
-                        return;
-                    }
-                    else if (world.isAttribute(id, color) === true) { // when the user input an id that is already use
+                    /*else if (world.isAttribute(id, color) === true) { // when the user input an id that is already use
                         world.errorMessage(document.getElementById("comment"), start, previousStartColor, "id or color already use");
                         world.resetCellWall(start, null, previousStartColor, null);
                         return;
-                    }
-                    else {
+                    }*/
 
-                        let minX = world.min(start[0], end[0])[0]; // these variables allow to create only one loop for
-                        let maxX = world.min(start[0], end[0])[1];
-                        let maxY = world.min(start[1], end[1])[1];
-                        let minY = world.min(start[1], end[1])[0];
-                        for (let i = minX; i < maxX + 1; i += 1) {
-                            for (let j = minY; j < maxY + 1; j += 1) {
-                                world.checkNeighbour(i, j, color); //if the cell has already a color, color his neighbors in white except if there is a wall
-                                world.setColorIdBlocked(i, j, color, true, id);
-                            }
+                    let minX = world.min(start[0], end[0])[0]; // these variables allow to create only one loop for
+                    let maxX = world.min(start[0], end[0])[1];
+                    let maxY = world.min(start[1], end[1])[1];
+                    let minY = world.min(start[1], end[1])[0];
+                    for (let i = minX; i < maxX + 1; i += 1) {
+                        for (let j = minY; j < maxY + 1; j += 1) {
+                            world.setBackgroundColor(i, j, "#9b9b9b");
                         }
-                        world.reset();
+                    }
+                    const answer = world.askToColor(minX, maxX, maxY, minY);
+                    if (answer !== false) {
+                        const color = answer[0];
+                        const  id = answer[1];
                         if (document.getElementById(id) === null || document.getElementById(id).innerHTML === "") {
                             idBlock.innerHTML += "<div id=" + id + ">Color : " + color + " , id :" + id + "<button onClick = {this.removeId( " + id + ")}>Remove</button></div>";
                         }
                     }
+
                 } else { // when it's the first click, color the cell with a "light" color so the user know that he needs to click on a other cell
                     start.push(node.x);
                     start.push(node.y);
                     world.setPreviousStartColor(world.getBackgroundColor(start[0], start[1]));
+                    world.setBackgroundColor(node.x, node.y, "lightgray");
 
-                    if (id === "") { // when the user didn't input an id
-                        document.getElementById("comment").innerHTML = "you need to put an id";
-                        if (startWall.length !== 0) {
-                            world.resetCellWall(startWall, null, previousColorWall, null);
-                            return;
-                        }
-                        world.reset();
-                    } else {
-                        if (color === "red") {
-                            world.setBackgroundColor(node.x, node.y, "#fd6969");
-                        } else if (color === "purple") {
-                            world.setBackgroundColor(node.x, node.y, "#e785ff");
-                        } else {
-                            const lightColor = "light" + color;
-                            world.setBackgroundColor(node.x, node.y, lightColor);
-                        }
-                    }
                 }
             } else { // when you click on wall cell
                 if (startWall.length !== 0) {// when it's the second click
@@ -365,6 +337,7 @@ export default class CreateEnvironment extends React.Component {
         }
 
         world.clearAttributeTable();
+        world.resetInColorTable();
         document.getElementById("comment").innerHTML = "";
 
         for (let i = 0; i < size * 2 + 1; i++) {
@@ -389,16 +362,6 @@ export default class CreateEnvironment extends React.Component {
                             <button ref={this.robotButton} hidden={true} onClick={this.launchRobot}>Robot</button>
                         </div>
                         <canvas ref={this.myCanvas} id='canvas'/>
-                        <select ref={this.colorComponent} hidden={true} id="color" name="color">
-                            <option>blue</option>
-                            <option>red</option>
-                            <option>green</option>
-                            <option>pink</option>
-                            <option>purple</option>
-                            <option>yellow</option>
-                            <option>grey</option>
-                        </select>
-                        <input id={"id"} ref={this.id}/>
                         <div ref={this.divId} hidden={true}> choose an id to remove :
                             <input id={"idToRemove"} type="text"/>
                         </div>
