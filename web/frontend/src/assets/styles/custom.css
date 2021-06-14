@@ -15,6 +15,10 @@
     width: min-content;
 }
 
+.grid-template-2 {
+    grid-template-columns: 25% 75%;
+}
+
 @media (min-width: 640px) {
     .sm\:c-m-w-70 {
         max-width: 500px;
