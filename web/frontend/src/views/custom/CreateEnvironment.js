@@ -2,7 +2,6 @@ import React from 'react';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../components/Crome/IndexEnvironment";
 import GridWorld from "../../components/Crome/IndexEnvironment";
-import img from "./robot1.png";
 
 export default class CreateEnvironment extends React.Component {
 
