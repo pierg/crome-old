@@ -11,6 +11,10 @@
     margin: 6.75rem auto;
 }
 
+.min-content {
+    width: min-content;
+}
+
 @media (min-width: 640px) {
     .sm\:c-m-w-70 {
         max-width: 500px;

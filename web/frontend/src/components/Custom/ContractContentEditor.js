@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import CustomSelect from "./CustomSelect";
-import ContractAccordionEdit from "./ContractAccordionEdit.js";
+import ContractEditArguments from "./ContractEditArguments.js";
 import {Button, Card, CardBody, Table} from "reactstrap";
 import Input from "../Elements/Input";
 import searchPatterns from "hooks/searchPatterns.js";
@@ -48,6 +48,7 @@ export default function ContractContentEditor({ items, patterns, color, changePa
                                     {prop.pattern === undefined && (<Input
                                                                         value={prop.ltl_value}
                                                                         name="ltl_value"
+                                                                        placeholder={infos.placeholders.ltl}
                                                                         onChange={(e) => changeParameter(e, contractType, key)}/>)}
                                     {prop.pattern !== undefined && (<CustomSelect
                                                                         items={NamesOf(patterns)}
@@ -58,13 +59,14 @@ export default function ContractContentEditor({ items, patterns, color, changePa
                                 </td>
                                 <td>
                                     {prop.pattern !== undefined && (
-                                        <ContractAccordionEdit
+                                        <ContractEditArguments
                                             title={infos.details}
                                             content={searchPatterns(prop.pattern, patterns)}
                                             color={color}
                                             setOpen={() => callBackAction(key)}
                                             changeParameter={(e, subKey) => changeParameter(e, contractType, key, false, subKey)}
                                             number={key}
+                                            infos={infos}
                                             defaultOpened={key === open}/>
                                     )}
                                 </td>

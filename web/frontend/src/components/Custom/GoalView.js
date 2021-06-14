@@ -31,7 +31,7 @@ function GoalView(props) {
                                 <span className="font-bold text-xl uppercase text-blueGray-700">{props.title}</span>
                             </div>
                         </div>
-                        <div className="flex flex-col flex-wrap">
+                        <div className="flex flex-col flex-wrap w-full">
                             <div className="relative w-full pr-4 mb-4 max-w-full flex-grow flex-1">
                                 <span className="text-md text-blueGray-700">
                                     {props.description}
@@ -58,7 +58,7 @@ function GoalView(props) {
                             ))}
                         </div>
                     </div>
-                    <div className="flex flex-wrap">
+                    <div className="flex flex-wrap min-content">
                         <div className="relative pl-4 flex justify-end flex-initial">
                             <div
                                 onClick={() => props.modify(true, props.number)}

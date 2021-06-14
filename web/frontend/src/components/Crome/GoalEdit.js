@@ -19,7 +19,7 @@ function GoalEdit(props) {
             case "context-day": case "context-night" : goal.context = writeContext(e.target.name); break;
             case "ltl_value": contractTypeIndex.ltl_value = value; break;
             case "contentName": contractTypeIndex.pattern.name = value; break;
-            case "type": if(value === "Pattern") { contractTypeIndex.pattern={name: "", arguments: []} } else { delete contractTypeIndex.pattern } break;
+            case "type": if(value === "Pattern") { if (contractTypeIndex.pattern === undefined) contractTypeIndex.pattern={name: "", arguments: []} } else { delete contractTypeIndex.pattern } break;
             case "subValue": contractTypeIndex.pattern.arguments[subKey] = {"value": makeListOf(value)}; break;
             default: break;
         }
