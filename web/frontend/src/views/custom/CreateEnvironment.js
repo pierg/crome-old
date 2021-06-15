@@ -70,7 +70,6 @@ export default class CreateEnvironment extends React.Component {
     }
 
     generateGridworldWithJSON() {
-        this.divId.current.hidden = false;
         this.clearButton.current.hidden = false;
         this.robotButton.current.hidden = false;
         const locations = json.grid.locations;
@@ -93,8 +92,12 @@ export default class CreateEnvironment extends React.Component {
         this.world = this.buildGrid(this.myCanvas.current, (json.size[0].width / 2), this.map, this.onAddLocation);
     }
 
+
+
     clearGridworld() {
         this.map = [];
+        this.world.clearAttributeTable();
+        this.world.resetInColorTable();
         const context = this.myCanvas.current.getContext('2d');
         context.clearRect(0, 0, this.myCanvas.current.width, this.myCanvas.current.height);
         this.buildGrid(this.myCanvas.current, this.textInputSize.current.value, this.map, this.onAddLocation);
@@ -338,9 +341,6 @@ export default class CreateEnvironment extends React.Component {
             }
             world.updateMap(map);
         }
-
-        world.clearAttributeTable();
-        world.resetInColorTable();
         document.getElementById("comment").innerHTML = "";
 
         for (let i = 0; i < size * 2 + 1; i++) {

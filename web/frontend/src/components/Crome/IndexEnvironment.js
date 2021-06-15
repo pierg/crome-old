@@ -263,6 +263,14 @@ GridWorld.prototype = {
     }
   },
 
+  setInColorTable(color, bool) {
+    for (let i = 0; i < isColorTable.length; i++) {
+      if (colorTable[i] === color) {
+        isColorTable[i] = bool;
+      }
+    }
+  },
+
   getRandomColor() {
     const letters = '0123456789ABCDEF';
     let color = '#';
@@ -332,6 +340,9 @@ GridWorld.prototype = {
 
   removeAttribute: function(value) {
     if (this.isID(value)) {
+      const index = this.isAttribute(value);
+      const color = idTable[index][1];
+      this.setInColorTable(color, false);
       for (let i = 0; i < this.width; i++) {
         for (let j = 0; j < this.height; j++) {
           if (this.getAttribute(i, j, "id") === value) {
