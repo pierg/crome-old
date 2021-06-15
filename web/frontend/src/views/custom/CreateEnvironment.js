@@ -70,6 +70,10 @@ export default class CreateEnvironment extends React.Component {
         })
     }
 
+    callbackMap = (map) => {
+        this.map = map
+    }
+
     constructor(props) {
         super(props);
         this.myCanvas = React.createRef();
@@ -104,18 +108,18 @@ export default class CreateEnvironment extends React.Component {
     increaseSize() {
         this.size++
         this.world.onclick = null
-        this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation)
+        this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap)
     }
 
     decreaseSize() {
         this.size--
         this.world.onclick = null
-        this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation)
+        this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap)
     }
 
     generateGridworld() {
         if (this.world !== null) this.world.onclick = null
-        this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation)
+        this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap)
     }
 
     generateGridworldWithJSON() {
@@ -138,7 +142,7 @@ export default class CreateEnvironment extends React.Component {
             this.map[x][y] = ["black", true, null];
         }
         if (this.world !== null) this.world.onclick = null;
-        this.world = this.buildGrid(this.myCanvas.current, (json.size[0].width / 2), this.map, this.onAddLocation);
+        this.world = this.buildGrid(this.myCanvas.current, (json.size[0].width / 2), this.map, this.onAddLocation, this.callbackMap);
     }
 
     saveInToJSON() {
@@ -156,7 +160,7 @@ export default class CreateEnvironment extends React.Component {
         context.clearRect(0, 0, this.myCanvas.current.width, this.myCanvas.current.height)
         this.deleteAllLocations()
         this.world.onclick = null
-        this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation)
+        this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap)
     }
 
     launchRobot() {
@@ -213,7 +217,7 @@ export default class CreateEnvironment extends React.Component {
         return border;
     }
 
-    buildGrid(canvas, size, map, addLocation) {
+    buildGrid(canvas, size, map, addLocation, callbackMap) {
         if (map.length === 0) {
             this.buildMap(map, size);
         }
@@ -401,6 +405,7 @@ export default class CreateEnvironment extends React.Component {
                 }
             }
             world.updateMap(map);
+            callbackMap(map)
         }
         document.getElementById("comment").innerHTML = "";
 
