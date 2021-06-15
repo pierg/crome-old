@@ -283,12 +283,12 @@ GridWorld.prototype = {
     return color;
   },
 
-  askToColor(minX, maxX, maxY, minY) {
+  askToColor(minX, maxX, maxY, minY, previousColorArray) {
     let id = window.prompt("Enter an id");
     if (id === null) {
       for (let i = minX; i < maxX + 1; i += 1) {
         for (let j = minY; j < maxY + 1; j += 1) {
-          this.setBackgroundColor(i, j, "white");
+          this.setBackgroundColor(i, j, previousColorArray[i][j - minY]);
         }
       }
       this.reset();
