@@ -63,7 +63,7 @@ export default class CreateEnvironment extends React.Component {
         this.launchRobot = this.launchRobot.bind(this);
         this.robot = this.robot.bind(this);
         this.robotButton = React.createRef();
-        this.size = 5;
+        this.size = 8;
         this.i = 0;
         this.t = null;
         this.tab = [[1,5],[1,3],[1,1],[3,1],[3,3],[5,3],[5,1],[7,1],[9,1],[9,3],[7,3],[5,3],[5,5],[3,5],[1,5]];
@@ -119,9 +119,26 @@ export default class CreateEnvironment extends React.Component {
     }
 
     saveInToJSON() {
-        let obj = {"filetype": "environment",
-            "session_id": "default",
-            "project_id": "simple",}
+        const idTable = this.world.getIdTable();
+        let obj = {filetype: "environment",
+            session_id: "default",
+            project_id: "simple",};
+        obj.size = {width: this.size * 2, height: this.size * 2};
+        obj.grid = {location : [], walls : []};
+        for (let i = 0; i < idTable.length; i++) {
+            obj.grid.location.push({coordinates : [], color : idTable[i][1], id : idTable[i][0]});
+        }
+        for (let i = 0; i < this.map.length; i++) {
+            for (let j = 0; j < this.map[0].length; j++) {
+                if (this.map[i][j][0] !== "white" && this.map[i][j][2] !== null) {
+                    const index = this.world.isID(this.map[i][j][2]);
+                    obj.grid.location[index].coordinates.push({x : Math.trunc(i / 2) + 1, y : Math.trunc(j / 2) + 1})
+                }
+                else if (this.map[i][j][0] === "black") {
+                    obj.grid.walls.push({left : { x : i / 2, y : Math.trunc(j / 2) + 1},right : { x : (i / 2) + 1, y : Math.trunc(j / 2) + 1 }})
+                }
+            }
+        }
         const myJSON = JSON.stringify(obj);
     }
 
