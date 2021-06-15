@@ -11,16 +11,21 @@ export default class CreateEnvironment extends React.Component {
 
     state = {
         locations: [],
+        colors: [],
         numChildren: 0
     }
 
-    onAddLocation = (id) => {
+    onAddLocation = (id, color) => {
         let tmpLocations = this.state.locations
+        let tmpColors = this.state.colors
+
         if (!tmpLocations.includes(id)) {
             tmpLocations.push(id)
+            tmpColors.push(color)
 
             this.setState({
                 locations: tmpLocations,
+                colors: tmpColors,
                 numChildren: this.state.numChildren + 1
             })
         }
@@ -29,12 +34,16 @@ export default class CreateEnvironment extends React.Component {
     }
 
     deleteLocation = (key) => {
-        console.log(this.state.locations)
         let tmpLocations = this.state.locations
-        tmpLocations.splice(tmpLocations.indexOf(key), 1)
+        let tmpColors = this.state.colors
+        let index = tmpLocations.indexOf(key)
+
+        tmpLocations.splice(index, 1)
+        tmpColors.splice(index, 1)
 
         this.setState({
             locations: tmpLocations,
+            colors: tmpColors,
             numChildren: this.state.numChildren - 1
         })
 
@@ -249,7 +258,7 @@ export default class CreateEnvironment extends React.Component {
                         //const color = answer[0];
                         const  id = answer[1];
                         if (document.getElementById(id) === null || document.getElementById(id).innerHTML === "") {
-                            addLocation(id)
+                            addLocation(id, answer[0])
                         }
                     }
 
@@ -358,7 +367,9 @@ export default class CreateEnvironment extends React.Component {
         for (let i = 0; i < this.state.numChildren; i += 1) {
             children.push(<Location key={i}
                                     name={this.state.locations[i]}
-                                    onClick={() => this.deleteLocation(this.state.locations[i])}/>);
+                                    onClick={() => this.deleteLocation(this.state.locations[i])}
+                                    color={this.state.colors[i]}
+                                    statIconName={"fas fa-square"}/>);
         }
         return (
             <>
@@ -373,10 +384,15 @@ export default class CreateEnvironment extends React.Component {
                         </div>
                         <canvas ref={this.myCanvas} id='canvas'/>
                         <div className="container mx-auto px-4">
-                            <div className={"w-full lg:w-6/12 xl:w-5/12 mt-8 ml-4 mr-4 px-4 relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg opacity-1 transform duration-300 transition-all ease-in-out"}>
+                            <div className={"w-full lg:w-4/12 xl:w-3/12 mt-8 ml-4 mr-4 px-4 relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg opacity-1 transform duration-300 transition-all ease-in-out"}>
                                 <Card className="card-plain">
                                     <CardBody className="overflow-x-initial">
                                         <Table responsive>
+                                            <thead>
+                                            <tr>
+                                                <th colSpan={3} className="title title-up text-center font-bold">Locations</th>
+                                            </tr>
+                                            </thead>
                                             <tbody>
                                             {children}
                                             </tbody>

@@ -1,3 +1,6 @@
+import gridcolors from "_texts/custom/gridcolors.js";
+
+
 function _n(val, def) {
   return (typeof val === 'number') ? val : def;
 }
@@ -134,15 +137,15 @@ function GridWorld(canvas, width, height, options) {
   });
 }
 
-let idTable = [];
-let colorTable = ["blue","red","green","yellow","purple","pink","orange","grey", "brown", "gold"];
-let isColorTable = [false, false, false, false, false, false, false, false, false, false];
-let start =[];
-let end =[];
-let startWall =[];
-let endWall =[];
-let previousColorWall;
-let previousStartColor;
+let idTable = []
+let colorTable = gridcolors.colors
+let isColorTable = new Array(colorTable.length).fill(false)
+let start =[]
+let end =[]
+let startWall =[]
+let endWall =[]
+let previousColorWall
+let previousStartColor
 
 GridWorld.prototype = {
   draw: function() {

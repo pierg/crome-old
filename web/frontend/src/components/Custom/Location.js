@@ -5,9 +5,12 @@ function Location(props) {
     return(
         <tr>
             <td>
+                <i className={"text-2xl "+props.statIconName} style={{color: props.color}}/>
+            </td>
+            <td className="text-center">
                 {props.name}
             </td>
-            <td>
+            <td className="flex justify-end">
                 <Button
                     className="btn-icon"
                     color={"danger"}
