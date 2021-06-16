@@ -440,8 +440,7 @@ GridWorld.prototype = {
     this.draw();
   },
 
-  errorMessage: function(comment, start, previousColor, message) {
-    comment.innerHTML = message;
+  errorMessage: function(start, previousColor) {
     this.setBackgroundColor(start[0], start[1], previousColor);
   },
 

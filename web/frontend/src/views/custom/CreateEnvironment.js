@@ -3,16 +3,22 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../components/Crome/IndexEnvironment";
 import GridWorld from "../../components/Crome/IndexEnvironment";
 import Location from "../../components/Custom/Location";
-import {Button, Card, CardBody, Table} from "reactstrap";
+import {Card, CardBody, PopoverBody, PopoverHeader, Table, UncontrolledPopover} from "reactstrap";
 import img from "./robot1.png";
 import * as json from "./environment_example.json";
+import footeradmin from "../../_texts/admin/footers/footeradmin";
+import FooterAdmin from "../../components/Footers/Admin/FooterAdmin";
+import Button from "../../components/Elements/Button";
+import createenvironment from "_texts/custom/createenvironment.js";
 
 export default class CreateEnvironment extends React.Component {
 
     state = {
         locations: [],
         colors: [],
-        numChildren: 0
+        numChildren: 0,
+        errorMsg: "",
+        warningPop: false
     }
 
     componentDidMount() {
@@ -74,16 +80,29 @@ export default class CreateEnvironment extends React.Component {
         this.map = map
     }
 
+    updateErrorMsg = (msg) => {
+        if (msg !== "") {
+            this.setState({
+                errorMsg: msg,
+                warningPop: true
+            });
+            setTimeout(() => {
+                this.setState({warningPop: false});
+            }, 4000)
+        }
+        else {
+            this.setState({
+                warningPop: false
+            })
+        }
+    }
+
     constructor(props) {
         super(props);
         this.myCanvas = React.createRef();
         this.generateGridworld = this.generateGridworld.bind(this);
         this.generateGridworldWithJSON = this.generateGridworldWithJSON.bind(this);
         this.saveInToJSON = this.saveInToJSON.bind(this);
-        this.increaseSize = this.increaseSize.bind(this);
-        this.decreaseSize = this.decreaseSize.bind(this);
-        this.increaseButton = React.createRef();
-        this.decreaseButton = React.createRef();
         this.id = React.createRef();
         this.divId = React.createRef();
         this.map = [];
@@ -103,21 +122,59 @@ export default class CreateEnvironment extends React.Component {
         this.y = null;
     }
 
-    increaseSize() {
-        this.size++
-        this.world.onclick = null
-        this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap)
-    }
+    modifyGridSize(increment) {
 
-    decreaseSize() {
-        this.size--
-        this.world.onclick = null
-        this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap)
+        this.size += increment
+
+        let oldMap = this.map;
+        let maxIdX = 0; // table corresponding to the node with the largest x as abscissa and its colour
+        let minIdX = this.map.length; // table corresponding to the node with the smallest x abscissa and its colour
+        let minIdY = this.map[0].length; // table corresponding to the node with the smallest y and its colour as ordinates
+        let maxIdY = 0; // table corresponding to the node with the largest x and its colour as ordinates
+        for (let i = 0; i < this.map.length; i++) {
+            for (let j = 0; j < this.map[0].length; j++) { // if the colour of the node is not white check if it is the point corresponding to one of the 4 ends
+                if (this.map[i][j][0] !== "white") {
+                    minIdX = this.end(minIdX, i, this.map[i][j][0], minIdX >= i);
+                    minIdY = this.end(minIdY, j, this.map[i][j][0], minIdY >= j);
+                    maxIdX = this.end(maxIdX, i, this.map[i][j][0], maxIdX <= i);
+                    maxIdY = this.end(maxIdY, j, this.map[i][j][0], maxIdY <= j);
+                }
+            }
+        }
+        let oldSizeX = maxIdX - minIdX + 1;
+        let oldSizeY = maxIdY - minIdY + 1;
+        let isInX = (this.size * 2 + 1) - oldSizeX;
+        let isInY = (this.size * 2 + 1) - oldSizeY;
+
+        if (isInX <= 0 || isInY <= 0) {
+            console.log(createenvironment)
+            this.updateErrorMsg(createenvironment.errorMsg.gridTooSmall);
+            this.size -= increment
+        }
+        else {
+            let leftBorderX = Math.trunc(isInX / 2);
+            let topBorderY = Math.trunc(isInY / 2);
+            leftBorderX = this.shift(leftBorderX, minIdX);
+            topBorderY = this.shift(topBorderY, minIdY);
+
+            this.map = [];
+
+            this.buildMap(this.map, this.size);
+
+            for (let i = leftBorderX; i < leftBorderX + oldSizeX; i++) {
+                for (let j = topBorderY; j < topBorderY + oldSizeY; j++) {
+                    this.map[i][j] = oldMap[minIdX + i - leftBorderX][minIdY + j - topBorderY];
+                }
+            }
+
+            this.world.onclick = null
+            this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg)
+        }
     }
 
     generateGridworld() {
         if (this.world !== null) this.world.onclick = null
-        this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap)
+        this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg)
     }
 
     generateGridworldWithJSON() {
@@ -140,7 +197,7 @@ export default class CreateEnvironment extends React.Component {
             this.map[x][y] = ["black", true, null];
         }
         if (this.world !== null) this.world.onclick = null;
-        this.world = this.buildGrid(this.myCanvas.current, (json.size[0].width / 2), this.map, this.onAddLocation, this.callbackMap);
+        this.world = this.buildGrid(this.myCanvas.current, (json.size[0].width / 2), this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg);
     }
 
     saveInToJSON() {
@@ -164,9 +221,9 @@ export default class CreateEnvironment extends React.Component {
                 }
             }
         }
-        let fs = require('browserify-fs');
+        /*let fs = require('browserify-fs');
         const myJSON = JSON.stringify(obj);
-        const name = window.prompt("What is the name of the file ?");
+        const name = window.prompt("What is the name of the file ?");*/
         //fs.writeFile(name + '.json', myJSON);
     }
 
@@ -178,7 +235,7 @@ export default class CreateEnvironment extends React.Component {
         context.clearRect(0, 0, this.myCanvas.current.width, this.myCanvas.current.height)
         this.deleteAllLocations()
         this.world.onclick = null
-        this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap)
+        this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg)
     }
 
     launchRobot() {
@@ -235,51 +292,9 @@ export default class CreateEnvironment extends React.Component {
         return border;
     }
 
-    buildGrid(canvas, size, map, addLocation, callbackMap) {
+    buildGrid(canvas, size, map, addLocation, callbackMap, updateErrorMsg) {
         if (map.length === 0) {
             this.buildMap(map, size);
-        }
-        else {
-            let map2 = map;
-            let maxIdX = 0; // table corresponding to the node with the largest x as abscissa and its colour
-            let minIdX = map.length; // table corresponding to the node with the smallest x abscissa and its colour
-            let minIdY = map[0].length; // table corresponding to the node with the smallest y and its colour as ordinates
-            let maxIdY = 0; // table corresponding to the node with the largest x and its colour as ordinates
-            for (let i = 0; i < map.length; i++) {
-                for (let j = 0; j < map[0].length; j++) { // if the colour of the node is not white check if it is the point corresponding to one of the 4 ends
-                    if (map[i][j][0] !== "white") {
-                        minIdX = this.end(minIdX, i, map[i][j][0], minIdX >= i);
-                        minIdY = this.end(minIdY, j, map[i][j][0], minIdY >= j);
-                        maxIdX = this.end(maxIdX, i, map[i][j][0], maxIdX <= i);
-                        maxIdY = this.end(maxIdY, j, map[i][j][0], maxIdY <= j);
-                    }
-                }
-            }
-            let oldSizeX = maxIdX - minIdX + 1;
-            let oldSizeY = maxIdY - minIdY + 1;
-            let isInX = (size * 2 + 1) - oldSizeX;
-            let isInY = (size * 2 + 1) - oldSizeY;
-
-            if (isInX < 0 || isInY < 0) {
-                console.log("the retracted size is too small compared to the block, choose another size or clear before");
-                size = Math.trunc(map.length/2);
-            }
-            else {
-                let leftBorderX = Math.trunc(isInX / 2);
-                let topBorderY = Math.trunc(isInY / 2);
-                leftBorderX = this.shift(leftBorderX, minIdX);
-                topBorderY = this.shift(topBorderY, minIdY);
-
-                map = [];
-
-                this.buildMap(map, size);
-
-                for (let i = leftBorderX; i < leftBorderX + oldSizeX; i++) {
-                    for (let j = topBorderY; j < topBorderY + oldSizeY; j++) {
-                        map[i][j] = map2[minIdX + i - leftBorderX][minIdY + j - topBorderY];
-                    }
-                }
-            }
         }
 
         let world = new GridWorld(canvas, size, size, {
@@ -298,7 +313,7 @@ export default class CreateEnvironment extends React.Component {
             previousStartColor is a variable where the colour before the first click is stored if it is a cell
             previousColorWall is a variable where the colour before the first click is stored if it is a wall
             */
-            document.getElementById("comment").innerHTML = "";
+            updateErrorMsg("")
 
             let start = world.getStart();
             let startWall = world.getStartWall();
@@ -364,13 +379,14 @@ export default class CreateEnvironment extends React.Component {
                             world.setColorIdBlocked(startWall[0], startWall[1], "black", true, null);
                             return;
                         } else { // if the wall was neither black nor white, you can't change the background color
-                            document.getElementById("comment").innerHTML = "you can't change the color of this wall";
+                            updateErrorMsg("you can't change the color of this wall") // TODO How can we arrive here?
                             world.resetCellWall(startWall, null, previousColorWall, null);
                             return;
                         }
                     } else if (startWall[0] === endWall[0]) { // when the users select a column
                         if (startWall[0] % 2 === 1) { // when he clicks on a case that he can't choose
-                            world.errorMessage(document.getElementById("comment"), startWall, previousColorWall, "you have to select a row/column to change the colour of the walls");
+                            updateErrorMsg("you have to select a row/column to change the colour of the walls") // TODO How can we arrive here?
+                            world.errorMessage(startWall, previousColorWall);
                             world.resetCellWall(startWall, null, previousColorWall, null);
                             return;
                         } else {
@@ -378,7 +394,8 @@ export default class CreateEnvironment extends React.Component {
                             max = world.min(startWall[1],endWall[1])[1];
                             for (let i = min; i < max + 1; i += 1) {
                                 if ((world.isBlocked(startWall[0], i) && world.getBackgroundColor(startWall[0], i) !== "black") && previousColorWall !== "black") {// if there is a block of colour in the selected column
-                                    world.errorMessage(document.getElementById("comment"), startWall, previousColorWall, "you cannot select these, there are wall inside a block");
+                                    updateErrorMsg(createenvironment.errorMsg.wallInsideBlock)
+                                    world.errorMessage(startWall, previousColorWall);
                                     world.resetCellWall(startWall, null, previousColorWall, null);
                                     return;
                                 }
@@ -389,7 +406,8 @@ export default class CreateEnvironment extends React.Component {
                         }
                     } else if (startWall[1] === endWall[1]) { // when the users select a line
                         if (startWall[1] % 2 === 1) { // when he clicks on a case that he can't choose
-                            world.errorMessage(document.getElementById("comment"), startWall, previousColorWall, "you have to select a row/column to change the colour of the walls");
+                            updateErrorMsg("you have to select a row/column to change the colour of the walls") // TODO How can we arrive here?
+                            world.errorMessage(startWall, previousColorWall);
                             world.resetCellWall(startWall, null, previousColorWall, null);
                             return;
                         } else {
@@ -398,7 +416,8 @@ export default class CreateEnvironment extends React.Component {
 
                             for (let i = min; i < max + 1; i += 1) {
                                 if ((world.isBlocked(i, startWall[1]) && world.getBackgroundColor(i, startWall[1]) !== "black" ) && previousColorWall !== "black") { // if there is a block of colour in the selected column
-                                    world.errorMessage(document.getElementById("comment"), startWall, previousColorWall, "you cannot select these, there are wall inside a block");
+                                    updateErrorMsg(createenvironment.errorMsg.wallInsideBlock)
+                                    world.errorMessage(startWall, previousColorWall);
                                     world.resetCellWall(startWall, null, previousColorWall, null);
                                     return;
                                 }
@@ -409,7 +428,7 @@ export default class CreateEnvironment extends React.Component {
                         }
                     } else {
                         world.setBackgroundColor(startWall[0], startWall[1], "white");
-                        document.getElementById("comment").innerHTML = "select a line or a column when you want to put wall";
+                        updateErrorMsg(createenvironment.errorMsg.wallLine)
                     }
                     world.reset();
                 }
@@ -424,7 +443,7 @@ export default class CreateEnvironment extends React.Component {
                     if (world.getBackgroundColor(node.x, node.y) === "white" || world.getBackgroundColor(node.x, node.y) === "black") {
                         world.setBackgroundColor(node.x, node.y, "lightgray");
                     } else { // when he clicks on a case that he can't choose
-                        document.getElementById("comment").innerHTML = "you cannot select a wall within a block";
+                        updateErrorMsg(createenvironment.errorMsg.wallInsideBlock)
                         world.reset();
                         return;
                     }
@@ -433,7 +452,7 @@ export default class CreateEnvironment extends React.Component {
             world.updateMap(map);
             callbackMap(map)
         }
-        document.getElementById("comment").innerHTML = "";
+        updateErrorMsg("")
 
         for (let i = 0; i < size * 2 + 1; i++) {
             for (let j = 0; j < size * 2 + 1; j++) {
@@ -455,40 +474,80 @@ export default class CreateEnvironment extends React.Component {
         }
         return (
             <>
-                <div>
-                    <div id="body" className="flex items-center">
+                <div className="relative pt-32 pb-32 bg-orange-500">
+                    <div className="px-4 md:px-6 mx-auto w-full">
                         <div>
-                            <Button ref={this.increaseButton} onClick={this.increaseSize}>+</Button>
-                            <Button ref={this.decreaseButton} onClick={this.decreaseSize}>-</Button>
-                            {/*<Button ref={this.generateButton} onClick={this.generateGridworld}>Generate</Button>
-                            <Button ref={this.generateJSONButton} onClick={this.generateGridworldWithJSON}>Generate with JSON</Button>*/}
-                            <Button ref={this.clearButton} onClick={this.clearGridworld}>Clear</Button>
-                            <Button ref={this.robotButton} onClick={this.launchRobot}>Robot</Button>
-                        </div>
-                        <div>
-                            <canvas ref={this.myCanvas} id='canvas'/>
-                        </div>
-                        <div className="container px-4">
-                            <div className={"w-full lg:w-4/12 xl:w-3/12 m-4 px-4 relative flex flex-col min-w-0 break-words bg-white rounded shadow-lg opacity-1 transform duration-300 transition-all ease-in-out"}>
-                                <Card className="card-plain">
-                                    <CardBody className="overflow-x-initial">
-                                        <Table responsive>
-                                            <thead>
-                                            <tr>
-                                                <th colSpan={3} className="title title-up text-center font-bold">Locations</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            {children}
-                                            </tbody>
-                                        </Table>
-                                    </CardBody>
-                                </Card>
+                            <div className="flex flex-wrap justify-center">
+                                <h1 className="display-3 title-up text-white font-semibold text-center">Build your Environment</h1>
                             </div>
                         </div>
-                        <div id={"comment"}/>
-                        <div><Button ref={this.saveButton} onClick={this.saveInToJSON}>Save</Button></div>
                     </div>
+                </div>
+                <div className="px-4 md:px-6 mx-auto w-full -mt-24">
+                    <div className="mt-12 relative">
+                        <div className="relative w-full overflow-hidden">
+                            <div>
+                                <div id="body" className="flex justify-center items-center">
+                                    <div className="flex container px-4 justify-center">
+                                        <div className="flex justify-center">
+                                            <div className="flex flex-col items-center">
+                                                <canvas className="shifted-canvas-margin" ref={this.myCanvas} id='canvas'/>
+
+                                                <UncontrolledPopover
+                                                    placement={window.innerWidth > 991 ? "left" : "top"}
+                                                    target="canvas"
+                                                    className="popover-info"
+                                                    isOpen={this.state.warningPop}
+                                                >
+                                                    <PopoverHeader>Warning!</PopoverHeader>
+                                                    <PopoverBody>
+                                                        {this.state.errorMsg}
+                                                    </PopoverBody>
+                                                </UncontrolledPopover>
+
+                                                <div className="m-4 px-16 pt-2 pb-2 relative flex flex-col min-w-0 break-words bg-white rounded shadow-lg">
+                                                    <span className="font-semibold text-xs mb-1 text-center uppercase text-blueGray-700">Size of the Grid</span>
+                                                    <div className="flex pl-2">
+                                                        <Button color="red" onClick={() => this.modifyGridSize(-1)}><i className="text-xl fas fa-minus-square"/></Button>
+                                                        <Button color="lightBlue" onClick={() => this.modifyGridSize(1)}><i className="text-xl fas fa-plus-square"/></Button>
+                                                        {/*<Button ref={this.robotButton} onClick={this.launchRobot}>Robot</Button>*/}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="w-full lg:w-4/12 xl:w-3/12 flex-col">
+                                            <div className="m-4 px-4 relative flex flex-col min-w-0 break-words bg-white rounded shadow-lg">
+                                                <div className="flex flex-col justify-center">
+                                                    <Card className="card-plain">
+                                                        <CardBody className="overflow-x-initial">
+                                                            <Table responsive>
+                                                                <thead>
+                                                                <tr>
+                                                                    <th colSpan={3} className="title title-up text-center font-bold">Locations</th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                {children}
+                                                                </tbody>
+                                                            </Table>
+                                                        </CardBody>
+                                                    </Card>
+                                                    <div className="flex flex-col pl-2 pb-3">
+                                                       <Button ref={this.clearButton} color="amber" onClick={this.clearGridworld}><i className="text-xl mr-2 fas fa-trash-alt"/>Clear</Button>
+                                                       <div className="mt-2"/>
+                                                       <Button ref={this.saveButton} color="emerald" onClick={this.saveInToJSON}><i className="text-xl mr-2 fas fa-check-square"/>Save</Button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <FooterAdmin {...footeradmin} />
                 </div>
             </>
         );
