@@ -37,7 +37,7 @@ export default function ContractContentEditor({ items, patterns, color, changePa
                         {items.map((prop, key) => (
                             <tr key={key}>
                                 <td>{key+1}</td>
-                                <td>
+                                <td className="w-32">
                                     <CustomSelect
                                         items={infos.types}
                                         defaultValue={prop.pattern === undefined ? infos.types[0] : infos.types[1]}
@@ -57,7 +57,7 @@ export default function ContractContentEditor({ items, patterns, color, changePa
                                                                         name="contentName"
                                                                         changeSelector={(e, value) => changeParameter(e, contractType, key, value)}/>)}
                                 </td>
-                                <td>
+                                <td className="grid w-full">
                                     {prop.pattern !== undefined && (
                                         <ContractEditArguments
                                             title={infos.details}

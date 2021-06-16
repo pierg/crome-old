@@ -3,6 +3,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../components/Crome/IndexEnvironment";
 import GridWorld from "../../components/Crome/IndexEnvironment";
 import Location from "../../components/Custom/Location";
+import {Button, Card, CardBody, Table} from "reactstrap";
 import img from "./robot1.png";
 import * as json from "./environment_example.json";
 
@@ -10,34 +11,63 @@ export default class CreateEnvironment extends React.Component {
 
     state = {
         locations: [],
+        colors: [],
         numChildren: 0
     }
 
-    onAddLocation = (id) => {
+    componentDidMount() {
+        this.generateGridworld()
+    }
+
+    componentWillUnmount() {
+        // fix Warning: Can't perform a React state update on an unmounted component
+    }
+
+    onAddLocation = (id, color) => {
         let tmpLocations = this.state.locations
+        let tmpColors = this.state.colors
+
         if (!tmpLocations.includes(id)) {
             tmpLocations.push(id)
+            tmpColors.push(color)
 
             this.setState({
                 locations: tmpLocations,
+                colors: tmpColors,
                 numChildren: this.state.numChildren + 1
             })
         }
-
-
     }
 
     deleteLocation = (key) => {
-        console.log(this.state.locations)
         let tmpLocations = this.state.locations
-        tmpLocations.splice(tmpLocations.indexOf(key), 1)
+        let tmpColors = this.state.colors
+        let index = tmpLocations.indexOf(key)
+
+        tmpLocations.splice(index, 1)
+        tmpColors.splice(index, 1)
 
         this.setState({
             locations: tmpLocations,
+            colors: tmpColors,
             numChildren: this.state.numChildren - 1
         })
 
         this.removeId(key)
+    }
+
+    deleteAllLocations = () => {
+        let tmpLocations = this.state.locations
+
+        for (let i=0; i<tmpLocations.length; i++) {
+            this.removeId(tmpLocations[i])
+        }
+
+        this.setState({
+            locations: [],
+            colors: [],
+            numChildren: 0
+        })
     }
 
     constructor(props) {
@@ -50,8 +80,6 @@ export default class CreateEnvironment extends React.Component {
         this.decreaseSize = this.decreaseSize.bind(this);
         this.increaseButton = React.createRef();
         this.decreaseButton = React.createRef();
-        this.generateButton = React.createRef();
-        this.generateJSONButton = React.createRef();
         this.id = React.createRef();
         this.divId = React.createRef();
         this.map = [];
@@ -72,28 +100,20 @@ export default class CreateEnvironment extends React.Component {
     }
 
     increaseSize() {
-        this.size++;
-        this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation);
+        this.size++
+        this.world.onclick = null
+        this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation)
     }
 
     decreaseSize() {
-        this.size--;
-        this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation);
-    }
-
-    hidden() {
-        this.clearButton.current.hidden = false;
-        this.robotButton.current.hidden = false;
-        this.saveButton.current.hidden = false;
-        this.increaseButton.current.hidden = false;
-        this.decreaseButton.current.hidden = false;
-        this.generateButton.current.hidden = true;
-        this.generateJSONButton.current.hidden = true;
+        this.size--
+        this.world.onclick = null
+        this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation)
     }
 
     generateGridworld() {
-        this.hidden();
-        this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation);
+        if (this.world !== null) this.world.onclick = null
+        this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation)
     }
 
     generateGridworldWithJSON() {
@@ -115,6 +135,7 @@ export default class CreateEnvironment extends React.Component {
             y = ((walls[i].left.y * 2 - 1) + (walls[i].right.y * 2 - 1)) / 2 ;
             this.map[x][y] = ["black", true, null];
         }
+        if (this.world !== null) this.world.onclick = null;
         this.world = this.buildGrid(this.myCanvas.current, (json.size[0].width / 2), this.map, this.onAddLocation);
     }
 
@@ -139,21 +160,27 @@ export default class CreateEnvironment extends React.Component {
                 }
             }
         }
+        let fs = require('browserify-fs');
         const myJSON = JSON.stringify(obj);
+        const name = window.prompt("What is the name of the file ?");
+        //fs.writeFile(name + '.json', myJSON);
     }
 
     clearGridworld() {
-        this.map = [];
-        this.world.clearAttributeTable();
-        this.world.resetInColorTable();
-        const context = this.myCanvas.current.getContext('2d');
-        context.clearRect(0, 0, this.myCanvas.current.width, this.myCanvas.current.height);
-        this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation);
+        this.map = []
+        this.world.clearAttributeTable()
+        this.world.resetInColorTable()
+        const context = this.myCanvas.current.getContext('2d')
+        context.clearRect(0, 0, this.myCanvas.current.width, this.myCanvas.current.height)
+        this.deleteAllLocations()
+        this.world.onclick = null
+        this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation)
     }
 
     launchRobot() {
         this.t = setInterval(this.robot, 1000);
     }
+
     robot() {
         const ctx = document.getElementById('canvas').getContext('2d');
         if (this.i === this.tab.length) {
@@ -179,7 +206,6 @@ export default class CreateEnvironment extends React.Component {
     }
 
     removeId(idToRemove) {
-        console.log("remove")
         this.world.removeAttribute(idToRemove);
         this.world.updateMap(this.map);
         this.world.reset();
@@ -256,6 +282,7 @@ export default class CreateEnvironment extends React.Component {
             padding: {top: 10, left: 10, right: 10, bottom: 60},
             resizeCanvas: true,
             drawBorder: true});
+
         this.drawRobot();
 
         world.onclick = function (node) {
@@ -300,14 +327,18 @@ export default class CreateEnvironment extends React.Component {
                     previousColorArray[start[0]][start[1] - minY] = previousStartColor;
                     const answer = world.askToColor(minX, maxX, maxY, minY, previousColorArray);
                     if (answer !== false) {
-                        //const color = answer[0];
-                        const  id = answer[1];
+                        const color = answer[0];
+                        const id = answer[1];
                         if (document.getElementById(id) === null || document.getElementById(id).innerHTML === "") {
-                            addLocation(id)
+                            addLocation(id, color)
                         }
                     }
 
                 } else { // when it's the first click, color the cell with a "light" color so the user know that he needs to click on a other cell
+                    if (startWall.length !== 0) {
+                        world.resetCellWall(startWall, null, previousColorWall, null);
+                        return;
+                    }
                     start.push(node.x);
                     start.push(node.y);
                     world.setPreviousStartColor(world.getBackgroundColor(start[0], start[1]));
@@ -315,7 +346,7 @@ export default class CreateEnvironment extends React.Component {
 
                 }
             } else { // when you click on wall cell
-                if (startWall.length !== 0) {// when it's the second click
+                if (startWall.length !== 0) { // when it's the second click
                     endWall.push(node.x);
                     endWall.push(node.y);
                     let min;
@@ -379,6 +410,10 @@ export default class CreateEnvironment extends React.Component {
                     world.reset();
                 }
                 else { // when it's the first click, color the cell with a "light" color so the user know that he needs to click on a other cell
+                    if (start.length !== 0) {
+                        world.resetCellWall(start, null, previousStartColor, null);
+                        return;
+                    }
                     startWall.push(node.x);
                     startWall.push(node.y);
                     world.setPreviousColorWall(world.getBackgroundColor(startWall[0], startWall[1]));
@@ -408,25 +443,46 @@ export default class CreateEnvironment extends React.Component {
         const children = [];
         for (let i = 0; i < this.state.numChildren; i += 1) {
             children.push(<Location key={i}
-                                    number={i}
-                                    onClick={() => this.deleteLocation(this.state.locations[i])}/>);
+                                    name={this.state.locations[i]}
+                                    onClick={() => this.deleteLocation(this.state.locations[i])}
+                                    color={this.state.colors[i]}
+                                    statIconName={"fas fa-square"}/>);
         }
         return (
             <>
                 <div>
-                    <div id ="body" onLoad={this.generateGridworld}>
+                    <div id="body" className="flex items-center">
                         <div>
-                            <button ref={this.increaseButton} hidden={true} onClick={this.increaseSize}>+</button>
-                            <button ref={this.decreaseButton} hidden={true} onClick={this.decreaseSize}>-</button>
-                            <button ref={this.generateButton} onClick={this.generateGridworld}>Generate</button>
-                            <button ref={this.generateJSONButton} onClick={this.generateGridworldWithJSON}>Generate with JSON</button>
-                            <button ref={this.clearButton} hidden={true} onClick={this.clearGridworld}>Clear</button>
-                            <button ref={this.robotButton} hidden={true} onClick={this.launchRobot}>Robot</button>
+                            <Button ref={this.increaseButton} onClick={this.increaseSize}>+</Button>
+                            <Button ref={this.decreaseButton} onClick={this.decreaseSize}>-</Button>
+                            {/*<Button ref={this.generateButton} onClick={this.generateGridworld}>Generate</Button>
+                            <Button ref={this.generateJSONButton} onClick={this.generateGridworldWithJSON}>Generate with JSON</Button>*/}
+                            <Button ref={this.clearButton} onClick={this.clearGridworld}>Clear</Button>
+                            <Button ref={this.robotButton} onClick={this.launchRobot}>Robot</Button>
                         </div>
-                        <canvas ref={this.myCanvas} id='canvas'/>
-                        <div className="flex flex-wrap justify-center">{children}</div>
+                        <div>
+                            <canvas ref={this.myCanvas} id='canvas'/>
+                        </div>
+                        <div className="container px-4">
+                            <div className={"w-full lg:w-4/12 xl:w-3/12 m-4 px-4 relative flex flex-col min-w-0 break-words bg-white rounded shadow-lg opacity-1 transform duration-300 transition-all ease-in-out"}>
+                                <Card className="card-plain">
+                                    <CardBody className="overflow-x-initial">
+                                        <Table responsive>
+                                            <thead>
+                                            <tr>
+                                                <th colSpan={3} className="title title-up text-center font-bold">Locations</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {children}
+                                            </tbody>
+                                        </Table>
+                                    </CardBody>
+                                </Card>
+                            </div>
+                        </div>
                         <div id={"comment"}/>
-                        <div><button ref={this.saveButton} hidden={true} onClick={this.saveInToJSON}>Save</button> </div>
+                        <div><Button ref={this.saveButton} onClick={this.saveInToJSON}>Save</Button></div>
                     </div>
                 </div>
             </>

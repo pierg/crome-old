@@ -12,8 +12,8 @@ const ContractEditArguments = ({
   return (
       <>
         {content.map((prop, key) => (
-            <div key={key} className="flex items-center d-table-row">
-              <div className="mr-4 text-right whitespace-nowrap d-table-cell">{prop.name[0].toUpperCase()+prop.name.slice(1)+" : "}</div>
+            <div key={key} className="grid grid-template-2 items-center">
+              <div className="mr-4 text-right whitespace-nowrap">{prop.name[0].toUpperCase()+prop.name.slice(1)+" : "}</div>
 
               <Input id={"tooltipValues"+number+key} autoComplete="off" className="ml-2" placeholder={prop.format === "list" ? infos.placeholders.listOfValues : infos.placeholders.singleValues} value={makeStringOf(prop.value)} name="subValue" onChange={(e) => changeParameter(e, key)}/>
               {prop.format === "list" && (

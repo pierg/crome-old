@@ -191,6 +191,7 @@
     ]
   },
   "devDependencies": {
+    "browserify-fs": "^1.0.0",
     "components": "^0.1.0",
     "prettier": "^2.3.0",
     "sass": "^1.32.13",
