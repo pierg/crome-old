@@ -229,6 +229,10 @@ GridWorld.prototype = {
     return this.nodes[(y *  (this.width + 1)) + x].backgroundColor;
   },
 
+  getIdTable : function () {
+    return idTable;
+  },
+
   setPreviousStartColor: function (color) {
     previousStartColor = color;
   },
@@ -328,7 +332,7 @@ GridWorld.prototype = {
   isID : function(value) { // checks if an id is in the array : idTable
        for (let i = 0; i < idTable.length ; i++) {
           if (idTable[i][0] === value) {
-            return true;
+            return i;
           }
        }
        return false;
@@ -342,7 +346,7 @@ GridWorld.prototype = {
   },
 
   removeAttribute: function(value) {
-    if (this.isID(value)) {
+    if (this.isID(value) !== false) {
       const index = this.isAttribute(value);
       const color = idTable[index][1];
       this.setInColorTable(color, false);

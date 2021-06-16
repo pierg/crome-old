@@ -84,8 +84,6 @@ export default class CreateEnvironment extends React.Component {
         this.decreaseSize = this.decreaseSize.bind(this);
         this.increaseButton = React.createRef();
         this.decreaseButton = React.createRef();
-        this.generateButton = React.createRef();
-        this.generateJSONButton = React.createRef();
         this.id = React.createRef();
         this.divId = React.createRef();
         this.map = [];
@@ -97,7 +95,7 @@ export default class CreateEnvironment extends React.Component {
         this.launchRobot = this.launchRobot.bind(this);
         this.robot = this.robot.bind(this);
         this.robotButton = React.createRef();
-        this.size = 5;
+        this.size = 8;
         this.i = 0;
         this.t = null;
         this.tab = [[1,5],[1,3],[1,1],[3,1],[3,3],[5,3],[5,1],[7,1],[9,1],[9,3],[7,3],[5,3],[5,5],[3,5],[1,5]];
@@ -146,10 +144,30 @@ export default class CreateEnvironment extends React.Component {
     }
 
     saveInToJSON() {
-        /*let obj = {"filetype": "environment",
-            "session_id": "default",
-            "project_id": "simple",}*/
-        //const myJSON = JSON.stringify(obj);
+        const idTable = this.world.getIdTable();
+        let obj = {filetype: "environment",
+            session_id: "default",
+            project_id: "simple",};
+        obj.size = {width: this.size * 2, height: this.size * 2};
+        obj.grid = {location : [], walls : []};
+        for (let i = 0; i < idTable.length; i++) {
+            obj.grid.location.push({coordinates : [], color : idTable[i][1], id : idTable[i][0]});
+        }
+        for (let i = 0; i < this.map.length; i++) {
+            for (let j = 0; j < this.map[0].length; j++) {
+                if (this.map[i][j][0] !== "white" && this.map[i][j][2] !== null) {
+                    const index = this.world.isID(this.map[i][j][2]);
+                    obj.grid.location[index].coordinates.push({x : Math.trunc(i / 2) + 1, y : Math.trunc(j / 2) + 1})
+                }
+                else if (this.map[i][j][0] === "black") {
+                    obj.grid.walls.push({left : { x : i / 2, y : Math.trunc(j / 2) + 1},right : { x : (i / 2) + 1, y : Math.trunc(j / 2) + 1 }})
+                }
+            }
+        }
+        let fs = require('browserify-fs');
+        const myJSON = JSON.stringify(obj);
+        const name = window.prompt("What is the name of the file ?");
+        //fs.writeFile(name + '.json', myJSON);
     }
 
     clearGridworld() {
@@ -321,6 +339,10 @@ export default class CreateEnvironment extends React.Component {
                     }
 
                 } else { // when it's the first click, color the cell with a "light" color so the user know that he needs to click on a other cell
+                    if (startWall.length !== 0) {
+                        world.resetCellWall(startWall, null, previousColorWall, null);
+                        return;
+                    }
                     start.push(node.x);
                     start.push(node.y);
                     world.setPreviousStartColor(world.getBackgroundColor(start[0], start[1]));
@@ -328,7 +350,7 @@ export default class CreateEnvironment extends React.Component {
 
                 }
             } else { // when you click on wall cell
-                if (startWall.length !== 0) {// when it's the second click
+                if (startWall.length !== 0) { // when it's the second click
                     endWall.push(node.x);
                     endWall.push(node.y);
                     let min;
@@ -392,6 +414,10 @@ export default class CreateEnvironment extends React.Component {
                     world.reset();
                 }
                 else { // when it's the first click, color the cell with a "light" color so the user know that he needs to click on a other cell
+                    if (start.length !== 0) {
+                        world.resetCellWall(start, null, previousStartColor, null);
+                        return;
+                    }
                     startWall.push(node.x);
                     startWall.push(node.y);
                     world.setPreviousColorWall(world.getBackgroundColor(startWall[0], startWall[1]));
