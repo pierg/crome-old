@@ -6,6 +6,7 @@ function _n(val, def) {
 }
 
 const floor = Math.floor;
+const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
 function Node(x, y, backgroundColor) {
   this.x = x;
@@ -299,25 +300,31 @@ GridWorld.prototype = {
       return false;
     }
     else {
-      let color;
-      let index = this.isAttribute(id);
-      if (index !== false) {
-        color = idTable[index][1];
+      if (this.validMap(this.map)) {
+        let color;
+        let index = this.isAttribute(id);
+        if (index !== false) {
+          color = idTable[index][1];
+        } else {
+          color = this.chooseBackgroundColor();
+          if (color === false) {
+            color = this.getRandomColor();
+          }
+        }
+        for (let i = minX; i < maxX + 1; i += 1) {
+          for (let j = minY; j < maxY + 1; j += 1) {
+            this.checkNeighbour(i, j, color); //if the cell has already a color, color his neighbors in white except if there is a wall
+            this.setColorIdBlocked(i, j, color, true, id);
+          }
+        }
+        this.reset();
+        return [color, id];
       }
       else {
-        color = this.chooseBackgroundColor();
-        if (color === false) {
-          color = this.getRandomColor();
-        }
+        window.alert("Impossible");
+        this.reset();
+        return false;
       }
-      for (let i = minX; i < maxX + 1; i += 1) {
-        for (let j = minY; j < maxY + 1; j += 1) {
-          this.checkNeighbour(i, j, color); //if the cell has already a color, color his neighbors in white except if there is a wall
-          this.setColorIdBlocked(i, j, color, true, id);
-        }
-      }
-      this.reset();
-      return [color, id];
     }
   },
 
@@ -475,6 +482,59 @@ GridWorld.prototype = {
     end = [];
     startWall = [];
     endWall = [];
+  },
+
+  getListColor: function(map, id) {  // Print the list of cells of a specified id (only cells, not walls)
+    let list = []
+     for (let i = 1; i < map.length; i += 2) {
+      for (let j = 1; j < map[0].length; j += 2) {
+        if (map[i][j][2] === id) {
+          list.push([i, j]);
+        }
+      }
+    }
+    return list
+  },
+
+  coordInArray: function(list, coord) {
+    for (let i = 0; i < list.length; i++) {
+      if (equals(list[i] , coord)) {
+        return true;
+      }
+    }
+    return false
+  },
+
+  valid: function(list, coord) {
+    if (equals(list[list.length - 1], coord)) {
+      return 1;
+    }
+    else if (this.coordInArray(list, coord)) {
+      return this.valid(list, [coord[0] + 2, coord[1]]) + this.valid(list, [coord[0], coord[1] + 2]);
+    }
+    else {
+      return 0;
+    }
+  },
+
+  validColor: function(map, id) {
+    let list = this.getListColor(map, id);
+    if (this.valid(list, list[0]) >= 1) {
+      return true;
+    }
+    return false;
+  },
+
+  validMap: function(map) {
+    if (idTable.length === 1) {
+      return true;
+    }
+    for (let i = 1; i < idTable.length; i++) {
+      if (!this.validColor(map, idTable[i][0])) {
+        return false;
+      }
+    }
+    return true;
   },
 
   updateMap : function(map) {
