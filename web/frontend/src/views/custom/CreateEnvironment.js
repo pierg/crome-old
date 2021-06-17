@@ -163,7 +163,7 @@ export default class CreateEnvironment extends React.Component {
         let fs = require('browserify-fs');
         const myJSON = JSON.stringify(obj);
         const name = window.prompt("What is the name of the file ?");
-        //fs.writeFile(name + '.json', myJSON);
+        fs.writeFile(name + '.json', myJSON);
     }
 
     clearGridworld() {
