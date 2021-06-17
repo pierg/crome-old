@@ -344,7 +344,7 @@ export default class CreateEnvironment extends React.Component {
                         }
                     }
                     previousColorArray[start[0]][start[1] - minY] = previousStartColor;
-                    const answer = world.askToColor(minX, maxX, maxY, minY, previousColorArray);
+                    const answer = world.askToColor(minX, maxX, maxY, minY, previousColorArray, map);
                     if (answer !== false) {
                         const color = answer[0];
                         const id = answer[1];

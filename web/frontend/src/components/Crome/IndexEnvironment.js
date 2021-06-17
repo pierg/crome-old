@@ -288,7 +288,7 @@ GridWorld.prototype = {
     return color;
   },
 
-  askToColor(minX, maxX, maxY, minY, previousColorArray) {
+  askToColor(minX, maxX, maxY, minY, previousColorArray, map) {
     let id = window.prompt("Enter an id");
     if (id === null && "") {
       for (let i = minX; i < maxX + 1; i += 1) {
@@ -300,7 +300,7 @@ GridWorld.prototype = {
       return false;
     }
     else {
-      if (this.validMap(this.map)) {
+      if (this.validMap(map)) {
         let color;
         let index = this.isAttribute(id);
         if (index !== false) {
