@@ -2,7 +2,7 @@ const textProps = {
   colors: [
       "#0000FF",
       "#FF0000",
-      "#00FF00",
+      "#8FF484",
       "#FF00FF",
       "#FFFF00",
       "#00FFFF",
@@ -23,7 +23,7 @@ const textProps = {
       "#488F4F",
       "#484FF8",
       "#8F484F",
-      "#8FF484",
+      "#00FF00",
       "#F4488F",
       "#F48F84",
       "#8F844F",
