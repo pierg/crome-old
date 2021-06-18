@@ -378,14 +378,10 @@ export default class CreateEnvironment extends React.Component {
                         } else if (previousColorWall === "white" || previousColorWall === null) { // if the wall was white the background color will be black
                             world.setColorIdBlocked(startWall[0], startWall[1], "black", true, null);
                             return;
-                        } else { // if the wall was neither black nor white, you can't change the background color
-                            updateErrorMsg("you can't change the color of this wall") // TODO How can we arrive here?
-                            world.resetCellWall(startWall, null, previousColorWall, null);
-                            return;
                         }
                     } else if (startWall[0] === endWall[0]) { // when the users select a column
                         if (startWall[0] % 2 === 1) { // when he clicks on a case that he can't choose
-                            updateErrorMsg("you have to select a row/column to change the colour of the walls") // TODO How can we arrive here?
+                            updateErrorMsg(createenvironment.errorMsg.wallLine)
                             world.errorMessage(startWall, previousColorWall);
                             world.resetCellWall(startWall, null, previousColorWall, null);
                             return;
@@ -406,7 +402,7 @@ export default class CreateEnvironment extends React.Component {
                         }
                     } else if (startWall[1] === endWall[1]) { // when the users select a line
                         if (startWall[1] % 2 === 1) { // when he clicks on a case that he can't choose
-                            updateErrorMsg("you have to select a row/column to change the colour of the walls") // TODO How can we arrive here?
+                            updateErrorMsg(createenvironment.errorMsg.wallLine)
                             world.errorMessage(startWall, previousColorWall);
                             world.resetCellWall(startWall, null, previousColorWall, null);
                             return;

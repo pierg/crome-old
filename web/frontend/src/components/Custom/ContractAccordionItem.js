@@ -3,20 +3,23 @@ import classnames from "classnames";
 import {Table} from "reactstrap";
 import makeStringOf from "hooks/listToStringConversion.js";
 import searchPatterns from "hooks/searchPatterns.js";
+import Switch from "react-bootstrap-switch";
+import Button from "../Elements/Button";
 
 const ContractAccordionItem = ({
-  title,
+  contract,
   color,
-  content,
-  defaultOpened,
   setOpen,
+  defaultOpened,
   patterns
 }) => {
   const [collapseOpen, setCollapseOpen] = React.useState(defaultOpened);
   const [rotate, setRotate] = React.useState(defaultOpened);
   const [collapseStyle, setCollapseStyle] = React.useState(undefined);
   const [animation, setAnimation] = React.useState(false);
+  const [toggleLTL, setToggleLTL] = React.useState(true);
   const collapseRef = React.useRef(null);
+
   const openAnimation = () => {
     setOpen();
     if (!collapseOpen && collapseStyle === undefined) {
@@ -70,6 +73,11 @@ const ContractAccordionItem = ({
     }
   }, [defaultOpened]);
 
+  React.useEffect(() => {
+      setCollapseStyle(collapseRef.current.scrollHeight);
+  }, [toggleLTL]);
+
+
   const colors = {
     blueGray: "text-blueGray-700 hover:text-blueGray-900",
     red: "text-red-500 hover:text-red-700",
@@ -90,10 +98,10 @@ const ContractAccordionItem = ({
           <h5
             className={
               colors[color] +
-              " mb-0 font-semibold duration-300 transition-all ease-in-out"
+              " mb-0 font-semibold text-center duration-300 transition-all ease-in-out"
             }
           >
-            {title}
+            {"Show Contract"}
               <i
                   className={classnames(
                       "text-sm mr-2 float-right fas fa-chevron-down duration-300 transition-all ease-in-out transform",
@@ -103,33 +111,38 @@ const ContractAccordionItem = ({
           </h5>
         </a>
       </div>
-      <div
-        className={classnames("duration-300 transition-all ease-in-out", {
-          block: collapseOpen,
-          hidden: !collapseOpen,
-        })}
-        style={{
-            height: "auto",
-            maxHeight: collapseStyle,
-        }}
-        ref={collapseRef}
-      >
-          <div className="text-blueGray-500 px-4 py-5 flex-auto leading-relaxed">
-              <Table responsive>
+        <div
+            className={classnames("duration-300 transition-all ease-in-out", {
+                block: collapseOpen,
+                hidden: !collapseOpen,
+            })}
+            style={{
+                height: "auto",
+                maxHeight: collapseStyle,
+            }}
+            ref={collapseRef}
+        >
+            <div className="flex justify-end"><Switch offText="Pattern" onText="LTL" onChange={(e) => setToggleLTL(e.state.value)}/></div>
+
+
+
+            {contract.map((prop, key) => (
+
+
+            <div key={key} className="text-blueGray-500 px-4 flex-auto leading-relaxed">
+                <Table responsive>
                     <thead>
                     <tr>
-                        <th className={"title-up"}>LTL Value</th>
-                        <th className={"title-up"}>Pattern</th>
+                        <th className={"title-up font-semibold"}>{prop.title}</th> {/* TODO apply semibold */}
                     </tr>
                     </thead>
                     <tbody>
-                    {/*console.log(content)*/}
-                    {content.map((prop, key) => (
-
+                    {prop.content.map((prop, key) => (
                         <tr key={key}>
-                            {/*(key===0) ? console.log(content) : ""*/}
-                            <td colSpan={prop.pattern !== undefined ? 1 : 2}><p>{prop.ltl_value}</p></td>
-                            {prop.pattern !== undefined && (
+                            {(toggleLTL || prop.pattern === undefined) && (
+                                <td><p>{prop.ltl_value}</p></td>
+                            )}
+                            {!toggleLTL && prop.pattern !== undefined && (
                                 <td>
                                     <p>{prop.pattern.name}</p>
                                     {searchPatterns(prop.pattern, patterns).map((arg, subKey) => (
@@ -140,9 +153,12 @@ const ContractAccordionItem = ({
                         </tr>
                     ))}
                     </tbody>
-              </Table>
-          </div>
-      </div>
+                </Table>
+            </div>
+                ))}
+
+            <div className="flex justify-center"><Button>Show Details</Button></div>
+        </div>
     </>
   );
 };

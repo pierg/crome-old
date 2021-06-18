@@ -17,8 +17,8 @@ function GoalView(props) {
         return context===undefined ? ["",""] : [context.includes("day") ? "checked" : "", context.includes("night") ? "checked" : ""]
     }
 
-    let callBackAction = (key) => {
-      setOpen(key);
+    let callBackAction = () => {
+      setOpen(undefined);
     };
 
     return(
@@ -32,7 +32,7 @@ function GoalView(props) {
                             </div>
                         </div>
                         <div className="flex flex-col flex-wrap w-full">
-                            <div className="relative w-full pr-4 mb-4 max-w-full flex-grow flex-1">
+                            <div className="relative w-full pr-4 mt-2 mb-2 max-w-full flex-grow flex-1">
                                 <span className="text-md text-blueGray-700">
                                     {props.description}
                                 </span>
@@ -41,24 +41,9 @@ function GoalView(props) {
                                 <Checkbox className="mr-4" label="Day" readOnly checked={parseContext(props.context)[0]}/>
                                 <Checkbox label="Night" readOnly checked={parseContext(props.context)[1]}/>
                             </div>
-                            {contract.map((prop, key) => (
-                                <div key={key} className="relative w-full pr-4 max-w-full flex-grow flex-1">
-                                    <div
-                                        className="overflow-hidden relative flex flex-col min-w-0 break-words bg-white w-full border-b border-blueGray-200">
-                                        <ContractAccordionItem
-                                            title={prop.title[0].toUpperCase() + prop.title.slice(1)}
-                                            content={prop.content}
-                                            patterns={props.patterns}
-                                            color={"lightBlue"}
-                                            setOpen={() => callBackAction(key)}
-                                            number={key}
-                                            defaultOpened={key === open}/>
-                                    </div>
-                                </div>
-                            ))}
                         </div>
                     </div>
-                    <div className="flex flex-wrap min-content">
+                    <div className="flex flex-col min-content">
                         <div className="relative pl-4 flex justify-end flex-initial">
                             <div
                                 onClick={() => props.modify(true, props.number)}
@@ -70,7 +55,7 @@ function GoalView(props) {
                                 <i className={props.statIconName}/>
                             </div>
                         </div>
-                        <div className="relative pl-4 flex justify-end items-end flex-initial">
+                        <div className="relative pl-4 flex mt-2 justify-end flex-initial">
                             <div
                                 onClick={() => props.delete(props.number)}
                                 className={
@@ -82,6 +67,21 @@ function GoalView(props) {
                             </div>
                         </div>
                     </div>
+                </div>
+                <div className="flex flex-col mt-4">
+
+                        <div className="relative w-full max-w-full flex-grow flex-1">
+                            <div
+                                className={"overflow-hidden relative flex flex-col min-w-0 pb-4 break-words bg-white w-full border-b border-blueGray-200"+ open ? "pb-4" : ""}>
+                                <ContractAccordionItem
+                                    contract={contract}
+                                    patterns={props.patterns}
+                                    color={"lightBlue"}
+                                    setOpen={() => callBackAction()}
+                                    defaultOpened={open}/>
+                            </div>
+                        </div>
+
                 </div>
             </div>
     </div>);
