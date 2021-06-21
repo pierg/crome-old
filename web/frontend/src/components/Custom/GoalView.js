@@ -5,20 +5,22 @@ import ContractAccordionItem from "./ContractAccordionItem";
 function GoalView(props) {
 
     const contract = []
-    const [open, setOpen] = React.useState();
+    const [open, setOpen] = React.useState()
 
     for (const property in props.contract) {
-        contract[Object.keys(props.contract).indexOf(property)] = []
-        contract[Object.keys(props.contract).indexOf(property)]["title"]=property
-        contract[Object.keys(props.contract).indexOf(property)]["content"]=props.contract[property]
+        if (props.contract.hasOwnProperty(property)) {
+            contract[Object.keys(props.contract).indexOf(property)] = []
+            contract[Object.keys(props.contract).indexOf(property)]["title"]=property
+            contract[Object.keys(props.contract).indexOf(property)]["content"]=props.contract[property]
+        }
     }
 
     function parseContext(context) {
         return context===undefined ? ["",""] : [context.includes("day") ? "checked" : "", context.includes("night") ? "checked" : ""]
     }
 
-    let callBackAction = () => {
-      setOpen(undefined);
+    let callBackAction = (bool) => {
+      setOpen(bool);
     };
 
     return(
@@ -69,15 +71,14 @@ function GoalView(props) {
                     </div>
                 </div>
                 <div className="flex flex-col mt-4">
-
                         <div className="relative w-full max-w-full flex-grow flex-1">
                             <div
-                                className={"overflow-hidden relative flex flex-col min-w-0 pb-4 break-words bg-white w-full border-b border-blueGray-200"+ open ? "pb-4" : ""}>
+                                className={"overflow-hidden relative flex flex-col min-w-0 " + (open ? "pb-4 " : "") + "break-words bg-white w-full border-b border-blueGray-200"}>
                                 <ContractAccordionItem
                                     contract={contract}
                                     patterns={props.patterns}
                                     color={"lightBlue"}
-                                    setOpen={() => callBackAction()}
+                                    setOpen={callBackAction}
                                     defaultOpened={open}/>
                             </div>
                         </div>
