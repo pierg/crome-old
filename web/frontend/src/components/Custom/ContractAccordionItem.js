@@ -11,7 +11,8 @@ const ContractAccordionItem = ({
   color,
   setOpen,
   defaultOpened,
-  patterns
+  patterns,
+  modal
 }) => {
   const [collapseOpen, setCollapseOpen] = React.useState(defaultOpened);
   const [rotate, setRotate] = React.useState(defaultOpened);
@@ -133,8 +134,8 @@ const ContractAccordionItem = ({
               <div key={key} className="text-blueGray-500 px-4 flex-auto leading-relaxed">
                 <Table responsive>
                   <thead>
-                  <tr>{/*}
-                        <th className={"title-up font-semibold"}>{prop.title}</th> {/* TODO apply semibold */}
+                  <tr>
+                    <th className={"title-up font-semibold-important"}>{prop.title}</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -158,7 +159,7 @@ const ContractAccordionItem = ({
               </div>
           ))}
 
-          <div className="flex justify-center"><Button>Show Details</Button></div>
+          <div className="flex justify-center"><Button onClick={() => modal(true)}>Show Details</Button></div>
         </div>
       </>
   );

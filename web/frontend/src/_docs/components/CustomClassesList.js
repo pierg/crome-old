@@ -55,11 +55,11 @@ export default function CustomClassesList({ title, items, content }) {
             <h3 className="text-pink-500 hover:text-pink-700 mb-0 font-semibold duration-300 transition-all ease-in-out">
               {title}
               <i
-                className={classnames(
-                  "text-sm mr-2 float-right fas fa-chevron-down duration-300 transition-all ease-in-out transform",
-                  { "rotate-180": rotate }
-                )}
-              ></i>
+                  className={classnames(
+                      "text-sm mr-2 float-right fas fa-chevron-down duration-300 transition-all ease-in-out transform",
+                      {"rotate-180": rotate}
+                  )}
+              />
             </h3>
           </a>
         </div>

@@ -89,7 +89,7 @@ export default function CustomPlayer({ items, defaultOpened }) {
                         toggleNew(e, open - 1 < 0 ? items.length - 1 : open - 1)
                     }
                 >
-                  <i className="text-lightBlue-500 fas fa-chevron-left"></i>
+                  <i className="text-lightBlue-500 fas fa-chevron-left"/>
                   <span className="sr-only">Previous</span>
                 </a>
                 <a
@@ -99,7 +99,7 @@ export default function CustomPlayer({ items, defaultOpened }) {
                         toggleNew(e, open + 1 > items.length - 1 ? 0 : open + 1)
                     }
                 >
-                  <i className="text-lightBlue-500 fas fa-chevron-right"></i>
+                  <i className="text-lightBlue-500 fas fa-chevron-right"/>
                   <span className="sr-only">Next</span>
                 </a>
               </div>
