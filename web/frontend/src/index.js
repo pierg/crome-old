@@ -50,8 +50,8 @@ import Landing1 from "views/presentation/Landing1.js";
 import Landing2 from "views/presentation/Landing2.js";
 import AboutUs from "views/presentation/AboutUs.js";
 import ContactUs from "views/presentation/ContactUs.js";
+// // custom
 import CustomDashboard from "./views/custom/CustomDashboard";
-import CustomJavascript from "./components/NowUI/CustomJavaScript";
 // Product Pages - STOP
 
 
@@ -98,6 +98,7 @@ ReactDOM.render(
       {/* Custom Routes added */}
       <Route path="/index" render={() => (<CustomDashboard page="index" />)}/>
       <Route path="/world" render={() => (<CustomDashboard page="world" />)}/>
+      <Route path="/console" render={() => (<CustomDashboard page="console" />)}/>
       {/* TODO
       * Refactor te 2 Routes above, to have only one Route that calls CustomDashboard
       * A prop must be passed to the component depending on the path
@@ -105,8 +106,6 @@ ReactDOM.render(
       */}
       {/*<Route path="/index/:page" component={CustomDashboard} />*/}
       {/*<Route path="/index" render={(props) => (<CustomDashboard id={props.match.params.id} />)}/>*/}
-
-      <Route path="/test" component={CustomJavascript}/>
 
       <Redirect from="*" to="/index" />
     </Switch>
