@@ -11,6 +11,7 @@ import custommediaplayerteaminfo from "_texts/custom/customplayerinfo.js";
 import {SocketProvider} from "../../contexts/SocketProvider";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import CreateEnvironment from "./CreateEnvironment";
+import Console from "../../components/Crome/Console";
 
 
 export default function CustomDashboard(props) {
@@ -28,7 +29,8 @@ export default function CustomDashboard(props) {
                 {
                     {
                         'index': <CustomPlayer {...custommediaplayerteaminfo} />,
-                        'world': <CreateEnvironment/>
+                        'world': <CreateEnvironment/>,
+                        'console': <Console/>
                     }[props.page]
                 }
             </div>

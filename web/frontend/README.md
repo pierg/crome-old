@@ -81,6 +81,7 @@ Location : src/views/custom
 - CustomPlayer
     - Description : Player allowing to navigate between the 4 following components
         - WorldModeling
+            - Description : Displays worlds
         - GoalModeling
             - Description : Displays goals
         - Analysis
@@ -89,14 +90,17 @@ Location : src/views/custom
 - CreateEnvironment
     - Description : Page built with Gridworld allowing to build or modify an environment
     - Requires :
-        - JSON of coordinates with existing rooms (to be determined)
+        - JSON of coordinates with existing locations (to be determined)
     - Produces :
-        - JSON of coordinates with created rooms (to be determined)
+        - JSON of coordinates with created locations (to be determined)
 
 ### Crome Components
 
 Location : src/components/Crome
 
+-Console
+    - Description : Temporary page, soon will be able to display raw data of every exchange
+                    between frontend and backend, visible from everywhere
 - CustomHeader
     - Description : Displays the 4 parts of the CustomPlayer
     - Requires :
@@ -124,19 +128,24 @@ Location : src/components/Crome
 Location : src/components/Custom
 
 - AddGoal
-- ContractEditArguments  
+- ContractAccordionItem
 - ContractContentComponent
 - ContractContentEditor
+- ContractEditArguments 
+- ContractModalDetails  
 - CustomCardMini
 - CustomSelect
 - GoalView
+- Location  
 - LoginSession
+- WorldView
 
 ### Custom Data
 
 Location : src/_texts/custom
 
 - contracteditorinfo
+- createenvironment  
 - customaccordion
 - customheadercards
 - customplayerinfo
@@ -144,3 +153,11 @@ Location : src/_texts/custom
 - defaultgoal
 - goaleditinfo
 - goalmodelinginfo
+- gridcolors
+
+### Custom Stylesheets
+
+Location : src/assets/styles
+
+- custom.css
+    - Description : Every style rule that we couldn't have with the other stylesheets
