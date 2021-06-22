@@ -212,19 +212,29 @@ export default class CreateEnvironment extends React.Component {
         }
         for (let i = 0; i < this.map.length; i++) {
             for (let j = 0; j < this.map[0].length; j++) {
-                if (this.map[i][j][0] !== "white" && this.map[i][j][2] !== null) {
+                if (this.map[i][j][0] !== "white" && this.map[i][j][2] !== null && i % 2 === 1 && j % 2 === 1) {
                     const index = this.world.isID(this.map[i][j][2]);
                     obj.grid.location[index].coordinates.push({x : Math.trunc(i / 2) + 1, y : Math.trunc(j / 2) + 1})
                 }
-                else if (this.map[i][j][0] === "black") {
-                    obj.grid.walls.push({left : { x : i / 2, y : Math.trunc(j / 2) + 1},right : { x : (i / 2) + 1, y : Math.trunc(j / 2) + 1 }})
+                else if (this.map[i][j][0] === "black" && ((i % 2 === 0 && j % 2 === 1) || (i % 2 === 1 && j % 2 === 0))) {
+                    if (i % 2 === 1 && j % 2 === 0) {
+                        console.log(" i :" + i + ", j : " + j);
+                        obj.grid.walls.push({
+                            above : {x : Math.trunc(i / 2) + 1, y : (j / 2)},
+                            below : {x : Math.trunc(i / 2) + 1, y : (j / 2) + 1}
+                        });
+                    }
+                    else if (i % 2 === 0 && j % 2 === 1) {
+                        obj.grid.walls.push({
+                            left: {x: i / 2, y: Math.trunc(j / 2) + 1},
+                            right: {x: (i / 2) + 1, y: Math.trunc(j / 2) + 1}
+                        });
+                    }
                 }
             }
         }
-        let fs = require('browserify-fs');
         const myJSON = JSON.stringify(obj);
-        const name = window.prompt("What is the name of the file ?");
-        fs.writeFile("./" + name + ".json", myJSON);
+        console.log(myJSON);
     }
 
     clearGridworld() {
@@ -374,13 +384,11 @@ export default class CreateEnvironment extends React.Component {
                     if (startWall[0] === endWall[0] && startWall[1] === endWall[1]) { // when you double-click on a wall
                         if (previousColorWall === "black") { // if the wall was black the background color will be white
                             world.setColorIdBlocked(startWall[0], startWall[1], "white", false, null);
+                            world.reset();
                             return;
                         } else if (previousColorWall === "white" || previousColorWall === null) { // if the wall was white the background color will be black
                             world.setColorIdBlocked(startWall[0], startWall[1], "black", true, null);
-                            return;
-                        } else { // if the wall was neither black nor white, you can't change the background color
-                            updateErrorMsg("you can't change the color of this wall") // TODO How can we arrive here?
-                            world.resetCellWall(startWall, null, previousColorWall, null);
+                            world.reset();
                             return;
                         }
                     } else if (startWall[0] === endWall[0]) { // when the users select a column

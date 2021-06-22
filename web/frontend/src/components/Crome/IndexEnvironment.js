@@ -290,7 +290,7 @@ GridWorld.prototype = {
 
   askToColor(minX, maxX, maxY, minY, previousColorArray, map) {
     let id = window.prompt("Enter an id");
-    if (id === null && "") {
+    if (id === null || id === "") {
       for (let i = minX; i < maxX + 1; i += 1) {
         for (let j = minY; j < maxY + 1; j += 1) {
           this.setBackgroundColor(i, j, previousColorArray[i][j - minY]);
@@ -322,6 +322,11 @@ GridWorld.prototype = {
       }
       else {
         window.alert("Impossible");
+        for (let i = minX; i < maxX + 1; i += 1) {
+          for (let j = minY; j < maxY + 1; j += 1) {
+            this.setBackgroundColor(i, j, previousColorArray[i][j - minY]);
+          }
+        }
         this.reset();
         return false;
       }
@@ -347,7 +352,7 @@ GridWorld.prototype = {
 
   setAttribute: function(x, y, key, value) {
     this.nodes[(y * (this.width + 1)) + x][key] = value;
-    if (this.isAttribute(value) === false) { // if the value entered by the user has not already been selected, this value is added to the array :idTable
+    if (this.isAttribute(value) === false && this.getBackgroundColor(x,y) !== "white") { // if the value entered by the user has not already been selected, this value is added to the array :idTable
       idTable.push([value,this.getBackgroundColor(x,y)]);
     }
   },
