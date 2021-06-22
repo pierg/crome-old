@@ -10,6 +10,7 @@ import footeradmin from "../../_texts/admin/footers/footeradmin";
 import FooterAdmin from "../../components/Footers/Admin/FooterAdmin";
 import Button from "../../components/Elements/Button";
 import createenvironment from "_texts/custom/createenvironment.js";
+import {B} from "react-select/dist/index-4bd03571.esm";
 
 export default class CreateEnvironment extends React.Component {
 
@@ -177,8 +178,17 @@ export default class CreateEnvironment extends React.Component {
         this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg)
     }
 
+    checkNeighbour(map, i, j) {
+        const aboveColor = this.map[i - 1][j][0];
+        const leftColor = this.map[i][j - 1][0];
+        if (aboveColor === this.map[i + 1][j][0] && aboveColor !== "white") {
+            this.map[i][j] = this.map[i - 1][j];
+        } else if (leftColor === this.map[i][j + 1][0] && leftColor !== "white") {
+            this.map[i][j] = this.map[i][j - 1];
+        }
+    }
+
     generateGridworldWithJSON() {
-        this.hidden();
         const locations = json.grid.locations;
         const walls = json.grid.walls;
         let  x;
@@ -195,6 +205,33 @@ export default class CreateEnvironment extends React.Component {
             x = ((walls[i].left.x * 2 - 1) + (walls[i].right.x * 2 - 1)) / 2 ;
             y = ((walls[i].left.y * 2 - 1) + (walls[i].right.y * 2 - 1)) / 2 ;
             this.map[x][y] = ["black", true, null];
+        }
+        let leftColor;
+        let aboveColor;
+
+        for (let i = 1; i < json.size[0].width; i++) {
+            for (let j = 1; j < json.size[0].width; j++) {
+                if (i % 2 !== 1 || j % 2 !== 1 ) {
+                    this.checkNeighbour(this.map, i, j);
+                }
+            }
+        }
+        for (let i = 2; i < json.size[0].width; i+= 2) {
+            for (let j = 2; j < json.size[0].width; j+= 2) {
+                this.checkNeighbour(this.map, i, j);
+            }
+        }
+        for (let i = 2; i < json.size[0].width; i+= 2) {
+            aboveColor = this.map[i - 1][0][0];
+            if (aboveColor === this.map[i + 1][0][0] && aboveColor !== "white") {
+                this.map[i][0] = this.map[i - 1][0];
+            }
+        }
+        for (let j = 2; j < json.size[0].width; j+= 2) {
+            leftColor = this.map[0][j - 1][0];
+            if (leftColor === this.map[0][j+ 1 ][0] && leftColor !== "white") {
+                this.map[0][j] = this.map[0][j - 1];
+            }
         }
         if (this.world !== null) this.world.onclick = null;
         this.world = this.buildGrid(this.myCanvas.current, (json.size[0].width / 2), this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg);
@@ -218,7 +255,6 @@ export default class CreateEnvironment extends React.Component {
                 }
                 else if (this.map[i][j][0] === "black" && ((i % 2 === 0 && j % 2 === 1) || (i % 2 === 1 && j % 2 === 0))) {
                     if (i % 2 === 1 && j % 2 === 0) {
-                        console.log(" i :" + i + ", j : " + j);
                         obj.grid.walls.push({
                             above : {x : Math.trunc(i / 2) + 1, y : (j / 2)},
                             below : {x : Math.trunc(i / 2) + 1, y : (j / 2) + 1}
@@ -355,6 +391,7 @@ export default class CreateEnvironment extends React.Component {
                     }
                     previousColorArray[start[0]][start[1] - minY] = previousStartColor;
                     const answer = world.askToColor(minX, maxX, maxY, minY, previousColorArray, map);
+                    world.updateMap(map);
                     if (answer !== false) {
                         const color = answer[0];
                         const id = answer[1];
