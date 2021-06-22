@@ -2,7 +2,16 @@ import React from "react";
 import PropTypes from "prop-types";
 import CustomSelect from "./CustomSelect";
 import ContractEditArguments from "./ContractEditArguments.js";
-import {Button, Card, CardBody, Table} from "reactstrap";
+import {
+    Button,
+    Card,
+    CardBody,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    Table,
+    UncontrolledDropdown
+} from "reactstrap";
 import Input from "../Elements/Input";
 import searchPatterns from "hooks/searchPatterns.js";
 
@@ -38,11 +47,24 @@ export default function ContractContentEditor({ items, patterns, color, changePa
                             <tr key={key}>
                                 <td>{key+1}</td>
                                 <td className="w-32">
-                                    <CustomSelect
-                                        items={infos.types}
-                                        defaultValue={prop.pattern === undefined ? infos.types[0] : infos.types[1]}
-                                        name="type"
-                                        changeSelector={(e, value) => changeParameter(e, contractType, key, value)}/>
+                                    <UncontrolledDropdown>
+                                        <DropdownToggle
+                                            caret
+                                            className="btn-round btn-block"
+                                            color={infos.dropdownColor}
+                                        >
+                                            {prop.pattern === undefined ? infos.types[0] : infos.types[1]}
+                                        </DropdownToggle>
+                                        <DropdownMenu>
+                                            {infos.types.map((infoType, infoTypeKey) => (
+                                                <DropdownItem
+                                                    key={infoTypeKey}
+                                                    name="type"
+                                                    onClick={(e) => changeParameter(e, contractType, key, infoType)}
+                                                >{infoType}</DropdownItem>
+                                            ))}
+                                        </DropdownMenu>
+                                    </UncontrolledDropdown>
                                 </td>
                                 <td>
                                     {prop.pattern === undefined && (<Input

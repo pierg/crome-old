@@ -7,6 +7,7 @@ const textProps = {
             singleValues: "Value",
             listOfValues: "Values"
         },
+        dropdownColor: "info",
         titles: ["#", "Type", "Value"],
         details: "See Arguments",
         deleteButton: {
