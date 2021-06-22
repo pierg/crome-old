@@ -300,31 +300,24 @@ GridWorld.prototype = {
       return false;
     }
     else {
-      if (this.validMap(map)) {
-        let color;
-        let index = this.isAttribute(id);
-        if (index !== false) {
-          color = idTable[index][1];
-        } else {
-          color = this.chooseBackgroundColor();
-          if (color === false) {
-            color = this.getRandomColor();
-          }
+      let color;
+      let index = this.isAttribute(id);
+      if (index !== false) {
+        color = idTable[index][1];
+      } else {
+        color = this.chooseBackgroundColor();
+        if (color === false) {
+          color = this.getRandomColor();
         }
-        for (let i = minX; i < maxX + 1; i += 1) {
-          for (let j = minY; j < maxY + 1; j += 1) {
-            this.checkNeighbour(i, j, color); //if the cell has already a color, color his neighbors in white except if there is a wall
-            this.setColorIdBlocked(i, j, color, true, id);
-          }
+      }
+      for (let i = minX; i < maxX + 1; i += 1) {
+        for (let j = minY; j < maxY + 1; j += 1) {
+          this.checkNeighbour(i, j, color); //if the cell has already a color, color his neighbors in white except if there is a wall
+          this.setColorIdBlocked(i, j, color, true, id);
         }
-        this.reset();
-        return [color, id];
       }
-      else {
-        window.alert("Impossible");
-        this.reset();
-        return false;
-      }
+      this.reset();
+      return [color, id];
     }
   },
 
