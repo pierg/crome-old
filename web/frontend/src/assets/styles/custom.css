@@ -23,6 +23,10 @@
     margin-right: 10px;
 }
 
+.font-semibold-important {
+    font-weight: 600 !important;
+}
+
 @media (min-width: 640px) {
     .sm\:c-m-w-70 {
         max-width: 500px;

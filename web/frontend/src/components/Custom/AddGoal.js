@@ -5,7 +5,7 @@ function AddGoal(props) {
     return(
         <div className="flex-auto p-4 flex flex-col justify-center items-center">
             <div className="flex flex-wrap flex-col">
-                <div className="relative w-full pb-2 max-w-full flex-grow flex-1">
+                <div className="relative w-full pb-2 max-w-full text-center flex-grow flex-1">
                     <span className="font-bold text-xl uppercase text-white">{props.statText}</span>
                 </div>
                 <div className="relative w-auto flex flex-initial justify-center">

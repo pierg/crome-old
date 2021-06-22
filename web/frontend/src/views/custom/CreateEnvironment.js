@@ -385,15 +385,17 @@ export default class CreateEnvironment extends React.Component {
                         if (previousColorWall === "black") { // if the wall was black the background color will be white
                             world.setColorIdBlocked(startWall[0], startWall[1], "white", false, null);
                             world.reset();
+                            world.updateMap(map);
                             return;
                         } else if (previousColorWall === "white" || previousColorWall === null) { // if the wall was white the background color will be black
                             world.setColorIdBlocked(startWall[0], startWall[1], "black", true, null);
                             world.reset();
+                            world.updateMap(map);
                             return;
                         }
                     } else if (startWall[0] === endWall[0]) { // when the users select a column
                         if (startWall[0] % 2 === 1) { // when he clicks on a case that he can't choose
-                            updateErrorMsg("you have to select a row/column to change the colour of the walls") // TODO How can we arrive here?
+                            updateErrorMsg(createenvironment.errorMsg.wallLine)
                             world.errorMessage(startWall, previousColorWall);
                             world.resetCellWall(startWall, null, previousColorWall, null);
                             return;
@@ -411,10 +413,11 @@ export default class CreateEnvironment extends React.Component {
                             for (let i = min; i < max +1; i+= 1) {
                                 world.setBackgroundColorWall(startWall[0], i, previousColorWall);
                             }
+                            world.updateMap(map);
                         }
                     } else if (startWall[1] === endWall[1]) { // when the users select a line
                         if (startWall[1] % 2 === 1) { // when he clicks on a case that he can't choose
-                            updateErrorMsg("you have to select a row/column to change the colour of the walls") // TODO How can we arrive here?
+                            updateErrorMsg(createenvironment.errorMsg.wallLine)
                             world.errorMessage(startWall, previousColorWall);
                             world.resetCellWall(startWall, null, previousColorWall, null);
                             return;
@@ -457,7 +460,6 @@ export default class CreateEnvironment extends React.Component {
                     }
                 }
             }
-            world.updateMap(map);
             callbackMap(map)
         }
         updateErrorMsg("")

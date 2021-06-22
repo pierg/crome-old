@@ -1,35 +1,6 @@
-import React, {useEffect} from 'react';
-import Checkbox from "../Elements/Checkbox";
-import ContractAccordionItem from "./ContractAccordionItem";
-import {Modal} from "reactstrap";
-import ContractModalDetails from "./ContractModalDetails";
+import React from 'react';
 
-function GoalView(props) {
-
-    const contract = []
-    const [open, setOpen] = React.useState(false)
-    const [modalClassic, setModalClassic] = React.useState(false)
-
-    for (const property in props.contract) {
-        if (props.contract.hasOwnProperty(property)) {
-            contract[Object.keys(props.contract).indexOf(property)] = []
-            contract[Object.keys(props.contract).indexOf(property)]["title"]=property
-            contract[Object.keys(props.contract).indexOf(property)]["content"]=props.contract[property]
-        }
-    }
-
-    useEffect(() => {
-        setOpen(false)
-    }, [props.contract]);
-
-
-    function parseContext(context) {
-        return context===undefined ? ["",""] : [context.includes("day") ? "checked" : "", context.includes("night") ? "checked" : ""]
-    }
-
-    let callBackAction = (bool) => {
-      setOpen(bool);
-    };
+function WorldView(props) {
 
     return(
         <>
@@ -48,10 +19,7 @@ function GoalView(props) {
                                     {props.description}
                                 </span>
                                 </div>
-                                <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
-                                    <Checkbox className="mr-4" label="Day" readOnly checked={parseContext(props.context)[0]}/>
-                                    <Checkbox label="Night" readOnly checked={parseContext(props.context)[1]}/>
-                                </div>
+                                <div className="relative w-full pr-4 max-w-full flex-grow flex-1"/>
                             </div>
                         </div>
                         <div className="flex flex-col min-content">
@@ -82,27 +50,14 @@ function GoalView(props) {
                     <div className="flex flex-col mt-4">
                         <div className="relative w-full max-w-full flex-grow flex-1">
                             <div
-                                className={"overflow-hidden relative flex flex-col min-w-0 " + (open ? "pb-4 " : "") + "break-words bg-white w-full border-b border-blueGray-200"}>
-                                <ContractAccordionItem
-                                    contract={contract}
-                                    patterns={props.patterns}
-                                    color={"lightBlue"}
-                                    setOpen={callBackAction}
-                                    defaultOpened={open}
-                                    modal={setModalClassic}/>
+                                className={"overflow-hidden relative flex flex-col min-w-0 break-words bg-white w-full border-b border-blueGray-200"}>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <Modal
-                isOpen={modalClassic}
-                toggle={() => setModalClassic(false)}
-                className={"custom-modal-dialog sm:c-m-w-70 md:c-m-w-60 lg:c-m-w-50 xl:c-m-w-40"}>
-                <ContractModalDetails close={() => setModalClassic(false)}/>
-            </Modal>
         </>
     );
 }
 
-export default GoalView;
+export default WorldView;
