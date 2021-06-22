@@ -291,6 +291,7 @@ GridWorld.prototype = {
   askToColor(minX, maxX, maxY, minY, previousColorArray, map) {
     let id = window.prompt("Enter an id");
     if (id === null || id === "") {
+      console.log("test3")
       for (let i = minX; i < maxX + 1; i += 1) {
         for (let j = minY; j < maxY + 1; j += 1) {
           this.setBackgroundColor(i, j, previousColorArray[i][j - minY]);
@@ -304,20 +305,29 @@ GridWorld.prototype = {
       let index = this.isAttribute(id);
       if (index !== false) {
         color = idTable[index][1];
+        console.log("test5")
       } else {
         color = this.chooseBackgroundColor();
-        if (color === false) {
-          color = this.getRandomColor();
-        }
+        console.log("test6")
       }
-      for (let i = minX; i < maxX + 1; i += 1) {
-        for (let j = minY; j < maxY + 1; j += 1) {
-          this.checkNeighbour(i, j, color); //if the cell has already a color, color his neighbors in white except if there is a wall
-          this.setColorIdBlocked(i, j, color, true, id);
+      if (this.validMap(map)) {
+        console.log("test1")
+        for (let i = minX; i < maxX + 1; i += 1) {
+          for (let j = minY; j < maxY + 1; j += 1) {
+            this.checkNeighbour(i, j, color); //if the cell has already a color, color his neighbors in white except if there is a wall
+            this.setColorIdBlocked(i, j, color, true, id);
+          }
         }
+        this.reset();
+        return [color, id];
       }
-      this.reset();
-      return [color, id];
+
+      else {
+        console.log("test2")
+        window.alert("Impossible");
+        this.reset();
+        return false;
+      }
     }
   },
 
