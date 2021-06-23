@@ -1,8 +1,9 @@
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../assets/styles/tailwind.css";
 import React from "react";
-import AddGoal from "../../components/Custom/AddGoal";
+import AddButton from "../../components/Custom/AddButton";
 import WorldView from "../../components/Custom/WorldView";
+import {Link} from "react-router-dom";
 
 
 export default class WorldModeling extends React.Component {
@@ -50,11 +51,13 @@ const ParentComponent = props => (
             <div>
                 <div className="flex justify-center">
                     <div onClick={props.build} className="w-full lg:w-6/12 xl:w-3/12 mt-8 ml-4 mr-4 px-4 relative flex flex-col min-w-0 break-words bg-lightBlue-600 rounded mb-6 xl:mb-0 shadow-lg opacity-1 transform duration-300 transition-all ease-in-out">
-                        <AddGoal
+                        <Link to="/world" className="hover-no-underline"><AddButton
                             statText="Build your Environment"
                             statIconName="fas fa-plus-square"
                             statIconColor="text-lightBlue-700"
-                        /></div></div>
+                        /></Link>
+                    </div>
+                </div>
                 <div className="flex flex-wrap justify-center">
                     {props.children}
                 </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-function AddGoal(props) {
+function AddButton(props) {
 
     return(
         <div className="flex-auto p-4 flex flex-col justify-center items-center">
@@ -22,4 +22,4 @@ function AddGoal(props) {
         </div>);
 }
 
-export default AddGoal;
+export default AddButton;

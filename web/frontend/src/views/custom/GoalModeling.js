@@ -3,7 +3,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../assets/styles/tailwind.css";
 import "../../assets/styles/custom.css";
 import GoalView from "../../components/Custom/GoalView";
-import AddGoal from "../../components/Custom/AddGoal";
+import AddButton from "../../components/Custom/AddButton";
 import {Modal} from "reactstrap";
 import GoalEdit from "../../components/Crome/GoalEdit";
 import SocketIoGaols from "../../components/Custom/Examples/GetGoals";
@@ -161,7 +161,7 @@ const ParentComponent = props => (
             <div>
                 <div className="flex justify-center">
                     <div onClick={props.addChild} className="w-full lg:w-6/12 xl:w-3/12 mt-8 ml-4 mr-4 px-4 relative flex flex-col min-w-0 break-words bg-lightBlue-600 rounded mb-6 xl:mb-0 shadow-lg opacity-1 transform duration-300 transition-all ease-in-out">
-                        <AddGoal
+                        <AddButton
                             statText="Add a Goal"
                             statIconName="fas fa-plus-square"
                             statIconColor="text-lightBlue-700"

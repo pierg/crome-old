@@ -127,7 +127,7 @@ Location : src/components/Crome
 
 Location : src/components/Custom
 
-- AddGoal
+- AddButton
 - ContractAccordionItem
 - ContractContentComponent
 - ContractContentEditor

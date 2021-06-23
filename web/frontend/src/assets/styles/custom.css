@@ -27,6 +27,10 @@
     font-weight: 600 !important;
 }
 
+.hover-no-underline:hover {
+    text-decoration: none;
+}
+
 @media (min-width: 640px) {
     .sm\:c-m-w-70 {
         max-width: 500px;
