@@ -3,14 +3,13 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../components/Crome/IndexEnvironment";
 import GridWorld from "../../components/Crome/IndexEnvironment";
 import Location from "../../components/Custom/Location";
-import {Card, CardBody, PopoverBody, PopoverHeader, Table, UncontrolledPopover} from "reactstrap";
+import {Card, CardBody, PopoverBody, PopoverHeader, Table, UncontrolledPopover, UncontrolledTooltip} from "reactstrap";
 import img from "./robot1.png";
 import * as json from "./environment_example.json";
 import footeradmin from "../../_texts/admin/footers/footeradmin";
 import FooterAdmin from "../../components/Footers/Admin/FooterAdmin";
 import Button from "../../components/Elements/Button";
 import createenvironment from "_texts/custom/createenvironment.js";
-import {B} from "react-select/dist/index-4bd03571.esm";
 
 export default class CreateEnvironment extends React.Component {
 
@@ -539,7 +538,6 @@ export default class CreateEnvironment extends React.Component {
                                         <div className="flex justify-center">
                                             <div className="flex flex-col items-center">
                                                 <canvas className="shifted-canvas-margin" ref={this.myCanvas} id='canvas'/>
-
                                                 <UncontrolledPopover
                                                     placement={window.innerWidth > 991 ? "left" : "top"}
                                                     target="canvas"
@@ -551,7 +549,6 @@ export default class CreateEnvironment extends React.Component {
                                                         {this.state.errorMsg}
                                                     </PopoverBody>
                                                 </UncontrolledPopover>
-
                                                 <div className="m-4 px-16 pt-2 pb-2 relative flex flex-col min-w-0 break-words bg-white rounded shadow-lg">
                                                     <span className="font-semibold text-xs mb-1 text-center uppercase text-blueGray-700">Size of the Grid</span>
                                                     <div className="flex pl-2">
@@ -562,7 +559,27 @@ export default class CreateEnvironment extends React.Component {
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div className="w-full lg:w-4/12 xl:w-3/12 flex-col">
+                                            <div id="tooltipHelpBuild" className="m-4 px-4 relative flex flex-col min-w-0 break-words bg-white rounded shadow-lg">
+                                                <div className="flex flex-col justify-center">
+                                                    <div className="flex justify-center items-center title-up text-center my-2">How to do?<i className="ml-1 text-lightBlue-700 text-lg fas fa-info-circle"/></div>
+                                                    <UncontrolledTooltip
+                                                        delay={0}
+                                                        placement="right"
+                                                        target="tooltipHelpBuild"
+                                                    >
+                                                        <div className="flex flex-col text-left">
+                                                            {createenvironment.helpMsg.map((prop, key) => (
+                                                                <div className="mb-2" key={key}>
+                                                                    <h4 className="font-bold">{prop.title}</h4>
+                                                                    <div>{prop.content}</div>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </UncontrolledTooltip>
+                                                </div>
+                                            </div>
                                             <div className="m-4 px-4 relative flex flex-col min-w-0 break-words bg-white rounded shadow-lg">
                                                 <div className="flex flex-col justify-center">
                                                     <Card className="card-plain">
@@ -570,7 +587,7 @@ export default class CreateEnvironment extends React.Component {
                                                             <Table responsive>
                                                                 <thead>
                                                                 <tr>
-                                                                    <th colSpan={3} className="title title-up text-center font-bold">Locations</th>
+                                                                    <th colSpan={3} className="title-up text-center">Locations</th>
                                                                 </tr>
                                                                 </thead>
                                                                 <tbody>
@@ -587,9 +604,7 @@ export default class CreateEnvironment extends React.Component {
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
-
                                 </div>
                             </div>
                         </div>
