@@ -249,7 +249,7 @@ export default class CreateEnvironment extends React.Component {
             session_id: "default",
             project_id: "simple",};
         obj.size = {width: this.size * 2, height: this.size * 2};
-        obj.grid = {location : [], walls : []};
+        obj.grid = {location : [], walls : {horizontal : [], vertical : []}};
         for (let i = 0; i < idTable.length; i++) {
             obj.grid.location.push({coordinates : [], color : idTable[i][1], id : idTable[i][0]});
         }
@@ -261,13 +261,13 @@ export default class CreateEnvironment extends React.Component {
                 }
                 else if (this.map[i][j][0] === "black" && ((i % 2 === 0 && j % 2 === 1) || (i % 2 === 1 && j % 2 === 0))) {
                     if (i % 2 === 1 && j % 2 === 0) {
-                        obj.grid.walls.push({
-                            above : {x : Math.trunc(i / 2) + 1, y : (j / 2)},
-                            below : {x : Math.trunc(i / 2) + 1, y : (j / 2) + 1}
+                        obj.grid.walls.vertical.push({
+                            up : {x : Math.trunc(i / 2) + 1, y : (j / 2)},
+                            down : {x : Math.trunc(i / 2) + 1, y : (j / 2) + 1}
                         });
                     }
                     else if (i % 2 === 0 && j % 2 === 1) {
-                        obj.grid.walls.push({
+                        obj.grid.walls.horizontal.push({
                             left: {x: i / 2, y: Math.trunc(j / 2) + 1},
                             right: {x: (i / 2) + 1, y: Math.trunc(j / 2) + 1}
                         });
