@@ -28,7 +28,7 @@ export default function CustomHeader({ cards, color, states }) {
           <div>
             <div className="flex flex-wrap">
               {cards.map((prop, key) => (
-                <div key={key} className="w-full lg:w-6/12 xl:w-3/12 px-4">
+                <div key={key} className="w-full xl:w-6/12 xxl:w-3/12 px-4">
                   <CustomCardMini {...prop} state={states[key]} />
                 </div>
               ))}

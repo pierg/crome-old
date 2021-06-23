@@ -50,3 +50,12 @@
         max-width: 1000px;
     }
 }
+
+@media (min-width: 1850px) {
+    .xxl\:w-3\/12 {
+        width: 25%;
+    }
+    .xxl\:mb-0 {
+        margin-bottom: 0;
+    }
+}

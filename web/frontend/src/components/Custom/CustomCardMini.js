@@ -13,7 +13,7 @@ export default function CustomCardMini({
 
   return (
     <>
-      <div className="relative flex flex-col min-w-0 break-words bg-white rounded-lg mb-6 xl:mb-0 shadow-lg">
+      <div className="relative flex flex-col min-w-0 break-words bg-white rounded-lg mb-6 xxl:mb-0 shadow-lg">
         <div className="flex-auto p-4">
           <div className="flex flex-wrap">
             <div className="relative w-full pr-4 flex justify-center items-center max-w-full flex-grow flex-1">
@@ -26,7 +26,7 @@ export default function CustomCardMini({
                   iconColor
                 }
               >
-                <i className={statIconName}></i>
+                <i className={statIconName}/>
               </div>
             </div>
           </div>
