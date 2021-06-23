@@ -58,4 +58,34 @@
     .xxl\:mb-0 {
         margin-bottom: 0;
     }
+
+    /** SIDEBAR **/
+    .xxl\:z-10 {
+        z-index: 10;
+    }
+    .xxl\:translate-x-0 {
+        --tw-translate-x: 0px;
+    }
+    .xxl\:hidden {
+        display: none;
+    }
+    .xxl\:flex {
+        display: -webkit-flex;
+        display: flex;
+    }
+    .xxl\:pb-2 {
+        padding-bottom: 0.5rem;
+    }
+    .xxl\:flex-col {
+        -webkit-flex-direction: column;
+        flex-direction: column;
+    }
+    .xxl\:min-w-full {
+        min-width: 100%;
+    }
+
+    .xxl\:ml-64 {
+        margin-left: 16rem;
+    }
+    /** SIDEBAR **/
 }
