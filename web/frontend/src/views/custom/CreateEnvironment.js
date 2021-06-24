@@ -10,7 +10,6 @@ import footeradmin from "../../_texts/admin/footers/footeradmin";
 import FooterAdmin from "../../components/Footers/Admin/FooterAdmin";
 import Button from "../../components/Elements/Button";
 import createenvironment from "_texts/custom/createenvironment.js";
-import {B} from "react-select/dist/index-4bd03571.esm";
 
 export default class CreateEnvironment extends React.Component {
 
@@ -187,11 +186,28 @@ export default class CreateEnvironment extends React.Component {
             this.map[i][j] = this.map[i][j - 1];
         }
     }
-
+    displayWall(orientation) {
+        const wall = json.grid.walls[orientation];
+        let x;
+        let y;
+        let direction1;
+        let direction2;
+        if (orientation === "horizontal") {
+            direction1 = "left";
+            direction2 = "right";
+        }
+        else {
+            direction1 = "up";
+            direction2 = "down";
+        }
+        for (let i = 0; i < wall.length; i++) {
+            x = ((wall[i][direction1].x * 2 - 1) + (wall[i][direction2].x * 2 - 1)) / 2 ;
+            y = ((wall[i][direction1].y * 2 - 1) + (wall[i][direction2].y * 2 - 1)) / 2 ;
+            this.map[x][y] = ["black", true, null];
+        }
+    }
     generateGridworldWithJSON() {
         const locations = json.grid.locations;
-        const horizontal = json.grid.walls.horizontal;
-        const vertical = json.grid.walls.vertical;
         let  x;
         let  y;
         this.buildMap(this.map, (json.size[0].width / 2));
@@ -202,16 +218,8 @@ export default class CreateEnvironment extends React.Component {
                 this.map[x][y] = [locations[i].color, true, locations[i].id];
             }
         }
-        for (let i = 0; i < horizontal.length; i ++) {
-            x = ((horizontal[i].left.x * 2 - 1) + (horizontal[i].right.x * 2 - 1)) / 2 ;
-            y = ((horizontal[i].left.y * 2 - 1) + (horizontal[i].right.y * 2 - 1)) / 2 ;
-            this.map[x][y] = ["black", true, null];
-        }
-        for (let i = 0; i < vertical.length; i ++) {
-            x = ((vertical[i].up.x * 2 - 1) + (vertical[i].down.x * 2 - 1)) / 2 ;
-            y = ((vertical[i].up.y * 2 - 1) + (vertical[i].down.y * 2 - 1)) / 2 ;
-            this.map[x][y] = ["black", true, null];
-        }
+        this.displayWall("horizontal");
+        this.displayWall("vertical");
         let leftColor;
         let aboveColor;
 
@@ -275,8 +283,8 @@ export default class CreateEnvironment extends React.Component {
                 }
             }
         }
-        const myJSON = JSON.stringify(obj);
-        const name = window.prompt("What is the name of the file ?");
+        //const myJSON = JSON.stringify(obj);
+        //const name = window.prompt("What is the name of the file ?");
     }
 
     clearGridworld() {
@@ -564,7 +572,7 @@ export default class CreateEnvironment extends React.Component {
                                                     <div className="flex pl-2">
                                                         <Button color="red" onClick={() => this.modifyGridSize(-1)}><i className="text-xl fas fa-minus-square"/></Button>
                                                         <Button color="lightBlue" onClick={() => this.modifyGridSize(1)}><i className="text-xl fas fa-plus-square"/></Button>
-                                                        <Button onClick = {this.generateGridworldWithJSON}>Test</Button>
+                                                        {/*<Button onClick = {this.generateGridworldWithJSON}>Test</Button>*/}
                                                         {/*<Button ref={this.robotButton} onClick={this.launchRobot}>Robot</Button>*/}
                                                     </div>
                                                 </div>
