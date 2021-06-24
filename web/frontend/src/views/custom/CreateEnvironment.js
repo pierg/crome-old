@@ -189,7 +189,8 @@ export default class CreateEnvironment extends React.Component {
 
     generateGridworldWithJSON() {
         const locations = json.grid.locations;
-        const walls = json.grid.walls;
+        const horizontal = json.grid.walls.horizontal;
+        const vertical = json.grid.walls.vertical;
         let  x;
         let  y;
         this.buildMap(this.map, (json.size[0].width / 2));
@@ -200,9 +201,14 @@ export default class CreateEnvironment extends React.Component {
                 this.map[x][y] = [locations[i].color, true, locations[i].id];
             }
         }
-        for (let i = 0; i < walls.length; i ++) {
-            x = ((walls[i].left.x * 2 - 1) + (walls[i].right.x * 2 - 1)) / 2 ;
-            y = ((walls[i].left.y * 2 - 1) + (walls[i].right.y * 2 - 1)) / 2 ;
+        for (let i = 0; i < horizontal.length; i ++) {
+            x = ((horizontal[i].left.x * 2 - 1) + (horizontal[i].right.x * 2 - 1)) / 2 ;
+            y = ((horizontal[i].left.y * 2 - 1) + (horizontal[i].right.y * 2 - 1)) / 2 ;
+            this.map[x][y] = ["black", true, null];
+        }
+        for (let i = 0; i < vertical.length; i ++) {
+            x = ((vertical[i].up.x * 2 - 1) + (vertical[i].down.x * 2 - 1)) / 2 ;
+            y = ((vertical[i].up.y * 2 - 1) + (vertical[i].down.y * 2 - 1)) / 2 ;
             this.map[x][y] = ["black", true, null];
         }
         let leftColor;
@@ -242,7 +248,7 @@ export default class CreateEnvironment extends React.Component {
             session_id: "default",
             project_id: "simple",};
         obj.size = {width: this.size * 2, height: this.size * 2};
-        obj.grid = {location : [], walls : []};
+        obj.grid = {location : [], walls : {horizontal : [], vertical : []}};
         for (let i = 0; i < idTable.length; i++) {
             obj.grid.location.push({coordinates : [], color : idTable[i][1], id : idTable[i][0]});
         }
@@ -254,13 +260,13 @@ export default class CreateEnvironment extends React.Component {
                 }
                 else if (this.map[i][j][0] === "black" && ((i % 2 === 0 && j % 2 === 1) || (i % 2 === 1 && j % 2 === 0))) {
                     if (i % 2 === 1 && j % 2 === 0) {
-                        obj.grid.walls.push({
-                            above : {x : Math.trunc(i / 2) + 1, y : (j / 2)},
-                            below : {x : Math.trunc(i / 2) + 1, y : (j / 2) + 1}
+                        obj.grid.walls.vertical.push({
+                            up : {x : Math.trunc(i / 2) + 1, y : (j / 2)},
+                            down : {x : Math.trunc(i / 2) + 1, y : (j / 2) + 1}
                         });
                     }
                     else if (i % 2 === 0 && j % 2 === 1) {
-                        obj.grid.walls.push({
+                        obj.grid.walls.horizontal.push({
                             left: {x: i / 2, y: Math.trunc(j / 2) + 1},
                             right: {x: (i / 2) + 1, y: Math.trunc(j / 2) + 1}
                         });
@@ -269,7 +275,7 @@ export default class CreateEnvironment extends React.Component {
             }
         }
         const myJSON = JSON.stringify(obj);
-        console.log(myJSON);
+        const name = window.prompt("What is the name of the file ?");
     }
 
     clearGridworld() {
@@ -497,6 +503,7 @@ export default class CreateEnvironment extends React.Component {
                 }
             }
             callbackMap(map)
+            world.updateMap(map);
         }
         updateErrorMsg("")
 
@@ -554,6 +561,7 @@ export default class CreateEnvironment extends React.Component {
                                                     <div className="flex pl-2">
                                                         <Button color="red" onClick={() => this.modifyGridSize(-1)}><i className="text-xl fas fa-minus-square"/></Button>
                                                         <Button color="lightBlue" onClick={() => this.modifyGridSize(1)}><i className="text-xl fas fa-plus-square"/></Button>
+                                                        <Button onClick = {this.generateGridworldWithJSON}>Test</Button>
                                                         {/*<Button ref={this.robotButton} onClick={this.launchRobot}>Robot</Button>*/}
                                                     </div>
                                                 </div>

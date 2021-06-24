@@ -1,13 +1,19 @@
 {
   "filetype": "environment",
+  "name": "simple_gridworld_example",
   "session_id": "default",
   "project_id": "simple",
-  "size": [
-    {
-      "width": "10",
-      "height": "10"
+  "actions": {
+    "greet": {
+      "mutex_group": "mutex_group_1"
+    },
+    "register": {
+      "mutex_group": "mutex_group_1"
     }
-  ],
+  },
+  "sensors": {
+    "person": {}
+  },
   "grid": {
     "locations": [
       {
