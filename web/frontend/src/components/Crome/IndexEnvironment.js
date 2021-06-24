@@ -519,17 +519,6 @@ GridWorld.prototype = {
     return true;
   },
 
-  split(map,newBlock, id) {
-    let list = this.getListColor(map, id);
-    let nextToNewBlock = [];
-    for (let i = 0; i < list.length; i++) {
-      if (map[list[i][0] + 2][list[i][1]]) {
-
-      }
-    }
-    return true;
-  },
-
   valid: function(list, coord) {
     if (equals(list[list.length - 1], coord)) {
       return 1;
