@@ -276,7 +276,6 @@ export default class CreateEnvironment extends React.Component {
             }
         }
         const myJSON = JSON.stringify(obj);
-        console.log(myJSON);
         const name = window.prompt("What is the name of the file ?");
     }
 

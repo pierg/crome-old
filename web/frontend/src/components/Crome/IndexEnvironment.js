@@ -291,7 +291,6 @@ GridWorld.prototype = {
   askToColor(minX, maxX, maxY, minY, previousColorArray, map) {
     let id = window.prompt("Enter an id");
     if (id === null || id === "") {
-      console.log("test3")
       for (let i = minX; i < maxX + 1; i += 1) {
         for (let j = minY; j < maxY + 1; j += 1) {
           this.setBackgroundColor(i, j, previousColorArray[i][j - minY]);
@@ -302,16 +301,19 @@ GridWorld.prototype = {
     }
     else {
       let color;
-      let index = this.isAttribute(id);
+      let index = this.isID(id);
       if (index !== false) {
         color = idTable[index][1];
-        console.log("test5")
       } else {
         color = this.chooseBackgroundColor();
-        console.log("test6")
       }
-      if (this.validMap(map)) {
-        console.log("test1")
+      let newBlock = [];
+      for (let i = minX; i < maxX + 1; i += 1) {
+        for (let j = minY; j < maxY + 1; j += 1) {
+          newBlock.push([id, i, j]);
+        }
+      }
+      if (this.validMap(map, newBlock, color)) {
         for (let i = minX; i < maxX + 1; i += 1) {
           for (let j = minY; j < maxY + 1; j += 1) {
             this.checkNeighbour(i, j, color); //if the cell has already a color, color his neighbors in white except if there is a wall
@@ -323,7 +325,11 @@ GridWorld.prototype = {
       }
 
       else {
-        console.log("test2")
+        for (let i = minX; i < maxX + 1; i += 1) {
+          for (let j = minY; j < maxY + 1; j += 1) {
+            this.setBackgroundColor(i, j, previousColorArray[i][j - minY]);
+          }
+        }
         window.alert("Impossible");
         this.reset();
         return false;
@@ -339,25 +345,17 @@ GridWorld.prototype = {
     this.nodes[(y *  (this.width + 1)) + x].blocked = !!blocked;
   },
 
-  isID : function(value) { // checks if an id is in the array : idTable
-       for (let i = 0; i < idTable.length ; i++) {
-          if (idTable[i][0] === value) {
-            return i;
-          }
-       }
-       return false;
-  },
 
   setAttribute: function(x, y, key, value) {
     this.nodes[(y * (this.width + 1)) + x][key] = value;
-    if (this.isAttribute(value) === false && this.getBackgroundColor(x,y) !== "white") { // if the value entered by the user has not already been selected, this value is added to the array :idTable
+    if (this.isID(value) === false && this.getBackgroundColor(x,y) !== "white") { // if the value entered by the user has not already been selected, this value is added to the array :idTable
       idTable.push([value,this.getBackgroundColor(x,y)]);
     }
   },
 
   removeAttribute: function(value) {
     if (this.isID(value) !== false) {
-      const index = this.isAttribute(value);
+      const index = this.isID(value);
       const color = idTable[index][1];
       this.setInColorTable(color, false);
       for (let i = 0; i < this.width; i++) {
@@ -374,7 +372,7 @@ GridWorld.prototype = {
     return false;
   },
 
-  isAttribute: function(value) { // checks if an id is in the array : idTable
+  isID : function(value) { // checks if an id is in the array : idTable
        for (let i = 0; i < idTable.length ; i++) {
           if (idTable[i][0] === value) {
             return i;
@@ -508,6 +506,30 @@ GridWorld.prototype = {
     return false
   },
 
+  validColor: function(map, id, newBlock) {
+    let list = this.getListColor(map, id);
+    if (list.length !== 0) {
+      for (let i = 0; i < newBlock.length; i++) {
+        if (this.coordInArray(list, [newBlock[i][1], newBlock[i][2]])) {
+          return true;
+        }
+      }
+      return false;
+    }
+    return true;
+  },
+
+  split(map,newBlock, id) {
+    let list = this.getListColor(map, id);
+    let nextToNewBlock = [];
+    for (let i = 0; i < list.length; i++) {
+      if (map[list[i][0] + 2][list[i][1]]) {
+
+      }
+    }
+    return true;
+  },
+
   valid: function(list, coord) {
     if (equals(list[list.length - 1], coord)) {
       return 1;
@@ -520,7 +542,7 @@ GridWorld.prototype = {
     }
   },
 
-  validColor: function(map, id) {
+  validTestColor: function(map, id) {
     let list = this.getListColor(map, id);
     if (this.valid(list, list[0]) >= 1) {
       return true;
@@ -528,12 +550,23 @@ GridWorld.prototype = {
     return false;
   },
 
-  validMap: function(map) {
-    if (idTable.length === 1) {
-      return true;
+  validMap: function(map, newBlock, color) {
+    if (!this.validColor(map, newBlock[0][0], newBlock)) {
+      return false;
     }
-    for (let i = 1; i < idTable.length; i++) {
-      if (!this.validColor(map, idTable[i][0])) {
+    let map2 = []
+    for(let i = 0; i < map.length; ++i) {
+      map2[i] = [];
+      for(let j = 0; j < map[0].length; ++j) {
+        map2[i].push([map[i][j][0],map[i][j][1], map[i][j][2]]);
+      }
+    }
+
+    for (let i = 0; i < newBlock.length; i++) {
+      map2[newBlock[i][1]][newBlock[i][2]] = [color, true, newBlock[i][0]];
+    }
+    for (let i = 0; i < idTable.length; i++) {
+      if (!this.validTestColor(map2, idTable[i][0])) {
         return false;
       }
     }
