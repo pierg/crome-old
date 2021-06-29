@@ -271,6 +271,7 @@ export default class CreateEnvironment extends React.Component {
         if (this.world !== null) this.world.onclick = null;
         this.size = (json.size[0].width / 2);
         this.world = this.buildGrid(this.myCanvas.current, (json.size[0].width / 2), this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg);
+        this.world.actualiseIsColorTable();
     }
 
     saveInToJSON() {

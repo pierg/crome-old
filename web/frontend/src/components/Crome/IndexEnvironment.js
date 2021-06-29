@@ -563,6 +563,14 @@ GridWorld.prototype = {
     return true;
   },
 
+  actualiseIsColorTable : function () {
+    for (let i = 0; i < idTable.length; i++) {
+      const color = idTable[i][1];
+      const index = colorTable.indexOf(color);
+      isColorTable[index] = true;
+    }
+  },
+
   updateMap : function(map) {
     for (let i = 0; i < map.length; i++) {
       for (let j = 0; j < map[0].length; j++) {
