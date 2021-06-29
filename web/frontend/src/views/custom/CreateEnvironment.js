@@ -147,7 +147,6 @@ export default class CreateEnvironment extends React.Component {
         let isInY = (this.size * 2 + 1) - oldSizeY;
 
         if (isInX <= 0 || isInY <= 0) {
-            console.log(createenvironment)
             this.updateErrorMsg(createenvironment.errorMsg.gridTooSmall);
             this.size -= increment
         }
@@ -248,6 +247,7 @@ export default class CreateEnvironment extends React.Component {
             }
         }
         if (this.world !== null) this.world.onclick = null;
+        this.size = (json.size[0].width / 2);
         this.world = this.buildGrid(this.myCanvas.current, (json.size[0].width / 2), this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg);
     }
 
@@ -267,7 +267,7 @@ export default class CreateEnvironment extends React.Component {
                     const index = this.world.isID(this.map[i][j][2]);
                     obj.grid.location[index].coordinates.push({x : Math.trunc(i / 2) + 1, y : Math.trunc(j / 2) + 1})
                 }
-                else if (this.map[i][j][0] === "black" && ((i % 2 === 0 && j % 2 === 1) || (i % 2 === 1 && j % 2 === 0))) {
+                else if (this.map[i][j][0] === "black") {
                     if (i % 2 === 1 && j % 2 === 0) {
                         obj.grid.walls.vertical.push({
                             up : {x : Math.trunc(i / 2) + 1, y : (j / 2)},
