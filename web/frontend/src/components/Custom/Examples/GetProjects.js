@@ -1,7 +1,7 @@
 import React, {useEffect, useCallback, useState} from 'react'
 import {useSocket} from "../../../contexts/SocketProvider";
 
-function SocketIoGaols(props) {
+function SocketIoProjects(props) {
 
     const socket = useSocket()
 
@@ -17,17 +17,14 @@ function SocketIoGaols(props) {
     useEffect(() => {
         if (socket == null) return
 
-        socket.emit('get-goals', {session: "default", project: "simple"})
-        socket.on('receive-goals', setMessageFunction)
+        socket.emit('get-projects', {session: "default", project: props.session})
+        socket.on('receive-projects', setMessageFunction)
 
-        return () => socket.off('receive-goals')
+        return () => socket.off('receive-projects')
     }, [socket, setMessageFunction])
 
-    useEffect(() => {
-        props.goals(message)
-    }, [message])  // eslint-disable-line react-hooks/exhaustive-deps
 
     return (<></>);
 }
 
-export default SocketIoGaols;
+export default SocketIoProjects;

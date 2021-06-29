@@ -19,6 +19,35 @@ storage_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '
 socketio = SocketIO(app, cors_allowed_origins='http://localhost:3000')
 
 
+@socketio.on('get-projects')
+def get_projects(data):
+    print(data)
+    print('Getting Projects')
+    print(request.args)
+    print(f'ID {request.args.get("id")}')
+    print(f'Session {request.args.get("session")}')
+    print(f'Project {request.args.get("simple")}')
+
+    session_folder = Path(os.path.join(storage_folder, f"sessions/{data['session']}"))
+
+    """Retrieving files"""
+    files_paths = []
+    dirpath, dirnames, filenames = next(walk(session_folder))
+    for dir in dirnames:
+        print(dir)
+    for file in filenames:
+        files_paths.append(Path(os.path.join(dirpath, file)))
+
+    list_of_goals = []
+    for file in files_paths:
+        with open(file) as json_file:
+            json_obj = json.load(json_file)
+            json_str = json.dumps(json_obj)
+            list_of_goals.append(json_str)
+
+    emit("receive-projects", list_of_goals)
+
+
 @socketio.on('get-goals')
 def get_goals(data):
     print(data)
@@ -26,8 +55,9 @@ def get_goals(data):
     print(request.args)
     print(f'ID {request.args.get("id")}')
     print(f'Session {request.args.get("session")}')
+    print(f'Project {request.args.get("project")}')
 
-    goals_folder = Path(os.path.join(storage_folder, f"sessions/{data['session']}/goals"))
+    goals_folder = Path(os.path.join(storage_folder, f"sessions/{data['session']}/{data['project']}/goals"))
 
     """Retrieving files"""
     files_paths = []
