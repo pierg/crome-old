@@ -22,6 +22,7 @@ export default class CreateEnvironment extends React.Component {
     }
 
     componentDidMount() {
+        this.map = this.buildMap(this.map, this.size)
         this.generateGridworld()
     }
 
@@ -176,7 +177,7 @@ export default class CreateEnvironment extends React.Component {
 
             this.map = [];
 
-            this.buildMap(this.map, this.size);
+            this.map = this.buildMap(this.map, this.size);
 
             for (let i = leftBorderX; i < leftBorderX + oldSizeX; i++) {
                 for (let j = topBorderY; j < topBorderY + oldSizeY; j++) {
@@ -227,7 +228,7 @@ export default class CreateEnvironment extends React.Component {
         const locations = json.grid.locations;
         let  x;
         let  y;
-        this.buildMap(this.map, (json.size[0].width / 2));
+        this.map = this.buildMap(this.map, (json.size[0].width / 2));
         for (let i = 0; i < locations.length; i++) {
             for (let j = 0; j < locations[i].coordinates.length; j++) {
                 x = locations[i].coordinates[j].x * 2 - 1;
@@ -236,7 +237,6 @@ export default class CreateEnvironment extends React.Component {
 
             }
         }
-        this.addAllLocations(locations)
 
         this.displayWall("horizontal");
         this.displayWall("vertical");
@@ -267,6 +267,7 @@ export default class CreateEnvironment extends React.Component {
                 this.map[0][j] = this.map[0][j - 1];
             }
         }
+        this.addAllLocations(locations)
         if (this.world !== null) this.world.onclick = null;
         this.size = (json.size[0].width / 2);
         this.world = this.buildGrid(this.myCanvas.current, (json.size[0].width / 2), this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg);
@@ -309,12 +310,12 @@ export default class CreateEnvironment extends React.Component {
     }
 
     clearGridworld() {
-        this.map = []
         this.world.clearAttributeTable()
         this.world.resetInColorTable()
         const context = this.myCanvas.current.getContext('2d')
         context.clearRect(0, 0, this.myCanvas.current.width, this.myCanvas.current.height)
         this.deleteAllLocations()
+        this.map = this.buildMap(this.map, this.size);
         this.world.onclick = null
         this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg)
     }
@@ -354,12 +355,14 @@ export default class CreateEnvironment extends React.Component {
     }
 
     buildMap(map, size) {
+        map = [];
         for (let i = 0; i < size * 2 + 1; i++) {
             map[i] = [];
             for (let j = 0; j < size * 2 + 1; j++) {
                 map[i].push(["white", false, null]);
             }
         }
+        return map
     }
     end(a, i, color, bool) {
         if (bool && (a !== i || color !== "black")) { // if there are several points corresponding to one end, the one that does not have the colour black is chosen
@@ -375,15 +378,13 @@ export default class CreateEnvironment extends React.Component {
 
     buildGrid(canvas, size, map, addLocation, callbackMap, updateErrorMsg) {
         if (map.length === 0) {
-            this.buildMap(map, size);
+            this.map = this.buildMap(map, size);
         }
 
         let world = new GridWorld(canvas, size, size, {
             padding: {top: 10, left: 10, right: 10, bottom: 60},
             resizeCanvas: true,
             drawBorder: true});
-
-        this.drawRobot();
 
         world.onclick = function (node) {
             /*
@@ -407,7 +408,6 @@ export default class CreateEnvironment extends React.Component {
                 world.resetCellWall(start, startWall, previousStartColor, previousColorWall);
                 return;
             }
-
             if (node.x % 2 === 1 && node.y % 2 === 1) { // if the user click on a cell
                 if (start.length !== 0) { // when it's the second click, draw a square
                     end.push(node.x);

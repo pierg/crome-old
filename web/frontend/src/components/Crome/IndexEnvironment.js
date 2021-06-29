@@ -349,7 +349,7 @@ GridWorld.prototype = {
 
   setAttribute: function(x, y, key, value) {
     this.nodes[(y * (this.width + 1)) + x][key] = value;
-    if (this.isID(value) === false && this.getBackgroundColor(x,y) !== "white") { // if the value entered by the user has not already been selected, this value is added to the array :idTable
+    if (this.isID(value) === false && this.getBackgroundColor(x,y) !== "white" && this.getBackgroundColor(x,y) !== "black") { // if the value entered by the user has not already been selected, this value is added to the array :idTable
       idTable.push([value,this.getBackgroundColor(x,y)]);
     }
   },
