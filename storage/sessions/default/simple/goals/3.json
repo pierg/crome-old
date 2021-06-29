@@ -1,18 +1,16 @@
 {
-  "name": "greet_person",
+  "name": "Greet Person",
   "description": "Always => if see a person, greet in the same step, Only if see a person, greet immediately",
   "contract": {
     "assumptions": [
       {
-        "type": "LTL",
         "ltl_value": "G(F(person))"
       }
     ],
     "guarantees": [
       {
-        "type": "pattern",
-        "content": {
-          "name": "StrictOrderPatrolling",
+        "pattern": {
+          "name": "InstantReaction",
           "arguments": [
             {
               "name": "trigger",
@@ -27,7 +25,8 @@
               "value": "greet"
             }
           ]
-        }
+        },
+        "ltl_value": "G(person -> greet)"
       }
     ]
   }

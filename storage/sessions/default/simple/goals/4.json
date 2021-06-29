@@ -1,5 +1,5 @@
 {
-  "name": "register_person",
+  "name": "Register Person",
   "description": "During context day => if see a person, register in the next step, Only if see a person, register in the next step",
   "context": [
     "day"
@@ -7,14 +7,12 @@
   "contract": {
     "assumptions": [
       {
-        "type": "LTL",
-        "ltl_value": "true"
+        "ltl_value": "G(F(person))"
       }
     ],
     "guarantees": [
       {
-        "type": "pattern",
-        "content": {
+        "pattern": {
           "name": "BoundDelay",
           "arguments": [
             {
@@ -30,7 +28,8 @@
               "value": "register"
             }
           ]
-        }
+        },
+        "ltl_value": "G(person -> register)"
       }
     ]
   }
