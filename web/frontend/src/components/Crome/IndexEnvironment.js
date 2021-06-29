@@ -1,4 +1,5 @@
 import gridcolors from "_texts/custom/gridcolors.js";
+import createenvironment from "_texts/custom/createenvironment.js";
 
 
 function _n(val, def) {
@@ -288,7 +289,7 @@ GridWorld.prototype = {
     return color;
   },
 
-  askToColor(minX, maxX, maxY, minY, previousColorArray, map) {
+  askToColor(minX, maxX, maxY, minY, previousColorArray, map, callbackError) {
     let id = window.prompt("Enter an id");
     if (id === null || id === "") {
       for (let i = minX; i < maxX + 1; i += 1) {
@@ -330,7 +331,7 @@ GridWorld.prototype = {
             this.setBackgroundColor(i, j, previousColorArray[i][j - minY]);
           }
         }
-        window.alert("Impossible");
+        callbackError(createenvironment.errorMsg.splitLocations)
         this.reset();
         return false;
       }
