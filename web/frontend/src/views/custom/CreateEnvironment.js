@@ -45,6 +45,24 @@ export default class CreateEnvironment extends React.Component {
         }
     }
 
+    addAllLocations = (locations) => {
+        let tmpLocations = []
+        let tmpColors = []
+
+        for (let i=0; i<locations.length; i++) {
+            if (!tmpLocations.includes(locations[i].id)) {
+                tmpLocations.push(locations[i].id)
+                tmpColors.push(locations[i].color)
+            }
+        }
+
+        this.setState({
+            locations: tmpLocations,
+            colors: tmpColors,
+            numChildren: locations.length
+        })
+    }
+
     deleteLocation = (key) => {
         let tmpLocations = this.state.locations
         let tmpColors = this.state.colors
@@ -215,8 +233,11 @@ export default class CreateEnvironment extends React.Component {
                 x = locations[i].coordinates[j].x * 2 - 1;
                 y = locations[i].coordinates[j].y * 2 - 1;
                 this.map[x][y] = [locations[i].color, true, locations[i].id];
+
             }
         }
+        this.addAllLocations(locations)
+
         this.displayWall("horizontal");
         this.displayWall("vertical");
         let leftColor;
@@ -570,7 +591,7 @@ export default class CreateEnvironment extends React.Component {
                                                     <div className="flex pl-2">
                                                         <Button color="red" onClick={() => this.modifyGridSize(-1)}><i className="text-xl fas fa-minus-square"/></Button>
                                                         <Button color="lightBlue" onClick={() => this.modifyGridSize(1)}><i className="text-xl fas fa-plus-square"/></Button>
-                                                        {/*<Button onClick = {this.generateGridworldWithJSON}>Test</Button>*/}
+                                                        <Button onClick = {this.generateGridworldWithJSON}>Test</Button>
                                                         {/*<Button ref={this.robotButton} onClick={this.launchRobot}>Robot</Button>*/}
                                                     </div>
                                                 </div>
