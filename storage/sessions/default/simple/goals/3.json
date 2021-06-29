@@ -10,18 +10,14 @@
     "guarantees": [
       {
         "pattern": {
-          "name": "InstantReaction",
+          "name": "InstantaneousReaction",
           "arguments": [
             {
               "name": "trigger",
-              "format": "value",
-              "type": "any",
               "value": "person"
             },
             {
               "name": "reaction",
-              "format": "value",
-              "type": "any",
               "value": "greet"
             }
           ]

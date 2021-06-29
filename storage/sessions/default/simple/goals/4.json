@@ -17,14 +17,10 @@
           "arguments": [
             {
               "name": "trigger",
-              "format": "value",
-              "type": "any",
               "value": "person"
             },
             {
               "name": "reaction",
-              "format": "value",
-              "type": "any",
               "value": "register"
             }
           ]
