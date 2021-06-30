@@ -3,22 +3,29 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../components/Crome/IndexEnvironment";
 import GridWorld from "../../components/Crome/IndexEnvironment";
 import Location from "../../components/Custom/Location";
-import {Card, CardBody, PopoverBody, PopoverHeader, Table, UncontrolledPopover, UncontrolledTooltip} from "reactstrap";
+import {Modal, PopoverBody, PopoverHeader, UncontrolledPopover, UncontrolledTooltip} from "reactstrap";
 import img from "./robot1.png";
 import * as json from "./environment_example.json";
 import footeradmin from "../../_texts/admin/footers/footeradmin";
 import FooterAdmin from "../../components/Footers/Admin/FooterAdmin";
 import Button from "../../components/Elements/Button";
 import createenvironment from "_texts/custom/createenvironment.js";
+import ListBlock from "../../components/Custom/ListBlock";
+import ListLine from "../../components/Custom/ListLine";
+import goaleditinfo from "../../_texts/custom/goaleditinfo";
+import WorldEdit from "../../components/Crome/WorldEdit";
 
 export default class CreateEnvironment extends React.Component {
 
     state = {
-        locations: [],
+        lists: [[], ["test"], []],
+        editedLists: [[], ["test"], []],
         colors: [],
-        numChildren: 0,
+        numChildren: [0, 1, 0],
         errorMsg: "",
-        warningPop: false
+        warningPop: false,
+        currentList: 0,
+        currentIndex: 0
     }
 
     componentDidMount() {
@@ -31,69 +38,184 @@ export default class CreateEnvironment extends React.Component {
     }
 
     onAddLocation = (id, color) => {
-        let tmpLocations = this.state.locations
+        let tmpLists = this.state.lists
         let tmpColors = this.state.colors
 
-        if (!tmpLocations.includes(id)) {
-            tmpLocations.push(id)
+        if (!tmpLists[0].includes(id)) {
+            tmpLists[0].push(id)
             tmpColors.push(color)
 
+            let tmpNumChildren = this.state.numChildren
+            tmpNumChildren[0]++
+
             this.setState({
-                locations: tmpLocations,
+                lists: tmpLists,
+                editedLists: tmpLists,
                 colors: tmpColors,
-                numChildren: this.state.numChildren + 1
+                numChildren: tmpNumChildren
             })
         }
     }
 
     addAllLocations = (locations) => {
-        let tmpLocations = []
+        let tmpLists = []
         let tmpColors = []
 
         for (let i=0; i<locations.length; i++) {
-            if (!tmpLocations.includes(locations[i].id)) {
-                tmpLocations.push(locations[i].id)
+            if (!tmpLists[0].includes(locations[i].id)) {
+                tmpLists[0].push(locations[i].id)
                 tmpColors.push(locations[i].color)
             }
         }
 
+        let tmpNumChildren = this.state.numChildren
+        tmpNumChildren[0] = locations.length
+
         this.setState({
-            locations: tmpLocations,
+            lists: tmpLists,
             colors: tmpColors,
-            numChildren: locations.length
+            numChildren: tmpNumChildren
         })
     }
 
     deleteLocation = (key) => {
-        let tmpLocations = this.state.locations
+        let tmpLists = this.state.lists
         let tmpColors = this.state.colors
-        let index = tmpLocations.indexOf(key)
+        let tmpNumChildren = this.state.numChildren
+        let index = tmpLists[0].indexOf(key)
 
-        tmpLocations.splice(index, 1)
+        tmpLists[0].splice(index, 1)
         tmpColors.splice(index, 1)
 
+        tmpNumChildren[0]--
+
         this.setState({
-            locations: tmpLocations,
+            lists: tmpLists,
+            editedLists: tmpLists,
             colors: tmpColors,
-            numChildren: this.state.numChildren - 1
+            numChildren: tmpNumChildren
         })
 
         this.removeId(key)
     }
 
     deleteAllLocations = () => {
-        let tmpLocations = this.state.locations
+        let tmpLists = this.state.lists
 
-        for (let i=0; i<tmpLocations.length; i++) {
-            this.removeId(tmpLocations[i])
+        for (let i=0; i<tmpLists[0].length; i++) {
+            this.removeId(tmpLists[0][i])
         }
 
+        tmpLists[0] = []
+
         this.setState({
-            locations: [],
+            lists: tmpLists,
+            editedLists: tmpLists,
             colors: [],
-            numChildren: 0
+            numLocations: tmpLists
         })
     }
+
+    onAddLine = (index) => {
+
+        let tmpLists = this.state.lists
+        let tmpNumChildren = this.state.numChildren
+
+        tmpLists[index].push("")
+        tmpNumChildren[index]++
+
+        this.setState({
+            lists: tmpLists,
+            editedLists: tmpLists,
+            numChildren: tmpNumChildren
+        },() => this.setModalClassic(true, index, tmpNumChildren[index] - 1))
+
+
+    }
+
+    setModalClassic = (bool, listIndex = -1, elementIndex = -1) => {
+
+        this.setState({
+            modalClassic: bool,
+            editedLists: this.state.lists
+        })
+        if (listIndex !== -1 && elementIndex !== -1) {
+            this.setState({
+                currentList: listIndex,
+                currentIndex: elementIndex
+            })
+        }
+    }
+
+    editCurrentElement = (newElement) => {
+        this.setState( state => {
+            const editedLists = state.editedLists.map((list, j) => {
+                if (j === this.state.currentList) {
+                    return list.map((item, k) => {
+                        if (k === this.state.currentIndex) {
+                            return newElement
+                        } else {
+                            return item
+                        }
+                    })
+                } else {
+                    return list
+                }
+            })
+            return {
+                editedLists,
+            }
+        })
+    }
+
+    saveCurrentElement = (newElement) => {
+        this.setState( state => {
+            const lists = state.lists.map((list, j) => {
+                if (j === this.state.currentList) {
+                    return list.map((item, k) => {
+                        if (k === this.state.currentIndex) {
+                            return newElement
+                        } else {
+                            return item
+                        }
+                    })
+                } else {
+                    return list
+                }
+            })
+            return {
+                lists,
+            }
+        })
+
+        this.setState({
+            editedLists: this.state.lists,
+        })
+
+        this.setModalClassic(false)
+    }
+
+    deleteElement = (listIndex, elementIndex) => {
+
+        let tmpLists = this.state.lists
+        let tmpNumChildren = this.state.numChildren
+
+        console.log(tmpLists)
+        console.log(tmpNumChildren)
+
+        tmpLists[listIndex].splice(elementIndex, 1)
+        tmpNumChildren[listIndex]--
+
+        console.log(tmpLists)
+        console.log(tmpNumChildren)
+
+        this.setState({
+            lists: tmpLists,
+            editedLists: tmpLists,
+            numChildren: tmpNumChildren
+        })
+    }
+
 
     callbackMap = (map) => {
         this.map = map
@@ -139,6 +261,7 @@ export default class CreateEnvironment extends React.Component {
         this.tab = [[1,5],[1,3],[1,1],[3,1],[3,3],[5,3],[5,1],[7,1],[9,1],[9,3],[7,3],[5,3],[5,5],[3,5],[1,5]];
         this.x = null;
         this.y = null;
+        this.componentsList = []
     }
 
     modifyGridSize(increment) {
@@ -204,6 +327,7 @@ export default class CreateEnvironment extends React.Component {
             this.map[i][j] = this.map[i][j - 1];
         }
     }
+
     displayWall(orientation) {
         const wall = json.grid.walls[orientation];
         let x;
@@ -224,6 +348,7 @@ export default class CreateEnvironment extends React.Component {
             this.map[x][y] = ["black", true, null];
         }
     }
+
     generateGridworldWithJSON() {
         const locations = json.grid.locations;
         let  x;
@@ -365,6 +490,7 @@ export default class CreateEnvironment extends React.Component {
         }
         return map
     }
+
     end(a, i, color, bool) {
         if (bool && (a !== i || color !== "black")) { // if there are several points corresponding to one end, the one that does not have the colour black is chosen
             a = i;
@@ -548,14 +674,35 @@ export default class CreateEnvironment extends React.Component {
     }
 
     render() {
-        const children = [];
-        for (let i = 0; i < this.state.numChildren; i += 1) {
-            children.push(<Location key={i}
-                                    name={this.state.locations[i]}
-                                    onClick={() => this.deleteLocation(this.state.locations[i])}
+        this.componentsList = createenvironment.componentsList
+
+        for (let i = 0; i < this.state.numChildren[0]; i += 1) {
+            this.componentsList[0].content[i]=(<Location key={i}
+                                    name={this.state.lists[0][i]}
+                                    onClick={() => this.deleteLocation(this.state.lists[0][i])}
                                     color={this.state.colors[i]}
-                                    statIconName={"fas fa-square"}/>);
+                                    statIconName={"fas fa-square"}
+                                    deleteIconName={"now-ui-icons ui-1_simple-remove"}/>);
         }
+        for (let i = 0; i < this.state.numChildren[1]; i += 1) {
+            this.componentsList[1].content[i]=(<ListLine key={i}
+                                    name={this.state.lists[1][i]}
+                                    onEdit={() => this.setModalClassic(true, 1, i)}
+                                    onDelete={() => this.deleteElement(1, i)}
+                                    color={this.state.colors[i]}
+                                    editIconName={"fas fa-pen"}
+                                    deleteIconName={"now-ui-icons ui-1_simple-remove"}/>);
+        }
+        for (let i = 0; i < this.state.numChildren[2]; i += 1) {
+            this.componentsList[2].content[i]=(<ListLine key={this.state.numChildren[1] + i}
+                                    name={this.state.lists[2][i]}
+                                    onEdit={() => this.setModalClassic(true, 2, i)}
+                                    onDelete={() => this.deleteElement(2, i)}
+                                    color={this.state.colors[i]}
+                                    editIconName={"fas fa-pen"}
+                                    deleteIconName={"now-ui-icons ui-1_simple-remove"}/>);
+        }
+        console.log(this.componentsList)
         return (
             <>
                 <div className="relative pt-32 pb-32 bg-orange-500">
@@ -598,7 +745,6 @@ export default class CreateEnvironment extends React.Component {
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div className="w-full lg:w-4/12 xl:w-3/12 flex-col">
                                             <div id="tooltipHelpBuild" className="m-4 px-4 relative flex flex-col min-w-0 break-words bg-white rounded shadow-lg">
                                                 <div className="flex flex-col justify-center">
@@ -619,27 +765,14 @@ export default class CreateEnvironment extends React.Component {
                                                     </UncontrolledTooltip>
                                                 </div>
                                             </div>
+                                            {this.componentsList.map((prop, key) => (
+                                                <ListBlock key={key} displayAddButton={prop.displayAddButton === true} addLine={() => this.onAddLine(key)} content={prop.content} colspan={3} title={prop.title}/>
+                                            ))}
                                             <div className="m-4 px-4 relative flex flex-col min-w-0 break-words bg-white rounded shadow-lg">
-                                                <div className="flex flex-col justify-center">
-                                                    <Card className="card-plain">
-                                                        <CardBody className="overflow-x-initial">
-                                                            <Table responsive>
-                                                                <thead>
-                                                                <tr>
-                                                                    <th colSpan={3} className="title-up text-center">Locations</th>
-                                                                </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                {children}
-                                                                </tbody>
-                                                            </Table>
-                                                        </CardBody>
-                                                    </Card>
-                                                    <div className="flex flex-col pl-2 pb-3">
-                                                       <Button ref={this.clearButton} color="amber" onClick={this.clearGridworld}><i className="text-xl mr-2 fas fa-trash-alt"/>Clear</Button>
-                                                       <div className="mt-2"/>
-                                                       <Button ref={this.saveButton} color="emerald" onClick={this.saveInToJSON}><i className="text-xl mr-2 fas fa-check-square"/>Save</Button>
-                                                    </div>
+                                                <div className="flex flex-col pl-2 pt-3 pb-3">
+                                                    <Button ref={this.clearButton} color="amber" onClick={this.clearGridworld}><i className="text-xl mr-2 fas fa-trash-alt"/>Clear</Button>
+                                                    <div className="mt-2"/>
+                                                    <Button ref={this.saveButton} color="emerald" onClick={this.saveInToJSON}><i className="text-xl mr-2 fas fa-check-square"/>Save</Button>
                                                 </div>
                                             </div>
                                         </div>
@@ -650,6 +783,17 @@ export default class CreateEnvironment extends React.Component {
                     </div>
                     <FooterAdmin {...footeradmin} />
                 </div>
+                <Modal
+                    isOpen={this.state.modalClassic}
+                    toggle={() => this.setModalClassic(false)}
+                    className={"custom-modal-dialog sm:c-m-w-70 md:c-m-w-60 lg:c-m-w-50 xl:c-m-w-40"}>
+                    <WorldEdit
+                        element={this.state.editedLists[this.state.currentList][this.state.currentIndex]}
+                        edit={this.editCurrentElement}
+                        save={this.saveCurrentElement}
+                        close={() => this.setModalClassic(false)}
+                        {...goaleditinfo}/>
+                </Modal>
             </>
         );
     }

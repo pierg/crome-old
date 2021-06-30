@@ -13,12 +13,12 @@ function Location(props) {
             <td className="flex justify-end">
                 <Button
                     className="btn-icon"
-                    color={"danger"}
+                    color="danger"
                     size="sm"
                     type="button"
                     onClick={props.onClick}
                 >
-                    <i className="now-ui-icons ui-1_simple-remove"/>
+                    <i className={props.deleteIconName}/>
                 </Button>
             </td>
         </tr>
