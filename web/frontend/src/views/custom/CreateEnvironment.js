@@ -1,19 +1,23 @@
 import React from 'react';
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import "../../components/Crome/IndexEnvironment";
-import GridWorld from "../../components/Crome/IndexEnvironment";
-import Location from "../../components/Custom/Location";
 import {Modal, PopoverBody, PopoverHeader, UncontrolledPopover, UncontrolledTooltip} from "reactstrap";
-import img from "./robot1.png";
-import * as json from "./environment_example.json";
+
 import footeradmin from "../../_texts/admin/footers/footeradmin";
 import FooterAdmin from "../../components/Footers/Admin/FooterAdmin";
 import Button from "../../components/Elements/Button";
-import createenvironment from "_texts/custom/createenvironment.js";
+
+import "../../components/Crome/IndexEnvironment";
+import GridWorld from "../../components/Crome/IndexEnvironment";
+import Location from "../../components/Custom/Location";
 import ListBlock from "../../components/Custom/ListBlock";
 import ListLine from "../../components/Custom/ListLine";
-import goaleditinfo from "../../_texts/custom/goaleditinfo";
 import WorldEdit from "../../components/Crome/WorldEdit";
+import createenvironment from "_texts/custom/createenvironment.js";
+import goaleditinfo from "../../_texts/custom/goaleditinfo";
+
+import * as json from "./environment_example.json";
+import img from "./robot1.png";
+
 
 export default class CreateEnvironment extends React.Component {
 
@@ -28,6 +32,7 @@ export default class CreateEnvironment extends React.Component {
         currentIndex: 0
     }
 
+    /* GENERAL FUNCTIONS */
     componentDidMount() {
         this.map = this.buildMap(this.map, this.size)
         this.generateGridworld()
@@ -37,6 +42,44 @@ export default class CreateEnvironment extends React.Component {
         // fix Warning: Can't perform a React state update on an unmounted component
     }
 
+    setModalClassic = (bool, listIndex = -1, elementIndex = -1) => {
+
+        this.setState({
+            modalClassic: bool,
+            editedLists: this.state.lists
+        })
+        if (listIndex !== -1 && elementIndex !== -1) {
+            this.setState({
+                currentList: listIndex,
+                currentIndex: elementIndex
+            })
+        }
+    }
+
+    callbackMap = (map) => {
+        this.map = map
+    }
+
+    updateErrorMsg = (msg) => {
+        if (msg !== "") {
+            this.setState({
+                errorMsg: msg,
+                warningPop: true
+            });
+            setTimeout(() => {
+                this.setState({warningPop: false});
+            }, 4000)
+        }
+        else {
+            this.setState({
+                warningPop: false
+            })
+        }
+    }
+    /* GENERAL FUNCTIONS */
+
+
+    /* LISTS (Locations/Actions/Sensors) FUNCTIONS */
     onAddLocation = (id, color) => {
         let tmpLists = this.state.lists
         let tmpColors = this.state.colors
@@ -57,65 +100,6 @@ export default class CreateEnvironment extends React.Component {
         }
     }
 
-    addAllLocations = (locations) => {
-        let tmpLists = []
-        let tmpColors = []
-
-        for (let i=0; i<locations.length; i++) {
-            if (!tmpLists[0].includes(locations[i].id)) {
-                tmpLists[0].push(locations[i].id)
-                tmpColors.push(locations[i].color)
-            }
-        }
-
-        let tmpNumChildren = this.state.numChildren
-        tmpNumChildren[0] = locations.length
-
-        this.setState({
-            lists: tmpLists,
-            colors: tmpColors,
-            numChildren: tmpNumChildren
-        })
-    }
-
-    deleteLocation = (key) => {
-        let tmpLists = this.state.lists
-        let tmpColors = this.state.colors
-        let tmpNumChildren = this.state.numChildren
-        let index = tmpLists[0].indexOf(key)
-
-        tmpLists[0].splice(index, 1)
-        tmpColors.splice(index, 1)
-
-        tmpNumChildren[0]--
-
-        this.setState({
-            lists: tmpLists,
-            editedLists: tmpLists,
-            colors: tmpColors,
-            numChildren: tmpNumChildren
-        })
-
-        this.removeId(key)
-    }
-
-    deleteAllLocations = () => {
-        let tmpLists = this.state.lists
-
-        for (let i=0; i<tmpLists[0].length; i++) {
-            this.removeId(tmpLists[0][i])
-        }
-
-        tmpLists[0] = []
-
-        this.setState({
-            lists: tmpLists,
-            editedLists: tmpLists,
-            colors: [],
-            numLocations: tmpLists
-        })
-    }
-
     onAddLine = (index) => {
 
         let tmpLists = this.state.lists
@@ -133,18 +117,27 @@ export default class CreateEnvironment extends React.Component {
 
     }
 
-    setModalClassic = (bool, listIndex = -1, elementIndex = -1) => {
+    addAllLocations = (locations) => {
+        let tmpLists = this.state.lists
+        let tmpColors = []
+
+        tmpLists[0] = []
+
+        for (let i=0; i<locations.length; i++) {
+            if (!tmpLists[0].includes(locations[i].id)) {
+                tmpLists[0].push(locations[i].id)
+                tmpColors.push(locations[i].color)
+            }
+        }
+
+        let tmpNumChildren = this.state.numChildren
+        tmpNumChildren[0] = locations.length
 
         this.setState({
-            modalClassic: bool,
-            editedLists: this.state.lists
+            lists: tmpLists,
+            colors: tmpColors,
+            numChildren: tmpNumChildren
         })
-        if (listIndex !== -1 && elementIndex !== -1) {
-            this.setState({
-                currentList: listIndex,
-                currentIndex: elementIndex
-            })
-        }
     }
 
     editCurrentElement = (newElement) => {
@@ -200,57 +193,65 @@ export default class CreateEnvironment extends React.Component {
         let tmpLists = this.state.lists
         let tmpNumChildren = this.state.numChildren
 
-        console.log(tmpLists)
-        console.log(tmpNumChildren)
+        if (listIndex === 0) {
+            let tmpColors = this.state.colors
+            tmpColors.splice(elementIndex, 1)
+            this.setState({
+                colors: tmpColors,
+            })
+            this.removeId(this.state.lists[listIndex][elementIndex])
+        }
 
+        this.componentsList[listIndex].content.splice(elementIndex, 1)
         tmpLists[listIndex].splice(elementIndex, 1)
         tmpNumChildren[listIndex]--
-
-        console.log(tmpLists)
-        console.log(tmpNumChildren)
-
         this.setState({
             lists: tmpLists,
             editedLists: tmpLists,
             numChildren: tmpNumChildren
         })
+
     }
 
+    deleteAllElements = () => {
+        let tmpLists = this.state.lists
+        let tmpNumChildren = this.state.numChildren
 
-    callbackMap = (map) => {
-        this.map = map
-    }
-
-    updateErrorMsg = (msg) => {
-        if (msg !== "") {
-            this.setState({
-                errorMsg: msg,
-                warningPop: true
-            });
-            setTimeout(() => {
-                this.setState({warningPop: false});
-            }, 4000)
+        for (let i=0; i<tmpLists[0].length; i++) {
+            this.removeId(tmpLists[0][i])
         }
-        else {
-            this.setState({
-                warningPop: false
-            })
+
+        for (let i=0; i<tmpLists.length; i++) {
+            tmpLists[i] = []
+            tmpNumChildren[i] = 0
+            this.componentsList[i].content = []
         }
+
+        this.setState({
+            lists: tmpLists,
+            editedLists: tmpLists,
+            colors: [],
+            numChildren: tmpNumChildren
+        })
     }
 
+    clearEnvironment = () => {
+        this.deleteAllElements()
+        this.clearGridworld()
+    }
+    /* LISTS (Locations/Actions/Sensors) FUNCTIONS */
+
+
+    /* GRID FUNCTIONS */
     constructor(props) {
         super(props);
         this.myCanvas = React.createRef();
         this.generateGridworld = this.generateGridworld.bind(this);
         this.generateGridworldWithJSON = this.generateGridworldWithJSON.bind(this);
         this.saveInToJSON = this.saveInToJSON.bind(this);
-        this.id = React.createRef();
-        this.divId = React.createRef();
         this.map = [];
         this.clearGridworld = this.clearGridworld.bind(this);
         this.removeId = this.removeId.bind(this);
-        this.clearButton = React.createRef();
-        this.saveButton = React.createRef();
         this.world = null;
         this.launchRobot = this.launchRobot.bind(this);
         this.robot = this.robot.bind(this);
@@ -264,89 +265,9 @@ export default class CreateEnvironment extends React.Component {
         this.componentsList = []
     }
 
-    modifyGridSize(increment) {
-
-        this.size += increment
-
-        let oldMap = this.map;
-        let maxIdX = 0; // table corresponding to the node with the largest x as abscissa and its colour
-        let minIdX = this.map.length; // table corresponding to the node with the smallest x abscissa and its colour
-        let minIdY = this.map[0].length; // table corresponding to the node with the smallest y and its colour as ordinates
-        let maxIdY = 0; // table corresponding to the node with the largest x and its colour as ordinates
-        for (let i = 0; i < this.map.length; i++) {
-            for (let j = 0; j < this.map[0].length; j++) { // if the colour of the node is not white check if it is the point corresponding to one of the 4 ends
-                if (this.map[i][j][0] !== "white") {
-                    minIdX = this.end(minIdX, i, this.map[i][j][0], minIdX >= i);
-                    minIdY = this.end(minIdY, j, this.map[i][j][0], minIdY >= j);
-                    maxIdX = this.end(maxIdX, i, this.map[i][j][0], maxIdX <= i);
-                    maxIdY = this.end(maxIdY, j, this.map[i][j][0], maxIdY <= j);
-                }
-            }
-        }
-        let oldSizeX = maxIdX - minIdX + 1;
-        let oldSizeY = maxIdY - minIdY + 1;
-        let isInX = (this.size * 2 + 1) - oldSizeX;
-        let isInY = (this.size * 2 + 1) - oldSizeY;
-
-        if (isInX <= 0 || isInY <= 0) {
-            this.updateErrorMsg(createenvironment.errorMsg.gridTooSmall);
-            this.size -= increment
-        }
-        else {
-            let leftBorderX = Math.trunc(isInX / 2);
-            let topBorderY = Math.trunc(isInY / 2);
-            leftBorderX = this.shift(leftBorderX, minIdX);
-            topBorderY = this.shift(topBorderY, minIdY);
-
-            this.map = [];
-
-            this.map = this.buildMap(this.map, this.size);
-
-            for (let i = leftBorderX; i < leftBorderX + oldSizeX; i++) {
-                for (let j = topBorderY; j < topBorderY + oldSizeY; j++) {
-                    this.map[i][j] = oldMap[minIdX + i - leftBorderX][minIdY + j - topBorderY];
-                }
-            }
-
-            this.world.onclick = null
-            this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg)
-        }
-    }
-
     generateGridworld() {
         if (this.world !== null) this.world.onclick = null
         this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg)
-    }
-
-    checkNeighbour(map, i, j) {
-        const aboveColor = this.map[i - 1][j][0];
-        const leftColor = this.map[i][j - 1][0];
-        if (aboveColor === this.map[i + 1][j][0] && aboveColor !== "white") {
-            this.map[i][j] = this.map[i - 1][j];
-        } else if (leftColor === this.map[i][j + 1][0] && leftColor !== "white") {
-            this.map[i][j] = this.map[i][j - 1];
-        }
-    }
-
-    displayWall(orientation) {
-        const wall = json.grid.walls[orientation];
-        let x;
-        let y;
-        let direction1;
-        let direction2;
-        if (orientation === "horizontal") {
-            direction1 = "left";
-            direction2 = "right";
-        }
-        else {
-            direction1 = "up";
-            direction2 = "down";
-        }
-        for (let i = 0; i < wall.length; i++) {
-            x = ((wall[i][direction1].x * 2 - 1) + (wall[i][direction2].x * 2 - 1)) / 2 ;
-            y = ((wall[i][direction1].y * 2 - 1) + (wall[i][direction2].y * 2 - 1)) / 2 ;
-            this.map[x][y] = ["black", true, null];
-        }
     }
 
     generateGridworldWithJSON() {
@@ -397,110 +318,6 @@ export default class CreateEnvironment extends React.Component {
         this.size = (json.size[0].width / 2);
         this.world = this.buildGrid(this.myCanvas.current, (json.size[0].width / 2), this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg);
         this.world.actualiseIsColorTable();
-    }
-
-    saveInToJSON() {
-        const idTable = this.world.getIdTable();
-        let obj = {filetype: "environment",
-            session_id: "default",
-            project_id: "simple",};
-        obj.size = {width: this.size * 2, height: this.size * 2};
-        obj.grid = {location : [], walls : {horizontal : [], vertical : []}};
-        for (let i = 0; i < idTable.length; i++) {
-            obj.grid.location.push({coordinates : [], color : idTable[i][1], id : idTable[i][0]});
-        }
-        for (let i = 0; i < this.map.length; i++) {
-            for (let j = 0; j < this.map[0].length; j++) {
-                if (this.map[i][j][0] !== "white" && this.map[i][j][2] !== null && i % 2 === 1 && j % 2 === 1) {
-                    const index = this.world.isID(this.map[i][j][2]);
-                    obj.grid.location[index].coordinates.push({x : Math.trunc(i / 2) + 1, y : Math.trunc(j / 2) + 1})
-                }
-                else if (this.map[i][j][0] === "black") {
-                    if (i % 2 === 1 && j % 2 === 0) {
-                        obj.grid.walls.vertical.push({
-                            up : {x : Math.trunc(i / 2) + 1, y : (j / 2)},
-                            down : {x : Math.trunc(i / 2) + 1, y : (j / 2) + 1}
-                        });
-                    }
-                    else if (i % 2 === 0 && j % 2 === 1) {
-                        obj.grid.walls.horizontal.push({
-                            left: {x: i / 2, y: Math.trunc(j / 2) + 1},
-                            right: {x: (i / 2) + 1, y: Math.trunc(j / 2) + 1}
-                        });
-                    }
-                }
-            }
-        }
-        //const myJSON = JSON.stringify(obj);
-        //const name = window.prompt("What is the name of the file ?");
-    }
-
-    clearGridworld() {
-        this.world.clearAttributeTable()
-        this.world.resetInColorTable()
-        const context = this.myCanvas.current.getContext('2d')
-        context.clearRect(0, 0, this.myCanvas.current.width, this.myCanvas.current.height)
-        this.deleteAllLocations()
-        this.map = this.buildMap(this.map, this.size);
-        this.world.onclick = null
-        this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg)
-    }
-
-    launchRobot() {
-        this.t = setInterval(this.robot, 1000);
-    }
-
-    robot() {
-        const ctx = document.getElementById('canvas').getContext('2d');
-        if (this.i === this.tab.length) {
-            clearInterval(this.t);
-            this.i = 0;
-            return;
-        }
-        else if (this.i > 0) {
-            ctx.fillRect(this.x, this.y, 50, 50);
-            this.world.setBackgroundColor(this.tab[this.i - 1][0],this.tab[this.i - 1][1],this.map[this.tab[this.i - 1][0]][this.tab[this.i - 1][1]][0]);
-        }
-        this.drawRobot();
-        this.i++;
-    }
-
-    drawRobot() {
-        const image = new Image();
-        image.src = img;
-        const ctx = document.getElementById('canvas').getContext('2d');
-        this.x = Math.trunc(this.tab[this.i][0]/ 2 ) * 64 + 24;
-        this.y = Math.trunc(this.tab[this.i][1]/ 2 ) * 64 + 24;
-        ctx.drawImage(image, this.x, this.y, 50, 50);
-    }
-
-    removeId(idToRemove) {
-        this.world.removeAttribute(idToRemove);
-        this.world.updateMap(this.map);
-        this.world.reset();
-    }
-
-    buildMap(map, size) {
-        map = [];
-        for (let i = 0; i < size * 2 + 1; i++) {
-            map[i] = [];
-            for (let j = 0; j < size * 2 + 1; j++) {
-                map[i].push(["white", false, null]);
-            }
-        }
-        return map
-    }
-
-    end(a, i, color, bool) {
-        if (bool && (a !== i || color !== "black")) { // if there are several points corresponding to one end, the one that does not have the colour black is chosen
-            a = i;
-        }
-        return a;
-    }
-
-    shift(border, index) {
-        if (border % 2 !== index % 2) border++;
-        return border;
     }
 
     buildGrid(canvas, size, map, addLocation, callbackMap, updateErrorMsg) {
@@ -673,13 +490,201 @@ export default class CreateEnvironment extends React.Component {
         return world;
     }
 
+    buildMap(map, size) {
+        map = [];
+        for (let i = 0; i < size * 2 + 1; i++) {
+            map[i] = [];
+            for (let j = 0; j < size * 2 + 1; j++) {
+                map[i].push(["white", false, null]);
+            }
+        }
+        return map
+    }
+
+    modifyGridSize(increment) {
+
+        this.size += increment
+
+        let oldMap = this.map;
+        let maxIdX = 0; // table corresponding to the node with the largest x as abscissa and its colour
+        let minIdX = this.map.length; // table corresponding to the node with the smallest x abscissa and its colour
+        let minIdY = this.map[0].length; // table corresponding to the node with the smallest y and its colour as ordinates
+        let maxIdY = 0; // table corresponding to the node with the largest x and its colour as ordinates
+        for (let i = 0; i < this.map.length; i++) {
+            for (let j = 0; j < this.map[0].length; j++) { // if the colour of the node is not white check if it is the point corresponding to one of the 4 ends
+                if (this.map[i][j][0] !== "white") {
+                    minIdX = this.end(minIdX, i, this.map[i][j][0], minIdX >= i);
+                    minIdY = this.end(minIdY, j, this.map[i][j][0], minIdY >= j);
+                    maxIdX = this.end(maxIdX, i, this.map[i][j][0], maxIdX <= i);
+                    maxIdY = this.end(maxIdY, j, this.map[i][j][0], maxIdY <= j);
+                }
+            }
+        }
+        let oldSizeX = maxIdX - minIdX + 1;
+        let oldSizeY = maxIdY - minIdY + 1;
+        let isInX = (this.size * 2 + 1) - oldSizeX;
+        let isInY = (this.size * 2 + 1) - oldSizeY;
+
+        if (isInX <= 0 || isInY <= 0) {
+            this.updateErrorMsg(createenvironment.errorMsg.gridTooSmall);
+            this.size -= increment
+        }
+        else {
+            let leftBorderX = Math.trunc(isInX / 2);
+            let topBorderY = Math.trunc(isInY / 2);
+            leftBorderX = this.shift(leftBorderX, minIdX);
+            topBorderY = this.shift(topBorderY, minIdY);
+
+            this.map = [];
+
+            this.map = this.buildMap(this.map, this.size);
+
+            for (let i = leftBorderX; i < leftBorderX + oldSizeX; i++) {
+                for (let j = topBorderY; j < topBorderY + oldSizeY; j++) {
+                    this.map[i][j] = oldMap[minIdX + i - leftBorderX][minIdY + j - topBorderY];
+                }
+            }
+
+            this.world.onclick = null
+            this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg)
+        }
+    }
+
+    end(a, i, color, bool) {
+        if (bool && (a !== i || color !== "black")) { // if there are several points corresponding to one end, the one that does not have the colour black is chosen
+            a = i;
+        }
+        return a;
+    }
+
+    shift(border, index) {
+        if (border % 2 !== index % 2) border++;
+        return border;
+    }
+
+    checkNeighbour(map, i, j) {
+        const aboveColor = this.map[i - 1][j][0];
+        const leftColor = this.map[i][j - 1][0];
+        if (aboveColor === this.map[i + 1][j][0] && aboveColor !== "white") {
+            this.map[i][j] = this.map[i - 1][j];
+        } else if (leftColor === this.map[i][j + 1][0] && leftColor !== "white") {
+            this.map[i][j] = this.map[i][j - 1];
+        }
+    }
+
+    displayWall(orientation) {
+        const wall = json.grid.walls[orientation];
+        let x;
+        let y;
+        let direction1;
+        let direction2;
+        if (orientation === "horizontal") {
+            direction1 = "left";
+            direction2 = "right";
+        }
+        else {
+            direction1 = "up";
+            direction2 = "down";
+        }
+        for (let i = 0; i < wall.length; i++) {
+            x = ((wall[i][direction1].x * 2 - 1) + (wall[i][direction2].x * 2 - 1)) / 2 ;
+            y = ((wall[i][direction1].y * 2 - 1) + (wall[i][direction2].y * 2 - 1)) / 2 ;
+            this.map[x][y] = ["black", true, null];
+        }
+    }
+
+    removeId(idToRemove) {
+        this.world.removeAttribute(idToRemove);
+        this.world.updateMap(this.map);
+        this.world.reset();
+    }
+
+    clearGridworld() {
+        this.world.clearAttributeTable()
+        this.world.resetInColorTable()
+        const context = this.myCanvas.current.getContext('2d')
+        context.clearRect(0, 0, this.myCanvas.current.width, this.myCanvas.current.height)
+        this.map = this.buildMap(this.map, this.size);
+        this.world.onclick = null
+        this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg)
+    }
+
+    saveInToJSON() {
+        const idTable = this.world.getIdTable();
+        let obj = {filetype: "environment",
+            session_id: "default",
+            project_id: "simple",};
+        obj.size = {width: this.size * 2, height: this.size * 2};
+        obj.grid = {location : [], walls : {horizontal : [], vertical : []}};
+        for (let i = 0; i < idTable.length; i++) {
+            obj.grid.location.push({coordinates : [], color : idTable[i][1], id : idTable[i][0]});
+        }
+        for (let i = 0; i < this.map.length; i++) {
+            for (let j = 0; j < this.map[0].length; j++) {
+                if (this.map[i][j][0] !== "white" && this.map[i][j][2] !== null && i % 2 === 1 && j % 2 === 1) {
+                    const index = this.world.isID(this.map[i][j][2]);
+                    obj.grid.location[index].coordinates.push({x : Math.trunc(i / 2) + 1, y : Math.trunc(j / 2) + 1})
+                }
+                else if (this.map[i][j][0] === "black") {
+                    if (i % 2 === 1 && j % 2 === 0) {
+                        obj.grid.walls.vertical.push({
+                            up : {x : Math.trunc(i / 2) + 1, y : (j / 2)},
+                            down : {x : Math.trunc(i / 2) + 1, y : (j / 2) + 1}
+                        });
+                    }
+                    else if (i % 2 === 0 && j % 2 === 1) {
+                        obj.grid.walls.horizontal.push({
+                            left: {x: i / 2, y: Math.trunc(j / 2) + 1},
+                            right: {x: (i / 2) + 1, y: Math.trunc(j / 2) + 1}
+                        });
+                    }
+                }
+            }
+        }
+        //const myJSON = JSON.stringify(obj);
+        //const name = window.prompt("What is the name of the file ?");
+    }
+    /* GRID FUNCTIONS */
+
+
+    /* ROBOT FUNCTIONS */
+    launchRobot() {
+        this.t = setInterval(this.robot, 1000);
+    }
+
+    robot() {
+        const ctx = document.getElementById('canvas').getContext('2d');
+        if (this.i === this.tab.length) {
+            clearInterval(this.t);
+            this.i = 0;
+            return;
+        }
+        else if (this.i > 0) {
+            ctx.fillRect(this.x, this.y, 50, 50);
+            this.world.setBackgroundColor(this.tab[this.i - 1][0],this.tab[this.i - 1][1],this.map[this.tab[this.i - 1][0]][this.tab[this.i - 1][1]][0]);
+        }
+        this.drawRobot();
+        this.i++;
+    }
+
+    drawRobot() {
+        const image = new Image();
+        image.src = img;
+        const ctx = document.getElementById('canvas').getContext('2d');
+        this.x = Math.trunc(this.tab[this.i][0]/ 2 ) * 64 + 24;
+        this.y = Math.trunc(this.tab[this.i][1]/ 2 ) * 64 + 24;
+        ctx.drawImage(image, this.x, this.y, 50, 50);
+    }
+    /* ROBOT FUNCTIONS */
+
+
     render() {
         this.componentsList = createenvironment.componentsList
 
         for (let i = 0; i < this.state.numChildren[0]; i += 1) {
             this.componentsList[0].content[i]=(<Location key={i}
                                     name={this.state.lists[0][i]}
-                                    onClick={() => this.deleteLocation(this.state.lists[0][i])}
+                                    onClick={() => this.deleteElement(0, i)}
                                     color={this.state.colors[i]}
                                     statIconName={"fas fa-square"}
                                     deleteIconName={"now-ui-icons ui-1_simple-remove"}/>);
@@ -702,14 +707,13 @@ export default class CreateEnvironment extends React.Component {
                                     editIconName={"fas fa-pen"}
                                     deleteIconName={"now-ui-icons ui-1_simple-remove"}/>);
         }
-        console.log(this.componentsList)
         return (
             <>
                 <div className="relative pt-32 pb-32 bg-orange-500">
                     <div className="px-4 md:px-6 mx-auto w-full">
                         <div>
                             <div className="flex flex-wrap justify-center">
-                                <h1 className="display-3 title-up text-white font-semibold text-center">Build your Environment</h1>
+                                <h1 className="display-3 title-up text-white font-semibold text-center">{createenvironment.mainTitle}</h1>
                             </div>
                         </div>
                     </div>
@@ -739,7 +743,7 @@ export default class CreateEnvironment extends React.Component {
                                                     <div className="flex pl-2">
                                                         <Button color="red" onClick={() => this.modifyGridSize(-1)}><i className="text-xl fas fa-minus-square"/></Button>
                                                         <Button color="lightBlue" onClick={() => this.modifyGridSize(1)}><i className="text-xl fas fa-plus-square"/></Button>
-                                                        <Button onClick = {this.generateGridworldWithJSON}>Test</Button>
+                                                        <Button onClick = {this.generateGridworldWithJSON}>JSON</Button>
                                                         {/*<Button ref={this.robotButton} onClick={this.launchRobot}>Robot</Button>*/}
                                                     </div>
                                                 </div>
@@ -770,9 +774,9 @@ export default class CreateEnvironment extends React.Component {
                                             ))}
                                             <div className="m-4 px-4 relative flex flex-col min-w-0 break-words bg-white rounded shadow-lg">
                                                 <div className="flex flex-col pl-2 pt-3 pb-3">
-                                                    <Button ref={this.clearButton} color="amber" onClick={this.clearGridworld}><i className="text-xl mr-2 fas fa-trash-alt"/>Clear</Button>
+                                                    <Button color="amber" onClick={this.clearEnvironment}><i className="text-xl mr-2 fas fa-trash-alt"/>Clear</Button>
                                                     <div className="mt-2"/>
-                                                    <Button ref={this.saveButton} color="emerald" onClick={this.saveInToJSON}><i className="text-xl mr-2 fas fa-check-square"/>Save</Button>
+                                                    <Button color="emerald" onClick={this.saveInToJSON}><i className="text-xl mr-2 fas fa-check-square"/>Save</Button>
                                                 </div>
                                             </div>
                                         </div>

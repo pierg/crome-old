@@ -1,4 +1,5 @@
 const textProps = {
+  mainTitle: "Build Your Environment",
   errorMsg: {
       gridTooSmall: "The retracted size is too small, clear before decreasing the size",
       wallInsideBlock: "You can't create a wall within a block",
