@@ -72,7 +72,7 @@ export default function CustomPlayer({ items, defaultOpened }) {
                             {
                               'world': <WorldModeling />,
                               'goal': <GoalModeling {...goalmodelinginfo}/>,
-                              'analysis': <Analysis />,
+                              'analysis': <Analysis active={headerStates[2]}/>,
                               'synthesis': <Synthesis />
                             }[prop.component]
                           }
