@@ -4,7 +4,7 @@ import {Button} from "reactstrap";
 function ListLine(props) {
     return(
         <tr>
-            <td className="text-center" style={{color: props.color}}>
+            <td>
                 {props.name}
             </td>
             <td className="flex justify-end pr-0">

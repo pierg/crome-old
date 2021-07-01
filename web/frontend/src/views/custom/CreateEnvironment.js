@@ -22,10 +22,10 @@ import img from "./robot1.png";
 export default class CreateEnvironment extends React.Component {
 
     state = {
-        lists: [[], ["test"], []],
-        editedLists: [[], ["test"], []],
+        lists: [[], [], []],
+        editedLists: [[], [], []],
         colors: [],
-        numChildren: [0, 1, 0],
+        numChildren: [0, 0, 0],
         errorMsg: "",
         warningPop: false,
         currentList: 0,
@@ -44,9 +44,14 @@ export default class CreateEnvironment extends React.Component {
 
     setModalClassic = (bool, listIndex = -1, elementIndex = -1) => {
 
+        if (!bool) {
+            this.setState({
+                editedLists: this.state.lists,
+            })
+        }
+
         this.setState({
             modalClassic: bool,
-            editedLists: this.state.lists
         })
         if (listIndex !== -1 && elementIndex !== -1) {
             this.setState({
@@ -102,18 +107,13 @@ export default class CreateEnvironment extends React.Component {
 
     onAddLine = (index) => {
 
-        let tmpLists = this.state.lists
-        let tmpNumChildren = this.state.numChildren
+        let tmpLists = JSON.parse(JSON.stringify(this.state.lists))
 
         tmpLists[index].push("")
-        tmpNumChildren[index]++
 
         this.setState({
-            lists: tmpLists,
             editedLists: tmpLists,
-            numChildren: tmpNumChildren
-        },() => this.setModalClassic(true, index, tmpNumChildren[index] - 1))
-
+        },() => this.setModalClassic(true, index, this.state.numChildren[index]))
 
     }
 
@@ -162,6 +162,20 @@ export default class CreateEnvironment extends React.Component {
     }
 
     saveCurrentElement = (newElement) => {
+
+        if (this.state.currentIndex >= this.state.numChildren[this.state.currentList]) {
+            let tmpLists = this.state.lists
+            let tmpNumChildren = this.state.numChildren
+
+            tmpLists[this.state.currentList].push("")
+            tmpNumChildren[this.state.currentList]++
+
+            this.setState({
+                lists: tmpLists,
+                numChildren: tmpNumChildren
+            })
+        }
+
         this.setState( state => {
             const lists = state.lists.map((list, j) => {
                 if (j === this.state.currentList) {

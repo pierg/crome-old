@@ -21,7 +21,7 @@ function ListBlock(props) {
                         </Table>
                     </CardBody>
                 </Card>
-                {props.displayAddButton && (<div className="flex flex-col pl-2 pb-3"><Button color="lightBlue" onClick={() => props.addLine(props.title)}><i className="text-xl fas fa-plus-square"/></Button></div>)}
+                {props.displayAddButton && (<div className="flex flex-col pl-2 pb-3"><Button color="lightBlue" onClick={props.addLine}><i className="text-xl fas fa-plus-square"/></Button></div>)}
             </div>
         </div>
     );
