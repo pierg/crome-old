@@ -1,17 +1,21 @@
 {
   "session_id": "default",
   "project_id": "simple",
-  "actions": {
-    "greet": {
-      "mutex_group": "mutex_group_1"
+  "actions": [
+    {
+      "name": "greet",
+      "mutex_group": 1
     },
-    "register": {
-      "mutex_group": "mutex_group_1"
+    {
+      "name": "register",
+      "mutex_group": 1
     }
-  },
-  "sensors": {
-    "person": {}
-  },
+  ],
+  "sensors": [
+    {
+      "name": "person"
+    }
+  ],
   "grid": {
     "locations": [
       {
