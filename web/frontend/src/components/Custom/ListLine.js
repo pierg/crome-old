@@ -5,6 +5,9 @@ function ListLine(props) {
     return(
         <tr>
             <td>
+                <i className={"text-2xl "+props.statIconName} style={{color: props.color}}/>
+            </td>
+            <td>
                 {props.name}
             </td>
             <td className="flex justify-end pr-0">
