@@ -1,16 +1,21 @@
 import React from 'react';
 import {Button} from "reactstrap";
+import mutexcolors from "_texts/custom/mutexcolors.js";
 
 function ListLine(props) {
     return(
         <tr>
             <td>
-                <i className={"text-2xl "+props.statIconName} style={{color: props.color}}/>
+                <div className="grid grid-template-2">
+                    {props.colors.map((prop, key) => (
+                        <i key={key} className={"text-2xl "+props.statIconName} style={{color: mutexcolors.colors[prop]}}/>
+                    ))}
+                </div>
             </td>
-            <td>
+            <td className="text-break">
                 {props.name}
             </td>
-            <td className="flex justify-end pr-0">
+            <td className="whitespace-nowrap w-1 pr-0">
                 <Button
                     className="btn-icon mr-1"
                     color="info"

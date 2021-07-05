@@ -15,8 +15,12 @@
     width: min-content;
 }
 
-.grid-template-2 {
+.grid-template-25-75 {
     grid-template-columns: 25% 75%;
+}
+
+.grid-template-2 {
+    grid-template-columns: auto;
 }
 
 .shifted-canvas-margin {

@@ -14,9 +14,10 @@ import ListLine from "../../components/Custom/ListLine";
 import WorldEdit from "../../components/Crome/WorldEdit";
 
 import arrayEquals from "../../hooks/arrayEquals";
+import deleteSubArrays from "../../hooks/deleteSubArrays";
 
 import createenvironment from "_texts/custom/createenvironment.js";
-import goaleditinfo from "../../_texts/custom/goaleditinfo";
+import worldeditinfo from "../../_texts/custom/worldeditinfo";
 
 import * as json from "./environment_example.json";
 import img from "./robot1.png";
@@ -314,11 +315,12 @@ export default class CreateEnvironment extends React.Component {
             found[jsonArray] = true
         }
 
+        newArray = deleteSubArrays(newArray)
+
         mutexGroups[this.state.currentList-1] = newArray
         this.setState({
             mutexGroups: mutexGroups
         })
-        // TODO delete every array which have each of its elements included into another same array
     }
 
     getMutexElements = (element) => { // get every element exclusive to the specified element
@@ -342,6 +344,19 @@ export default class CreateEnvironment extends React.Component {
         this.setState({
             mutexList: mutexList
         })
+    }
+
+    getEveryIndexOf = (element) => {
+        let elements = []
+        let mutexGroup = this.state.mutexGroups[this.state.currentList - 1]
+        if(this.state.currentList > 0) {
+            for (let i = 0; i < mutexGroup.length; i++) {
+                if (mutexGroup[i].includes(element) && mutexGroup[i].length > 1) {
+                    elements.push(i)
+                }
+            }
+        }
+        return elements
     }
     /* MUTEX FUNCTIONS */
 
@@ -799,7 +814,7 @@ export default class CreateEnvironment extends React.Component {
                                     name={this.state.lists[1][i]}
                                     onEdit={() => this.setModalClassic(true, 1, i)}
                                     onDelete={() => this.deleteElement(1, i)}
-                                    color={"white"}
+                                    colors={this.getEveryIndexOf(this.state.lists[1][i])}
                                     statIconName={"fas fa-square"}
                                     editIconName={"fas fa-pen"}
                                     deleteIconName={"now-ui-icons ui-1_simple-remove"}/>);
@@ -907,7 +922,7 @@ export default class CreateEnvironment extends React.Component {
                         edit={this.editCurrentElement}
                         save={this.saveCurrentElement}
                         close={() => this.setModalClassic(false)}
-                        {...goaleditinfo}/>
+                        {...worldeditinfo}/>
                 </Modal>
             </>
         );
