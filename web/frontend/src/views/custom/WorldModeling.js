@@ -4,6 +4,8 @@ import React from "react";
 import AddButton from "../../components/Custom/AddButton";
 import WorldView from "../../components/Custom/WorldView";
 import {Link} from "react-router-dom";
+import SocketIoGaols from "../../components/Custom/Examples/GetGoals";
+import SocketIoProjects from "../../components/Custom/Examples/GetProjects";
 
 
 export default class WorldModeling extends React.Component {
@@ -31,6 +33,7 @@ export default class WorldModeling extends React.Component {
 
         return (
             <>
+                <SocketIoProjects />
                 {/*<SocketIoWorlds worlds={this.getWorlds} />*/}
                 <ParentComponent build={this.redirectToBuilding}>
                     {children}

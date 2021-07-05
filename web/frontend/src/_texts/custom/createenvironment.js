@@ -1,4 +1,5 @@
 const textProps = {
+  mainTitle: "Build Your Environment",
   errorMsg: {
       gridTooSmall: "The retracted size is too small, clear before decreasing the size",
       wallInsideBlock: "You can't create a wall within a block",
@@ -22,6 +23,22 @@ const textProps = {
           title: "How to delete a Wall?",
           content: "Create a new wall on top of the one you want to delete."
       },
+  ],
+  componentsList: [
+      {
+          content: [],
+          title: "Locations"
+      },
+      {
+          content: [],
+          title: "Actions",
+          displayAddButton: true
+      },
+      {
+          content: [],
+          title: "Sensors",
+          displayAddButton: true
+      }
   ]
 };
 export default textProps;

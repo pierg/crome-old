@@ -1,13 +1,9 @@
 import React from 'react';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../assets/styles/tailwind.css";
-import {
-    Card,
-    CardBody,
-    Table,
-} from "reactstrap";
-
-//import * as json from "./test.json"
+import FetchTime from "../../components/Custom/Examples/FetchTime";
+import SocketIoMessage from "../../components/Custom/Examples/SocketIoMessage";
+import SocketIoPatterns from "../../components/Custom/Examples/GetPatterns";
 
 
 
@@ -31,14 +27,12 @@ export default class Synthesis extends React.Component {
     }
     render() {
         return (
-            <Card className="card-plain">
-                <CardBody className="overflow-x-initial">
-                    <Table responsive id ="test">
-                        <thead>
-                        </thead>
-                    </Table>
-                </CardBody>
-            </Card>
+            <>
+                <FetchTime/>
+                <SocketIoMessage/>
+                <SocketIoPatterns/>
+                <div>This is Synthesis</div>
+            </>
         );
     }
 }
