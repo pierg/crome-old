@@ -156,9 +156,11 @@ export default class CreateEnvironment extends React.Component {
 
         for (let i=0; i<list.length; i++) {
             tmpLists[index].push(list[i].name)
-            if (list[i].mutex_group !== undefined) {
-                if (tmpMutex[index-1][list[i].mutex_group] === undefined) tmpMutex[index-1][list[i].mutex_group] = []
-                tmpMutex[index-1][list[i].mutex_group].push(list[i].name)
+            if (list[i].mutex_group !== undefined && Array.isArray(list[i].mutex_group)) {
+                for (let j=0; j<list[i].mutex_group.length; j++) {
+                    if (tmpMutex[index-1][list[i].mutex_group[j]] === undefined) tmpMutex[index-1][list[i].mutex_group[j]] = []
+                    tmpMutex[index-1][list[i].mutex_group[j]].push(list[i].name)
+                }
             }
         }
 
@@ -788,7 +790,18 @@ export default class CreateEnvironment extends React.Component {
                 }
             }
         }
-        console.log(this.state.mutexGroups)
+        let lists = ["actions", "sensors"]
+        for (let i = 1; i < this.state.lists.length; i++) {
+            obj[lists[i-1]] = []
+            for (let j = 0; j < this.state.lists[i].length; j++) {
+                obj[lists[i-1]][j] = {"name": this.state.lists[i][j]}
+                let indexArray = this.getEveryIndexOf(this.state.lists[i][j], i)
+                if (indexArray.length > 0) {
+                    obj[lists[i-1]][j].mutex_group = indexArray
+                }
+            }
+        }
+        console.log(obj)
         //const myJSON = JSON.stringify(obj);
         //const name = window.prompt("What is the name of the file ?");
     }
