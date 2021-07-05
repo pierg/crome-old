@@ -147,6 +147,31 @@ export default class CreateEnvironment extends React.Component {
         })
     }
 
+    addAllElements = (list, index) => {
+        let tmpLists = this.state.lists
+        let tmpMutex = this.state.mutexGroups
+
+        tmpLists[index] = []
+        tmpMutex[index-1] = []
+
+        for (let i=0; i<list.length; i++) {
+            tmpLists[index].push(list[i].name)
+            if (list[i].mutex_group !== undefined) {
+                if (tmpMutex[index-1][list[i].mutex_group] === undefined) tmpMutex[index-1][list[i].mutex_group] = []
+                tmpMutex[index-1][list[i].mutex_group].push(list[i].name)
+            }
+        }
+
+        let tmpNumChildren = this.state.numChildren
+        tmpNumChildren[index] = list.length
+
+        this.setState({
+            lists: tmpLists,
+            numChildren: tmpNumChildren,
+            mutexGroup: tmpMutex
+        })
+    }
+
     editCurrentElement = (newElement) => {
         this.setState( state => {
             const editedLists = state.editedLists.map((list, j) => {
@@ -389,6 +414,9 @@ export default class CreateEnvironment extends React.Component {
 
     generateGridworldWithJSON() {
         const locations = json.grid.locations;
+        const actions = json.actions;
+        const sensors = json.sensors;
+
         let  x;
         let  y;
         this.map = this.buildMap(this.map, (json.size[0].width / 2));
@@ -431,6 +459,8 @@ export default class CreateEnvironment extends React.Component {
             }
         }
         this.addAllLocations(locations)
+        this.addAllElements(actions, 1)
+        this.addAllElements(sensors, 2)
         if (this.world !== null) this.world.onclick = null;
         this.size = (json.size[0].width / 2);
         this.world = this.buildGrid(this.myCanvas.current, (json.size[0].width / 2), this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg);

@@ -8,6 +8,21 @@
       "height": "10"
     }
   ],
+  "actions": [
+    {
+      "name": "greet",
+      "mutex_group": 0
+    },
+    {
+      "name": "register",
+      "mutex_group": 0
+    }
+  ],
+  "sensors": [
+    {
+      "name": "person"
+    }
+  ],
   "grid": {
     "locations": [
       {
