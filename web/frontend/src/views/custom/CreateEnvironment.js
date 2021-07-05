@@ -895,7 +895,7 @@ export default class CreateEnvironment extends React.Component {
                                                     </PopoverBody>
                                                 </UncontrolledPopover>
                                                 <div className="m-4 px-16 pt-2 pb-2 relative flex flex-col min-w-0 break-words bg-white rounded shadow-lg">
-                                                    <span className="font-semibold text-xs mb-1 text-center uppercase text-blueGray-700">Size of the Grid</span>
+                                                    <span className="font-semibold text-xs mb-1 text-center uppercase text-blueGray-700">{createenvironment.gridSize}</span>
                                                     <div className="flex pl-2">
                                                         <Button color="red" onClick={() => this.modifyGridSize(-1)}><i className="text-xl fas fa-minus-square"/></Button>
                                                         <Button color="lightBlue" onClick={() => this.modifyGridSize(1)}><i className="text-xl fas fa-plus-square"/></Button>
@@ -908,14 +908,14 @@ export default class CreateEnvironment extends React.Component {
                                         <div className="w-full lg:w-4/12 xl:w-3/12 flex-col">
                                             <div id="tooltipHelpBuild" className="m-4 px-4 relative flex flex-col min-w-0 break-words bg-white rounded shadow-lg">
                                                 <div className="flex flex-col justify-center">
-                                                    <div className="flex justify-center items-center title-up text-center my-2">How to do?<i className="ml-1 text-lightBlue-700 text-lg fas fa-info-circle"/></div>
+                                                    <div className="flex justify-center items-center title-up text-center my-2">{createenvironment.help.title}<i className="ml-1 text-lightBlue-700 text-lg fas fa-info-circle"/></div>
                                                     <UncontrolledTooltip
                                                         delay={0}
                                                         placement="right"
                                                         target="tooltipHelpBuild"
                                                     >
                                                         <div className="flex flex-col text-left">
-                                                            {createenvironment.helpMsg.map((prop, key) => (
+                                                            {createenvironment.help.messages.map((prop, key) => (
                                                                 <div className="mb-2" key={key}>
                                                                     <h4 className="font-bold">{prop.title}</h4>
                                                                     <div>{prop.content}</div>
@@ -930,9 +930,9 @@ export default class CreateEnvironment extends React.Component {
                                             ))}
                                             <div className="m-4 px-4 relative flex flex-col min-w-0 break-words bg-white rounded shadow-lg">
                                                 <div className="flex flex-col pl-2 pt-3 pb-3">
-                                                    <Button color="amber" onClick={this.clearEnvironment}><i className="text-xl mr-2 fas fa-trash-alt"/>Clear</Button>
+                                                    <Button color="amber" onClick={this.clearEnvironment}><i className="text-xl mr-2 fas fa-trash-alt"/>{createenvironment.buttons.clear}</Button>
                                                     <div className="mt-2"/>
-                                                    <Button color="emerald" onClick={this.saveInToJSON}><i className="text-xl mr-2 fas fa-check-square"/>Save</Button>
+                                                    <Button color="emerald" onClick={this.saveInToJSON}><i className="text-xl mr-2 fas fa-check-square"/>{createenvironment.buttons.save}</Button>
                                                 </div>
                                             </div>
                                         </div>
