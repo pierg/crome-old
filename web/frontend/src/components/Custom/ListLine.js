@@ -8,7 +8,7 @@ function ListLine(props) {
             <td>
                 <div className="grid grid-template-2">
                     {props.colors.map((prop, key) => (
-                        <i key={key} className={"text-2xl "+props.statIconName} style={{color: mutexcolors.colors[prop]}}/>
+                        <i key={key} className={"text-2xl "+props.statIconName} style={{color: mutexcolors.colors[props.list][prop]}}/>
                     ))}
                 </div>
             </td>
