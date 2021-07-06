@@ -15,8 +15,12 @@
     width: min-content;
 }
 
-.grid-template-2 {
+.grid-template-25-75 {
     grid-template-columns: 25% 75%;
+}
+
+.grid-template-2 {
+    grid-template-columns: auto;
 }
 
 .shifted-canvas-margin {
@@ -29,6 +33,18 @@
 
 .hover-no-underline:hover {
     text-decoration: none;
+}
+
+.y-translate-0 {
+  --tw-translate-y: 0%;
+}
+
+.y-translate-100 {
+  --tw-translate-y: 100%;
+}
+
+.top--10 {
+    top: -1.5rem;
 }
 
 @media (min-width: 640px) {

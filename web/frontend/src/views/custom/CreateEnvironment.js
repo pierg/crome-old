@@ -12,8 +12,12 @@ import Location from "../../components/Custom/Location";
 import ListBlock from "../../components/Custom/ListBlock";
 import ListLine from "../../components/Custom/ListLine";
 import WorldEdit from "../../components/Crome/WorldEdit";
+
+import arrayEquals from "../../hooks/arrayEquals";
+import deleteSubArrays from "../../hooks/deleteSubArrays";
+
 import createenvironment from "_texts/custom/createenvironment.js";
-import goaleditinfo from "../../_texts/custom/goaleditinfo";
+import worldeditinfo from "../../_texts/custom/worldeditinfo";
 
 import * as json from "./environment_example.json";
 import img from "./robot1.png";
@@ -24,12 +28,14 @@ export default class CreateEnvironment extends React.Component {
     state = {
         lists: [[], [], []],
         editedLists: [[], [], []],
+        mutexGroups: [[], []],
+        mutexList: [],
         colors: [],
         numChildren: [0, 0, 0],
         errorMsg: "",
         warningPop: false,
         currentList: 0,
-        currentIndex: 0
+        currentIndex: 0,
     }
 
     /* GENERAL FUNCTIONS */
@@ -56,7 +62,8 @@ export default class CreateEnvironment extends React.Component {
         if (listIndex !== -1 && elementIndex !== -1) {
             this.setState({
                 currentList: listIndex,
-                currentIndex: elementIndex
+                currentIndex: elementIndex,
+                mutexList: this.getMutexElements(this.state.editedLists[listIndex][elementIndex])
             })
         }
     }
@@ -140,6 +147,33 @@ export default class CreateEnvironment extends React.Component {
         })
     }
 
+    addAllElements = (list, index) => {
+        let tmpLists = this.state.lists
+        let tmpMutex = this.state.mutexGroups
+
+        tmpLists[index] = []
+        tmpMutex[index-1] = []
+
+        for (let i=0; i<list.length; i++) {
+            tmpLists[index].push(list[i].name)
+            if (list[i].mutex_group !== undefined && Array.isArray(list[i].mutex_group)) {
+                for (let j=0; j<list[i].mutex_group.length; j++) {
+                    if (tmpMutex[index-1][list[i].mutex_group[j]] === undefined) tmpMutex[index-1][list[i].mutex_group[j]] = []
+                    tmpMutex[index-1][list[i].mutex_group[j]].push(list[i].name)
+                }
+            }
+        }
+
+        let tmpNumChildren = this.state.numChildren
+        tmpNumChildren[index] = list.length
+
+        this.setState({
+            lists: tmpLists,
+            numChildren: tmpNumChildren,
+            mutexGroup: tmpMutex
+        })
+    }
+
     editCurrentElement = (newElement) => {
         this.setState( state => {
             const editedLists = state.editedLists.map((list, j) => {
@@ -161,9 +195,9 @@ export default class CreateEnvironment extends React.Component {
         })
     }
 
-    saveCurrentElement = (newElement) => {
+    saveCurrentElement = (newElement, mutexArray) => {
 
-        if (this.state.currentIndex >= this.state.numChildren[this.state.currentList]) {
+        if (this.state.currentIndex >= this.state.numChildren[this.state.currentList]) { // Saving after a new element is created, i.e. not an edited existing element
             let tmpLists = this.state.lists
             let tmpNumChildren = this.state.numChildren
 
@@ -181,6 +215,7 @@ export default class CreateEnvironment extends React.Component {
                 if (j === this.state.currentList) {
                     return list.map((item, k) => {
                         if (k === this.state.currentIndex) {
+                            this.deleteEveryMutexOccurrenceOf(item) // deleting every occurrence of the old element in mutexGroups before replacing it
                             return newElement
                         } else {
                             return item
@@ -193,11 +228,9 @@ export default class CreateEnvironment extends React.Component {
             return {
                 lists,
             }
-        })
-
-        this.setState({
+        }, () => {this.setState({
             editedLists: this.state.lists,
-        })
+        }); this.updateMutexArray(newElement, mutexArray)})
 
         this.setModalClassic(false)
     }
@@ -216,6 +249,8 @@ export default class CreateEnvironment extends React.Component {
             this.removeId(this.state.lists[listIndex][elementIndex])
         }
 
+        this.deleteEveryMutexOccurrenceOf(this.state.lists[listIndex][elementIndex])
+
         this.componentsList[listIndex].content.splice(elementIndex, 1)
         tmpLists[listIndex].splice(elementIndex, 1)
         tmpNumChildren[listIndex]--
@@ -225,6 +260,7 @@ export default class CreateEnvironment extends React.Component {
             numChildren: tmpNumChildren
         })
 
+        this.cleanMutexGroups()
     }
 
     deleteAllElements = () => {
@@ -244,6 +280,7 @@ export default class CreateEnvironment extends React.Component {
         this.setState({
             lists: tmpLists,
             editedLists: tmpLists,
+            mutexGroups: [[], []],
             colors: [],
             numChildren: tmpNumChildren
         })
@@ -254,6 +291,99 @@ export default class CreateEnvironment extends React.Component {
         this.clearGridworld()
     }
     /* LISTS (Locations/Actions/Sensors) FUNCTIONS */
+
+
+    /* MUTEX FUNCTIONS */
+    updateMutexArray = (newElement, mutexArray) => {
+        this.deleteEveryMutexOccurrenceOf(newElement) // deleting every occurrence of the element before placing it again at the right place
+        let flag = true
+        let mutexGroup = this.state.mutexGroups[this.state.currentList-1]
+
+        for (let i=0; i<mutexGroup.length; i++) {
+            mutexGroup[i].sort()
+        	if (arrayEquals(mutexGroup[i], mutexArray)) {
+        		mutexGroup[i].push(newElement)
+        		flag = false
+        		break
+        	}
+        }
+        if (flag) {
+            if (mutexArray.length === 0) {
+        		mutexGroup.push([newElement]);
+        	}
+        	else {
+                for (let i = 0; i < mutexArray.length; i++) {
+                    mutexGroup.push([newElement, mutexArray[i]]);
+                }
+            }
+        }
+        this.cleanMutexGroups()
+    }
+
+    deleteEveryMutexOccurrenceOf = (element) => {
+        let mutexGroup = this.state.mutexGroups[this.state.currentList-1]
+        for (let i=0; i<mutexGroup.length; i++) {
+            let index = mutexGroup[i].indexOf(element)
+            if (index !== -1) {
+                mutexGroup[i].splice(index, 1)
+            }
+        }
+    }
+
+    cleanMutexGroups = () => { // deleting doubles and empty arrays
+        let mutexGroups = this.state.mutexGroups
+        let mutexGroup = mutexGroups[this.state.currentList-1]
+        let newArray = []
+        let found = {}
+        for (let i=0; i<mutexGroup.length; i++) {
+            let jsonArray = JSON.stringify(mutexGroup[i])
+            if (found[jsonArray] || jsonArray === "[]") { continue }
+            newArray.push(mutexGroup[i])
+            found[jsonArray] = true
+        }
+
+        newArray = deleteSubArrays(newArray)
+
+        mutexGroups[this.state.currentList-1] = newArray
+        this.setState({
+            mutexGroups: mutexGroups
+        })
+    }
+
+    getMutexElements = (element) => { // get every element exclusive to the specified element
+        let elements = []
+        let mutexGroup = this.state.mutexGroups[this.state.currentList - 1]
+        if(this.state.currentList > 0) {
+            for (let i = 0; i < mutexGroup.length; i++) {
+                if (mutexGroup[i].includes(element)) {
+                    for (let j = 0; j < mutexGroup[i].length; j++) {
+                        if (!elements.includes(mutexGroup[i][j]) && mutexGroup[i][j] !== element) {
+                            elements.push(mutexGroup[i][j])
+                        }
+                    }
+                }
+            }
+        }
+        return elements
+    }
+
+    setMutexList = (mutexList) => {
+        this.setState({
+            mutexList: mutexList
+        })
+    }
+
+    getEveryIndexOf = (element, currentList) => {
+        let elements = []
+        let mutexGroup = this.state.mutexGroups[currentList - 1]
+        for (let i = 0; i < mutexGroup.length; i++) {
+            if (mutexGroup[i].includes(element) && mutexGroup[i].length > 1) {
+                elements.push(i)
+            }
+        }
+        return elements
+    }
+    /* MUTEX FUNCTIONS */
 
 
     /* GRID FUNCTIONS */
@@ -286,6 +416,9 @@ export default class CreateEnvironment extends React.Component {
 
     generateGridworldWithJSON() {
         const locations = json.grid.locations;
+        const actions = json.actions;
+        const sensors = json.sensors;
+
         let  x;
         let  y;
         this.map = this.buildMap(this.map, (json.size[0].width / 2));
@@ -328,6 +461,8 @@ export default class CreateEnvironment extends React.Component {
             }
         }
         this.addAllLocations(locations)
+        this.addAllElements(actions, 1)
+        this.addAllElements(sensors, 2)
         if (this.world !== null) this.world.onclick = null;
         this.size = (json.size[0].width / 2);
         this.world = this.buildGrid(this.myCanvas.current, (json.size[0].width / 2), this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg);
@@ -655,6 +790,18 @@ export default class CreateEnvironment extends React.Component {
                 }
             }
         }
+        let lists = ["actions", "sensors"]
+        for (let i = 1; i < this.state.lists.length; i++) {
+            obj[lists[i-1]] = []
+            for (let j = 0; j < this.state.lists[i].length; j++) {
+                obj[lists[i-1]][j] = {"name": this.state.lists[i][j]}
+                let indexArray = this.getEveryIndexOf(this.state.lists[i][j], i)
+                if (indexArray.length > 0) {
+                    obj[lists[i-1]][j].mutex_group = indexArray
+                }
+            }
+        }
+        console.log(obj)
         //const myJSON = JSON.stringify(obj);
         //const name = window.prompt("What is the name of the file ?");
     }
@@ -703,23 +850,18 @@ export default class CreateEnvironment extends React.Component {
                                     statIconName={"fas fa-square"}
                                     deleteIconName={"now-ui-icons ui-1_simple-remove"}/>);
         }
-        for (let i = 0; i < this.state.numChildren[1]; i += 1) {
-            this.componentsList[1].content[i]=(<ListLine key={i}
-                                    name={this.state.lists[1][i]}
-                                    onEdit={() => this.setModalClassic(true, 1, i)}
-                                    onDelete={() => this.deleteElement(1, i)}
-                                    color={this.state.colors[i]}
-                                    editIconName={"fas fa-pen"}
-                                    deleteIconName={"now-ui-icons ui-1_simple-remove"}/>);
-        }
-        for (let i = 0; i < this.state.numChildren[2]; i += 1) {
-            this.componentsList[2].content[i]=(<ListLine key={this.state.numChildren[1] + i}
-                                    name={this.state.lists[2][i]}
-                                    onEdit={() => this.setModalClassic(true, 2, i)}
-                                    onDelete={() => this.deleteElement(2, i)}
-                                    color={this.state.colors[i]}
-                                    editIconName={"fas fa-pen"}
-                                    deleteIconName={"now-ui-icons ui-1_simple-remove"}/>);
+        for (let k = 1; k < this.state.lists.length; k++) {
+            for (let i = 0; i < this.state.numChildren[k]; i += 1) {
+                this.componentsList[k].content[i]=(<ListLine key={(k-1)*this.state.numChildren[k] + i}
+                    name={this.state.lists[k][i]}
+                    list={k-1}
+                    onEdit={() => this.setModalClassic(true, k, i)}
+                    onDelete={() => this.deleteElement(k, i)}
+                    colors={this.getEveryIndexOf(this.state.lists[k][i], k)}
+                    statIconName={"fas fa-square"}
+                    editIconName={"fas fa-pen"}
+                    deleteIconName={"now-ui-icons ui-1_simple-remove"}/>);
+            }
         }
         return (
             <>
@@ -807,10 +949,14 @@ export default class CreateEnvironment extends React.Component {
                     className={"custom-modal-dialog sm:c-m-w-70 md:c-m-w-60 lg:c-m-w-50 xl:c-m-w-40"}>
                     <WorldEdit
                         element={this.state.editedLists[this.state.currentList][this.state.currentIndex]}
+                        number={this.state.currentIndex}
+                        list={this.state.lists[this.state.currentList]}
+                        mutexList={this.state.mutexList}
+                        editMutex={this.setMutexList}
                         edit={this.editCurrentElement}
                         save={this.saveCurrentElement}
                         close={() => this.setModalClassic(false)}
-                        {...goaleditinfo}/>
+                        {...worldeditinfo}/>
                 </Modal>
             </>
         );

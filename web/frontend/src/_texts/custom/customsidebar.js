@@ -29,13 +29,6 @@ const textProps = {
       },
     },
     {
-      icon: "fas fa-terminal",
-      text: "Console",
-      link: {
-        href: "#/console",
-      },
-    },
-    {
       divider: true,
     },
     {

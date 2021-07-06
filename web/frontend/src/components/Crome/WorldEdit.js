@@ -1,13 +1,12 @@
 import React from 'react';
 import {Button, ModalFooter} from "reactstrap";
 import Input from "../Elements/Input";
+import Checkbox from "../Elements/Checkbox";
 
 function WorldEdit(props) {
 
-
     let element = props.element
-
-    //console.log(element)
+    let mutexList = JSON.parse(JSON.stringify(props.mutexList))
 
     function changeParameter(e) {
         switch (e.target.name) {
@@ -15,6 +14,12 @@ function WorldEdit(props) {
             default: break;
         }
         props.edit(element)
+    }
+
+    function changeMutex(key) {
+        mutexList.includes(props.list[key]) ? mutexList.splice(mutexList.indexOf(props.list[key]), 1) : mutexList.push(props.list[key])
+        mutexList.sort()
+        props.editMutex(mutexList)
     }
 
     return(
@@ -31,13 +36,19 @@ function WorldEdit(props) {
                 <h4 className="title title-up">{props.info.title}</h4>
             </div>
             <div className="modal-body justify-content-center">
-                <Input type="text" placeholder="Name" name="name" value={element} onChange={changeParameter}/>
+                <Input type="text" placeholder="Name" autoComplete="off" name="name" value={element} onChange={changeParameter}/>
+                {props.list.length > 0 && (<h4 className="title title-up mb-3">Exclusive with :</h4>)}
+                <div className="flex flex-col mt-1">
+                    {props.list.map((prop, key) => {
+                        return (key !== props.number) && (<Checkbox key={key} label={prop} name="mutex" checked={mutexList.includes(props.list[key])} onChange={() => changeMutex(key)}/>)
+                    })}
+                </div>
             </div>
             <ModalFooter>
                 <Button color={props.info.modal.cancelColor} onClick={props.close}>
                     {props.info.modal.cancelText}
                 </Button>
-                <Button color={props.info.modal.saveColor} onClick={() => props.save(element)}>
+                <Button color={props.info.modal.saveColor} disabled={element === ""} onClick={() => props.save(element, mutexList)}>
                     {props.info.modal.saveText}
                 </Button>
             </ModalFooter>
