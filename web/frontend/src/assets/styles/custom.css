@@ -47,6 +47,11 @@
     top: -1.5rem;
 }
 
+.left-9\/10 {
+  left: 90%;
+}
+
+
 @media (min-width: 640px) {
     .sm\:c-m-w-70 {
         max-width: 500px;

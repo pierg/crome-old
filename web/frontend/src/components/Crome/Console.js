@@ -13,7 +13,7 @@ export default function Console({text, customText}) {
                 }
             >
                 <button
-                    className="flex items-center justify-center cursor-pointer text-blueGray-700 w-10 h-6 border-l-0 border-r border-t border-b border-solid border-blueGray-100 text-xl leading-none bg-white rounded-r border border-solid border-transparent absolute left-1/2 top--10 z-9998"
+                    className="flex items-center justify-center cursor-pointer text-blueGray-700 w-10 h-6 border-l-0 border-r border-t border-b border-solid border-blueGray-100 text-xl leading-none bg-white rounded-r border border-solid border-transparent absolute left-9/10 top--10 z-9998"
                     onClick={() => {
                         if (sidebarShow === "y-translate-100") {
                             setSidebarShow("y-translate-0");
