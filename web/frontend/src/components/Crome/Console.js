@@ -1,4 +1,5 @@
 import React from "react";
+import SocketIoConsoleMessage from "../Custom/Examples/GetConsoleMessage";
 
 export default function Console({text, customText}) {
     const [sidebarShow, setSidebarShow] = React.useState("y-translate-100");
