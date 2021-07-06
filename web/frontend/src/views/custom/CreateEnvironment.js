@@ -273,9 +273,10 @@ export default class CreateEnvironment extends React.Component {
                 colors: tmpColors,
             })
             this.removeId(this.state.lists[listIndex][elementIndex])
+        } else {
+            this.deleteEveryMutexOccurrenceOf(this.state.lists[listIndex][elementIndex])
         }
 
-        this.deleteEveryMutexOccurrenceOf(this.state.lists[listIndex][elementIndex])
 
         this.componentsList[listIndex].content.splice(elementIndex, 1)
         tmpLists[listIndex].splice(elementIndex, 1)
@@ -286,7 +287,7 @@ export default class CreateEnvironment extends React.Component {
             numChildren: tmpNumChildren
         })
 
-        this.cleanMutexGroups()
+        if (listIndex !== 0) this.cleanMutexGroups()
     }
 
     deleteAllElements = () => {
