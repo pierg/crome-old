@@ -35,6 +35,18 @@
     text-decoration: none;
 }
 
+.y-translate-0 {
+  --tw-translate-y: 0%;
+}
+
+.y-translate-100 {
+  --tw-translate-y: 100%;
+}
+
+.top--10 {
+    top: -2.5rem;
+}
+
 @media (min-width: 640px) {
     .sm\:c-m-w-70 {
         max-width: 500px;
