@@ -18,9 +18,11 @@ import deleteSubArrays from "../../hooks/deleteSubArrays";
 
 import createenvironment from "_texts/custom/createenvironment.js";
 import worldeditinfo from "../../_texts/custom/worldeditinfo";
+import savingeditinfo from "../../_texts/custom/savingeditinfo";
 
 import * as json from "./environment_example.json";
 import img from "./robot1.png";
+import SavingEdit from "../../components/Custom/SavingEdit";
 
 
 export default class CreateEnvironment extends React.Component {
@@ -36,6 +38,9 @@ export default class CreateEnvironment extends React.Component {
         warningPop: false,
         currentList: 0,
         currentIndex: 0,
+        savingInfos: {name: "", description: ""},
+        modalClassic: false,
+        modalSaving: false
     }
 
     /* GENERAL FUNCTIONS */
@@ -46,6 +51,17 @@ export default class CreateEnvironment extends React.Component {
 
     componentWillUnmount() {
         // fix Warning: Can't perform a React state update on an unmounted component
+    }
+
+    setModalSaving = (bool) => {
+        if (!bool) {
+            this.setState({
+                savingInfos: {name: "", description: ""},
+            })
+        }
+        this.setState({
+            modalSaving: bool,
+        })
     }
 
     setModalClassic = (bool, listIndex = -1, elementIndex = -1) => {
@@ -87,6 +103,16 @@ export default class CreateEnvironment extends React.Component {
                 warningPop: false
             })
         }
+    }
+
+    editSavingInfos = (element) => {
+        this.setState({
+            savingInfos: element,
+        });
+    }
+
+    saveWorld = () => {
+        this.setModalSaving(false)
     }
     /* GENERAL FUNCTIONS */
 
@@ -247,9 +273,10 @@ export default class CreateEnvironment extends React.Component {
                 colors: tmpColors,
             })
             this.removeId(this.state.lists[listIndex][elementIndex])
+        } else {
+            this.deleteEveryMutexOccurrenceOf(this.state.lists[listIndex][elementIndex])
         }
 
-        this.deleteEveryMutexOccurrenceOf(this.state.lists[listIndex][elementIndex])
 
         this.componentsList[listIndex].content.splice(elementIndex, 1)
         tmpLists[listIndex].splice(elementIndex, 1)
@@ -260,7 +287,7 @@ export default class CreateEnvironment extends React.Component {
             numChildren: tmpNumChildren
         })
 
-        this.cleanMutexGroups()
+        if (listIndex !== 0) this.cleanMutexGroups()
     }
 
     deleteAllElements = () => {
@@ -802,6 +829,7 @@ export default class CreateEnvironment extends React.Component {
             }
         }
         console.log(obj)
+        this.setModalSaving(true)
         //const myJSON = JSON.stringify(obj);
         //const name = window.prompt("What is the name of the file ?");
     }
@@ -895,7 +923,7 @@ export default class CreateEnvironment extends React.Component {
                                                     </PopoverBody>
                                                 </UncontrolledPopover>
                                                 <div className="m-4 px-16 pt-2 pb-2 relative flex flex-col min-w-0 break-words bg-white rounded shadow-lg">
-                                                    <span className="font-semibold text-xs mb-1 text-center uppercase text-blueGray-700">Size of the Grid</span>
+                                                    <span className="font-semibold text-xs mb-1 text-center uppercase text-blueGray-700">{createenvironment.gridSize}</span>
                                                     <div className="flex pl-2">
                                                         <Button color="red" onClick={() => this.modifyGridSize(-1)}><i className="text-xl fas fa-minus-square"/></Button>
                                                         <Button color="lightBlue" onClick={() => this.modifyGridSize(1)}><i className="text-xl fas fa-plus-square"/></Button>
@@ -908,14 +936,14 @@ export default class CreateEnvironment extends React.Component {
                                         <div className="w-full lg:w-4/12 xl:w-3/12 flex-col">
                                             <div id="tooltipHelpBuild" className="m-4 px-4 relative flex flex-col min-w-0 break-words bg-white rounded shadow-lg">
                                                 <div className="flex flex-col justify-center">
-                                                    <div className="flex justify-center items-center title-up text-center my-2">How to do?<i className="ml-1 text-lightBlue-700 text-lg fas fa-info-circle"/></div>
+                                                    <div className="flex justify-center items-center title-up text-center my-2">{createenvironment.help.title}<i className="ml-1 text-lightBlue-700 text-lg fas fa-info-circle"/></div>
                                                     <UncontrolledTooltip
                                                         delay={0}
                                                         placement="right"
                                                         target="tooltipHelpBuild"
                                                     >
                                                         <div className="flex flex-col text-left">
-                                                            {createenvironment.helpMsg.map((prop, key) => (
+                                                            {createenvironment.help.messages.map((prop, key) => (
                                                                 <div className="mb-2" key={key}>
                                                                     <h4 className="font-bold">{prop.title}</h4>
                                                                     <div>{prop.content}</div>
@@ -930,9 +958,9 @@ export default class CreateEnvironment extends React.Component {
                                             ))}
                                             <div className="m-4 px-4 relative flex flex-col min-w-0 break-words bg-white rounded shadow-lg">
                                                 <div className="flex flex-col pl-2 pt-3 pb-3">
-                                                    <Button color="amber" onClick={this.clearEnvironment}><i className="text-xl mr-2 fas fa-trash-alt"/>Clear</Button>
+                                                    <Button color="amber" onClick={this.clearEnvironment}><i className="text-xl mr-2 fas fa-trash-alt"/>{createenvironment.buttons.clear}</Button>
                                                     <div className="mt-2"/>
-                                                    <Button color="emerald" onClick={this.saveInToJSON}><i className="text-xl mr-2 fas fa-check-square"/>Save</Button>
+                                                    <Button color="emerald" onClick={this.saveInToJSON}><i className="text-xl mr-2 fas fa-check-square"/>{createenvironment.buttons.save}</Button>
                                                 </div>
                                             </div>
                                         </div>
@@ -957,6 +985,17 @@ export default class CreateEnvironment extends React.Component {
                         save={this.saveCurrentElement}
                         close={() => this.setModalClassic(false)}
                         {...worldeditinfo}/>
+                </Modal>
+                <Modal
+                    isOpen={this.state.modalSaving}
+                    toggle={() => this.setModalSaving(false)}
+                    className={"custom-modal-dialog sm:c-m-w-70 md:c-m-w-60 lg:c-m-w-50 xl:c-m-w-40"}>
+                    <SavingEdit
+                        element={this.state.savingInfos}
+                        edit={this.editSavingInfos}
+                        save={this.saveWorld}
+                        close={() => this.setModalSaving(false)}
+                        {...savingeditinfo}/>
                 </Modal>
             </>
         );

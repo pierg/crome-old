@@ -13,12 +13,13 @@ import useLocalStorage from "../../hooks/useLocalStorage";
 import CreateEnvironment from "./CreateEnvironment";
 import Console from "../../components/Crome/Console";
 import console from "../../_texts/custom/console";
+import SocketIoConsoleMessage from "../../components/Custom/Examples/GetConsoleMessage";
 
 
 export default function CustomDashboard(props) {
     const location = useLocation();
     const [id, setId] = useLocalStorage('id');
-
+    let [message, setMessage] = React.useState(false);
 
     React.useEffect(() => {
         window.scrollTo(0, 0);
@@ -26,7 +27,8 @@ export default function CustomDashboard(props) {
     return (
         <SocketProvider id={id}>
             <CustomSidebar {...customsidebar} currentRoute={"#" + location.pathname} id={id} setId={setId}/>
-            <Console {...console} customText={false}/>
+            <Console {...console} customText={message}/>
+            <SocketIoConsoleMessage modifyMessage={setMessage}/>
             <div className="relative xxl:ml-64 bg-blueGray-100">
                 {
                     {
