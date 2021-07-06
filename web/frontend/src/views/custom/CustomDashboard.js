@@ -26,7 +26,7 @@ export default function CustomDashboard(props) {
     return (
         <SocketProvider id={id}>
             <CustomSidebar {...customsidebar} currentRoute={"#" + location.pathname} id={id} setId={setId}/>
-            <Console {...console} id={id} setId={setId}/>
+            <Console {...console} customText={false}/>
             <div className="relative xxl:ml-64 bg-blueGray-100">
                 {
                     {
