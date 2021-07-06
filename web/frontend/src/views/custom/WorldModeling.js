@@ -4,9 +4,8 @@ import React from "react";
 import AddButton from "../../components/Custom/AddButton";
 import WorldView from "../../components/Custom/WorldView";
 import {Link} from "react-router-dom";
-import SocketIoGaols from "../../components/Custom/Examples/GetGoals";
-import SocketIoProjects from "../../components/Custom/Examples/GetProjects";
-
+//import SocketIoGaols from "../../components/Custom/Examples/GetGoals";
+//import SocketIoProjects from "../../components/Custom/Examples/GetProjects";
 
 export default class WorldModeling extends React.Component {
 
@@ -14,6 +13,17 @@ export default class WorldModeling extends React.Component {
         worlds: [],
         currentGoalIndex: 0,
         numChildren: 0,
+    }
+
+    getWorlds = (list) => {
+        let tmpArray = this.state.worlds
+        for (let i=0; i<list.length; i++) {
+            tmpArray.push(JSON.parse(list[i]))
+        }
+        this.setState({
+            worlds: tmpArray,
+            numChildren: list.length
+        })
     }
 
     render() {
@@ -33,19 +43,14 @@ export default class WorldModeling extends React.Component {
 
         return (
             <>
-                <SocketIoProjects />
-                {/*<SocketIoWorlds worlds={this.getWorlds} />*/}
-                <ParentComponent build={this.redirectToBuilding}>
+
+                {/*<SocketIoProjects /><SocketIoWorlds worlds={this.getWorlds} />*/}
+                <ParentComponent>
                     {children}
                 </ParentComponent>
             </>
         );
     }
-
-    redirectToBuilding = () => {
-        console.log("redirection")
-    }
-
 }
 
 const ParentComponent = props => (
@@ -53,7 +58,7 @@ const ParentComponent = props => (
         <div className="px-4 md:px-10 mx-auto w-full">
             <div>
                 <div className="flex justify-center">
-                    <div onClick={props.build} className="w-full lg:w-6/12 xl:w-3/12 mt-8 ml-4 mr-4 px-4 relative flex flex-col min-w-0 break-words bg-lightBlue-600 rounded mb-6 xl:mb-0 shadow-lg opacity-1 transform duration-300 transition-all ease-in-out">
+                    <div className="w-full lg:w-6/12 xl:w-3/12 mt-8 ml-4 mr-4 px-4 relative flex flex-col min-w-0 break-words bg-lightBlue-600 rounded mb-6 xl:mb-0 shadow-lg opacity-1 transform duration-300 transition-all ease-in-out">
                         <Link to="/world" className="hover-no-underline"><AddButton
                             statText="Build your Environment"
                             statIconName="fas fa-plus-square"

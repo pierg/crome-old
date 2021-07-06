@@ -18,9 +18,11 @@ import deleteSubArrays from "../../hooks/deleteSubArrays";
 
 import createenvironment from "_texts/custom/createenvironment.js";
 import worldeditinfo from "../../_texts/custom/worldeditinfo";
+import savingeditinfo from "../../_texts/custom/savingeditinfo";
 
 import * as json from "./environment_example.json";
 import img from "./robot1.png";
+import SavingEdit from "../../components/Custom/SavingEdit";
 
 
 export default class CreateEnvironment extends React.Component {
@@ -36,6 +38,9 @@ export default class CreateEnvironment extends React.Component {
         warningPop: false,
         currentList: 0,
         currentIndex: 0,
+        savingInfos: {name: "", description: ""},
+        modalClassic: false,
+        modalSaving: false
     }
 
     /* GENERAL FUNCTIONS */
@@ -46,6 +51,17 @@ export default class CreateEnvironment extends React.Component {
 
     componentWillUnmount() {
         // fix Warning: Can't perform a React state update on an unmounted component
+    }
+
+    setModalSaving = (bool) => {
+        if (!bool) {
+            this.setState({
+                savingInfos: {name: "", description: ""},
+            })
+        }
+        this.setState({
+            modalSaving: bool,
+        })
     }
 
     setModalClassic = (bool, listIndex = -1, elementIndex = -1) => {
@@ -87,6 +103,16 @@ export default class CreateEnvironment extends React.Component {
                 warningPop: false
             })
         }
+    }
+
+    editSavingInfos = (element) => {
+        this.setState({
+            savingInfos: element,
+        });
+    }
+
+    saveWorld = () => {
+        this.setModalSaving(false)
     }
     /* GENERAL FUNCTIONS */
 
@@ -802,6 +828,7 @@ export default class CreateEnvironment extends React.Component {
             }
         }
         console.log(obj)
+        this.setModalSaving(true)
         //const myJSON = JSON.stringify(obj);
         //const name = window.prompt("What is the name of the file ?");
     }
@@ -957,6 +984,17 @@ export default class CreateEnvironment extends React.Component {
                         save={this.saveCurrentElement}
                         close={() => this.setModalClassic(false)}
                         {...worldeditinfo}/>
+                </Modal>
+                <Modal
+                    isOpen={this.state.modalSaving}
+                    toggle={() => this.setModalSaving(false)}
+                    className={"custom-modal-dialog sm:c-m-w-70 md:c-m-w-60 lg:c-m-w-50 xl:c-m-w-40"}>
+                    <SavingEdit
+                        element={this.state.savingInfos}
+                        edit={this.editSavingInfos}
+                        save={this.saveWorld}
+                        close={() => this.setModalSaving(false)}
+                        {...savingeditinfo}/>
                 </Modal>
             </>
         );
