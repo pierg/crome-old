@@ -12,7 +12,7 @@ import {SocketProvider} from "../../contexts/SocketProvider";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import CreateEnvironment from "./CreateEnvironment";
 import Console from "../../components/Crome/Console";
-import console from "../../_texts/custom/console";
+import consoleinfo from "../../_texts/custom/console";
 import SocketIoConsoleMessage from "../../components/Custom/Examples/GetConsoleMessage";
 
 
@@ -27,8 +27,8 @@ export default function CustomDashboard(props) {
     return (
         <SocketProvider id={id}>
             <CustomSidebar {...customsidebar} currentRoute={"#" + location.pathname} id={id} setId={setId}/>
-            <Console {...console} customText={message}/>
-            <SocketIoConsoleMessage modifyMessage={setMessage}/>
+            <Console {...consoleinfo} customText={message}/>
+            <SocketIoConsoleMessage modifyMessage={(e) => setMessage(e)}/>
             <div className="relative xxl:ml-64 bg-blueGray-100">
                 {
                     {

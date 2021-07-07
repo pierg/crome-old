@@ -93,7 +93,6 @@ def connected():
     print('Connected')
     print(request.args)
     print(f'ID {request.args.get("id")}')
-    test()
 
 
 @socketio.on('test')
