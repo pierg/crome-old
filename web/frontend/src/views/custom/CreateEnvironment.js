@@ -886,7 +886,7 @@ export default class CreateEnvironment extends React.Component {
                     onEdit={() => this.setModalClassic(true, k, i)}
                     onDelete={() => this.deleteElement(k, i)}
                     colors={this.getEveryIndexOf(this.state.lists[k][i], k)}
-                    statIconName={"fas fa-square"}
+                    statIconName={"far fa-circle"}
                     editIconName={"fas fa-pen"}
                     deleteIconName={"now-ui-icons ui-1_simple-remove"}/>);
             }
