@@ -48,7 +48,7 @@ function WorldEdit(props) {
                 <Button color={props.info.modal.cancelColor} onClick={props.close}>
                     {props.info.modal.cancelText}
                 </Button>
-                <Button color={props.info.modal.saveColor} disabled={element === ""} onClick={() => props.save(element, mutexList)}>
+                <Button color={props.info.modal.saveColor} disabled={!props.validName(element)} onClick={() => props.save(element, mutexList)}>
                     {props.info.modal.saveText}
                 </Button>
             </ModalFooter>

@@ -47,6 +47,39 @@ const textProps = {
     buttons: {
         clear: "Clear",
         save: "Save"
+    },
+    modal: {
+        world: {
+            title: "Edit Element",
+            modal: {
+                mutex: "Exclusive with :",
+                close: "now-ui-icons ui-1_simple-remove",
+                cancelText: "Cancel",
+                cancelColor: "danger",
+                saveText: "Save",
+                saveColor: "info"
+            }
+        },
+        saving: {
+            title: "Save Environment",
+            modal: {
+                close: "now-ui-icons ui-1_simple-remove",
+                cancelText: "Cancel",
+                cancelColor: "danger",
+                saveText: "Save",
+                saveColor: "info"
+            }
+        },
+        inputId: {
+            title: "Enter Location ID",
+            modal: {
+                close: "now-ui-icons ui-1_simple-remove",
+                cancelText: "Cancel",
+                cancelColor: "danger",
+                saveText: "Save",
+                saveColor: "info"
+            }
+        }
     }
 };
 export default textProps;

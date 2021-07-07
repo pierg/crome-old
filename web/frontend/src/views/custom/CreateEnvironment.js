@@ -17,12 +17,11 @@ import arrayEquals from "../../hooks/arrayEquals";
 import deleteSubArrays from "../../hooks/deleteSubArrays";
 
 import createenvironment from "_texts/custom/createenvironment.js";
-import worldeditinfo from "../../_texts/custom/worldeditinfo";
-import savingeditinfo from "../../_texts/custom/savingeditinfo";
 
 import * as json from "./environment_example.json";
 import img from "./robot1.png";
 import SavingEdit from "../../components/Custom/SavingEdit";
+import LocationIdEdit from "../../components/Custom/LocationIdEdit";
 
 
 export default class CreateEnvironment extends React.Component {
@@ -39,8 +38,11 @@ export default class CreateEnvironment extends React.Component {
         currentList: 0,
         currentIndex: 0,
         savingInfos: {name: "", description: ""},
+        currentIdInput: "",
         modalClassic: false,
-        modalSaving: false
+        modalSaving: false,
+        modalLocationId: false,
+        node: false
     }
 
     /* GENERAL FUNCTIONS */
@@ -51,17 +53,6 @@ export default class CreateEnvironment extends React.Component {
 
     componentWillUnmount() {
         // fix Warning: Can't perform a React state update on an unmounted component
-    }
-
-    setModalSaving = (bool) => {
-        if (!bool) {
-            this.setState({
-                savingInfos: {name: "", description: ""},
-            })
-        }
-        this.setState({
-            modalSaving: bool,
-        })
     }
 
     setModalClassic = (bool, listIndex = -1, elementIndex = -1) => {
@@ -82,6 +73,29 @@ export default class CreateEnvironment extends React.Component {
                 mutexList: this.getMutexElements(this.state.editedLists[listIndex][elementIndex])
             })
         }
+    }
+
+    setModalSaving = (bool) => {
+        if (!bool) {
+            this.setState({
+                savingInfos: {name: "", description: ""},
+            })
+        }
+        this.setState({
+            modalSaving: bool,
+        })
+    }
+
+    setModalLocationId = (bool, saved = false) => {
+        if (!bool) {
+            this.setState({
+                currentIdInput: ""
+            })
+            if (!saved) this.world.cancelFirstClick()
+        }
+        this.setState({
+            modalLocationId: bool,
+        })
     }
 
     callbackMap = (map) => {
@@ -317,6 +331,25 @@ export default class CreateEnvironment extends React.Component {
         this.deleteAllElements()
         this.clearGridworld()
     }
+
+    editCurrentIdInput = (element) => {
+        this.setState({
+            currentIdInput: element,
+        });
+    }
+
+    validName = (element, isLocation = false) => { // checking if the given name is valid, i.e. not empty and not already existing in any list
+        if (element === "") return false
+        let lists = this.state.lists
+        let i = isLocation ? 1 : 0 // the list of locations is the only list where we can add an already existing element (to increase the size of a location)
+        let currentList = isLocation ? 0 : this.state.currentList
+        for (i; i<lists.length; i++) {
+            for (let j = 0; j<lists[i].length; j++) {
+                if (lists[i][j] === element &&! (i === currentList && j === this.state.currentIndex)) return false
+            }
+        }
+        return true
+    }
     /* LISTS (Locations/Actions/Sensors) FUNCTIONS */
 
 
@@ -438,7 +471,7 @@ export default class CreateEnvironment extends React.Component {
 
     generateGridworld() {
         if (this.world !== null) this.world.onclick = null
-        this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg)
+        this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode)
     }
 
     generateGridworldWithJSON() {
@@ -492,11 +525,11 @@ export default class CreateEnvironment extends React.Component {
         this.addAllElements(sensors, 2)
         if (this.world !== null) this.world.onclick = null;
         this.size = (json.size[0].width / 2);
-        this.world = this.buildGrid(this.myCanvas.current, (json.size[0].width / 2), this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg);
+        this.world = this.buildGrid(this.myCanvas.current, (json.size[0].width / 2), this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode);
         this.world.actualiseIsColorTable();
     }
 
-    buildGrid(canvas, size, map, addLocation, callbackMap, updateErrorMsg) {
+    buildGrid(canvas, size, map, addLocation, callbackMap, updateErrorMsg, setNode) {
         if (map.length === 0) {
             this.map = this.buildMap(map, size);
         }
@@ -519,7 +552,6 @@ export default class CreateEnvironment extends React.Component {
 
             let start = world.getStart();
             let startWall = world.getStartWall();
-            let end = world.getEnd();
             let endWall = world.getEndWall();
             let previousStartColor = world.getPreviousStartColor();
             let previousColorWall = world.getPreviousColorWall();
@@ -529,32 +561,9 @@ export default class CreateEnvironment extends React.Component {
                 return;
             }
             if (node.x % 2 === 1 && node.y % 2 === 1) { // if the user click on a cell
-                if (start.length !== 0) { // when it's the second click, draw a square
-                    end.push(node.x);
-                    end.push(node.y);
-                    let minX = world.min(start[0], end[0])[0]; // these variables allow to create only one loop for
-                    let maxX = world.min(start[0], end[0])[1];
-                    let maxY = world.min(start[1], end[1])[1];
-                    let minY = world.min(start[1], end[1])[0];
-                    let previousColorArray = [];
-                    for (let i = minX; i < maxX + 1; i += 1) {
-                        previousColorArray[i] = [];
-                        for (let j = minY; j < maxY + 1; j += 1) {
-                            previousColorArray[i].push(world.getBackgroundColor(i, j));
-                            world.setBackgroundColor(i, j, "#9b9b9b");
-                        }
-                    }
-                    previousColorArray[start[0]][start[1] - minY] = previousStartColor;
-                    const answer = world.askToColor(minX, maxX, maxY, minY, previousColorArray, map, updateErrorMsg);
-                    world.updateMap(map);
-                    if (answer !== false) {
-                        const color = answer[0];
-                        const id = answer[1];
-                        if (document.getElementById(id) === null || document.getElementById(id).innerHTML === "") {
-                            addLocation(id, color)
-                        }
-                    }
-
+                if (start.length !== 0) { // when it's the second click, open the modal to get the Id entered by the user
+                    world.setClickedNode(node.x, node.y)
+                    setNode(node)
                 } else { // when it's the first click, color the cell with a "light" color so the user know that he needs to click on a other cell
                     if (startWall.length !== 0) {
                         world.resetCellWall(startWall, null, previousColorWall, null);
@@ -564,7 +573,6 @@ export default class CreateEnvironment extends React.Component {
                     start.push(node.y);
                     world.setPreviousStartColor(world.getBackgroundColor(start[0], start[1]));
                     world.setBackgroundColor(node.x, node.y, "lightgray");
-
                 }
             } else { // when you click on wall cell
                 if (startWall.length !== 0) { // when it's the second click
@@ -677,6 +685,24 @@ export default class CreateEnvironment extends React.Component {
         return map
     }
 
+    drawLocation = () => {
+
+        let limits = this.world.getLimits()
+        let previousColorArray = this.world.getPreviousColorArray()
+
+        const answer = this.world.askToColor(this.state.currentIdInput, limits.minX, limits.maxX, limits.maxY, limits.minY, previousColorArray, this.map, this.updateErrorMsg);
+        this.world.updateMap(this.map);
+        if (answer !== false) {
+            const color = answer[0];
+            const id = answer[1];
+            if (document.getElementById(id) === null || document.getElementById(id).innerHTML === "") {
+                this.onAddLocation(id, color)
+            }
+        }
+
+        this.setModalLocationId(false, true)
+    }
+
     modifyGridSize(increment) {
 
         this.size += increment
@@ -722,7 +748,7 @@ export default class CreateEnvironment extends React.Component {
             }
 
             this.world.onclick = null
-            this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg)
+            this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode)
         }
     }
 
@@ -782,7 +808,7 @@ export default class CreateEnvironment extends React.Component {
         context.clearRect(0, 0, this.myCanvas.current.width, this.myCanvas.current.height)
         this.map = this.buildMap(this.map, this.size);
         this.world.onclick = null
-        this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg)
+        this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode)
     }
 
     saveInToJSON() {
@@ -832,6 +858,12 @@ export default class CreateEnvironment extends React.Component {
         this.setModalSaving(true)
         //const myJSON = JSON.stringify(obj);
         //const name = window.prompt("What is the name of the file ?");
+    }
+
+    setNode = (node) => {
+        this.setState({
+            node: node,
+        }, () => this.setModalLocationId(true))
     }
     /* GRID FUNCTIONS */
 
@@ -984,7 +1016,8 @@ export default class CreateEnvironment extends React.Component {
                         edit={this.editCurrentElement}
                         save={this.saveCurrentElement}
                         close={() => this.setModalClassic(false)}
-                        {...worldeditinfo}/>
+                        validName={this.validName}
+                        info={createenvironment.modal.world}/>
                 </Modal>
                 <Modal
                     isOpen={this.state.modalSaving}
@@ -995,7 +1028,19 @@ export default class CreateEnvironment extends React.Component {
                         edit={this.editSavingInfos}
                         save={this.saveWorld}
                         close={() => this.setModalSaving(false)}
-                        {...savingeditinfo}/>
+                        info={createenvironment.modal.saving}/>
+                </Modal>
+                <Modal
+                    isOpen={this.state.modalLocationId}
+                    toggle={() => this.setModalLocationId(false)}
+                    className={"custom-modal-dialog sm:c-m-w-70 md:c-m-w-60 lg:c-m-w-50 xl:c-m-w-40"}>
+                    <LocationIdEdit
+                        element={this.state.currentIdInput}
+                        edit={this.editCurrentIdInput}
+                        save={this.drawLocation}
+                        close={() => this.setModalLocationId(false)}
+                        validName={this.validName}
+                        info={createenvironment.modal.inputId}/>
                 </Modal>
             </>
         );
