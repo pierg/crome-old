@@ -532,12 +532,9 @@ GridWorld.prototype = {
     }
   },
 
-  validTestColor: function(map, id) {
+  validColorSplit: function(map, id) {
     let list = this.getListColor(map, id);
-    if (this.valid(list, list[0]) >= 1) {
-      return true;
-    }
-    return false;
+    return this.valid(list, list[0]) >= 1;
   },
 
   validMap: function(map, newBlock, color) {
@@ -556,7 +553,7 @@ GridWorld.prototype = {
       map2[newBlock[i][1]][newBlock[i][2]] = [color, true, newBlock[i][0]];
     }
     for (let i = 0; i < idTable.length; i++) {
-      if (!this.validTestColor(map2, idTable[i][0])) {
+      if (!this.validColorSplit(map2, idTable[i][0])) {
         return false;
       }
     }
