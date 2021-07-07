@@ -26,6 +26,8 @@ function SocketIoConsoleMessage(props) {
     useEffect(() => {
         props.modifyMessage(message);
         console.log(message)
+
+
     }, [message])  // eslint-disable-line react-hooks/exhaustive-deps
 
     return (<></>);
