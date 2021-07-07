@@ -20,8 +20,10 @@ function SocketIoProjects(props) {
         socket.emit('get-projects', {session: "default", project: props.session})
         socket.on('receive-projects', setMessageFunction)
 
+        console.log(message)
+
         return () => socket.off('receive-projects')
-    }, [socket, setMessageFunction])
+    }, [socket, setMessageFunction, props.session, message])
 
 
     return (<></>);
