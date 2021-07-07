@@ -93,9 +93,16 @@ def connected():
     print('Connected')
     print(request.args)
     print(f'ID {request.args.get("id")}')
+    test()
+
+
+@socketio.on('test')
+def test():
     while True:
-        emit("receive-message", {request.args.get("id")})
+        emit("receive-message", "test")
         time.sleep(3)
+        print('test')
+
 
 @socketio.on('disconnect')
 def disconnected():
