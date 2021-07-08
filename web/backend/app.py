@@ -97,10 +97,12 @@ def connected():
 
 @socketio.on('test')
 def test():
+    i = 0
     while True:
-        emit("receive-message", "test")
+        emit("receive-message", i)
         time.sleep(3)
-        print('test')
+        print(i)
+        i += 1
 
 
 @socketio.on('disconnect')
