@@ -1,5 +1,4 @@
 import React from "react";
-import Input from "../Elements/Input";
 
 export default class Console extends React.Component{
     constructor(props) {
@@ -28,7 +27,7 @@ export default class Console extends React.Component{
                     }
                 >
                     <button
-                        className="flex items-center justify-center cursor-pointer text-blueGray-700 w-10 h-6 border-l-0 border-r border-t border-b border-solid border-blueGray-100 text-xl leading-none bg-white rounded-r border border-solid border-transparent absolute left-9/10 top--10 z-9998"
+                        className="flex items-center justify-center cursor-pointer text-blueGray-700 w-10 h-6 border-l-0 border-r border-t border-b border-solid border-blueGray-100 text-xl leading-none focus:outline-none bg-white rounded-r border border-solid border-transparent absolute left-9/10 top--10 z-9998"
                         onClick={() => {
                             if (this.state.sidebarShow === "y-translate-100") {
                                 this.setState({
