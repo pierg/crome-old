@@ -913,6 +913,7 @@ export default class CreateEnvironment extends React.Component {
         for (let k = 1; k < this.state.lists.length; k++) {
             for (let i = 0; i < this.state.numChildren[k]; i += 1) {
                 this.componentsList[k].content[i]=(<ListLine key={(k-1)*this.state.numChildren[k] + i}
+                    number={(k-1)*this.state.numChildren[k] + i}
                     name={this.state.lists[k][i]}
                     list={k-1}
                     onEdit={() => this.setModalClassic(true, k, i)}
