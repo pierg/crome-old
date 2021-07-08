@@ -7,7 +7,7 @@ import goalmodelinginfo from "_texts/custom/goalmodelinginfo.js";
 import GoalModeling from "./GoalModeling";
 import CustomHeader from "../../components/Crome/CustomHeader";
 import customheadercards from "../../_texts/custom/customheadercards";
-import FooterAdmin from "../../components/Footers/Admin/FooterAdmin";
+import CustomFooter from "../../components/Custom/CustomFooter";
 import footeradmin from "../../_texts/admin/footers/footeradmin";
 import WorldModeling from "./WorldModeling";
 import Analysis from "./Analysis";
@@ -80,7 +80,7 @@ export default function CustomPlayer({ items, defaultOpened }) {
               </div>
           </div>
           <div className="px-4 md:px-6 mx-auto w-full -mt-24">
-          <div className="mt-12 relative">
+          <div className="mt-12 relative pb-32">
             <div className="relative w-full overflow-hidden">
               <div>
                 {items.map((prop, key) => {
@@ -121,7 +121,7 @@ export default function CustomPlayer({ items, defaultOpened }) {
               {/*<CardFullTable {...cardfulltabledashboard2} />*/}
             </div>
           </div>
-          <FooterAdmin {...footeradmin} />
+          <CustomFooter {...footeradmin} />
         </div>
       </>
   );

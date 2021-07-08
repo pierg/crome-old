@@ -38,7 +38,7 @@ export default function CustomDashboard(props) {
             <CustomSidebar {...customsidebar} currentRoute={"#" + location.pathname} id={id} setId={setId}/>
             <Console {...consoleinfo} customText={message}/>
             <SocketIoConsoleMessage modifyMessage={(e) => updateMessage(e)}/>
-            <div className="relative xxl:ml-64 bg-blueGray-100">
+            <div className="relative xxl:ml-64 bg-blueGray-100 min-h-screen">
                 {
                     {
                         'index': <CustomPlayer {...custommediaplayerteaminfo} />,
