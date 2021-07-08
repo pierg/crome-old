@@ -148,6 +148,7 @@ let startWall =[]
 let endWall =[]
 let previousColorWall
 let previousStartColor
+let clickedNode = {x: false, y: false}
 
 GridWorld.prototype = {
   draw: function() {
@@ -256,6 +257,11 @@ GridWorld.prototype = {
     }
   },
 
+  setClickedNode: function(x, y) {
+    clickedNode.x = x
+    clickedNode.y = y
+  },
+
   chooseBackgroundColor: function () {
     for (let i = 0; i < isColorTable.length; i++) {
       if (isColorTable[i] === false) {
@@ -289,14 +295,53 @@ GridWorld.prototype = {
     return color;
   },
 
-  askToColor(minX, maxX, maxY, minY, previousColorArray, map, callbackError) {
-    let id = window.prompt("Enter an id");
-    if (id === null || id === "") {
-      for (let i = minX; i < maxX + 1; i += 1) {
-        for (let j = minY; j < maxY + 1; j += 1) {
-          this.setBackgroundColor(i, j, previousColorArray[i][j - minY]);
-        }
+  cancelFirstClick() {
+    let limits = this.getLimits()
+    let previousColorArray = this.getPreviousColorArray(false)
+
+    for (let i = limits.minX; i < limits.maxX + 1; i += 1) {
+      for (let j = limits.minY; j < limits.maxY + 1; j += 1) {
+        this.setBackgroundColor(i, j, previousColorArray[i][j - limits.minY]);
       }
+    }
+
+    this.reset()
+  },
+
+  getLimits(push = true) {
+    let start = this.getStart();
+    let end = this.getEnd();
+
+    if (push) {
+      end.push(clickedNode.x)
+      end.push(clickedNode.y)
+    }
+
+    return {minX: this.min(start[0], end[0])[0],
+            maxX: this.min(start[0], end[0])[1],
+            minY: this.min(start[1], end[1])[0],
+            maxY: this.min(start[1], end[1])[1]}
+  },
+
+  getPreviousColorArray(push = true) {
+    let previousColorArray = [];
+    let limits = this.getLimits(push)
+    let start = this.getStart();
+
+    for (let i = limits.minX; i < limits.maxX + 1; i += 1) {
+      previousColorArray[i] = [];
+      for (let j = limits.minY; j < limits.maxY + 1; j += 1) {
+        previousColorArray[i].push(this.getBackgroundColor(i, j));
+        this.setBackgroundColor(i, j, "#9b9b9b");
+      }
+    }
+    previousColorArray[start[0]][start[1] - limits.minY] = previousStartColor;
+    return previousColorArray
+  },
+
+  askToColor(id, minX, maxX, maxY, minY, previousColorArray, map, callbackError) {
+    if (id === null || id === "") {
+      this.cancelFirstClick()
       this.reset();
       return false;
     }
