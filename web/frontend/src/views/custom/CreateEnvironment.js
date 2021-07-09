@@ -18,10 +18,10 @@ import deleteSubArrays from "../../hooks/deleteSubArrays";
 
 import createenvironment from "_texts/custom/createenvironment.js";
 
-import * as json from "./environment_example.json";
 import img from "./robot1.png";
 import SavingEdit from "../../components/Custom/SavingEdit";
 import LocationIdEdit from "../../components/Custom/LocationIdEdit";
+import SocketIoEnvironment from "../../components/Custom/Examples/GetEnvironment";
 
 
 export default class CreateEnvironment extends React.Component {
@@ -42,7 +42,7 @@ export default class CreateEnvironment extends React.Component {
         modalClassic: false,
         modalSaving: false,
         modalLocationId: false,
-        node: false
+        node: false,
     }
 
     /* GENERAL FUNCTIONS */
@@ -467,6 +467,9 @@ export default class CreateEnvironment extends React.Component {
         this.x = null;
         this.y = null;
         this.componentsList = []
+        console.log("test")
+        this.json = props.environment;
+        console.log(this.json)
     }
 
     generateGridworld() {
@@ -474,7 +477,11 @@ export default class CreateEnvironment extends React.Component {
         this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode)
     }
 
+
     generateGridworldWithJSON() {
+        const json = JSON.parse(this.json);
+        console.log(json)
+
         const locations = json.grid.locations;
         const actions = json.actions;
         const sensors = json.sensors;
@@ -491,8 +498,8 @@ export default class CreateEnvironment extends React.Component {
             }
         }
 
-        this.displayWall("horizontal");
-        this.displayWall("vertical");
+        this.displayWall("horizontal", json);
+        this.displayWall("vertical", json);
         let leftColor;
         let aboveColor;
 
@@ -774,7 +781,7 @@ export default class CreateEnvironment extends React.Component {
         }
     }
 
-    displayWall(orientation) {
+    displayWall(orientation, json) {
         const wall = json.grid.walls[orientation];
         let x;
         let y;

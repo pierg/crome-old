@@ -14,12 +14,26 @@ import CreateEnvironment from "./CreateEnvironment";
 import Console from "../../components/Crome/Console";
 import consoleinfo from "../../_texts/custom/console";
 import SocketIoConsoleMessage from "../../components/Custom/Examples/GetConsoleMessage";
+import SocketIoEnvironment from "../../components/Custom/Examples/GetEnvironment";
 
 
 export default function CustomDashboard(props) {
     const location = useLocation();
     const [id, setId] = useLocalStorage('id');
-    let [message, setMessage] = React.useState(false);
+    let [message, setMessage] = React.useState("");
+    let [environment, setEnvironment] = React.useState(null);
+
+    function updateMessage(msg) {
+        if (message === "") {
+            setMessage(msg);
+        }
+        else {
+            setMessage(message + "\n" + msg);
+        }
+    }
+    function updateEnvironment(env) {
+        setEnvironment(env);
+    }
 
     React.useEffect(() => {
         window.scrollTo(0, 0);
@@ -28,12 +42,13 @@ export default function CustomDashboard(props) {
         <SocketProvider id={id}>
             <CustomSidebar {...customsidebar} currentRoute={"#" + location.pathname} id={id} setId={setId}/>
             <Console {...consoleinfo} customText={message}/>
-            <SocketIoConsoleMessage modifyMessage={(e) => setMessage(e)}/>
+            <SocketIoConsoleMessage modifyMessage={(e) => updateMessage(e)}/>
+            <SocketIoEnvironment modifyEnvironment={(e) => updateEnvironment(e)}/>
             <div className="relative xxl:ml-64 bg-blueGray-100">
                 {
                     {
                         'index': <CustomPlayer {...custommediaplayerteaminfo} />,
-                        'world': <CreateEnvironment/>,
+                        'world': <CreateEnvironment environment = {environment}/>,
                     }[props.page]
                 }
             </div>

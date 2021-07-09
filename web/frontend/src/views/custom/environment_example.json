@@ -2,12 +2,6 @@
   "filetype": "environment",
   "session_id": "default",
   "project_id": "simple",
-  "size": [
-    {
-      "width": "10",
-      "height": "10"
-    }
-  ],
   "actions": [
     {
       "name": "greet",

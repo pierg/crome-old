@@ -5,13 +5,10 @@ function SocketIoConsoleMessage(props) {
 
     const socket = useSocket()
 
-    const [message, setMessage] = useState("test123");
+    const [message, setMessage] = useState("");
 
 
     const setMessageFunction = useCallback((message_received) => {
-        //list_of_goals.forEach(goal => console.log(goal));
-        console.log("message_received")
-        console.log(message_received)
         setMessage(message_received);
     }, [setMessage])
 
@@ -26,10 +23,7 @@ function SocketIoConsoleMessage(props) {
     }, [socket, setMessageFunction])
 
     useEffect(() => {
-        console.log("sending")
-        console.log(message)
         props.modifyMessage(message);
-        console.log(message)
 
 
     }, [message])  // eslint-disable-line react-hooks/exhaustive-deps

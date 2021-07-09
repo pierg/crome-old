@@ -95,14 +95,22 @@ def connected():
     print(f'ID {request.args.get("id")}')
 
 
+@socketio.on('get-gridworld')
+def send_gridwolrd():
+    gridworld_file = Path(os.path.join(storage_folder, 'sessions/default/simple/environment.json'))
+    with open(gridworld_file) as json_file:
+        gridworld = json.load(json_file)
+    emit("receive-gridwolrd", json.dumps(gridworld))
+
+
 @socketio.on('test')
 def test():
     i = 0
     while True:
         emit("receive-message", i)
+        print(i)
         i += 1
         time.sleep(3)
-        print(i)
 
 
 @socketio.on('disconnect')
