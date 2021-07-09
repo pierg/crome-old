@@ -21,7 +21,6 @@ import createenvironment from "_texts/custom/createenvironment.js";
 import img from "./robot1.png";
 import SavingEdit from "../../components/Custom/SavingEdit";
 import LocationIdEdit from "../../components/Custom/LocationIdEdit";
-import SocketIoEnvironment from "../../components/Custom/Examples/GetEnvironment";
 
 
 export default class CreateEnvironment extends React.Component {
@@ -43,6 +42,7 @@ export default class CreateEnvironment extends React.Component {
         modalSaving: false,
         modalLocationId: false,
         node: false,
+        gridJson: null
     }
 
     /* GENERAL FUNCTIONS */
@@ -53,6 +53,14 @@ export default class CreateEnvironment extends React.Component {
 
     componentWillUnmount() {
         // fix Warning: Can't perform a React state update on an unmounted component
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props.environment !== prevProps.environment) {
+            this.setState({
+                gridJson: this.props.environment
+            })
+        }
     }
 
     setModalClassic = (bool, listIndex = -1, elementIndex = -1) => {
@@ -382,8 +390,6 @@ export default class CreateEnvironment extends React.Component {
     deleteEveryMutexOccurrenceOf = (element, list = false) => {
         let currentList = list || this.state.currentList
         let mutexGroup = this.state.mutexGroups[currentList-1]
-        console.log("deleting every "+element+" in :")
-        console.log(mutexGroup)
         for (let i=0; i<mutexGroup.length; i++) {
             let index = mutexGroup[i].indexOf(element)
             if (index !== -1) {
@@ -469,9 +475,6 @@ export default class CreateEnvironment extends React.Component {
         this.x = null;
         this.y = null;
         this.componentsList = []
-        console.log("test")
-        this.json = props.environment;
-        console.log(this.json)
     }
 
     generateGridworld() {
@@ -481,8 +484,7 @@ export default class CreateEnvironment extends React.Component {
 
 
     generateGridworldWithJSON() {
-        const json = JSON.parse(this.json);
-        console.log(json)
+        const json = JSON.parse(this.state.gridJson);
 
         const locations = json.grid.locations;
         const actions = json.actions;

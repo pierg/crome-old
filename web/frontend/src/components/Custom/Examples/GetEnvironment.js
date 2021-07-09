@@ -9,8 +9,6 @@ function SocketIoEnvironment(props) {
 
 
     const setEnvironmentFunction = useCallback((environment_received) => {
-        console.log("message_received")
-        //console.log(message_received)
         setEnvironment(environment_received);
     }, [setEnvironment])
 
@@ -25,12 +23,7 @@ function SocketIoEnvironment(props) {
     }, [socket, setEnvironmentFunction])
 
     useEffect(() => {
-        console.log("sending")
-        console.log(environment)
         props.modifyEnvironment(environment);
-        console.log(environment)
-
-
     }, [environment])  // eslint-disable-line react-hooks/exhaustive-deps
 
     return (<></>);
