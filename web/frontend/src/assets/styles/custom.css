@@ -47,12 +47,20 @@
     top: -1.5rem;
 }
 
+.top--30 {
+    top: -4.5rem;
+}
+
 .left-9\/10 {
   left: 90%;
 }
 
 .no-resize {
     resize: none;
+}
+
+.justify-evenly {
+    justify-content: space-evenly;
 }
 
 @media (min-width: 640px) {

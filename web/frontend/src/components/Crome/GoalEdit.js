@@ -47,6 +47,12 @@ function GoalEdit(props) {
         return day ? night ? ["day", "night"] : ["day"] : night ? ["night"] : undefined
     }
 
+    function handleKeyEvent(event) {
+        if (event.key === "Enter") {
+            props.save(goal)
+        }
+    }
+
     return(
         <>
             <div className="modal-header justify-content-center">
@@ -60,7 +66,7 @@ function GoalEdit(props) {
                 </button>
                 <h4 className="title title-up">{props.info.title}</h4>
             </div>
-            <div className="modal-body justify-content-center">
+            <div className="modal-body justify-content-center" onKeyPress={handleKeyEvent}>
                 <Input type="text" placeholder="Name" name="name" value={goal.name} onChange={changeParameter}/>
                 <Input type="textarea" placeholder="Description" name="description" value={goal.description} onChange={changeParameter}/>
                 <Checkbox label="Day" name="context-day" checked={parseContext(goal.context)[0]} onChange={changeParameter}/>

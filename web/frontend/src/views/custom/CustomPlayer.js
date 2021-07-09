@@ -7,7 +7,7 @@ import goalmodelinginfo from "_texts/custom/goalmodelinginfo.js";
 import GoalModeling from "./GoalModeling";
 import CustomHeader from "../../components/Crome/CustomHeader";
 import customheadercards from "../../_texts/custom/customheadercards";
-import FooterAdmin from "../../components/Footers/Admin/FooterAdmin";
+import CustomFooter from "../../components/Custom/CustomFooter";
 import footeradmin from "../../_texts/admin/footers/footeradmin";
 import WorldModeling from "./WorldModeling";
 import Analysis from "./Analysis";
@@ -48,9 +48,39 @@ export default function CustomPlayer({ items, defaultOpened }) {
 
   return (
       <>
-        <CustomHeader {...customheadercards} states={headerStates} />
-        <div className="px-4 md:px-6 mx-auto w-full -mt-24">
-          <div className="mt-12 relative">
+          <CustomHeader {...customheadercards} states={headerStates} />
+          <div className="flex justify-evenly relative top--30">
+              <div>
+                  <a
+                      href="#pablo"
+                      className="text-white text-center opacity-85 hover:opacity-100 transition-opacity duration-150 ease-linear w-12 text-xl z-50"
+                      onClick={(e) =>
+                          toggleNew(e, open - 1 < 0 ? items.length - 1 : open - 1)
+                      }
+                  >
+                      <div>
+                          <i className="text-orange-300 fas fa-chevron-left mr-2"/>
+                          <span className="text-2xl">Back</span>
+                      </div>
+                  </a>
+              </div>
+              <div>
+                  <a
+                      href="#pablo"
+                      className="text-white text-center opacity-85 hover:opacity-100 transition-opacity duration-150 ease-linear w-12 text-xl z-50"
+                      onClick={(e) =>
+                          toggleNew(e, open + 1 > items.length - 1 ? 0 : open + 1)
+                      }
+                  >
+                      <div>
+                          <span className="text-2xl">Continue</span>
+                          <i className="text-orange-300 fas fa-chevron-right ml-2"/>
+                      </div>
+                  </a>
+              </div>
+          </div>
+          <div className="px-4 md:px-6 mx-auto w-full -mt-24">
+          <div className="mt-12 relative pb-32">
             <div className="relative w-full overflow-hidden">
               <div>
                 {items.map((prop, key) => {
@@ -81,28 +111,6 @@ export default function CustomPlayer({ items, defaultOpened }) {
                   );
                 })}
               </div>
-              <div className="flex justify-center mb-12">
-                <a
-                    href="#pablo"
-                    className="text-white text-center opacity-50 hover:opacity-100 transition-opacity duration-150 ease-linear w-12 text-xl"
-                    onClick={(e) =>
-                        toggleNew(e, open - 1 < 0 ? items.length - 1 : open - 1)
-                    }
-                >
-                  <i className="text-lightBlue-500 fas fa-chevron-left"/>
-                  <span className="sr-only">Previous</span>
-                </a>
-                <a
-                    href="#pablo"
-                    className="text-white text-center opacity-50 hover:opacity-100 transition-opacity duration-150 ease-linear w-12 text-xl"
-                    onClick={(e) =>
-                        toggleNew(e, open + 1 > items.length - 1 ? 0 : open + 1)
-                    }
-                >
-                  <i className="text-lightBlue-500 fas fa-chevron-right"/>
-                  <span className="sr-only">Next</span>
-                </a>
-              </div>
             </div>
           </div>
           <div className="flex flex-wrap">
@@ -113,7 +121,7 @@ export default function CustomPlayer({ items, defaultOpened }) {
               {/*<CardFullTable {...cardfulltabledashboard2} />*/}
             </div>
           </div>
-          <FooterAdmin {...footeradmin} />
+          <CustomFooter {...footeradmin} />
         </div>
       </>
   );
