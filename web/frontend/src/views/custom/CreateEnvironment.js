@@ -288,7 +288,7 @@ export default class CreateEnvironment extends React.Component {
             })
             this.removeId(this.state.lists[listIndex][elementIndex])
         } else {
-            this.deleteEveryMutexOccurrenceOf(this.state.lists[listIndex][elementIndex])
+            this.deleteEveryMutexOccurrenceOf(this.state.lists[listIndex][elementIndex], listIndex)
         }
 
 
@@ -298,10 +298,9 @@ export default class CreateEnvironment extends React.Component {
         this.setState({
             lists: tmpLists,
             editedLists: tmpLists,
-            numChildren: tmpNumChildren
-        })
+            numChildren: tmpNumChildren,
+        }, () => {if (listIndex !== 0) this.cleanMutexGroups()})
 
-        if (listIndex !== 0) this.cleanMutexGroups()
     }
 
     deleteAllElements = () => {
@@ -380,8 +379,11 @@ export default class CreateEnvironment extends React.Component {
         this.cleanMutexGroups()
     }
 
-    deleteEveryMutexOccurrenceOf = (element) => {
-        let mutexGroup = this.state.mutexGroups[this.state.currentList-1]
+    deleteEveryMutexOccurrenceOf = (element, list = false) => {
+        let currentList = list || this.state.currentList
+        let mutexGroup = this.state.mutexGroups[currentList-1]
+        console.log("deleting every "+element+" in :")
+        console.log(mutexGroup)
         for (let i=0; i<mutexGroup.length; i++) {
             let index = mutexGroup[i].indexOf(element)
             if (index !== -1) {
