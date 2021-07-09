@@ -4,6 +4,12 @@ import Input from "../Elements/Input";
 
 function LocationIdEdit(props) {
 
+    function handleKeyEvent(event) {
+        if (event.key === "Enter" && props.validName(props.element, true)) {
+            props.save()
+        }
+    }
+
     return(
         <>
             <div className="modal-header justify-content-center">
@@ -17,7 +23,7 @@ function LocationIdEdit(props) {
                 </button>
                 <h4 className="title title-up">{props.info.title}</h4>
             </div>
-            <div className="modal-body justify-content-center">
+            <div className="modal-body justify-content-center" onKeyPress={handleKeyEvent}>
                 <Input type="text" placeholder="Name" autoComplete="off" name="name" value={props.element} onChange={(e) => props.edit(e.target.value)}/>
             </div>
             <ModalFooter>

@@ -8,7 +8,7 @@ function ListLine(props) {
             <td>
                 <div className="grid grid-template-2">
                     {props.colors.map((prop, key) => (
-                        <><i key={key} id={"tooltipMutex"+props.list+"-"+props.number+"-"+key} className={"text-2xl "+props.statIconName} style={{color: mutexcolors.colors[props.list][prop]}}/>
+                        <span key={key}><i id={"tooltipMutex"+props.list+"-"+props.number+"-"+key} className={"text-2xl "+props.statIconName} style={{color: mutexcolors.colors[props.list][prop]}}/>
                         <UncontrolledTooltip
                         delay={0}
                         placement="left"
@@ -17,7 +17,7 @@ function ListLine(props) {
                         <div className="flex flex-col text-left">
                             Mutex group {prop}
                         </div>
-                        </UncontrolledTooltip></>
+                        </UncontrolledTooltip></span>
                     ))}
                 </div>
             </td>

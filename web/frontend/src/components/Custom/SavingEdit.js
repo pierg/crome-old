@@ -15,6 +15,12 @@ function SavingEdit(props) {
         props.edit(element)
     }
 
+    function handleKeyEvent(event) {
+        if (event.key === "Enter" && element !== "") {
+            props.save(element)
+        }
+    }
+
     return(
         <>
             <div className="modal-header justify-content-center">
@@ -28,7 +34,7 @@ function SavingEdit(props) {
                 </button>
                 <h4 className="title title-up">{props.info.title}</h4>
             </div>
-            <div className="modal-body justify-content-center">
+            <div className="modal-body justify-content-center" onKeyPress={handleKeyEvent}>
                 <Input type="text" placeholder="Name" autoComplete="off" name="name" value={element.name} onChange={changeParameter}/>
                 <Input type="textarea" placeholder="Description" autoComplete="off" name="description" value={element.description} onChange={changeParameter}/>
             </div>
