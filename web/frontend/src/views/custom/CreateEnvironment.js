@@ -42,7 +42,8 @@ export default class CreateEnvironment extends React.Component {
         modalSaving: false,
         modalLocationId: false,
         node: false,
-        gridJson: null
+        gridJson: null,
+        environmentToBeSaved: null
     }
 
     /* GENERAL FUNCTIONS */
@@ -135,6 +136,7 @@ export default class CreateEnvironment extends React.Component {
 
     saveWorld = () => {
         this.setModalSaving(false)
+        this.props.saveEnvironment(this.state.savingInfos, this.state.environmentToBeSaved)
     }
     /* GENERAL FUNCTIONS */
 
@@ -866,7 +868,9 @@ export default class CreateEnvironment extends React.Component {
             }
         }
         console.log(obj)
-        this.setModalSaving(true)
+        this.setState({
+            environmentToBeSaved: obj,
+        }, () => this.setModalSaving(true))
         //const myJSON = JSON.stringify(obj);
         //const name = window.prompt("What is the name of the file ?");
     }

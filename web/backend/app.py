@@ -76,6 +76,12 @@ def get_projects(data):
     emit("receive-projects", list_of_projects)
 
 
+@socketio.on('save-project')
+def save_project(data):
+    print("SAVE PROJECT")
+    print(data)
+
+
 @socketio.on('get-goals')
 def get_goals(data):
     # print(data)
