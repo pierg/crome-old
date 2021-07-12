@@ -4,6 +4,7 @@ import React from "react";
 import AddButton from "../../components/Custom/AddButton";
 import WorldView from "../../components/Custom/WorldView";
 import {Link} from "react-router-dom";
+import SocketIoProjects from "../../components/Custom/Examples/GetProjects";
 //import SocketIoGaols from "../../components/Custom/Examples/GetGoals";
 //import SocketIoProjects from "../../components/Custom/Examples/GetProjects";
 
@@ -16,14 +17,16 @@ export default class WorldModeling extends React.Component {
     }
 
     getWorlds = (list) => {
-        let tmpArray = this.state.worlds
+        console.log("getWorlds")
+        console.log(list)
+        /*let tmpArray = this.state.worlds
         for (let i=0; i<list.length; i++) {
             tmpArray.push(JSON.parse(list[i]))
         }
         this.setState({
             worlds: tmpArray,
             numChildren: list.length
-        })
+        })*/
     }
 
     render() {
@@ -43,8 +46,7 @@ export default class WorldModeling extends React.Component {
 
         return (
             <>
-
-                {/*<SocketIoProjects /><SocketIoWorlds worlds={this.getWorlds} />*/}
+                <SocketIoProjects session={this.props.id} worlds={this.getWorlds}/>
                 <ParentComponent>
                     {children}
                 </ParentComponent>

@@ -47,7 +47,7 @@ export default function CustomDashboard(props) {
             <div className="relative xxl:ml-64 bg-blueGray-100 min-h-screen">
                 {
                     {
-                        'index': <CustomPlayer {...custommediaplayerteaminfo} />,
+                        'index': <CustomPlayer {...custommediaplayerteaminfo} id={id}/>,
                         'world': <CreateEnvironment environment = {environment}/>,
                     }[props.page]
                 }
