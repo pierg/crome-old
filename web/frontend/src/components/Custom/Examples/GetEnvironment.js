@@ -16,10 +16,10 @@ function SocketIoEnvironment(props) {
     useEffect(() => {
         if (socket == null) return
 
-        socket.emit('get-gridworld')
-        socket.on('receive-gridwolrd', setEnvironmentFunction)
+        socket.emit('get-environment')
+        socket.on('receive-environment', setEnvironmentFunction)
 
-        return () => socket.off('receive-gridwolrd')
+        return () => socket.off('receive-environment')
     }, [socket, setEnvironmentFunction])
 
     useEffect(() => {
