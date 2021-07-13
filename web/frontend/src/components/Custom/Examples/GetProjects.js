@@ -8,22 +8,24 @@ function SocketIoProjects(props) {
     const [message, setMessage] = useState(0);
 
 
-    const setMessageFunction = useCallback((list_of_goals) => {
-        //list_of_goals.forEach(goal => console.log(goal));
-        setMessage(list_of_goals);
+    const setMessageFunction = useCallback((list_of_projects) => {
+        setMessage(list_of_projects);
     }, [setMessage])
 
 
     useEffect(() => {
         if (socket == null) return
 
-        socket.emit('get-projects', {session: "default", project: props.session})
+        //socket.emit('get-projects', {session: props.session, project: "simple"})
+        socket.emit('get-projects', {session: props.session})
         socket.on('receive-projects', setMessageFunction)
 
-        console.log(message)
-
         return () => socket.off('receive-projects')
-    }, [socket, setMessageFunction, props.session, message])
+    }, [socket, setMessageFunction, props.session])
+
+    useEffect(() => {
+        props.worlds(message)
+    }, [message])  // eslint-disable-line react-hooks/exhaustive-deps
 
 
     return (<></>);
