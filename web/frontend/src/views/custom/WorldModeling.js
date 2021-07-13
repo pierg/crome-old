@@ -5,28 +5,68 @@ import AddButton from "../../components/Custom/AddButton";
 import WorldView from "../../components/Custom/WorldView";
 import {Link} from "react-router-dom";
 import SocketIoProjects from "../../components/Custom/Examples/GetProjects";
-//import SocketIoGaols from "../../components/Custom/Examples/GetGoals";
-//import SocketIoProjects from "../../components/Custom/Examples/GetProjects";
+import {Button, Modal, ModalFooter} from "reactstrap";
 
 export default class WorldModeling extends React.Component {
 
     state = {
         worlds: [],
-        currentGoalIndex: 0,
+        infos: [],
+        selectedWorldIndex: 0,
+        selectedWorldToDelete: 0,
         numChildren: 0,
+        modalDeletionConfirmation : false,
+        deletionConfirmation: false
     }
 
     getWorlds = (list) => {
-        console.log("getWorlds")
-        console.log(list)
-        /*let tmpArray = this.state.worlds
+        let worlds = []
+        let infos = []
         for (let i=0; i<list.length; i++) {
-            tmpArray.push(JSON.parse(list[i]))
+            worlds.push(JSON.parse(list[i][0]))
+            infos.push(JSON.parse(list[i][1]))
+        }
+
+        this.setState({
+            worlds: worlds,
+            infos: infos,
+            numChildren: worlds.length
+        })
+    }
+
+    modifyWorld = () => {
+        console.log("redirection")
+    }
+
+    setModalDeletionConfirmation = (bool, key = null) => {
+        if (bool && key !== null) {
+            this.setState({
+                selectedWorldToDelete: key,
+            })
         }
         this.setState({
-            worlds: tmpArray,
-            numChildren: list.length
-        })*/
+            modalDeletionConfirmation: bool,
+        })
+    }
+
+    setDeletionConfirmation = (bool) => {
+        this.setState({
+            deletionConfirmation: bool,
+        })
+    }
+
+    deleteWorld = () => {
+        let tmpWorlds = this.state.worlds
+        let tmpInfos = this.state.infos
+        tmpWorlds.splice(this.state.selectedWorldToDelete, 1)
+        tmpInfos.splice(this.state.selectedWorldToDelete, 1)
+        this.setState({
+            worlds: tmpWorlds,
+            infos: tmpInfos,
+            numChildren: this.state.numChildren - 1
+        })
+        this.setModalDeletionConfirmation(false)
+        this.setDeletionConfirmation(true)
     }
 
     render() {
@@ -34,22 +74,53 @@ export default class WorldModeling extends React.Component {
         const children = [];
         for (let i = 0; i < this.state.numChildren; i += 1) {
             children.push(<WorldView key={i} number={i}
-                                    title={this.state.worlds[i].name}
-                                    description={this.state.worlds[i].description}
+                                    title={this.state.infos[i].name}
+                                    description={this.state.infos[i].description}
                                     statIconName={this.props.info.goalComponent.editIconName}
                                     statSecondIconName={this.props.info.goalComponent.deleteIconName}
                                     statIconColor={this.props.info.goalComponent.iconColor}
-                                    modify={this.setModalClassic}
-                                    delete={this.deleteGoal}
+                                    modify={this.modifyWorld}
+                                    delete={this.setModalDeletionConfirmation}
             />);
         }
 
         return (
             <>
-                <SocketIoProjects session={this.props.id} worlds={this.getWorlds}/>
+                <SocketIoProjects session={this.props.id}
+                                  worlds={this.getWorlds}
+                                  deletionIndex={this.state.selectedWorldToDelete}
+                                  deletionConfirmation={this.state.deletionConfirmation}
+                                  deletionChanger={this.setDeletionConfirmation}/>
                 <ParentComponent>
                     {children}
                 </ParentComponent>
+                <Modal
+                    isOpen={this.state.modalDeletionConfirmation}
+                    toggle={() => this.setModalDeletionConfirmation(false)}
+                    className={"custom-modal-dialog sm:c-m-w-70 md:c-m-w-60 lg:c-m-w-50 xl:c-m-w-40"}>
+                    <div className="modal-header justify-content-center">
+                        <button
+                            aria-hidden={true}
+                            className="close"
+                            onClick={() => this.setModalDeletionConfirmation(false)}
+                            type="button"
+                        >
+                            <i className={this.props.info.modal.close}/>
+                        </button>
+                        <h4 className="title title-up">{this.props.info.modal.title}</h4>
+                    </div>
+                    <div className="modal-body justify-content-center">
+                        <span>The World "{this.state.infos[this.state.selectedWorldToDelete] !== undefined && this.state.infos[this.state.selectedWorldToDelete].name}" will be deleted, confirm?</span>
+                    </div>
+                    <ModalFooter>
+                        <Button color={this.props.info.modal.cancelColor} onClick={() => this.setModalDeletionConfirmation(false)}>
+                            {this.props.info.modal.cancelText}
+                        </Button>
+                        <Button color={this.props.info.modal.confirmColor} onClick={this.deleteWorld}>
+                            {this.props.info.modal.confirmText}
+                        </Button>
+                    </ModalFooter>
+                </Modal>
             </>
         );
     }

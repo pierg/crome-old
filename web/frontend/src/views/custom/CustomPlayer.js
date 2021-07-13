@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import goalmodelinginfo from "_texts/custom/goalmodelinginfo.js";
+import worldmodelinginfo from "_texts/custom/worldmodelinginfo.js";
 
 // components
 import GoalModeling from "./GoalModeling";
@@ -100,7 +101,7 @@ export default function CustomPlayer({ items, defaultOpened, id }) {
                         <div className="container mx-auto px-4">
                           {
                             {
-                              'world': <WorldModeling id={id}/>,
+                              'world': <WorldModeling id={id} {...worldmodelinginfo}/>,
                               'goal': <GoalModeling {...goalmodelinginfo}/>,
                               'analysis': <Analysis active={headerStates[2]}/>,
                               'synthesis': <Synthesis />

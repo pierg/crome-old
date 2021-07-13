@@ -27,6 +27,13 @@ function SocketIoProjects(props) {
         props.worlds(message)
     }, [message])  // eslint-disable-line react-hooks/exhaustive-deps
 
+    useEffect(() => {
+        if (props.deletionConfirmation) {
+            console.log("deletion confirmed with the following index : "+props.deletionIndex)
+            socket.emit('delete-project', {session: props.session, index: props.deletionIndex})
+            props.deletionChanger(false)
+        }
+    }, [props.deletionConfirmation, props.deletionIndex, props.deletionChanger, socket])  // eslint-disable-line react-hooks/exhaustive-deps
 
     return (<></>);
 }

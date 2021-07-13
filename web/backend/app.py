@@ -1,4 +1,5 @@
 import os
+import shutil
 from os import path, walk
 
 import time
@@ -88,9 +89,24 @@ def save_project(data):
         os.mkdir(project_dir)
     list_of_files = ["environment", "info"]
     for filename in list_of_files:
-        json_file = open(os.path.join(project_dir, filename+".json"), "w")
+        json_file = open(os.path.join(project_dir, filename + ".json"), "w")
         json_file.write(json.dumps(data['world'][filename]))
         json_file.close()
+
+
+@socketio.on('delete-project')
+def delete_project(data):
+    current_session_folder = Path(os.path.join(storage_folder, f"sessions/{data['session']}"))
+    dir_path, dir_names, filenames = next(walk(current_session_folder))
+    i = 1
+    for name in dir_names:
+        if i == data['index']:
+            if len(dir_names) == 1:
+                shutil.rmtree(current_session_folder)
+            else:
+                dir_to_delete = Path(os.path.join(current_session_folder, name))
+                shutil.rmtree(dir_to_delete)
+        i += 1
 
 
 @socketio.on('get-goals')
