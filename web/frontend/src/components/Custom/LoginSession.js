@@ -1,4 +1,4 @@
-import React, {useRef} from 'react'
+import React, {useCallback, useEffect, useRef} from 'react'
 import Button from "../../components/Elements/Button.js";
 import {Form} from 'react-bootstrap'
 import {v4 as uuidV4} from 'uuid'
@@ -11,10 +11,16 @@ export default function LoginSession({id, onIdSubmit}) {
 
         onIdSubmit(idRef.current.value)
     }
-
-    function createNewId() {
+    
+    const createNewId = useCallback(() => {
         onIdSubmit(uuidV4())
-    }
+    }, [onIdSubmit])
+    
+    useEffect(() => {
+        if (id === undefined) {
+            createNewId()
+        }
+    }, [createNewId, id])
 
     return (
         <>
