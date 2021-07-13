@@ -102,6 +102,9 @@ export default class CreateEnvironment extends React.Component {
             })
             if (!saved) this.world.cancelFirstClick()
         }
+        else {
+            this.world.setSelectionInGray()
+        }
         this.setState({
             modalLocationId: bool,
         })

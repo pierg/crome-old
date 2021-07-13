@@ -149,6 +149,7 @@ let endWall =[]
 let previousColorWall
 let previousStartColor
 let clickedNode = {x: false, y: false}
+let previousColorArray = [];
 
 GridWorld.prototype = {
   draw: function() {
@@ -297,13 +298,13 @@ GridWorld.prototype = {
 
   cancelFirstClick() {
     let limits = this.getLimits()
-    let previousColorArray = this.getPreviousColorArray(false)
 
     for (let i = limits.minX; i < limits.maxX + 1; i += 1) {
       for (let j = limits.minY; j < limits.maxY + 1; j += 1) {
         this.setBackgroundColor(i, j, previousColorArray[i][j - limits.minY]);
       }
     }
+    this.setBackgroundColor(start[0],start[1], previousStartColor)
 
     this.reset()
   },
@@ -332,11 +333,22 @@ GridWorld.prototype = {
       previousColorArray[i] = [];
       for (let j = limits.minY; j < limits.maxY + 1; j += 1) {
         previousColorArray[i].push(this.getBackgroundColor(i, j));
-        this.setBackgroundColor(i, j, "#9b9b9b");
       }
     }
     previousColorArray[start[0]][start[1] - limits.minY] = previousStartColor;
     return previousColorArray
+  },
+
+  setSelectionInGray() {
+    let limits = this.getLimits(true)
+
+    for (let i = limits.minX; i < limits.maxX + 1; i += 1) {
+      previousColorArray[i] = [];
+      for (let j = limits.minY; j < limits.maxY + 1; j += 1) {
+        previousColorArray[i].push(this.getBackgroundColor(i, j))
+        this.setBackgroundColor(i, j, "#9b9b9b");
+      }
+    }
   },
 
   askToColor(id, minX, maxX, maxY, minY, previousColorArray, map, callbackError) {
