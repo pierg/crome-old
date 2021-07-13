@@ -35,14 +35,14 @@ function SavingEdit(props) {
                 <h4 className="title title-up">{props.info.title}</h4>
             </div>
             <div className="modal-body justify-content-center" onKeyPress={handleKeyEvent}>
-                <Input type="text" placeholder="Name" autoComplete="off" name="name" value={element.name} onChange={changeParameter}/>
+                <Input type="text" placeholder="Name *" autoComplete="off" name="name" value={element.name} onChange={changeParameter}/>
                 <Input type="textarea" placeholder="Description" autoComplete="off" name="description" value={element.description} onChange={changeParameter}/>
             </div>
             <ModalFooter>
                 <Button color={props.info.modal.cancelColor} onClick={props.close}>
                     {props.info.modal.cancelText}
                 </Button>
-                <Button color={props.info.modal.saveColor} disabled={element === ""} onClick={() => props.save(element)}>
+                <Button color={props.info.modal.saveColor} disabled={element.name === ""} onClick={() => props.save(element)}>
                     {props.info.modal.saveText}
                 </Button>
             </ModalFooter>

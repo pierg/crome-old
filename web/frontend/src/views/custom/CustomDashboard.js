@@ -36,8 +36,8 @@ export default function CustomDashboard(props) {
     function updateEnvironment(env) {
         setEnvironment(env);
     }
-    function saveEnvironment(infos, env) {
-        setSavedEnvironment({"infos":infos, "environment":env})
+    function saveEnvironment(info, env) {
+        setSavedEnvironment({"info":info, "environment":env})
     }
 
     React.useEffect(() => {

@@ -80,6 +80,17 @@ def get_projects(data):
 def save_project(data):
     print("SAVE PROJECT")
     print(data)
+    session_dir = os.path.join(storage_folder, f"sessions/{data['world']['info']['session_id']}")
+    if not os.path.isdir(session_dir):
+        os.mkdir(session_dir)
+    project_dir = os.path.join(session_dir, f"{data['world']['info']['project_id']}")
+    if not os.path.isdir(project_dir):
+        os.mkdir(project_dir)
+    list_of_files = ["environment", "info"]
+    for filename in list_of_files:
+        json_file = open(os.path.join(project_dir, filename+".json"), "w")
+        json_file.write(json.dumps(data['world'][filename]))
+        json_file.close()
 
 
 @socketio.on('get-goals')

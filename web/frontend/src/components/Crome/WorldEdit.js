@@ -42,7 +42,7 @@ function WorldEdit(props) {
                 <h4 className="title title-up">{props.info.title}</h4>
             </div>
             <div className="modal-body justify-content-center" onKeyPress={handleKeyEvent}>
-                <Input type="text" placeholder="Name" autoComplete="off" name="name" value={element} onChange={changeParameter}/>
+                <Input type="text" placeholder="Name *" autoComplete="off" name="name" value={element} onChange={changeParameter}/>
                 {props.list.length > 0 && (<h4 className="title title-up mb-3">{props.info.modal.mutex}</h4>)}
                 <div className="flex flex-col mt-1">
                     {props.list.map((prop, key) => {
