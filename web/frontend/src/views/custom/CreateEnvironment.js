@@ -481,6 +481,7 @@ export default class CreateEnvironment extends React.Component {
 
     generateGridworld() {
         if (this.world !== null) this.world.onclick = null
+        this.deleteAllElements()
         this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode)
     }
 

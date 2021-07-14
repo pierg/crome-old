@@ -38,6 +38,10 @@ export default class WorldModeling extends React.Component {
         this.props.setEnvironment(this.state.worlds[index])
     }
 
+    clearWorld = () => {
+        this.props.setEnvironment(null)
+    }
+
     setModalDeletionConfirmation = (bool, key = null) => {
         if (bool && key !== null) {
             this.setState({
@@ -91,7 +95,7 @@ export default class WorldModeling extends React.Component {
                                   deletionIndex={this.state.selectedWorldToDelete}
                                   deletionConfirmation={this.state.deletionConfirmation}
                                   deletionChanger={this.setDeletionConfirmation}/>
-                <ParentComponent>
+                <ParentComponent clearWorld={this.clearWorld}>
                     {children}
                 </ParentComponent>
                 <Modal
@@ -132,7 +136,7 @@ const ParentComponent = props => (
             <div>
                 <div className="flex justify-center">
                     <div className="w-full lg:w-6/12 xl:w-3/12 mt-8 ml-4 mr-4 px-4 relative flex flex-col min-w-0 break-words bg-lightBlue-600 rounded mb-6 xl:mb-0 shadow-lg opacity-1 transform duration-300 transition-all ease-in-out">
-                        <Link to="/world" className="hover-no-underline"><AddButton
+                        <Link to="/world" className="hover-no-underline" onClick={props.clearWorld}><AddButton
                             statText="Build your Environment"
                             statIconName="fas fa-plus-square"
                             statIconColor="text-lightBlue-700"
