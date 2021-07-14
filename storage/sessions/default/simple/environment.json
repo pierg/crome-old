@@ -8,12 +8,16 @@
    },
   "actions": [
     {
-      "name": "greet",
-      "mutex_group": 1
+      "mutex_group": [
+        0
+      ],
+      "name": "a"
     },
     {
-      "name": "register",
-      "mutex_group": 1
+      "mutex_group": [
+        0
+      ],
+      "name": "b"
     }
   ],
   "sensors": [
