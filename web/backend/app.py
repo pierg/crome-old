@@ -71,7 +71,7 @@ def get_projects(data):
                         if os.path.splitext(file)[1] == ".json":
                             json_obj = json.load(json_file)
                             json_str = json.dumps(json_obj)
-                            default_project.append(json_str)
+                            default_project.append({"title": os.path.splitext(file)[0], "content": json_str})
                 list_of_projects.append(default_project)
 
     emit("receive-projects", list_of_projects)

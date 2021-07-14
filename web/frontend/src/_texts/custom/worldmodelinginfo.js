@@ -17,6 +17,7 @@ const textProps = {
         ],
         modal: {
             title: "Confirm Deletion",
+            content: "The following World will be deleted : ",
             close: "now-ui-icons ui-1_simple-remove",
             cancelText: "Cancel",
             cancelColor: "danger",

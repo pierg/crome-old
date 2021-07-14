@@ -321,6 +321,7 @@ export default class CreateEnvironment extends React.Component {
             lists: tmpLists,
             editedLists: tmpLists,
             numChildren: tmpNumChildren,
+            currentList: listIndex
         }, () => {if (listIndex !== 0) this.cleanMutexGroups()})
 
     }
@@ -415,6 +416,9 @@ export default class CreateEnvironment extends React.Component {
     cleanMutexGroups = () => { // deleting doubles and empty arrays
         let mutexGroups = this.state.mutexGroups
         let mutexGroup = mutexGroups[this.state.currentList-1]
+        console.log("cleanMutexGroups")
+        console.log(mutexGroups)
+        console.log(this.state.currentList-1)
         let newArray = []
         let found = {}
         for (let i=0; i<mutexGroup.length; i++) {

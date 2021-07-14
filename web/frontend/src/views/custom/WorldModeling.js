@@ -22,10 +22,16 @@ export default class WorldModeling extends React.Component {
     getWorlds = (list) => {
         let worlds = []
         let info = []
+
         for (let i=0; i<list.length; i++) {
-            worlds.push(JSON.parse(list[i][0]))
-            info.push(JSON.parse(list[i][1]))
+            for (let j=0; j<list[i].length; j++) {
+                console.log(list[i][j])
+                list[i][j]["title"] === "environment" ? worlds.push(JSON.parse(list[i][j]["content"])) : info.push(JSON.parse(list[i][j]["content"]))
+            }
         }
+        console.log("getWorlds")
+        console.log(worlds)
+        console.log(info)
 
         this.setState({
             worlds: worlds,
@@ -113,8 +119,8 @@ export default class WorldModeling extends React.Component {
                         </button>
                         <h4 className="title title-up">{this.props.info.modal.title}</h4>
                     </div>
-                    <div className="modal-body justify-content-center">
-                        <span>The World "{this.state.info[this.state.selectedWorldToDelete] !== undefined && this.state.info[this.state.selectedWorldToDelete].name}" will be deleted, confirm?</span>
+                    <div className="modal-body justify-content-center text-center">
+                        <span>{this.props.info.modal.content}{this.state.info[this.state.selectedWorldToDelete] !== undefined && this.state.info[this.state.selectedWorldToDelete].name}</span>
                     </div>
                     <ModalFooter>
                         <Button color={this.props.info.modal.cancelColor} onClick={() => this.setModalDeletionConfirmation(false)}>
