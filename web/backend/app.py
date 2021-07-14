@@ -90,7 +90,8 @@ def save_project(data):
     list_of_files = ["environment", "info"]
     for filename in list_of_files:
         json_file = open(os.path.join(project_dir, filename + ".json"), "w")
-        json_file.write(json.dumps(data['world'][filename]))
+        json_formatted = json.dumps(data['world'][filename], indent=4, sort_keys=True)
+        json_file.write(json_formatted)
         json_file.close()
 
 
