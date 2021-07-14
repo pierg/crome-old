@@ -49,7 +49,12 @@ export default class CreateEnvironment extends React.Component {
     /* GENERAL FUNCTIONS */
     componentDidMount() {
         this.map = this.buildMap(this.map, this.size)
-        this.generateGridworld()
+        if (this.props.environment !== null) {
+            this.generateGridworldWithJSON()
+        }
+        else {
+            this.generateGridworld()
+        }
     }
 
     componentWillUnmount() {
@@ -57,11 +62,11 @@ export default class CreateEnvironment extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.props.environment !== prevProps.environment) {
+        /*if (this.props.environment !== prevProps.environment) {
             this.setState({
                 gridJson: this.props.environment
             })
-        }
+        }*/
     }
 
     setModalClassic = (bool, listIndex = -1, elementIndex = -1) => {
@@ -489,7 +494,7 @@ export default class CreateEnvironment extends React.Component {
 
 
     generateGridworldWithJSON() {
-        const json = JSON.parse(this.state.gridJson);
+        const json = this.props.environment
 
         const locations = json.grid.locations;
         const actions = json.actions;
@@ -497,7 +502,7 @@ export default class CreateEnvironment extends React.Component {
 
         let  x;
         let  y;
-        this.map = this.buildMap(this.map, (json.size[0].width / 2));
+        this.map = this.buildMap(this.map, (json.size.width / 2));
         for (let i = 0; i < locations.length; i++) {
             for (let j = 0; j < locations[i].coordinates.length; j++) {
                 x = locations[i].coordinates[j].x * 2 - 1;
@@ -512,25 +517,25 @@ export default class CreateEnvironment extends React.Component {
         let leftColor;
         let aboveColor;
 
-        for (let i = 1; i < json.size[0].width; i++) {
-            for (let j = 1; j < json.size[0].width; j++) {
+        for (let i = 1; i < json.size.width; i++) {
+            for (let j = 1; j < json.size.width; j++) {
                 if (i % 2 !== 1 || j % 2 !== 1 ) {
                     this.checkNeighbour(this.map, i, j);
                 }
             }
         }
-        for (let i = 2; i < json.size[0].width; i+= 2) {
-            for (let j = 2; j < json.size[0].width; j+= 2) {
+        for (let i = 2; i < json.size.width; i+= 2) {
+            for (let j = 2; j < json.size.width; j+= 2) {
                 this.checkNeighbour(this.map, i, j);
             }
         }
-        for (let i = 2; i < json.size[0].width; i+= 2) {
+        for (let i = 2; i < json.size.width; i+= 2) {
             aboveColor = this.map[i - 1][0][0];
             if (aboveColor === this.map[i + 1][0][0] && aboveColor !== "white") {
                 this.map[i][0] = this.map[i - 1][0];
             }
         }
-        for (let j = 2; j < json.size[0].width; j+= 2) {
+        for (let j = 2; j < json.size.width; j+= 2) {
             leftColor = this.map[0][j - 1][0];
             if (leftColor === this.map[0][j+ 1 ][0] && leftColor !== "white") {
                 this.map[0][j] = this.map[0][j - 1];
@@ -540,8 +545,8 @@ export default class CreateEnvironment extends React.Component {
         this.addAllElements(actions, 1)
         this.addAllElements(sensors, 2)
         if (this.world !== null) this.world.onclick = null;
-        this.size = (json.size[0].width / 2);
-        this.world = this.buildGrid(this.myCanvas.current, (json.size[0].width / 2), this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode);
+        this.size = (json.size.width / 2);
+        this.world = this.buildGrid(this.myCanvas.current, (json.size.width / 2), this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode);
         this.world.actualiseIsColorTable();
     }
 
@@ -833,15 +838,15 @@ export default class CreateEnvironment extends React.Component {
             session_id: "default",
             project_id: "simple",};
         obj.size = {width: this.size * 2, height: this.size * 2};
-        obj.grid = {location : [], walls : {horizontal : [], vertical : []}};
+        obj.grid = {locations : [], walls : {horizontal : [], vertical : []}};
         for (let i = 0; i < idTable.length; i++) {
-            obj.grid.location.push({coordinates : [], color : idTable[i][1], id : idTable[i][0]});
+            obj.grid.locations.push({coordinates : [], color : idTable[i][1], id : idTable[i][0]});
         }
         for (let i = 0; i < this.map.length; i++) {
             for (let j = 0; j < this.map[0].length; j++) {
                 if (this.map[i][j][0] !== "white" && this.map[i][j][2] !== null && i % 2 === 1 && j % 2 === 1) {
                     const index = this.world.isID(this.map[i][j][2]);
-                    obj.grid.location[index].coordinates.push({x : Math.trunc(i / 2) + 1, y : Math.trunc(j / 2) + 1})
+                    obj.grid.locations[index].coordinates.push({x : Math.trunc(i / 2) + 1, y : Math.trunc(j / 2) + 1})
                 }
                 else if (this.map[i][j][0] === "black") {
                     if (i % 2 === 1 && j % 2 === 0) {
@@ -870,7 +875,6 @@ export default class CreateEnvironment extends React.Component {
                 }
             }
         }
-        console.log(obj)
         this.setState({
             environmentToBeSaved: obj,
         }, () => this.setModalSaving(true))
@@ -978,7 +982,6 @@ export default class CreateEnvironment extends React.Component {
                                                     <div className="flex pl-2">
                                                         <Button color="red" onClick={() => this.modifyGridSize(-1)}><i className="text-xl fas fa-minus-square"/></Button>
                                                         <Button color="lightBlue" onClick={() => this.modifyGridSize(1)}><i className="text-xl fas fa-plus-square"/></Button>
-                                                        <Button onClick = {this.generateGridworldWithJSON}>JSON</Button>
                                                         {/*<Button ref={this.robotButton} onClick={this.launchRobot}>Robot</Button>*/}
                                                     </div>
                                                 </div>

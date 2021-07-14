@@ -34,8 +34,8 @@ export default class WorldModeling extends React.Component {
         })
     }
 
-    modifyWorld = () => {
-        console.log("redirection")
+    modifyWorld = (index) => {
+        this.props.setEnvironment(this.state.worlds[index])
     }
 
     setModalDeletionConfirmation = (bool, key = null) => {

@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from "react-router-dom";
 
 function WorldView(props) {
 
@@ -24,15 +25,15 @@ function WorldView(props) {
                         </div>
                         <div className="flex flex-col min-content">
                             <div className="relative pl-4 flex justify-end flex-initial">
-                                <div
-                                    onClick={() => props.modify(true, props.number)}
+                                <Link to="/world" className="hover-no-underline"><div
+                                    onClick={() => props.modify(props.number)}
                                     className={
                                         "text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full cursor-pointer " +
                                         props.statIconColor
                                     }
                                 >
                                     <i className={props.statIconName}/>
-                                </div>
+                                </div></Link>
                             </div>
                             {props.number !== 0 && (<div className="relative pl-4 flex mt-2 justify-end flex-initial">
                                 <div

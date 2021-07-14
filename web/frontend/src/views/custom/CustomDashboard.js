@@ -14,7 +14,6 @@ import CreateEnvironment from "./CreateEnvironment";
 import Console from "../../components/Crome/Console";
 import consoleinfo from "../../_texts/custom/console";
 import SocketIoConsoleMessage from "../../components/Custom/Examples/GetConsoleMessage";
-import SocketIoEnvironment from "../../components/Custom/Examples/GetEnvironment";
 import SocketSaveEnvironment from "../../components/Custom/Examples/SaveEnvironment";
 
 
@@ -48,12 +47,11 @@ export default function CustomDashboard(props) {
             <CustomSidebar {...customsidebar} currentRoute={"#" + location.pathname} id={id} setId={setId}/>
             <Console {...consoleinfo} customText={message}/>
             <SocketIoConsoleMessage modifyMessage={(e) => updateMessage(e)}/>
-            <SocketIoEnvironment modifyEnvironment={(e) => updateEnvironment(e)}/>
             <SocketSaveEnvironment session={id} world={savedEnvironment}/>
             <div className="relative xxl:ml-64 bg-blueGray-100 min-h-screen">
                 {
                     {
-                        'index': <CustomPlayer {...custommediaplayerteaminfo} id={id}/>,
+                        'index': <CustomPlayer {...custommediaplayerteaminfo} setEnvironment={updateEnvironment} id={id}/>,
                         'world': <CreateEnvironment environment={environment} saveEnvironment={saveEnvironment}/>,
                     }[props.page]
                 }
