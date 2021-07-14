@@ -61,14 +61,6 @@ export default class CreateEnvironment extends React.Component {
         // fix Warning: Can't perform a React state update on an unmounted component
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        /*if (this.props.environment !== prevProps.environment) {
-            this.setState({
-                gridJson: this.props.environment
-            })
-        }*/
-    }
-
     setModalClassic = (bool, listIndex = -1, elementIndex = -1) => {
 
         if (!bool) {
