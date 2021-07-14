@@ -50,6 +50,7 @@ export default class CreateEnvironment extends React.Component {
     /* GENERAL FUNCTIONS */
     componentDidMount() {
         this.map = this.buildMap(this.map, this.size)
+        this.deleteAllElements()
         if (this.props.environment !== null) {
             this.generateGridworldWithJSON()
         }
@@ -482,7 +483,6 @@ export default class CreateEnvironment extends React.Component {
 
     generateGridworld() {
         if (this.world !== null) this.world.onclick = null
-        this.deleteAllElements()
         this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode)
     }
 
