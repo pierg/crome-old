@@ -1,6 +1,7 @@
 import React from 'react';
 import {Button, ModalFooter} from "reactstrap";
 import Input from "../Elements/Input";
+import {Link} from "react-router-dom";
 
 function SavingEdit(props) {
 
@@ -42,9 +43,9 @@ function SavingEdit(props) {
                 <Button color={props.info.modal.cancelColor} onClick={props.close}>
                     {props.info.modal.cancelText}
                 </Button>
-                <Button color={props.info.modal.saveColor} disabled={element.name === ""} onClick={() => props.save(element)}>
+                <Link to="/index" className="hover-no-underline"><Button color={props.info.modal.saveColor} disabled={element.name === ""} onClick={() => props.save(element)}>
                     {props.info.modal.saveText}
-                </Button>
+                </Button></Link>
             </ModalFooter>
         </>
     );

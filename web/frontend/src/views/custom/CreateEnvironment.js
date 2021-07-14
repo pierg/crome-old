@@ -21,6 +21,7 @@ import createenvironment from "_texts/custom/createenvironment.js";
 import img from "./robot1.png";
 import SavingEdit from "../../components/Custom/SavingEdit";
 import LocationIdEdit from "../../components/Custom/LocationIdEdit";
+import {Link} from "react-router-dom";
 
 
 export default class CreateEnvironment extends React.Component {
@@ -827,9 +828,7 @@ export default class CreateEnvironment extends React.Component {
 
     saveInToJSON() {
         const idTable = this.world.getIdTable();
-        let obj = {filetype: "environment",
-            session_id: "default",
-            project_id: "simple",};
+        let obj = {filetype: "environment"};
         obj.size = {width: this.size * 2, height: this.size * 2};
         obj.grid = {locations : [], walls : {horizontal : [], vertical : []}};
         for (let i = 0; i < idTable.length; i++) {
@@ -941,6 +940,7 @@ export default class CreateEnvironment extends React.Component {
         }
         return (
             <>
+                <Link to="/index" className="hover-no-underline"><Button>Return</Button></Link>
                 <div className="relative pt-32 pb-32 bg-orange-500">
                     <div className="px-4 md:px-6 mx-auto w-full">
                         <div>

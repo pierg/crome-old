@@ -18,7 +18,9 @@ function SocketSaveEnvironment(props) {
             console.log(props.world)
             props.world.environment.session_id = props.session
             props.world.info.session_id = props.session
-            props.world.info.project_id = generateProjectId(props.world.info.name)
+            const projectId = generateProjectId(props.world.info.name)
+            props.world.environment.project_id = projectId
+            props.world.info.project_id = projectId
             socket.emit('save-project', {world: props.world})
         }
         

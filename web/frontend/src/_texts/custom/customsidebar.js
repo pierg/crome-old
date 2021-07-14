@@ -15,13 +15,6 @@ const textProps = {
       title: "CROME",
     },
     {
-      icon: "fas fa-tools",
-      text: "Environment Builder",
-      link: {
-        href: "#/world",
-      },
-    },
-    {
       icon: "fas fa-tv",
       text: "Run CROME",
       link: {
