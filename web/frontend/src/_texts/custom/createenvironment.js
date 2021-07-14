@@ -46,7 +46,13 @@ const textProps = {
     ],
     buttons: {
         clear: "Clear",
-        save: "Save"
+        save: "Save",
+        update: "Update",
+        back: {
+            text: "Back to Crome",
+            color: "white",
+            icon: "fas fa-long-arrow-alt-left"
+        }
     },
     modal: {
         world: {

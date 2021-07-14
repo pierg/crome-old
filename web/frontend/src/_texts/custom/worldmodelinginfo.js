@@ -1,7 +1,7 @@
 const textProps = {
     info: {
         goalComponent: {
-            editIconName: "fas fa-eye",
+            editIconName: "fas fa-pen",
             deleteIconName: "fas fa-trash-alt" ,
             iconColor: "bg-lightBlue-600",
         },

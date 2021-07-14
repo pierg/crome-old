@@ -50,9 +50,11 @@ export default class CreateEnvironment extends React.Component {
     /* GENERAL FUNCTIONS */
     componentDidMount() {
         this.map = this.buildMap(this.map, this.size)
-        console.log("mounted")
         this.deleteAllElements()
-        if (this.props.environment !== null) {
+        if (this.props.world !== null) {
+            this.setState({
+                savingInfos: this.props.world.info
+            })
             this.generateGridworldWithJSON()
         }
         else {
@@ -86,9 +88,16 @@ export default class CreateEnvironment extends React.Component {
 
     setModalSaving = (bool) => {
         if (!bool) {
-            this.setState({
-                savingInfos: {name: "", description: ""},
-            })
+            if (this.props.world === null) {
+                this.setState({
+                    savingInfos: {name: "", description: ""}
+                })
+            }
+            else {
+                this.setState({
+                    savingInfos: this.props.world.info
+                })
+            }
         }
         this.setState({
             modalSaving: bool,
@@ -223,7 +232,7 @@ export default class CreateEnvironment extends React.Component {
         this.setState({
             lists: tmpLists,
             numChildren: tmpNumChildren,
-            mutexGroup: tmpMutex
+            mutexGroups: tmpMutex
         })
     }
 
@@ -479,20 +488,20 @@ export default class CreateEnvironment extends React.Component {
         this.tab = [[1,5],[1,3],[1,1],[3,1],[3,3],[5,3],[5,1],[7,1],[9,1],[9,3],[7,3],[5,3],[5,5],[3,5],[1,5]];
         this.x = null;
         this.y = null;
-        this.componentsList = []
+        this.componentsList = [];
+        this.projectId = null;
     }
 
     generateGridworld() {
         if (this.world !== null) {
             this.world.onclick = null
-
         }
         this.world = this.buildGrid(this.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode)
     }
 
 
     generateGridworldWithJSON() {
-        const json = this.props.environment
+        const json = this.props.world.environment
 
         const locations = json.grid.locations;
         const actions = json.actions;
@@ -539,6 +548,7 @@ export default class CreateEnvironment extends React.Component {
                 this.map[0][j] = this.map[0][j - 1];
             }
         }
+        this.projectId = json.project_id
         this.addAllLocations(locations)
         this.addAllElements(actions, 1)
         this.addAllElements(sensors, 2)
@@ -834,7 +844,7 @@ export default class CreateEnvironment extends React.Component {
 
     saveInToJSON() {
         const idTable = this.world.getIdTable();
-        let obj = {filetype: "environment"};
+        let obj = {filetype: "environment", project_id: this.projectId};
         obj.size = {width: this.size * 2, height: this.size * 2};
         obj.grid = {locations : [], walls : {horizontal : [], vertical : []}};
         for (let i = 0; i < idTable.length; i++) {
@@ -946,7 +956,6 @@ export default class CreateEnvironment extends React.Component {
         }
         return (
             <>
-                <Link to="/index" className="hover-no-underline"><Button>Return</Button></Link>
                 <div className="relative pt-32 pb-32 bg-orange-500">
                     <div className="px-4 md:px-6 mx-auto w-full">
                         <div>
@@ -957,13 +966,21 @@ export default class CreateEnvironment extends React.Component {
                     </div>
                 </div>
                 <div className="px-4 md:px-6 mx-auto w-full -mt-24">
-                    <div className="mt-12 relative">
+                    <div className="mt-6 relative">
                         <div className="relative w-full overflow-hidden">
                             <div>
                                 <div id="body" className="flex justify-center items-center">
                                     <div className="flex container px-4 justify-center">
                                         <div className="flex justify-center">
                                             <div className="flex flex-col items-center">
+                                                <div className="w-full ml-4">
+                                                    <Link to="/index" className="hover-no-underline">
+                                                        <Button color={createenvironment.buttons.back.color} outline={true}>
+                                                            <i className={createenvironment.buttons.back.icon+" mr-2"}/>
+                                                            {createenvironment.buttons.back.text}
+                                                        </Button>
+                                                    </Link>
+                                                </div>
                                                 <canvas className="shifted-canvas-margin" ref={this.myCanvas} id='canvas'/>
                                                 <UncontrolledPopover
                                                     placement={window.innerWidth > 991 ? "left" : "top"}
@@ -986,7 +1003,7 @@ export default class CreateEnvironment extends React.Component {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="w-full lg:w-4/12 xl:w-3/12 flex-col">
+                                        <div className="w-full lg:w-4/12 xl:w-3/12 flex-col mt-4">
                                             <div id="tooltipHelpBuild" className="m-4 px-4 relative flex flex-col min-w-0 break-words bg-white rounded shadow-lg">
                                                 <div className="flex flex-col justify-center">
                                                     <div className="flex justify-center items-center title-up text-center my-2">{createenvironment.help.title}<i className="ml-1 text-lightBlue-700 text-lg fas fa-info-circle"/></div>
@@ -1009,13 +1026,13 @@ export default class CreateEnvironment extends React.Component {
                                             {this.componentsList.map((prop, key) => (
                                                 <ListBlock key={key} displayAddButton={prop.displayAddButton === true} addLine={() => this.onAddLine(key)} content={prop.content} colspan={3} title={prop.title}/>
                                             ))}
-                                            <div className="m-4 px-4 relative flex flex-col min-w-0 break-words bg-white rounded shadow-lg">
+                                            {this.projectId !== "simple" && (<div className="m-4 px-4 relative flex flex-col min-w-0 break-words bg-white rounded shadow-lg">
                                                 <div className="flex flex-col pl-2 pt-3 pb-3">
                                                     <Button color="amber" onClick={this.clearEnvironment}><i className="text-xl mr-2 fas fa-trash-alt"/>{createenvironment.buttons.clear}</Button>
                                                     <div className="mt-2"/>
-                                                    <Button color="emerald" onClick={this.saveInToJSON}><i className="text-xl mr-2 fas fa-check-square"/>{createenvironment.buttons.save}</Button>
+                                                    <Button color="emerald" onClick={this.saveInToJSON}><i className="text-xl mr-2 fas fa-check-square"/>{this.projectId === null ? createenvironment.buttons.save : createenvironment.buttons.update}</Button>
                                                 </div>
-                                            </div>
+                                            </div>)}
                                         </div>
                                     </div>
                                 </div>

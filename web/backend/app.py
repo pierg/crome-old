@@ -157,14 +157,6 @@ def connected():
     print(f'ID {request.args.get("id")}')
 
 
-@socketio.on('get-environment')
-def send_environment():
-    gridworld_file = Path(os.path.join(storage_folder, 'sessions/default/simple/environment.json'))
-    with open(gridworld_file) as json_file:
-        gridworld = json.load(json_file)
-    emit("receive-environment", json.dumps(gridworld))
-
-
 @socketio.on('test')
 def test():
     i = 0

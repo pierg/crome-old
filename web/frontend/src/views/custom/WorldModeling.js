@@ -11,7 +11,7 @@ export default class WorldModeling extends React.Component {
 
     state = {
         worlds: [],
-        infos: [],
+        info: [],
         selectedWorldIndex: 0,
         selectedWorldToDelete: 0,
         numChildren: 0,
@@ -21,25 +21,25 @@ export default class WorldModeling extends React.Component {
 
     getWorlds = (list) => {
         let worlds = []
-        let infos = []
+        let info = []
         for (let i=0; i<list.length; i++) {
             worlds.push(JSON.parse(list[i][0]))
-            infos.push(JSON.parse(list[i][1]))
+            info.push(JSON.parse(list[i][1]))
         }
 
         this.setState({
             worlds: worlds,
-            infos: infos,
+            info: info,
             numChildren: worlds.length
         })
     }
 
     modifyWorld = (index) => {
-        this.props.setEnvironment(this.state.worlds[index])
+        this.props.setWorld({"environment": this.state.worlds[index], "info": this.state.info[index]})
     }
 
     clearWorld = () => {
-        this.props.setEnvironment(null)
+        this.props.setWorld(null)
     }
 
     setModalDeletionConfirmation = (bool, key = null) => {
@@ -61,12 +61,12 @@ export default class WorldModeling extends React.Component {
 
     deleteWorld = () => {
         let tmpWorlds = this.state.worlds
-        let tmpInfos = this.state.infos
+        let tmpInfo = this.state.info
         tmpWorlds.splice(this.state.selectedWorldToDelete, 1)
-        tmpInfos.splice(this.state.selectedWorldToDelete, 1)
+        tmpInfo.splice(this.state.selectedWorldToDelete, 1)
         this.setState({
             worlds: tmpWorlds,
-            infos: tmpInfos,
+            info: tmpInfo,
             numChildren: this.state.numChildren - 1
         })
         this.setModalDeletionConfirmation(false)
@@ -78,8 +78,8 @@ export default class WorldModeling extends React.Component {
         const children = [];
         for (let i = 0; i < this.state.numChildren; i += 1) {
             children.push(<WorldView key={i} number={i}
-                                    title={this.state.infos[i].name}
-                                    description={this.state.infos[i].description}
+                                    title={this.state.info[i].name}
+                                    description={this.state.info[i].description}
                                     statIconName={this.props.info.goalComponent.editIconName}
                                     statSecondIconName={this.props.info.goalComponent.deleteIconName}
                                     statIconColor={this.props.info.goalComponent.iconColor}
@@ -114,7 +114,7 @@ export default class WorldModeling extends React.Component {
                         <h4 className="title title-up">{this.props.info.modal.title}</h4>
                     </div>
                     <div className="modal-body justify-content-center">
-                        <span>The World "{this.state.infos[this.state.selectedWorldToDelete] !== undefined && this.state.infos[this.state.selectedWorldToDelete].name}" will be deleted, confirm?</span>
+                        <span>The World "{this.state.info[this.state.selectedWorldToDelete] !== undefined && this.state.info[this.state.selectedWorldToDelete].name}" will be deleted, confirm?</span>
                     </div>
                     <ModalFooter>
                         <Button color={this.props.info.modal.cancelColor} onClick={() => this.setModalDeletionConfirmation(false)}>

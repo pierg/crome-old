@@ -21,7 +21,7 @@ export default function CustomDashboard(props) {
     const location = useLocation();
     const [id, setId] = useLocalStorage('id');
     let [message, setMessage] = React.useState("");
-    let [environment, setEnvironment] = React.useState(null);
+    let [world, setWorld] = React.useState(null);
     let [savedEnvironment, setSavedEnvironment] = React.useState(null);
 
     function updateMessage(msg) {
@@ -32,8 +32,8 @@ export default function CustomDashboard(props) {
             setMessage(message + "\n" + msg);
         }
     }
-    function updateEnvironment(env) {
-        setEnvironment(env);
+    function updateWorld(wor) {
+        setWorld(wor);
     }
     function saveEnvironment(info, env) {
         setSavedEnvironment({"info":info, "environment":env})
@@ -51,8 +51,8 @@ export default function CustomDashboard(props) {
             <div className="relative xxl:ml-64 bg-blueGray-100 min-h-screen">
                 {
                     {
-                        'index': <CustomPlayer {...custommediaplayerteaminfo} setEnvironment={updateEnvironment} id={id}/>,
-                        'world': <CreateEnvironment environment={environment} saveEnvironment={saveEnvironment}/>,
+                        'index': <CustomPlayer {...custommediaplayerteaminfo} setWorld={updateWorld} id={id}/>,
+                        'world': <CreateEnvironment world={world} saveEnvironment={saveEnvironment}/>,
                     }[props.page]
                 }
             </div>

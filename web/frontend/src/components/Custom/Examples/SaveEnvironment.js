@@ -14,13 +14,21 @@ function SocketSaveEnvironment(props) {
         if (socket == null) return
         
         if (props.world !== null) {
-            console.log("SaveEnvironment.js : sent to back-end")
-            console.log(props.world)
             props.world.environment.session_id = props.session
             props.world.info.session_id = props.session
-            const projectId = generateProjectId(props.world.info.name)
-            props.world.environment.project_id = projectId
-            props.world.info.project_id = projectId
+
+            if (props.world.environment.project_id === null) {
+                const projectId = generateProjectId(props.world.info.name)
+                props.world.environment.project_id = projectId
+                props.world.info.project_id = projectId
+            }
+            else {
+                props.world.info.project_id = props.world.environment.project_id
+            }
+
+            console.log("emit save project with :")
+            console.log(props.world)
+
             socket.emit('save-project', {world: props.world})
         }
         

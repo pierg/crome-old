@@ -14,7 +14,7 @@ import WorldModeling from "./WorldModeling";
 import Analysis from "./Analysis";
 import Synthesis from "./Synthesis";
 
-export default function CustomPlayer({ items, defaultOpened, id, setEnvironment }) {
+export default function CustomPlayer({ items, defaultOpened, id, setWorld }) {
   const [open, setOpen] = React.useState(defaultOpened);
   const [oldInTransition, setOldInTransition] = React.useState(false);
   const [newInTransition, setNewInTransition] = React.useState(false);
@@ -101,7 +101,7 @@ export default function CustomPlayer({ items, defaultOpened, id, setEnvironment 
                         <div className="container mx-auto px-4">
                           {
                             {
-                              'world': <WorldModeling id={id} setEnvironment={setEnvironment} {...worldmodelinginfo}/>,
+                              'world': <WorldModeling id={id} setWorld={setWorld} {...worldmodelinginfo}/>,
                               'goal': <GoalModeling {...goalmodelinginfo}/>,
                               'analysis': <Analysis active={headerStates[2]}/>,
                               'synthesis': <Synthesis />
