@@ -22,6 +22,13 @@ function SavingEdit(props) {
         }
     }
 
+    function arrayIncludesWithoutCase(array, element) {
+        for (let i=0; i<array.length; i++) {
+            if (array[i].toLowerCase() === element.toLowerCase()) return true
+        }
+        return false
+    }
+
     return(
         <>
             <div className="modal-header justify-content-center">
@@ -43,7 +50,7 @@ function SavingEdit(props) {
                 <Button color={props.info.modal.cancelColor} onClick={props.close}>
                     {props.info.modal.cancelText}
                 </Button>
-                <Link to="/index" className="hover-no-underline"><Button color={props.info.modal.saveColor} disabled={element.name === ""} onClick={() => props.save(element)}>
+                <Link to="/index" className="hover-no-underline"><Button color={props.info.modal.saveColor} disabled={element.name === "" || arrayIncludesWithoutCase(props.listOfNames, element.name)} onClick={() => props.save(element)}>
                     {props.info.modal.saveText}
                 </Button></Link>
             </ModalFooter>

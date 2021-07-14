@@ -9,6 +9,7 @@ function SocketIoProjects(props) {
 
 
     const setMessageFunction = useCallback((list_of_projects) => {
+        console.log(list_of_projects)
         setMessage(list_of_projects);
     }, [setMessage])
 
@@ -16,7 +17,6 @@ function SocketIoProjects(props) {
     useEffect(() => {
         if (socket == null) return
 
-        //socket.emit('get-projects', {session: props.session, project: "simple"})
         socket.emit('get-projects', {session: props.session})
         socket.on('receive-projects', setMessageFunction)
 

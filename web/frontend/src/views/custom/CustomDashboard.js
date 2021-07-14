@@ -23,6 +23,7 @@ export default function CustomDashboard(props) {
     let [message, setMessage] = React.useState("");
     let [world, setWorld] = React.useState(null);
     let [savedEnvironment, setSavedEnvironment] = React.useState(null);
+    let [listOfWorldNames, setListOfWorldNames] = React.useState(null);
 
     function updateMessage(msg) {
         if (message === "") {
@@ -38,6 +39,9 @@ export default function CustomDashboard(props) {
     function saveEnvironment(info, env) {
         setSavedEnvironment({"info":info, "environment":env})
     }
+    function updateListOfWorldNames(names) {
+        setListOfWorldNames(names)
+    }
 
     React.useEffect(() => {
         window.scrollTo(0, 0);
@@ -51,8 +55,8 @@ export default function CustomDashboard(props) {
             <div className="relative xxl:ml-64 bg-blueGray-100 min-h-screen">
                 {
                     {
-                        'index': <CustomPlayer {...custommediaplayerteaminfo} setWorld={updateWorld} id={id}/>,
-                        'world': <CreateEnvironment world={world} saveEnvironment={saveEnvironment}/>,
+                        'index': <CustomPlayer {...custommediaplayerteaminfo} setWorld={updateWorld} setListOfWorldNames={updateListOfWorldNames} id={id}/>,
+                        'world': <CreateEnvironment world={world} worldNames={listOfWorldNames} saveEnvironment={saveEnvironment}/>,
                     }[props.page]
                 }
             </div>

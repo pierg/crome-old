@@ -1073,6 +1073,7 @@ export default class CreateEnvironment extends React.Component {
                     className={"custom-modal-dialog sm:c-m-w-70 md:c-m-w-60 lg:c-m-w-50 xl:c-m-w-40"}>
                     <SavingEdit
                         element={this.state.savingInfos}
+                        listOfNames={this.projectId === null ? this.props.worldNames : []}
                         edit={this.editSavingInfos}
                         save={this.saveWorld}
                         close={() => this.setModalSaving(false)}
