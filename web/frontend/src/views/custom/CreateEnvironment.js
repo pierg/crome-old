@@ -61,14 +61,6 @@ export default class CreateEnvironment extends React.Component {
         // fix Warning: Can't perform a React state update on an unmounted component
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        /*if (this.props.environment !== prevProps.environment) {
-            this.setState({
-                gridJson: this.props.environment
-            })
-        }*/
-    }
-
     setModalClassic = (bool, listIndex = -1, elementIndex = -1) => {
 
         if (!bool) {
@@ -595,7 +587,7 @@ export default class CreateEnvironment extends React.Component {
                     world.setPreviousStartColor(world.getBackgroundColor(start[0], start[1]));
                     world.setBackgroundColor(node.x, node.y, "lightgray");
                 }
-            } else { // when you click on wall cell
+            } else if ((node.x % 2 === 0 && node.y % 2 === 1) || (node.x % 2 === 1 && node.y % 2 === 0)) { // when you click on wall cell
                 if (startWall.length !== 0) { // when it's the second click
                     endWall.push(node.x);
                     endWall.push(node.y);
