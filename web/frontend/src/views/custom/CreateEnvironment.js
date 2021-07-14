@@ -66,7 +66,10 @@ export default class CreateEnvironment extends React.Component {
         // fix Warning: Can't perform a React state update on an unmounted component
     }
 
-    setModalClassic = (bool, listIndex = -1, elementIndex = -1) => {
+    setModalClassic = (bool) => {
+
+        console.log("state.mutexList")
+        console.log(this.state.mutexList)
 
         if (!bool) {
             this.setState({
@@ -77,13 +80,6 @@ export default class CreateEnvironment extends React.Component {
         this.setState({
             modalClassic: bool,
         })
-        if (listIndex !== -1 && elementIndex !== -1) {
-            this.setState({
-                currentList: listIndex,
-                currentIndex: elementIndex,
-                mutexList: this.getMutexElements(this.state.editedLists[listIndex][elementIndex])
-            })
-        }
     }
 
     setModalSaving = (bool) => {
@@ -182,8 +178,21 @@ export default class CreateEnvironment extends React.Component {
 
         this.setState({
             editedLists: tmpLists,
-        },() => this.setModalClassic(true, index, this.state.numChildren[index]))
+        },() => this.editLine(index, this.state.numChildren[index]))
 
+    }
+
+    editLine = (listIndex, elementIndex) => {
+        console.log("about to getMutexElements with :")
+        console.log(this.state.editedLists[listIndex][elementIndex])
+        console.log("result :")
+        console.log(this.getMutexElements(this.state.editedLists[listIndex][elementIndex]))
+        this.setState({
+            currentList: listIndex,
+            currentIndex: elementIndex,
+        },() => this.setState({
+            mutexList: this.getMutexElements(this.state.editedLists[listIndex][elementIndex])
+        }, () => this.setModalClassic(true)))
     }
 
     addAllLocations = (locations) => {
@@ -416,9 +425,6 @@ export default class CreateEnvironment extends React.Component {
     cleanMutexGroups = () => { // deleting doubles and empty arrays
         let mutexGroups = this.state.mutexGroups
         let mutexGroup = mutexGroups[this.state.currentList-1]
-        console.log("cleanMutexGroups")
-        console.log(mutexGroups)
-        console.log(this.state.currentList-1)
         let newArray = []
         let found = {}
         for (let i=0; i<mutexGroup.length; i++) {
@@ -950,7 +956,7 @@ export default class CreateEnvironment extends React.Component {
                     number={(k-1)*this.state.numChildren[k] + i}
                     name={this.state.lists[k][i]}
                     list={k-1}
-                    onEdit={() => this.setModalClassic(true, k, i)}
+                    onEdit={() => this.editLine(k, i)}
                     onDelete={() => this.deleteElement(k, i)}
                     colors={this.getEveryIndexOf(this.state.lists[k][i], k)}
                     statIconName={"far fa-circle"}
@@ -1032,7 +1038,7 @@ export default class CreateEnvironment extends React.Component {
                                             ))}
                                             {this.projectId !== "simple" && (<div className="m-4 px-4 relative flex flex-col min-w-0 break-words bg-white rounded shadow-lg">
                                                 <div className="flex flex-col pl-2 pt-3 pb-3">
-                                                    <Button color="amber" onClick={this.clearEnvironment}><i className="text-xl mr-2 fas fa-trash-alt"/>{createenvironment.buttons.clear}</Button>
+                                                    <Button color="amber" /*onClick={this.clearEnvironment}*/ onClick={() => console.log(this.state.mutexList)}><i className="text-xl mr-2 fas fa-trash-alt"/>{createenvironment.buttons.clear}</Button>
                                                     <div className="mt-2"/>
                                                     <Button color="emerald" onClick={this.saveInToJSON}><i className="text-xl mr-2 fas fa-check-square"/>{this.projectId === null ? createenvironment.buttons.save : createenvironment.buttons.update}</Button>
                                                 </div>

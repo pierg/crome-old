@@ -25,13 +25,9 @@ export default class WorldModeling extends React.Component {
 
         for (let i=0; i<list.length; i++) {
             for (let j=0; j<list[i].length; j++) {
-                console.log(list[i][j])
                 list[i][j]["title"] === "environment" ? worlds.push(JSON.parse(list[i][j]["content"])) : info.push(JSON.parse(list[i][j]["content"]))
             }
         }
-        console.log("getWorlds")
-        console.log(worlds)
-        console.log(info)
 
         this.setState({
             worlds: worlds,
