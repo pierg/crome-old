@@ -458,6 +458,7 @@ GridWorld.prototype = {
 
   clearAttributeTable: function () {
     idTable = [];
+    isColorTable = new Array(colorTable.length).fill(false)
   },
 
   checkNeighbour: function (i, j, color) {
