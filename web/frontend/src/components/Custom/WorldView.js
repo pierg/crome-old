@@ -5,7 +5,8 @@ function WorldView(props) {
 
     return(
         <>
-            <div className={"w-full lg:w-6/12 xl:w-5/12 mt-8 ml-4 mr-4 px-4 relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg opacity-1 transform duration-300 transition-all ease-in-out"}>
+            <div onClick={props.onClick} className={"w-full lg:w-6/12 xl:w-5/12 mt-8 ml-4 mr-4 px-4 relative flex cursor-pointer flex-col min-w-0 break-words border-lightBlue-700 bg-white rounded mb-6 xl:mb-0 shadow-lg opacity-1 transform duration-300 transition-all ease-in-out "
+                + (props.selected ? "world-border-8" : "world-border-0")}>
                 <div className="flex-auto p-4 pr-0">
                     <div className="flex">
                         <div className="flex flex-wrap w-full">

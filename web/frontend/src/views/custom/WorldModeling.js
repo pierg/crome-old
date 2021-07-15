@@ -16,7 +16,8 @@ export default class WorldModeling extends React.Component {
         selectedWorldToDelete: 0,
         numChildren: 0,
         modalDeletionConfirmation : false,
-        deletionConfirmation: false
+        deletionConfirmation: false,
+        worldSelected: null
     }
 
     getWorlds = (list) => {
@@ -42,6 +43,12 @@ export default class WorldModeling extends React.Component {
             worlds: worlds,
             info: info,
             numChildren: worlds.length
+        })
+    }
+
+    selectWorld = (index) => {
+        this.setState({
+            worldSelected: index,
         })
     }
 
@@ -94,6 +101,8 @@ export default class WorldModeling extends React.Component {
                                     statIconName={this.props.info.goalComponent.editIconName}
                                     statSecondIconName={this.props.info.goalComponent.deleteIconName}
                                     statIconColor={this.props.info.goalComponent.iconColor}
+                                    selected={this.state.worldSelected === i}
+                                    onClick={() => this.selectWorld(i)}
                                     modify={this.modifyWorld}
                                     delete={this.setModalDeletionConfirmation}
             />);
