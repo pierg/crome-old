@@ -16,12 +16,13 @@ function SocketIoGaols(props) {
 
     useEffect(() => {
         if (socket == null) return
-
-        socket.emit('get-goals', {session: "default", project: "simple"})
+        let session = props.projectId === "simple" ? "default" : props.session;
+        console.log("session " + session + ", projet_id" + props.projectId)
+        socket.emit('get-goals', {session: session, project: props.projectId})
         socket.on('receive-goals', setMessageFunction)
 
         return () => socket.off('receive-goals')
-    }, [socket, setMessageFunction])
+    }, [socket, setMessageFunction, props.projectId, props.session])
 
     useEffect(() => {
         props.goals(message)

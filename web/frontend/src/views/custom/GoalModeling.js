@@ -10,6 +10,7 @@ import SocketIoGaols from "../../components/Custom/Examples/GetGoals";
 import defaultgoal from "_texts/custom/defaultgoal.js";
 import goaleditinfo from "_texts/custom/goaleditinfo.js";
 import SocketIoPatterns from "../../components/Custom/Examples/GetPatterns";
+import SocketSaveGoals from "../../components/Custom/Examples/SaveGoals";
 
 
 
@@ -42,8 +43,9 @@ export default class GoalModeling extends React.Component {
         }
         return (
             <>
-                <SocketIoGaols goals={this.getGoals} />
+                <SocketIoGaols projectId={this.props.project} session={this.props.id}  goals={this.getGoals} />
                 <SocketIoPatterns patterns={this.getPatterns} />
+                <SocketSaveGoals projectId={this.props.project} session={this.props.id} goals={this.state.goals}/>
                 <ParentComponent addChild={this.onAddChild}>
                     {children}
                 </ParentComponent>

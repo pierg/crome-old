@@ -18,6 +18,7 @@ export default function CustomPlayer({ items, defaultOpened, id, setWorld, setLi
   const [open, setOpen] = React.useState(defaultOpened);
   const [oldInTransition, setOldInTransition] = React.useState(false);
   const [newInTransition, setNewInTransition] = React.useState(false);
+  const [project, setProject] = React.useState(null);
 
   const [headerStates, setHeaderStates] = React.useState([true, false, false, false]);
 
@@ -101,8 +102,8 @@ export default function CustomPlayer({ items, defaultOpened, id, setWorld, setLi
                         <div className="container mx-auto px-4">
                           {
                             {
-                              'world': <WorldModeling id={id} setListOfWorldNames={setListOfWorldNames} setWorld={setWorld} {...worldmodelinginfo}/>,
-                              'goal': <GoalModeling {...goalmodelinginfo}/>,
+                              'world': <WorldModeling id={id} setListOfWorldNames={setListOfWorldNames} setProject={setProject} setWorld={setWorld} {...worldmodelinginfo}/>,
+                              'goal': <GoalModeling id={id} {...goalmodelinginfo} project={project}/>,
                               'analysis': <Analysis active={headerStates[2]}/>,
                               'synthesis': <Synthesis />
                             }[prop.component]

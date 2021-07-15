@@ -50,6 +50,7 @@ export default class WorldModeling extends React.Component {
         this.setState({
             worldSelected: index,
         })
+        this.props.setProject(this.state.worlds[index].project_id)
     }
 
     modifyWorld = (index) => {

@@ -87,10 +87,31 @@ def save_project(data):
     project_dir = os.path.join(session_dir, f"{data['world']['info']['project_id']}")
     if not os.path.isdir(project_dir):
         os.mkdir(project_dir)
+    goals_dir = os.path.join(project_dir, "goals")
+    if not os.path.isdir(goals_dir):
+        os.mkdir(goals_dir)
     list_of_files = ["environment", "info"]
     for filename in list_of_files:
         json_file = open(os.path.join(project_dir, filename + ".json"), "w")
         json_formatted = json.dumps(data['world'][filename], indent=4, sort_keys=True)
+        json_file.write(json_formatted)
+        json_file.close()
+
+
+@socketio.on('save-goals')
+def save_goals(data):
+    print("SAVE GOALS")
+    print(data)
+    goals_dir = os.path.join(storage_folder, f"sessions/{data['session']}/{data['projectId']}/goals")
+    for i in range(len(data['goals'])) :
+        j = i
+        file = str(j) + ".json"
+        while os.path.isfile(os.path.join(goals_dir, file)):
+            j += 1
+            file = str(j) + ".json"
+
+        json_file = open(os.path.join(goals_dir, file), "w")
+        json_formatted = json.dumps(data['goals'][j], indent=4, sort_keys=True)
         json_file.write(json_formatted)
         json_file.close()
 
