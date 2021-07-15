@@ -43,7 +43,7 @@ export default class GoalModeling extends React.Component {
         }
         return (
             <>
-                <SocketIoGaols projectId={this.props.project} session={this.props.id}  goals={this.getGoals} />
+                <SocketIoGaols projectId={this.props.project} session={this.props.id} goals={this.getGoals} />
                 <SocketIoPatterns patterns={this.getPatterns} />
                 <SocketSaveGoals projectId={this.props.project} session={this.props.id} goals={this.state.goals}/>
                 <ParentComponent addChild={this.onAddChild}>

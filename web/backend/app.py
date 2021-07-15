@@ -103,7 +103,7 @@ def save_goals(data):
     print("SAVE GOALS")
     print(data)
     goals_dir = os.path.join(storage_folder, f"sessions/{data['session']}/{data['projectId']}/goals")
-    for i in range(len(data['goals'])) :
+    for i in range(len(data['goals'])):
         j = i
         file = str(j) + ".json"
         while os.path.isfile(os.path.join(goals_dir, file)):
@@ -111,7 +111,9 @@ def save_goals(data):
             file = str(j) + ".json"
 
         json_file = open(os.path.join(goals_dir, file), "w")
-        json_formatted = json.dumps(data['goals'][j], indent=4, sort_keys=True)
+        print("opening")
+        print(json_file)
+        json_formatted = json.dumps(data['goals'][i], indent=4, sort_keys=True)
         json_file.write(json_formatted)
         json_file.close()
 
@@ -143,19 +145,20 @@ def get_goals(data):
     goals_folder = Path(os.path.join(storage_folder, f"sessions/{data['session']}/{data['project']}/goals"))
 
     """Retrieving files"""
-    files_paths = []
-    dirpath, dirnames, filenames = next(walk(goals_folder))
-    for file in filenames:
-        files_paths.append(Path(os.path.join(dirpath, file)))
+    if os.path.isdir(goals_folder):
+        files_paths = []
+        dirpath, dirnames, filenames = next(walk(goals_folder))
+        for file in filenames:
+            files_paths.append(Path(os.path.join(dirpath, file)))
 
-    list_of_goals = []
-    for file in files_paths:
-        with open(file) as json_file:
-            json_obj = json.load(json_file)
-            json_str = json.dumps(json_obj)
-            list_of_goals.append(json_str)
+        list_of_goals = []
+        for file in files_paths:
+            with open(file) as json_file:
+                json_obj = json.load(json_file)
+                json_str = json.dumps(json_obj)
+                list_of_goals.append(json_str)
 
-    emit("receive-goals", list_of_goals)
+        emit("receive-goals", list_of_goals)
 
 
 @socketio.on('get-patterns')

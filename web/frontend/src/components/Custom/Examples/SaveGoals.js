@@ -10,7 +10,7 @@ function SocketSaveGoals(props) {
         
         if (props.goals !== null) {
 
-            socket.emit('save-goal', {goals : props.goals, session : props.session, projectId : props.projectId})
+            socket.emit('save-goals', {goals : props.goals, session : props.session, projectId : props.projectId})
         }
         
     }, [socket, props.goals, props.session, props.projectId])
