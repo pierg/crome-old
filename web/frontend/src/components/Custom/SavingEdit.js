@@ -17,14 +17,16 @@ function SavingEdit(props) {
     }
 
     function handleKeyEvent(event) {
-        if (event.key === "Enter" && element !== "") {
+        if (event.key === "Enter" && element !== "" && !arrayIncludesWithoutCase(props.listOfNames, element.name)) {
             props.save(element)
         }
     }
 
     function arrayIncludesWithoutCase(array, element) {
-        for (let i=0; i<array.length; i++) {
-            if (array[i].toLowerCase() === element.toLowerCase()) return true
+        if (array != null) {
+            for (let i=0; i<array.length; i++) {
+                if (array[i].toLowerCase() === element.toLowerCase()) return true
+            }
         }
         return false
     }
@@ -44,6 +46,7 @@ function SavingEdit(props) {
             </div>
             <div className="modal-body justify-content-center" onKeyPress={handleKeyEvent}>
                 <Input type="text" placeholder="Name *" autoComplete="off" name="name" value={element.name} onChange={changeParameter}/>
+                <span className={"text-red-500 " + (arrayIncludesWithoutCase(props.listOfNames, element.name) ? "ml-2" : "")}>{arrayIncludesWithoutCase(props.listOfNames, element.name) ? "This project name already exists" : ""}</span>
                 <Input type="textarea" placeholder="Description" autoComplete="off" name="description" value={element.description} onChange={changeParameter}/>
             </div>
             <ModalFooter>
