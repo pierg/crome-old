@@ -19,20 +19,22 @@ export default class GoalModeling extends React.Component {
     state = {
         modalClassic: false,
         goals: [],
+        receivedGoals: [],
         editedGoals: [],
         currentGoalIndex: 0,
         numChildren: 0,
-        patterns: []
+        patterns: [],
+        triggers: [false, false] // the first one is the saving trigger, the second one is the getting trigger
     }
 
     render() {
         const children = [];
         for (let i = 0; i < this.state.numChildren; i += 1) {
             children.push(<GoalView key={i} number={i}
-                                    title={this.state.goals[i].name}
-                                    description={this.state.goals[i].description}
-                                    context={this.state.goals[i].context}
-                                    contract={this.state.goals[i].contract}
+                                    title={this.state.receivedGoals[i].name}
+                                    description={this.state.receivedGoals[i].description}
+                                    context={this.state.receivedGoals[i].context}
+                                    contract={this.state.receivedGoals[i].contract}
                                     patterns={this.state.patterns}
                                     statIconName={this.props.info.goalComponent.editIconName}
                                     statSecondIconName={this.props.info.goalComponent.deleteIconName}
@@ -43,9 +45,9 @@ export default class GoalModeling extends React.Component {
         }
         return (
             <>
-                <SocketIoGaols projectId={this.props.project} session={this.props.id} goals={this.getGoals} />
+                <SocketIoGaols projectId={this.props.project} session={this.props.id} updateGoals={this.getGoals} triggerGoals={this.state.triggers[1]}/>
                 <SocketIoPatterns patterns={this.getPatterns} />
-                <SocketSaveGoals projectId={this.props.project} session={this.props.id} goals={this.state.goals}/>
+                <SocketSaveGoals projectId={this.props.project} session={this.props.id} goals={this.state.editedGoals} triggerSave={this.state.triggers[0]} toggleTrigger={this.toggleTrigger}/>
                 <ParentComponent addChild={this.onAddChild}>
                     {children}
                 </ParentComponent>
@@ -54,6 +56,8 @@ export default class GoalModeling extends React.Component {
                     toggle={() => this.setModalClassic(false)}
                     className={"custom-modal-dialog sm:c-m-w-70 md:c-m-w-60 lg:c-m-w-50 xl:c-m-w-40"}>
                     <GoalEdit
+                        tmpedited={this.state.editedGoals}
+                        tmpindex={this.state.currentGoalIndex}
                         goal={this.state.editedGoals[this.state.currentGoalIndex]}
                         patterns={this.state.patterns}
                         edit={this.editCurrentGoal}
@@ -66,22 +70,18 @@ export default class GoalModeling extends React.Component {
     }
 
     onAddChild = () => {
-        let tmpGoals = this.state.goals
+        let tmpGoals = JSON.parse(JSON.stringify(this.state.goals))
         tmpGoals.push(JSON.parse(JSON.stringify(defaultgoal)))
 
         this.setState({
-            goals: tmpGoals,
             editedGoals: tmpGoals,
-            numChildren: this.state.numChildren + 1
-        })
-
-        this.setModalClassic(true, tmpGoals.length - 1)
+        },() => this.setModalClassic(true, tmpGoals.length - 1))
     }
 
     setModalClassic = (bool, key = -1) => {
         this.setState({
             modalClassic: bool,
-            editedGoals: this.state.goals
+            //editedGoals: this.state.goals
         })
         if (key !== -1) {
             this.setState({
@@ -127,20 +127,18 @@ export default class GoalModeling extends React.Component {
             return {
                 goals,
             };
-        });
-        this.setState({
-            editedGoals: this.state.goals
-        })
+        }, () => this.toggleTrigger(0, true));
         this.setModalClassic(false)
     }
 
     getGoals = (list) => {
-        let tmpArray = this.state.goals
+        let tmpArray = []
         for (let i=0; i<list.length; i++) {
             tmpArray.push(JSON.parse(list[i]))
         }
         this.setState({
             goals: tmpArray,
+            receivedGoals: tmpArray,
             editedGoals: tmpArray,
             numChildren: list.length
         })
@@ -149,6 +147,15 @@ export default class GoalModeling extends React.Component {
     getPatterns = (list) => {
         this.setState({
             patterns: JSON.parse(list)
+        })
+    }
+
+    toggleTrigger = (index, bool) => {
+        let tmpTriggers = this.state.triggers
+        if (index === 1) bool = !tmpTriggers[1]
+        tmpTriggers[index] = bool
+        this.setState({
+            triggers: tmpTriggers
         })
     }
 }

@@ -1,6 +1,10 @@
 {
-  "name": "Greet Person",
-  "description": "Always => if see a person, greet in the same step, Only if see a person, greet immediately",
+  "name": "Register Person",
+  "id": 3,
+  "description": "During context day => if see a person, register in the next step, Only if see a person, register in the next step",
+  "context": [
+    "day"
+  ],
   "contract": {
     "assumptions": [
       {
@@ -10,7 +14,7 @@
     "guarantees": [
       {
         "pattern": {
-          "name": "InstantaneousReaction",
+          "name": "BoundDelay",
           "arguments": [
             {
               "name": "trigger",
@@ -18,11 +22,11 @@
             },
             {
               "name": "reaction",
-              "value": "greet"
+              "value": "register"
             }
           ]
         },
-        "ltl_value": "G(person -> greet)"
+        "ltl_value": "G(person -> register)"
       }
     ]
   }

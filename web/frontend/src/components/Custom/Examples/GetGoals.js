@@ -9,7 +9,6 @@ function SocketIoGaols(props) {
 
 
     const setMessageFunction = useCallback((list_of_goals) => {
-        //list_of_goals.forEach(goal => console.log(goal));
         setMessage(list_of_goals);
     }, [setMessage])
 
@@ -17,15 +16,15 @@ function SocketIoGaols(props) {
     useEffect(() => {
         if (socket == null) return
         let session = props.projectId === "simple" ? "default" : props.session;
-        console.log("session " + session + ", projet_id" + props.projectId)
         socket.emit('get-goals', {session: session, project: props.projectId})
+
         socket.on('receive-goals', setMessageFunction)
 
         return () => socket.off('receive-goals')
-    }, [socket, setMessageFunction, props.projectId, props.session])
+    }, [socket, setMessageFunction, props.projectId, props.session, props.triggerGoals])
 
     useEffect(() => {
-        props.goals(message)
+        props.updateGoals(message)
     }, [message])  // eslint-disable-line react-hooks/exhaustive-deps
 
     return (<></>);

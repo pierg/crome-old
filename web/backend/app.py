@@ -19,38 +19,6 @@ storage_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '
 # socketio = SocketIO(app, cors_allowed_origins="*")
 socketio = SocketIO(app, cors_allowed_origins='http://localhost:3000')
 
-'''
-@socketio.on('get-projects')
-def get_projects(data):
-    print(data)
-    print('Getting Projects')
-    print(request.args)
-    print(f'ID {request.args.get("id")}')
-    print(f'Session {request.args.get("session")}')
-    print(f'Project {request.args.get("simple")}')
-
-    session_folder = Path(os.path.join(storage_folder, f"sessions/{data['session']}"))
-
-    """Retrieving files"""
-    files_paths = []
-    dirpath, dirnames, filenames = next(walk(session_folder))
-    for dir in dirnames:
-        print(dir)
-    for file in filenames:
-        files_paths.append(Path(os.path.join(dirpath, file)))
-
-    list_of_projects = []
-    for file in files_paths:
-        with open(file) as json_file:
-            json_obj = json.load(json_file)
-            json_str = json.dumps(json_obj)
-            list_of_projects.append(json_str)
-
-    emit("receive-projects", list_of_projects)
-
-
-'''
-
 
 @socketio.on('get-projects')
 def get_projects(data):
@@ -79,8 +47,6 @@ def get_projects(data):
 
 @socketio.on('save-project')
 def save_project(data):
-    print("SAVE PROJECT")
-    print(data)
     session_dir = os.path.join(storage_folder, f"sessions/{data['world']['info']['session_id']}")
     if not os.path.isdir(session_dir):
         os.mkdir(session_dir)
@@ -100,22 +66,18 @@ def save_project(data):
 
 @socketio.on('save-goals')
 def save_goals(data):
-    print("SAVE GOALS")
-    print(data)
     goals_dir = os.path.join(storage_folder, f"sessions/{data['session']}/{data['projectId']}/goals")
+    greatest_id = len(os.listdir(goals_dir))
     for i in range(len(data['goals'])):
-        j = i
-        file = str(j) + ".json"
-        while os.path.isfile(os.path.join(goals_dir, file)):
-            j += 1
-            file = str(j) + ".json"
-
-        json_file = open(os.path.join(goals_dir, file), "w")
-        print("opening")
-        print(json_file)
+        if 'id' not in data['goals'][i]:
+            data['goals'][i]['id'] = greatest_id
+            greatest_id += 1
+        filename = str(data['goals'][i]['id']).zfill(4) + ".json"
+        json_file = open(os.path.join(goals_dir, filename), "w")
         json_formatted = json.dumps(data['goals'][i], indent=4, sort_keys=True)
         json_file.write(json_formatted)
         json_file.close()
+    emit("saving-complete", True)
 
 
 @socketio.on('delete-project')
@@ -135,13 +97,6 @@ def delete_project(data):
 
 @socketio.on('get-goals')
 def get_goals(data):
-    # print(data)
-    # print('Getting Goals')
-    # print(request.args)
-    # print(f'ID {request.args.get("id")}')
-    # print(f'Session {request.args.get("session")}')
-    # print(f'Project {request.args.get("project")}')
-
     goals_folder = Path(os.path.join(storage_folder, f"sessions/{data['session']}/{data['project']}/goals"))
 
     """Retrieving files"""
