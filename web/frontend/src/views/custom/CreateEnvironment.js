@@ -1036,13 +1036,13 @@ export default class CreateEnvironment extends React.Component {
                                             {this.componentsList.map((prop, key) => (
                                                 <ListBlock key={key} displayAddButton={prop.displayAddButton === true} addLine={() => this.onAddLine(key)} content={prop.content} colspan={3} title={prop.title}/>
                                             ))}
-                                            {this.projectId !== "simple" && (<div className="m-4 px-4 relative flex flex-col min-w-0 break-words bg-white rounded shadow-lg">
+                                            <div className="m-4 px-4 relative flex flex-col min-w-0 break-words bg-white rounded shadow-lg">
                                                 <div className="flex flex-col pl-2 pt-3 pb-3">
-                                                    <Button color="amber" /*onClick={this.clearEnvironment}*/ onClick={() => console.log(this.state.mutexList)}><i className="text-xl mr-2 fas fa-trash-alt"/>{createenvironment.buttons.clear}</Button>
+                                                    <Button color="amber" onClick={this.clearEnvironment}><i className="text-xl mr-2 fas fa-trash-alt"/>{createenvironment.buttons.clear}</Button>
                                                     <div className="mt-2"/>
                                                     <Button color="emerald" onClick={this.saveInToJSON}><i className="text-xl mr-2 fas fa-check-square"/>{this.projectId === null ? createenvironment.buttons.save : createenvironment.buttons.update}</Button>
                                                 </div>
-                                            </div>)}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
