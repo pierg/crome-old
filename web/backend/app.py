@@ -51,17 +51,22 @@ def save_project(data):
     session_dir = os.path.join(storage_folder, f"sessions/{session_id}")
     if not os.path.isdir(session_dir):
         os.mkdir(session_dir)
-    if data['world']['info']['project_id'] == "simple":
+    is_simple = data['world']['info']['project_id'] == "simple"
+    if is_simple:
         number_of_copies = 1
         while os.path.isdir(os.path.join(storage_folder, f"sessions/{session_id}/simple_{number_of_copies}")):
             number_of_copies += 1
+        data['world']['environment']['project_id'] = f"simple_{number_of_copies}"
         data['world']['info']['project_id'] = f"simple_{number_of_copies}"
     project_dir = os.path.join(session_dir, f"{data['world']['info']['project_id']}")
     if not os.path.isdir(project_dir):
         os.mkdir(project_dir)
     goals_dir = os.path.join(project_dir, "goals")
     if not os.path.isdir(goals_dir):
-        os.mkdir(goals_dir)
+        if is_simple:
+            shutil.copytree(os.path.join(storage_folder, "sessions/default/simple/goals"), goals_dir)
+        else:
+            os.mkdir(goals_dir)
     list_of_files = ["environment", "info"]
     for filename in list_of_files:
         json_file = open(os.path.join(project_dir, filename + ".json"), "w")
