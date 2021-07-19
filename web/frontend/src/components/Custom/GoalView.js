@@ -36,7 +36,7 @@ function GoalView(props) {
             <div className={"w-full lg:w-6/12 xl:w-5/12 mt-8 ml-4 mr-4 px-4 relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg opacity-1 transform duration-300 transition-all ease-in-out"}>
                 <div className="flex-auto p-4 pr-0">
                     <div className="flex">
-                        <div className="flex flex-wrap">
+                        <div className="flex flex-wrap w-full">
                             <div className="flex flex-wrap">
                                 <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
                                     <span className="font-bold text-xl uppercase text-blueGray-700">{props.title}</span>

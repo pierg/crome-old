@@ -24,7 +24,8 @@ export default class GoalModeling extends React.Component {
         currentGoalIndex: 0,
         numChildren: 0,
         patterns: [],
-        triggers: [false, false] // the first one is the saving trigger, the second one is the getting trigger
+        triggers: [false, false], // the first one is the saving trigger, the second one is the getting trigger
+        deletionIndex: null
     }
 
     render() {
@@ -45,7 +46,7 @@ export default class GoalModeling extends React.Component {
         }
         return (
             <>
-                <SocketIoGaols projectId={this.props.project} session={this.props.id} updateGoals={this.getGoals} triggerGoals={this.state.triggers[1]}/>
+                <SocketIoGaols projectId={this.props.project} session={this.props.id} updateGoals={this.getGoals} deleteIndex={this.state.deletionIndex} triggerGoals={this.state.triggers[1]} deleteTrigger={this.deleteTrigger}/>
                 <SocketIoPatterns patterns={this.getPatterns} />
                 <SocketSaveGoals projectId={this.props.project} session={this.props.id} goals={this.state.editedGoals} triggerSave={this.state.triggers[0]} toggleTrigger={this.toggleTrigger}/>
                 <ParentComponent addChild={this.onAddChild}>
@@ -91,12 +92,8 @@ export default class GoalModeling extends React.Component {
     }
 
     deleteGoal = (key) => {
-        let tmpGoals = this.state.goals
-        tmpGoals.splice(key, 1)
         this.setState({
-            goals: tmpGoals,
-            editedGoals: tmpGoals,
-            numChildren: this.state.numChildren - 1
+            deletionIndex: key
         })
     }
 
@@ -157,6 +154,12 @@ export default class GoalModeling extends React.Component {
         this.setState({
             triggers: tmpTriggers
         })
+    }
+
+    deleteTrigger = () => {
+        this.setState({
+            deletionIndex: null
+        }, () => this.toggleTrigger(1, true))
     }
 }
 

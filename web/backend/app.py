@@ -67,7 +67,9 @@ def save_project(data):
 @socketio.on('save-goals')
 def save_goals(data):
     goals_dir = os.path.join(storage_folder, f"sessions/{data['session']}/{data['projectId']}/goals")
-    greatest_id = len(os.listdir(goals_dir))
+    dir_path, dir_names, filenames = next(walk(goals_dir))
+    greatest_id = -1 if len(filenames) == 0 else max(filenames)[0:4]
+    greatest_id = int(greatest_id) + 1
     for i in range(len(data['goals'])):
         if 'id' not in data['goals'][i]:
             data['goals'][i]['id'] = greatest_id
@@ -114,6 +116,18 @@ def get_goals(data):
                 list_of_goals.append(json_str)
 
         emit("receive-goals", list_of_goals)
+
+
+@socketio.on('delete-goal')
+def delete_goal(data):
+    current_goals_folder = Path(os.path.join(storage_folder, f"sessions/{data['session']}/{data['project']}/goals"))
+    dir_path, dir_names, filenames = next(walk(current_goals_folder))
+    i = 0
+    for goal_file in filenames:
+        if i == data['index']:
+            goal_to_delete = Path(os.path.join(current_goals_folder, goal_file))
+            os.remove(goal_to_delete)
+        i += 1
 
 
 @socketio.on('get-patterns')

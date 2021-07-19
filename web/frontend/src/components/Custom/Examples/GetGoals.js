@@ -11,6 +11,18 @@ function SocketIoGaols(props) {
     const setMessageFunction = useCallback((list_of_goals) => {
         setMessage(list_of_goals);
     }, [setMessage])
+    
+    
+    useEffect(() => {
+        if (socket == null || props.deleteIndex === null) return
+        
+
+        socket.emit('delete-goal', {index: props.deleteIndex, session: props.session, project: props.projectId})
+
+        props.deleteTrigger()
+        /*socket.on('deletion-complete', props.deleteTrigger())
+        return () => socket.off('deletion-complete')*/
+    }, [socket, props.deleteIndex, props.deleteTrigger, props.session, props.projectId])  // eslint-disable-line react-hooks/exhaustive-deps
 
 
     useEffect(() => {
