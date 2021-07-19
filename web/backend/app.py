@@ -47,9 +47,15 @@ def get_projects(data):
 
 @socketio.on('save-project')
 def save_project(data):
-    session_dir = os.path.join(storage_folder, f"sessions/{data['world']['info']['session_id']}")
+    session_id = data['world']['info']['session_id']
+    session_dir = os.path.join(storage_folder, f"sessions/{session_id}")
     if not os.path.isdir(session_dir):
         os.mkdir(session_dir)
+    if data['world']['info']['project_id'] == "simple":
+        number_of_copies = 1
+        while os.path.isdir(os.path.join(storage_folder, f"sessions/{session_id}/simple_{number_of_copies}")):
+            number_of_copies += 1
+        data['world']['info']['project_id'] = f"simple_{number_of_copies}"
     project_dir = os.path.join(session_dir, f"{data['world']['info']['project_id']}")
     if not os.path.isdir(project_dir):
         os.mkdir(project_dir)
@@ -66,17 +72,32 @@ def save_project(data):
 
 @socketio.on('save-goals')
 def save_goals(data):
-    is_simple = str(data['projectId']) == "simple"
-    if is_simple:
+    project_id = data['projectId']
+    if str(project_id) == "simple":
+        number_of_copies = 1
+        while os.path.isdir(os.path.join(storage_folder, f"sessions/{data['session']}/simple_{number_of_copies}")):
+            number_of_copies += 1
+        project_id = f"simple_{number_of_copies}"
         shutil.copytree(os.path.join(storage_folder, "sessions/default/simple"),
-                        os.path.join(storage_folder,  f"sessions/{data['session']}/simple"))
-        with open(os.path.join(storage_folder, f"sessions/{data['session']}/simple/info.json"), "r") as file:
+                        os.path.join(storage_folder,  f"sessions/{data['session']}/{project_id}"))
+        with open(os.path.join(storage_folder, f"sessions/{data['session']}/{project_id}/info.json"), "r") as file:
             json_data = json.load(file)
-        json_data["name"] = "Simple Gridworld (copy)"
-        with open(os.path.join(storage_folder, f"sessions/{data['session']}/simple/info.json"), "w") as file:
+        json_data["name"] = f"Simple Gridworld ({number_of_copies})"
+        json_data["project_id"] = project_id
+        json_data["session_id"] = data['session']
+        with open(os.path.join(storage_folder, f"sessions/{data['session']}/{project_id}/info.json"), "w") as file:
             json_formatted = json.dumps(json_data, indent=4, sort_keys=True)
             file.write(json_formatted)
-    goals_dir = os.path.join(storage_folder, f"sessions/{data['session']}/{data['projectId']}/goals")
+
+        with open(os.path.join(storage_folder, f"sessions/{data['session']}/{project_id}/environment.json"), "r") as file:
+            json_data = json.load(file)
+        json_data["project_id"] = project_id
+        json_data["session_id"] = data['session']
+        with open(os.path.join(storage_folder, f"sessions/{data['session']}/{project_id}/environment.json"), "w") as file:
+            json_formatted = json.dumps(json_data, indent=4, sort_keys=True)
+            file.write(json_formatted)
+
+    goals_dir = os.path.join(storage_folder, f"sessions/{data['session']}/{project_id}/goals")
     dir_path, dir_names, filenames = next(walk(goals_dir))
     greatest_id = -1 if len(filenames) == 0 else max(filenames)[0:4]
     greatest_id = int(greatest_id) + 1
