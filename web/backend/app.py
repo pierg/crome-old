@@ -66,6 +66,15 @@ def save_project(data):
 
 @socketio.on('save-goals')
 def save_goals(data):
+    is_simple = str(data['projectId']) == "simple"
+    if is_simple:
+        shutil.copytree(os.path.join(storage_folder, "sessions/default/simple"),
+                        os.path.join(storage_folder,  f"sessions/{data['session']}/simple"))
+        with open(os.path.join(storage_folder, f"sessions/{data['session']}/simple/info.json"), "a+") as file:
+            print(file)
+            data = json.load(file)
+        print("loaded")
+        data.get("name").append(" copy")
     goals_dir = os.path.join(storage_folder, f"sessions/{data['session']}/{data['projectId']}/goals")
     dir_path, dir_names, filenames = next(walk(goals_dir))
     greatest_id = -1 if len(filenames) == 0 else max(filenames)[0:4]

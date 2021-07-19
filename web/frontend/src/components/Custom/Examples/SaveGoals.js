@@ -8,7 +8,7 @@ function SocketSaveGoals(props) {
     useEffect(() => {
         if (socket == null) return
         
-        if (props.goals !== null && props.triggerSave && props.projectId !== "simple") {
+        if (props.goals !== null && props.triggerSave) {
             props.toggleTrigger(0, false)
             socket.emit('save-goals', {goals : props.goals, session : props.session, projectId : props.projectId})
 

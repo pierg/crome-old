@@ -3,7 +3,7 @@ import {Button, ModalFooter} from "reactstrap";
 import Input from "../Elements/Input";
 import {Link} from "react-router-dom";
 
-function SavingEdit(props) {
+function  SavingEdit(props) {
 
     const [element] = React.useState(JSON.parse(JSON.stringify(props.element)));
 
@@ -23,6 +23,7 @@ function SavingEdit(props) {
     }
 
     function arrayIncludesWithoutCase(array, element) {
+        if (element.toLowerCase() === "simple gridworld") return true
         if (array != null) {
             for (let i=0; i<array.length; i++) {
                 if (array[i].toLowerCase() === element.toLowerCase()) return true
