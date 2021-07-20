@@ -19,7 +19,6 @@ function SocketSaveGoals(props) {
             socket.emit('save-goals', {goals : props.goals, session : props.session, projectId : props.projectId})
 
             if (props.projectId === "simple") {
-                console.log("if simple")
                 socket.on('saving-simple', setIdFunction)
                 return () => socket.off('saving-simple-complete')
             }

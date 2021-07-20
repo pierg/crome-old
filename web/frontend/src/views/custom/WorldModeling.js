@@ -20,8 +20,15 @@ export default class WorldModeling extends React.Component {
         worldSelected: null
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.project !== this.props.project) {
+            this.setState({
+                worldSelected: this.getIndexOfProjectId(this.props.project)
+            })
+        }
+    }
+
     getWorlds = (list) => {
-        console.log("getWorlds")
         let worlds = []
         let info = []
         let names = []
@@ -47,11 +54,13 @@ export default class WorldModeling extends React.Component {
         })
     }
 
-    selectWorld = (index) => {
-        this.setState({
-            worldSelected: index,
-        })
-        this.props.setProject(this.state.worlds[index].project_id)
+    selectWorld = (index, eventId) => {
+        if (eventId !== "deleteButton" && eventId !== "deleteIcon") {
+            this.setState({
+                worldSelected: index,
+            })
+            this.props.setProject(this.state.worlds[index].project_id)
+        }
     }
 
     modifyWorld = (index) => {
@@ -93,6 +102,15 @@ export default class WorldModeling extends React.Component {
         this.setDeletionConfirmation(true)
     }
 
+    getIndexOfProjectId(projectId) {
+        for (let i=0; i<this.state.worlds.length; i++) {
+            if (this.state.worlds[i].project_id === projectId) {
+                return i
+            }
+        }
+        return this.state.worlds.length
+    }
+
     render() {
 
         const children = [];
@@ -104,7 +122,7 @@ export default class WorldModeling extends React.Component {
                                     statSecondIconName={this.props.info.goalComponent.deleteIconName}
                                     statIconColor={this.props.info.goalComponent.iconColor}
                                     selected={this.state.worldSelected === i}
-                                    onClick={() => this.selectWorld(i)}
+                                    onClick={(e) => this.selectWorld(i, e.target.id)}
                                     modify={this.modifyWorld}
                                     delete={this.setModalDeletionConfirmation}
             />);

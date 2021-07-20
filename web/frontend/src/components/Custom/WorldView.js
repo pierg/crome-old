@@ -39,12 +39,13 @@ function WorldView(props) {
                             {props.number !== 0 && (<div className="relative pl-4 flex mt-2 justify-end flex-initial">
                                 <div
                                     onClick={() => props.delete(true, props.number)}
+                                    id={"deleteButton"}
                                     className={
                                         "text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full cursor-pointer " +
                                         props.statIconColor
                                     }
                                 >
-                                    <i className={props.statSecondIconName}/>
+                                    <i className={props.statSecondIconName} id={"deleteIcon"}/>
                                 </div>
                             </div>)}
                         </div>

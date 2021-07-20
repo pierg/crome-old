@@ -163,7 +163,6 @@ export default class GoalModeling extends React.Component {
     }
 
     switchWorld = (id) => {
-        console.log("SWITCH : "+id)
         this.props.setProject(id)
         this.toggleTrigger(1, true)
     }

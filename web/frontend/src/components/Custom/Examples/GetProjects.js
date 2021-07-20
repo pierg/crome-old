@@ -9,7 +9,6 @@ function SocketIoProjects(props) {
 
 
     const setMessageFunction = useCallback((list_of_projects) => {
-        console.log(list_of_projects)
         setMessage(list_of_projects);
     }, [setMessage])
 

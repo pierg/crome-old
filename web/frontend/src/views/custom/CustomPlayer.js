@@ -108,7 +108,7 @@ export default function CustomPlayer({ items, defaultOpened, id, setWorld, setLi
                         <div className="container mx-auto px-4">
                           {
                             {
-                              'world': <WorldModeling id={id} setListOfWorldNames={setListOfWorldNames} projectAdded={projectAdded} setProject={setProject} setWorld={setWorld} {...worldmodelinginfo}/>,
+                              'world': <WorldModeling id={id} setListOfWorldNames={setListOfWorldNames} projectAdded={projectAdded} project={project} setProject={setProject} setWorld={setWorld} {...worldmodelinginfo}/>,
                               'goal': <GoalModeling id={id} {...goalmodelinginfo} project={project} setProject={(project) => addProjectFromGoalModeling(project)}/>,
                               'analysis': <Analysis active={headerStates[2]}/>,
                               'synthesis': <Synthesis />
