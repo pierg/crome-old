@@ -65,9 +65,6 @@ export default class CreateEnvironment extends React.Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         this.listOfNames = []
         if (this.props.world !== null) {
-            console.log("calling getList")
-            console.log(this.props.worldNames)
-            console.log(this.props.world.info.name)
             this.listOfNames = this.getListWithoutElement(this.props.worldNames, this.props.world.info.name)
         }
     }
@@ -77,10 +74,6 @@ export default class CreateEnvironment extends React.Component {
     }
 
     setModalClassic = (bool) => {
-
-        console.log("state.mutexList")
-        console.log(this.state.mutexList)
-
         if (!bool) {
             this.setState({
                 editedLists: this.state.lists,
@@ -199,10 +192,6 @@ export default class CreateEnvironment extends React.Component {
     }
 
     editLine = (listIndex, elementIndex) => {
-        console.log("about to getMutexElements with :")
-        console.log(this.state.editedLists[listIndex][elementIndex])
-        console.log("result :")
-        console.log(this.getMutexElements(this.state.editedLists[listIndex][elementIndex]))
         this.setState({
             currentList: listIndex,
             currentIndex: elementIndex,

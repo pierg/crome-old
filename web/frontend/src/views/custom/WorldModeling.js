@@ -89,20 +89,20 @@ export default class WorldModeling extends React.Component {
     }
 
     deleteWorld = () => {
-        let tmpWorlds = this.state.worlds
+        /*let tmpWorlds = this.state.worlds
         let tmpInfo = this.state.info
         tmpWorlds.splice(this.state.selectedWorldToDelete, 1)
-        tmpInfo.splice(this.state.selectedWorldToDelete, 1)
+        tmpInfo.splice(this.state.selectedWorldToDelete, 1)*/
         if (this.state.selectedWorldToDelete < this.state.worldSelected) {
             this.setState({
                 worldSelected: this.state.worldSelected - 1
             })
         }
-        this.setState({
+        /*this.setState({
             worlds: tmpWorlds,
             info: tmpInfo,
             numChildren: this.state.numChildren - 1
-        })
+        })*/
         this.setModalDeletionConfirmation(false)
         this.setDeletionConfirmation(true)
     }

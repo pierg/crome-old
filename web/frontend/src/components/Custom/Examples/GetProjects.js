@@ -7,6 +7,8 @@ function SocketIoProjects(props) {
 
     const [message, setMessage] = useState(0);
 
+    const [trigger, setTrigger] = useState(false);
+
 
     const setMessageFunction = useCallback((list_of_projects) => {
         setMessage(list_of_projects);
@@ -20,7 +22,7 @@ function SocketIoProjects(props) {
         socket.on('receive-projects', setMessageFunction)
 
         return () => socket.off('receive-projects')
-    }, [socket, setMessageFunction, props.session, props.projectAdded])
+    }, [socket, setMessageFunction, props.session, props.projectAdded, trigger])
 
     useEffect(() => {
         props.worlds(message)
@@ -30,6 +32,9 @@ function SocketIoProjects(props) {
         if (props.deletionConfirmation) {
             socket.emit('delete-project', {session: props.session, index: props.deletionIndex})
             props.deletionChanger(false)
+
+            socket.on('deletion-complete', setTrigger(!trigger))
+            return () => socket.off('deletion-complete')
         }
     }, [props.deletionConfirmation, props.deletionIndex, props.deletionChanger, socket])  // eslint-disable-line react-hooks/exhaustive-deps
 

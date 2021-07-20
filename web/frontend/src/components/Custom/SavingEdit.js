@@ -7,8 +7,6 @@ function  SavingEdit(props) {
 
     const [element] = React.useState(JSON.parse(JSON.stringify(props.element)));
 
-    console.log(props.listOfNames)
-
     function changeParameter(e) {
         switch (e.target.name) {
             case "name": element.name = e.target.value; break;

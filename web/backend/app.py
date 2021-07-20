@@ -135,6 +135,7 @@ def delete_project(data):
                 dir_to_delete = Path(os.path.join(current_session_folder, name))
                 shutil.rmtree(dir_to_delete)
         i += 1
+    emit("deletion-complete", True)
 
 
 @socketio.on('get-goals')
