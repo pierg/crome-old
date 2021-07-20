@@ -21,6 +21,7 @@ export default class WorldModeling extends React.Component {
     }
 
     getWorlds = (list) => {
+        console.log("getWorlds")
         let worlds = []
         let info = []
         let names = []
@@ -115,7 +116,8 @@ export default class WorldModeling extends React.Component {
                                   worlds={this.getWorlds}
                                   deletionIndex={this.state.selectedWorldToDelete}
                                   deletionConfirmation={this.state.deletionConfirmation}
-                                  deletionChanger={this.setDeletionConfirmation}/>
+                                  deletionChanger={this.setDeletionConfirmation}
+                                  projectAdded={this.props.projectAdded}/>
                 <ParentComponent clearWorld={this.clearWorld}>
                     {children}
                 </ParentComponent>

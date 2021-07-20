@@ -21,7 +21,7 @@ function SocketIoProjects(props) {
         socket.on('receive-projects', setMessageFunction)
 
         return () => socket.off('receive-projects')
-    }, [socket, setMessageFunction, props.session])
+    }, [socket, setMessageFunction, props.session, props.projectAdded])
 
     useEffect(() => {
         props.worlds(message)

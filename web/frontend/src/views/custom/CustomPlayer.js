@@ -19,8 +19,14 @@ export default function CustomPlayer({ items, defaultOpened, id, setWorld, setLi
   const [oldInTransition, setOldInTransition] = React.useState(false);
   const [newInTransition, setNewInTransition] = React.useState(false);
   const [project, setProject] = React.useState(null);
+  const [projectAdded, setProjectAdded] = React.useState(false);
 
   const [headerStates, setHeaderStates] = React.useState([true, false, false, false]);
+
+  function addProjectFromGoalModeling(projectId) {
+      setProject(projectId)
+      setProjectAdded(!projectAdded)
+  }
 
   const toggleNew = (e, newOpen) => {
 
@@ -102,8 +108,8 @@ export default function CustomPlayer({ items, defaultOpened, id, setWorld, setLi
                         <div className="container mx-auto px-4">
                           {
                             {
-                              'world': <WorldModeling id={id} setListOfWorldNames={setListOfWorldNames} setProject={setProject} setWorld={setWorld} {...worldmodelinginfo}/>,
-                              'goal': <GoalModeling id={id} {...goalmodelinginfo} project={project} setProject={setProject}/>,
+                              'world': <WorldModeling id={id} setListOfWorldNames={setListOfWorldNames} projectAdded={projectAdded} setProject={setProject} setWorld={setWorld} {...worldmodelinginfo}/>,
+                              'goal': <GoalModeling id={id} {...goalmodelinginfo} project={project} setProject={(project) => addProjectFromGoalModeling(project)}/>,
                               'analysis': <Analysis active={headerStates[2]}/>,
                               'synthesis': <Synthesis />
                             }[prop.component]
