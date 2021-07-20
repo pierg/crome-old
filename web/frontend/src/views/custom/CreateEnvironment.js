@@ -62,6 +62,16 @@ export default class CreateEnvironment extends React.Component {
         }
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        this.listOfNames = []
+        if (this.props.world !== null) {
+            console.log("calling getList")
+            console.log(this.props.worldNames)
+            console.log(this.props.world.info.name)
+            this.listOfNames = this.getListWithoutElement(this.props.worldNames, this.props.world.info.name)
+        }
+    }
+
     componentWillUnmount() {
         // fix Warning: Can't perform a React state update on an unmounted component
     }
@@ -145,6 +155,12 @@ export default class CreateEnvironment extends React.Component {
     saveWorld = () => {
         this.setModalSaving(false)
         this.props.saveEnvironment(this.state.savingInfos, this.state.environmentToBeSaved)
+    }
+
+    getListWithoutElement = (array, element) => {
+        let arrayCopy = JSON.parse(JSON.stringify(array))
+        arrayCopy.splice(arrayCopy.indexOf(element), 1)
+        return arrayCopy
     }
     /* GENERAL FUNCTIONS */
 
@@ -1073,7 +1089,7 @@ export default class CreateEnvironment extends React.Component {
                     className={"custom-modal-dialog sm:c-m-w-70 md:c-m-w-60 lg:c-m-w-50 xl:c-m-w-40"}>
                     <SavingEdit
                         element={this.state.savingInfos}
-                        listOfNames={this.projectId === null ? this.props.worldNames : []}
+                        listOfNames={this.projectId === null ? this.props.worldNames : this.listOfNames}
                         edit={this.editSavingInfos}
                         save={this.saveWorld}
                         close={() => this.setModalSaving(false)}
