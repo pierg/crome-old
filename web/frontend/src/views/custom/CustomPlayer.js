@@ -103,7 +103,7 @@ export default function CustomPlayer({ items, defaultOpened, id, setWorld, setLi
                           {
                             {
                               'world': <WorldModeling id={id} setListOfWorldNames={setListOfWorldNames} setProject={setProject} setWorld={setWorld} {...worldmodelinginfo}/>,
-                              'goal': <GoalModeling id={id} {...goalmodelinginfo} project={project}/>,
+                              'goal': <GoalModeling id={id} {...goalmodelinginfo} project={project} setProject={setProject}/>,
                               'analysis': <Analysis active={headerStates[2]}/>,
                               'synthesis': <Synthesis />
                             }[prop.component]

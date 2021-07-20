@@ -78,7 +78,8 @@ def save_project(data):
 @socketio.on('save-goals')
 def save_goals(data):
     project_id = data['projectId']
-    if str(project_id) == "simple":
+    is_simple = str(project_id) == "simple"
+    if is_simple:
         number_of_copies = 1
         while os.path.isdir(os.path.join(storage_folder, f"sessions/{data['session']}/simple_{number_of_copies}")):
             number_of_copies += 1
@@ -115,7 +116,10 @@ def save_goals(data):
         json_formatted = json.dumps(data['goals'][i], indent=4, sort_keys=True)
         json_file.write(json_formatted)
         json_file.close()
-    emit("saving-complete", True)
+    if is_simple:
+        emit("saving-simple", project_id)
+    else:
+        emit("saving-complete", True)
 
 
 @socketio.on('delete-project')

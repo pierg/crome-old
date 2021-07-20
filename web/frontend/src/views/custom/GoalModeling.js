@@ -48,7 +48,7 @@ export default class GoalModeling extends React.Component {
             <>
                 <SocketIoGaols projectId={this.props.project} session={this.props.id} updateGoals={this.getGoals} deleteIndex={this.state.deletionIndex} triggerGoals={this.state.triggers[1]} deleteTrigger={this.deleteTrigger}/>
                 <SocketIoPatterns patterns={this.getPatterns} />
-                <SocketSaveGoals projectId={this.props.project} session={this.props.id} goals={this.state.editedGoals} triggerSave={this.state.triggers[0]} toggleTrigger={this.toggleTrigger}/>
+                <SocketSaveGoals projectId={this.props.project} session={this.props.id} goals={this.state.editedGoals} triggerSave={this.state.triggers[0]} toggleTrigger={this.toggleTrigger} switchWorld={this.switchWorld}/>
                 <ParentComponent addChild={this.onAddChild}>
                     {children}
                 </ParentComponent>
@@ -160,6 +160,12 @@ export default class GoalModeling extends React.Component {
         this.setState({
             deletionIndex: null
         }, () => this.toggleTrigger(1, true))
+    }
+
+    switchWorld = (id) => {
+        console.log("SWITCH : "+id)
+        this.props.setProject(id)
+        this.toggleTrigger(1, true)
     }
 }
 
