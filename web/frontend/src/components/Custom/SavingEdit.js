@@ -19,6 +19,7 @@ function  SavingEdit(props) {
     function handleKeyEvent(event) {
         if (event.key === "Enter" && element !== "" && !arrayIncludesWithoutCase(props.listOfNames, element.name)) {
             props.save(element)
+            // TODO manual redirection
         }
     }
 
