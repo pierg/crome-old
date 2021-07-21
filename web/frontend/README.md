@@ -90,23 +90,22 @@ Location : src/views/custom
 - CreateEnvironment
     - Description : Page built with Gridworld allowing to build or modify an environment
     - Requires :
-        - JSON of coordinates with existing locations (to be determined)
+        - JSON of the grid, the actions and sensors
     - Produces :
-        - JSON of coordinates with created locations (to be determined)
+        - JSON of the new environment, or the updated one
 
 ### Crome Components
 
 Location : src/components/Crome
 
 -Console
-    - Description : Temporary page, soon will be able to display raw data of every exchange
-                    between frontend and backend, visible from everywhere
+    - Description : Component visible from everywhere able to display data
 - CustomHeader
     - Description : Displays the 4 parts of the CustomPlayer
     - Requires :
         - List of titles, icons and colors (see customheadercards in Custom Data)
 - CustomSidebar
-    - Description : Sidebar with every custom page
+    - Description : Sidebar with links to every custom page
     - Requires :
         - List of titles, colors, links and more (see customheadercards in Custom Data)
         - Current page to know what title to highlight
@@ -114,14 +113,38 @@ Location : src/components/Crome
     - Description : Gridworld file
     - Requires :
         - Canvas to draw the grid, width, height and options of the grid
-        - JSON of coordinates, given by CreateEnvironment (to be determined)
 - GoalEdit
     - Description : Displays a modal to edit a Goal component
     - Requires :
         - List of goals ('get-goals' API)
         - List of available patterns ('get-patterns' API)
     - Produces :
-        - JSON {goal, description, context, contract}
+        - Modified goal
+- WorldEdit
+    - Description : Displays a modal to edit a element from the environment creation
+    - Requires :
+        - Element to modify, and lists to handle mutex
+    - Produces :
+        - Modified element (location, action or sensor)
+
+### Custom APIs
+
+Location : src/components/Custom/Examples
+
+- FetchTime
+- GetConsoleMessage
+  - Fetches the messages sent by the back-end to return them to the Console
+- GetGoals
+  - Fetches the goals and returns them to GoalModeling
+- GetPatterns
+  - Fetches the patterns and returns them to GoalModeling
+- GetProjects
+  - Fetches the projects and returns them to WorldModeling
+- SaveEnvironment
+  - Takes a world in argument and sends it to the back-end for it to be saved
+- SaveGoals
+  - Takes a list of goals and sends it to the back-end for it to be saved
+- SocketIoMessage
 
 ### Custom Components
 
@@ -134,26 +157,36 @@ Location : src/components/Custom
 - ContractEditArguments 
 - ContractModalDetails  
 - CustomCardMini
+- CustomFooter
+- CustomNavButton  
 - CustomSelect
 - GoalView
-- Location  
+- ListBlock
+- ListLine  
+- Location
+- LocationIdEdit  
 - LoginSession
+- SavingEdit  
 - WorldView
 
 ### Custom Data
 
 Location : src/_texts/custom
 
+- console
 - contracteditorinfo
 - createenvironment  
 - customaccordion
 - customheadercards
+- customnavbutton  
 - customplayerinfo
 - customsidebar
 - defaultgoal
 - goaleditinfo
 - goalmodelinginfo
 - gridcolors
+- mutexcolors
+- worldmodelinginfo
 
 ### Custom Stylesheets
 
