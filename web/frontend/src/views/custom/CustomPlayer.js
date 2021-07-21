@@ -13,6 +13,8 @@ import footeradmin from "../../_texts/admin/footers/footeradmin";
 import WorldModeling from "./WorldModeling";
 import Analysis from "./Analysis";
 import Synthesis from "./Synthesis";
+import CustomNavButton from "../../components/Custom/CustomNavButton";
+import {UncontrolledTooltip} from "reactstrap";
 
 export default function CustomPlayer({ items, defaultOpened, id, setWorld, setListOfWorldNames }) {
   const [open, setOpen] = React.useState(defaultOpened);
@@ -30,26 +32,29 @@ export default function CustomPlayer({ items, defaultOpened, id, setWorld, setLi
 
   const toggleNew = (e, newOpen) => {
 
-    for (let i=0; i<headerStates.length; i++) {
-      headerStates[i] = false;
-    }
-    headerStates[newOpen] = true;
-    setHeaderStates(headerStates);
+      if ((newOpen !== 1 || project !== 0) && (open !== 0 || newOpen !== 3) && (open !== 3 || newOpen !== 0)) {
 
-    e.preventDefault();
-    if (!newInTransition && !oldInTransition) {
-      setOldInTransition(true);
-      setTimeout(function () {
-        setOpen(newOpen);
-      }, 500);
-      setTimeout(function () {
-        setOldInTransition(false);
-        setNewInTransition(true);
-      }, 600);
-      setTimeout(function () {
-        setNewInTransition(false);
-      }, 1100);
-    }
+          for (let i = 0; i < headerStates.length; i++) {
+              headerStates[i] = false;
+          }
+          headerStates[newOpen] = true;
+          setHeaderStates(headerStates);
+
+          e.preventDefault();
+          if (!newInTransition && !oldInTransition) {
+              setOldInTransition(true);
+              setTimeout(function () {
+                  setOpen(newOpen);
+              }, 500);
+              setTimeout(function () {
+                  setOldInTransition(false);
+                  setNewInTransition(true);
+              }, 600);
+              setTimeout(function () {
+                  setNewInTransition(false);
+              }, 1100);
+          }
+      }
   };
 
 
@@ -58,34 +63,15 @@ export default function CustomPlayer({ items, defaultOpened, id, setWorld, setLi
       <>
           <CustomHeader {...customheadercards} states={headerStates} />
           <div className="flex justify-evenly relative top--30">
-              <div>
-                  <a
-                      href="#pablo"
-                      className="text-white text-center opacity-85 hover:opacity-100 transition-opacity duration-150 ease-linear w-12 text-xl z-50"
-                      onClick={(e) =>
-                          toggleNew(e, open - 1 < 0 ? items.length - 1 : open - 1)
-                      }
-                  >
-                      <div>
-                          <i className="text-orange-300 fas fa-chevron-left mr-2"/>
-                          <span className="text-2xl">Back</span>
-                      </div>
-                  </a>
-              </div>
-              <div>
-                  <a
-                      href="#pablo"
-                      className="text-white text-center opacity-85 hover:opacity-100 transition-opacity duration-150 ease-linear w-12 text-xl z-50"
-                      onClick={(e) =>
-                          toggleNew(e, open + 1 > items.length - 1 ? 0 : open + 1)
-                      }
-                  >
-                      <div>
-                          <span className="text-2xl">Continue</span>
-                          <i className="text-orange-300 fas fa-chevron-right ml-2"/>
-                      </div>
-                  </a>
-              </div>
+              <div><CustomNavButton open={open} toggleNew={toggleNew} itemsLength={items.length} type={"back"}/></div>
+              <div id="continueArrow"><CustomNavButton  open={open} toggleNew={toggleNew} itemsLength={items.length} type={"continue"} noProject={project === 0}/></div>
+              {(project === 0) && (<UncontrolledTooltip
+                  delay={0}
+                  placement="bottom"
+                  target="continueArrow"
+              >
+                  <span>Select an Environment to continue</span>
+              </UncontrolledTooltip>)}
           </div>
           <div className="px-4 md:px-6 mx-auto w-full -mt-24">
           <div className="mt-12 relative pb-32">
@@ -119,14 +105,6 @@ export default function CustomPlayer({ items, defaultOpened, id, setWorld, setLi
                   );
                 })}
               </div>
-            </div>
-          </div>
-          <div className="flex flex-wrap">
-            <div className="w-full xl:w-8/12 px-4">
-              {/*<CardFullTable {...cardfulltabledashboard1} />*/}
-            </div>
-            <div className="w-full xl:w-4/12 px-4">
-              {/*<CardFullTable {...cardfulltabledashboard2} />*/}
             </div>
           </div>
           <CustomFooter {...footeradmin} />

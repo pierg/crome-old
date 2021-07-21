@@ -13,13 +13,16 @@ function SocketIoConsoleMessage(props) {
     }, [setMessage])
 
 
+    if (socket != null) socket.on('receive-message', setMessageFunction)
+
+
     useEffect(() => {
         if (socket == null) return
 
         socket.emit('test')
-        socket.on('receive-message', setMessageFunction)
+        /*socket.on('receive-message', setMessageFunction)
 
-        return () => socket.off('receive-message')
+        return () => socket.off('receive-message')*/
     }, [socket, setMessageFunction])
 
     useEffect(() => {

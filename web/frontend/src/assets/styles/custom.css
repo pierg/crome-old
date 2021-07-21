@@ -71,6 +71,14 @@
     border-width: 0px;
 }
 
+.hover\:no-underline:hover {
+    text-decoration: none;
+}
+
+.cursor-default {
+    cursor: default;
+}
+
 @media (min-width: 640px) {
     .sm\:c-m-w-70 {
         max-width: 500px;
