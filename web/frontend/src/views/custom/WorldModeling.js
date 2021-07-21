@@ -24,7 +24,7 @@ export default class WorldModeling extends React.Component {
         if (prevProps.project !== this.props.project) {
             this.setState({
                 worldSelected: this.getIndexOfProjectId(this.props.project)
-            })
+            }, () => console.log("worldSelected : "+this.state.worldSelected+", with project : "+this.props.project))
         }
     }
 
@@ -108,6 +108,7 @@ export default class WorldModeling extends React.Component {
     }
 
     getIndexOfProjectId(projectId) {
+        if (projectId === 0) return null
         for (let i=0; i<this.state.worlds.length; i++) {
             if (this.state.worlds[i].project_id === projectId) {
                 return i
