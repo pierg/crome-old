@@ -53,12 +53,18 @@ export default function CustomDashboard(props) {
             <SocketIoConsoleMessage modifyMessage={(e) => updateMessage(e)}/>
             <SocketSaveEnvironment session={id} world={savedEnvironment}/>
             <div className="relative xxl:ml-64 bg-blueGray-100 min-h-screen">
-                {
-                    {
-                        'index': <CustomPlayer {...custommediaplayerteaminfo} setWorld={updateWorld} setListOfWorldNames={updateListOfWorldNames} id={id}/>,
-                        'world': <CreateEnvironment world={world} worldNames={listOfWorldNames} saveEnvironment={saveEnvironment}/>,
-                    }[props.page]
-                }
+                {(() => {
+                    switch (props.page) {
+                        case 'world':
+                            return (
+                                <CreateEnvironment world={world} worldNames={listOfWorldNames} saveEnvironment={saveEnvironment}/>
+                            )
+                        default:
+                            return (
+                                <CustomPlayer {...custommediaplayerteaminfo} setWorld={updateWorld} setListOfWorldNames={updateListOfWorldNames} id={id}/>
+                            )
+                    }
+                })()}
             </div>
         </SocketProvider>
     );

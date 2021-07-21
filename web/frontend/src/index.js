@@ -96,16 +96,7 @@ ReactDOM.render(
       <Route path="/documentation" component={Documentation} />
       {/* Docs Routes - STOP */}
       {/* Custom Routes added */}
-      <Route path="/index" render={() => (<CustomDashboard page="index" />)}/>
-      <Route path="/world" render={() => (<CustomDashboard page="world" />)}/>
-      <Route path="/console" render={() => (<CustomDashboard page="console" />)}/>
-      {/* TODO
-      * Refactor te 2 Routes above, to have only one Route that calls CustomDashboard
-      * A prop must be passed to the component depending on the path
-      * The 2 lines below are some tries, the solution should be something like this
-      */}
-      {/*<Route path="/index/:page" component={CustomDashboard} />*/}
-      {/*<Route path="/index" render={(props) => (<CustomDashboard id={props.match.params.id} />)}/>*/}
+      <Route exact path="/:id" render={(props) => ( <CustomDashboard page={props.match.params.id}/>)} />
 
       <Redirect from="*" to="/index" />
     </Switch>
