@@ -79,6 +79,24 @@
     cursor: default;
 }
 
+.hover\:text-lightBlue-500:hover {
+  --tw-text-opacity: 1;
+  color: rgba(14, 165, 233, var(--tw-text-opacity));
+}
+
+.dark-tooltip > div > div {
+    background-color: #0f172a;
+    color: white;
+}
+
+.dark-tooltip > div > span:before {
+    border-bottom-color: #0f172a !important;
+}
+
+.dark-tooltip > div {
+    z-index: 9999;
+}
+
 @media (min-width: 640px) {
     .sm\:c-m-w-70 {
         max-width: 500px;
