@@ -22,6 +22,7 @@ export default function CustomPlayer({ items, defaultOpened, id, setWorld, setLi
   const [newInTransition, setNewInTransition] = React.useState(false);
   const [project, setProject] = React.useState(null);
   const [projectAdded, setProjectAdded] = React.useState(false);
+  const [changingPage, setChangingPage] = React.useState(false);
 
   const [headerStates, setHeaderStates] = React.useState([true, false, false, false]);
 
@@ -32,7 +33,9 @@ export default function CustomPlayer({ items, defaultOpened, id, setWorld, setLi
 
   const toggleNew = (e, newOpen) => {
 
-      if ((newOpen !== 1 || project !== 0) && (open !== 0 || newOpen !== 3) && (open !== 3 || newOpen !== 0)) {
+      if (((newOpen !== 1 || project !== 0) && (open !== 0 || newOpen !== 3) && (open !== 3 || newOpen !== 0)) && !changingPage) {
+
+          setChangingPage(true)
 
           for (let i = 0; i < headerStates.length; i++) {
               headerStates[i] = false;
@@ -52,6 +55,7 @@ export default function CustomPlayer({ items, defaultOpened, id, setWorld, setLi
               }, 600);
               setTimeout(function () {
                   setNewInTransition(false);
+                  setChangingPage(false)
               }, 1100);
           }
       }
