@@ -3,6 +3,7 @@ import Button from "../../components/Elements/Button.js";
 import {Form} from 'react-bootstrap'
 import {v4 as uuidV4} from 'uuid'
 import {UncontrolledTooltip} from "reactstrap";
+import {CSSTransition, SwitchTransition} from "react-transition-group";
 
 export default function LoginSession({id, onIdSubmit}) {
     const idRef = useRef()
@@ -10,7 +11,11 @@ export default function LoginSession({id, onIdSubmit}) {
     function handleSubmit(e) {
         e.preventDefault()
 
-        onIdSubmit(idRef.current.value)
+        //setTimeout(function() {
+            onIdSubmit(idRef.current.value)
+        //}, 500)
+
+        idRef.current.value = ""
     }
     
     const createNewId = useCallback(() => {
@@ -26,33 +31,52 @@ export default function LoginSession({id, onIdSubmit}) {
     const [toolTipText, setToolTipText] = useState(true);
     const [toolTipColor, setToolTipColor] = useState("text-lightBlue-700");
 
+    function animateId() {
+        setToolTipColor("text-white")
+        setTimeout(function () {
+            setToolTipColor("text-lightBlue-700")
+        }, 300)
+    }
+
     const toggleToolTipText = (reset) => {
         if (toolTipText !== reset) setToolTipText(reset)
-        if (!reset) {
-            setToolTipColor("text-white")
-            setTimeout(function () {
-                setToolTipColor("text-lightBlue-700")
-            }, 200)
-        }
+        if (!reset) animateId()
     }
 
     return (
         <>
             <p className="text-center mt-4">Your Session ID is:</p>
-            <p className={"text-center font-semibold hover:text-lightBlue-500 cursor-pointer transition-all duration-300 ease-in-out "+toolTipColor}
-               onClick={() => {navigator.clipboard.writeText(id).then(() => toggleToolTipText(false))}}
-               id={"idDisplay"}
-               onMouseOut={() => setTimeout(function() {toggleToolTipText(true)},500)}>
-                {id.split("-")[0]+"-"+id.split("-")[1]+"..."}
-            </p>
-            <UncontrolledTooltip
-                delay={0}
-                placement="bottom"
-                target="idDisplay"
-                className="dark-tooltip"
-            >
-                <div>{toolTipText ? "Click to Copy ID" : "ID Copied!"}</div>
-            </UncontrolledTooltip>
+
+
+            {id !== undefined && (<SwitchTransition mode="out-in">
+                <CSSTransition
+                    classNames="fade"
+                    addEndListener={(node, done) => {
+                        node.addEventListener("transitionend", done, false);
+                    }}
+                    key={id.split("-")[0]+"-"+id.split("-")[1]+"..."}
+                >
+                    <>
+                    <p className={"text-center font-semibold hover:text-lightBlue-500 cursor-pointer transition-all duration-300 ease-in-out "+toolTipColor}
+                       onClick={() => {navigator.clipboard.writeText(id).then(() => toggleToolTipText(false))}}
+                       id={"idDisplay"}
+                       onMouseOut={() => setTimeout(function() {toggleToolTipText(true)},500)}>
+                        {id.split("-")[0]+"-"+id.split("-")[1]+"..."}
+                    </p>
+                    <UncontrolledTooltip
+                        delay={0}
+                        placement="bottom"
+                        target="idDisplay"
+                        className="dark-tooltip"
+                    >
+                        <div>{toolTipText ? "Click to Copy ID" : "ID Copied!"}</div>
+                    </UncontrolledTooltip></>
+                </CSSTransition>
+            </SwitchTransition>)}
+
+
+
+
             <Form onSubmit={handleSubmit} className="w-full mt-4">
                 <Form.Group>
                     <Form.Control type="text" className="border-lightBlue-200" ref={idRef} required placeholder={"Load another session"}/>
