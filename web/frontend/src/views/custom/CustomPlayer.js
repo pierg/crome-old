@@ -63,8 +63,12 @@ export default function CustomPlayer({ items, defaultOpened, id, setWorld, setLi
       <>
           <CustomHeader {...customheadercards} states={headerStates} />
           <div className="flex justify-evenly relative top--30">
-              <div><CustomNavButton open={open} toggleNew={toggleNew} itemsLength={items.length} type={"back"}/></div>
-              <div id="continueArrow"><CustomNavButton  open={open} toggleNew={toggleNew} itemsLength={items.length} type={"continue"} noProject={project === 0}/></div>
+              <div>
+                  <CustomNavButton open={open} toggleNew={toggleNew} itemsLength={items.length} type={"back"}/>
+              </div>
+              <div id="continueArrow">
+                  <CustomNavButton  open={open} toggleNew={toggleNew} itemsLength={items.length} type={"continue"} noProject={project === 0}/>
+              </div>
               {(project === 0) && (<UncontrolledTooltip
                   delay={0}
                   placement="bottom"

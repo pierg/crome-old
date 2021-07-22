@@ -56,10 +56,18 @@ export default class WorldModeling extends React.Component {
 
     selectWorld = (index, eventId) => {
         if (eventId !== "deleteButton" && eventId !== "deleteIcon") {
-            this.setState({
-                worldSelected: index,
-            })
-            this.props.setProject(this.state.worlds[index].project_id)
+            if (index === this.state.worldSelected) {
+                this.setState({
+                    worldSelected: null,
+                })
+                this.props.setProject(0)
+            }
+            else {
+                this.setState({
+                    worldSelected: index,
+                })
+                this.props.setProject(this.state.worlds[index].project_id)
+            }
         }
     }
 
