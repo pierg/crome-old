@@ -50,7 +50,7 @@ export default function CustomDashboard(props) {
         <SocketProvider id={id}>
             <CustomSidebar {...customsidebar} currentRoute={"#" + location.pathname} id={id} setId={setId}/>
             <Console {...consoleinfo} customText={message}/>
-            <SocketIoConsoleMessage modifyMessage={(e) => updateMessage(e)}/>
+            <SocketIoConsoleMessage modifyMessage={(e) => updateMessage(e)} session={id}/>
             <SocketSaveEnvironment session={id} world={savedEnvironment}/>
             <div className="relative xxl:ml-64 bg-blueGray-100 min-h-screen">
                 {(() => {

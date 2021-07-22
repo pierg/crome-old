@@ -5,8 +5,8 @@ from os import path, walk
 import time
 from pathlib import Path
 
-from flask import Flask, request
-from flask_socketio import SocketIO, emit
+from flask import Flask, request, session
+from flask_socketio import SocketIO, emit, join_room
 import json
 
 if path.exists('../frontend/build'):
@@ -18,6 +18,8 @@ storage_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '
 
 # socketio = SocketIO(app, cors_allowed_origins="*")
 socketio = SocketIO(app, cors_allowed_origins='http://localhost:3000')
+
+messages = {}
 
 
 @socketio.on('get-projects')
@@ -42,7 +44,7 @@ def get_projects(data):
                             default_project.append({"title": os.path.splitext(file)[0], "content": json_str})
                 list_of_projects.append(default_project)
 
-    emit("receive-projects", list_of_projects)
+    emit("receive-projects", list_of_projects, room=request.sid)
 
 
 @socketio.on('save-project')
@@ -117,9 +119,9 @@ def save_goals(data):
         json_file.write(json_formatted)
         json_file.close()
     if is_simple:
-        emit("saving-simple", project_id)
+        emit("saving-simple", project_id, room=request.sid)
     else:
-        emit("saving-complete", True)
+        emit("saving-complete", True, room=request.sid)
 
 
 @socketio.on('delete-project')
@@ -135,7 +137,7 @@ def delete_project(data):
                 dir_to_delete = Path(os.path.join(current_session_folder, name))
                 shutil.rmtree(dir_to_delete)
         i += 1
-    emit("deletion-complete", True)
+    emit("deletion-complete", True, room=request.sid)
 
 
 @socketio.on('get-goals')
@@ -156,7 +158,7 @@ def get_goals(data):
                 json_str = json.dumps(json_obj)
                 list_of_goals.append(json_str)
 
-        emit("receive-goals", list_of_goals)
+        emit("receive-goals", list_of_goals, room=request.sid)
 
 
 @socketio.on('delete-goal')
@@ -181,7 +183,7 @@ def get_patterns():
     with open(robotic_patterns_file) as json_file:
         robotic_patterns = json.load(json_file)
 
-    emit("receive-patterns", {'robotic': json.dumps(robotic_patterns)})
+    emit("receive-patterns", {'robotic': json.dumps(robotic_patterns)}, room=request.sid)
 
 
 @socketio.on('connect')
@@ -189,15 +191,27 @@ def connected():
     print('Connected')
     print(request.args)
     print(f'ID {request.args.get("id")}')
+    messages[request.args.get("id")] = []
 
 
-@socketio.on('test')
-def test():
+@socketio.on('test-console')
+def console_message_every_3_seconds():
     i = 0
     while True:
-        emit("receive-message", i)
+        print("sent "+str(i))
+        emit("receive-message", i, room=request.sid)
         i += 1
         time.sleep(3)
+
+
+@socketio.on('ask-console-messages')
+def send_console_message(session_id):
+    print(messages)
+    print(session_id)
+    for i in range(len(messages[session_id])):
+        print("sent an update")
+        emit("receive-message", messages[session_id][i], room=request.sid)
+    messages[session_id] = []
 
 
 @socketio.on('disconnect')
@@ -212,9 +226,9 @@ def get_message_test():
     print('GET ENVIRONMENTS')
     print(request.args)
     print(f'ID {request.args.get("id")}')
-    emit("receive-message", {'data': "Message from Server"})
+    emit("receive-message", {'data': "Message from Server"}, room=request.sid)
     time.sleep(3)
-    emit("receive-message", {'data': "Message after 3 seconds from the first"})
+    emit("receive-message", {'data': "Message after 3 seconds from the first"}, room=request.sid)
 
 
 @app.route('/')
