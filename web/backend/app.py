@@ -9,6 +9,8 @@ from flask import Flask, request, session
 from flask_socketio import SocketIO, emit, join_room
 import json
 
+import threading
+
 if path.exists('../frontend/build'):
     app = Flask(__name__, static_folder='../frontend/build', static_url_path='/')
 else:
@@ -138,6 +140,7 @@ def delete_project(data):
                 shutil.rmtree(dir_to_delete)
         i += 1
     emit("deletion-complete", True, room=request.sid)
+    messages['d64bff97-0a49-4ec8-94f5-e38cf5722ca7'].append("test lock")
 
 
 @socketio.on('get-goals')
@@ -206,11 +209,14 @@ def console_message_every_3_seconds():
 
 @socketio.on('ask-console-messages')
 def send_console_message(session_id):
+    lock = threading.Lock()
+    lock.acquire()
     print(messages)
     print(session_id)
     for i in range(len(messages[session_id])):
         print("sent an update")
         emit("receive-message", messages[session_id][i], room=request.sid)
+    lock.release()
     messages[session_id] = []
 
 
