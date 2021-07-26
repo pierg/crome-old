@@ -49,6 +49,7 @@ def get_projects(data):
     emit("receive-projects", list_of_projects, room=request.sid)
 
 
+
 @socketio.on('save-project')
 def save_project(data):
     session_id = data['world']['info']['session_id']
