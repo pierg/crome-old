@@ -13,7 +13,7 @@ function SocketSaveEnvironment(props) {
     useEffect(() => {
         if (socket == null) return
         
-        if (props.world !== null) {
+        if (props.world !== null && props.trigger) {
             props.world.environment.session_id = props.session
             props.world.info.session_id = props.session
 
@@ -26,10 +26,12 @@ function SocketSaveEnvironment(props) {
                 props.world.info.project_id = props.world.environment.project_id
             }
 
-            socket.emit('save-project', {world: props.world})
+            socket.emit('save-project', {world: props.world, session: props.session})
+
+            props.setTrigger(false)
         }
         
-    }, [socket, props.world, props.session])
+    }, [socket, props.world, props])
 
     return (<></>);
 }

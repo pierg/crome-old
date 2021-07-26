@@ -19,9 +19,8 @@ function SocketIoConsoleMessage(props) {
 
         let askForMessages = setInterval(function() {
             socket.emit('ask-console-messages', props.session)
+            socket.on('receive-message', setMessageFunction)
         }, timeBetweenEachCheck)
-
-        socket.on('receive-message', setMessageFunction)
 
         return () => {
             clearInterval(askForMessages)
