@@ -24,6 +24,7 @@ export default function CustomDashboard(props) {
     let [world, setWorld] = React.useState(null);
     let [savedEnvironment, setSavedEnvironment] = React.useState(null);
     let [listOfWorldNames, setListOfWorldNames] = React.useState(null);
+    let [triggerSave, setTriggerSave] = React.useState(false);
 
     function updateMessage(msg) {
         if (message === "") {
@@ -38,6 +39,7 @@ export default function CustomDashboard(props) {
     }
     function saveEnvironment(info, env) {
         setSavedEnvironment({"info":info, "environment":env})
+        setTriggerSave(true)
     }
     function updateListOfWorldNames(names) {
         setListOfWorldNames(names)
@@ -51,7 +53,7 @@ export default function CustomDashboard(props) {
             <CustomSidebar {...customsidebar} currentRoute={"#" + location.pathname} id={id} setId={setId}/>
             <Console {...consoleinfo} customText={message}/>
             <SocketIoConsoleMessage modifyMessage={(e) => updateMessage(e)} session={id}/>
-            <SocketSaveEnvironment session={id} world={savedEnvironment}/>
+            <SocketSaveEnvironment session={id} world={savedEnvironment} trigger={triggerSave} setTrigger={setTriggerSave}/>
             <div className="relative xxl:ml-64 bg-blueGray-100 min-h-screen">
                 {(() => {
                     switch (props.page) {
