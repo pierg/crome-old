@@ -7,6 +7,8 @@ function  SavingEdit(props) {
 
     const [element] = React.useState(JSON.parse(JSON.stringify(props.element)));
 
+    const linkRef = React.useRef()
+
     function changeParameter(e) {
         switch (e.target.name) {
             case "name": element.name = e.target.value; break;
@@ -19,7 +21,7 @@ function  SavingEdit(props) {
     function handleKeyEvent(event) {
         if (event.key === "Enter" && element !== "" && !arrayIncludesWithoutCase(props.listOfNames, element.name)) {
             props.save(element)
-            // TODO manual redirection
+            //linkRef.click()
         }
     }
 
@@ -55,7 +57,7 @@ function  SavingEdit(props) {
                 <Button color={props.info.modal.cancelColor} onClick={props.close}>
                     {props.info.modal.cancelText}
                 </Button>
-                <Link to="/index" className="hover-no-underline"><Button color={props.info.modal.saveColor} disabled={element.name === "" || arrayIncludesWithoutCase(props.listOfNames, element.name)} onClick={() => props.save(element)}>
+                <Link to="/index" ref={linkRef} className="hover-no-underline"><Button color={props.info.modal.saveColor} disabled={element.name === "" || arrayIncludesWithoutCase(props.listOfNames, element.name)} onClick={() => props.save(element)}>
                     {props.info.modal.saveText}
                 </Button></Link>
             </ModalFooter>

@@ -2,26 +2,53 @@ import React, {useCallback, useEffect, useRef, useState} from 'react'
 import Button from "../../components/Elements/Button.js";
 import {Form} from 'react-bootstrap'
 import {v4 as uuidV4} from 'uuid'
-import {UncontrolledTooltip} from "reactstrap";
+import {PopoverBody, PopoverHeader, UncontrolledPopover, UncontrolledTooltip} from "reactstrap";
 import {CSSTransition, SwitchTransition} from "react-transition-group";
+import {useSocket} from "../../contexts/SocketProvider";
 
 export default function LoginSession({id, onIdSubmit}) {
     const idRef = useRef()
 
+    const socket = useSocket()
+
+    const [errorMsg, setErrorMsg] = useState("")
+    const [warningPopover, setWarningPopover] = useState(false)
+    
+    const handleAnswer = useCallback((answer) => {
+        answer ? onIdSubmit(idRef.current.value) : displayWarning()
+    }, [onIdSubmit])
+    
+    
+    
     function handleSubmit(e) {
         e.preventDefault()
 
-        //setTimeout(function() {
-            onIdSubmit(idRef.current.value)
-        //}, 500)
+        socket.emit("session-existing", idRef.current.value)
+        
+        socket.on('receive-answer', handleAnswer)
 
-        idRef.current.value = ""
+        return () => {
+            socket.off('receive-answer')
+        }
+
+    }
+    
+    function displayWarning() {
+        setWarningPopover(true)
+        setErrorMsg("This session doesn't exist or is empty")
+        setTimeout(function (){
+            setWarningPopover(false)
+        }, 4000)
     }
     
     const createNewId = useCallback(() => {
         onIdSubmit(uuidV4())
     }, [onIdSubmit])
-    
+
+    useEffect(() => {
+        idRef.current.value = ""
+    }, [id])
+
     useEffect(() => {
         if (id === undefined) {
             createNewId()
@@ -83,9 +110,20 @@ export default function LoginSession({id, onIdSubmit}) {
                 </Form.Group>
                 <div className="flex w-full justify-center">
                     <Button onClick={createNewId} color="teal" variant="secondary" type="reset">Reset</Button>
-                    <Button type="submit" color="lightBlue">Load</Button>
+                    <Button type="submit" color="lightBlue" id="loadButton">Load</Button>
                 </div>
             </Form>
+            <UncontrolledPopover
+                placement="bottom"
+                target="loadButton"
+                className="popover-warning"
+                isOpen={warningPopover}
+            >
+                <PopoverHeader>Warning!</PopoverHeader>
+                <PopoverBody>
+                    {errorMsg}
+                </PopoverBody>
+            </UncontrolledPopover>
         </>
     )
 }

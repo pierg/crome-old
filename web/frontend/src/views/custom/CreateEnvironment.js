@@ -22,8 +22,6 @@ import img from "./robot1.png";
 import SavingEdit from "../../components/Custom/SavingEdit";
 import LocationIdEdit from "../../components/Custom/LocationIdEdit";
 import {Link} from "react-router-dom";
-import {useScreenshot} from "use-react-screenshot";
-import SocketIoScreenshot from "../../components/Custom/Examples/GetScreenshot";
 import CustomDownload from "../../components/Custom/CustomDownload";
 
 
@@ -74,21 +72,16 @@ export default class CreateEnvironment extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        console.log(prevState)
-        console.log(this.state)
-        if (!this.state.started) {
-            if (this.state.myCanvas.current !== null) {
-                console.log("test")
-                this.starting();
-            }
-            this.listOfNames = []
-            if (this.props.world !== null) {
-                this.listOfNames = this.getListWithoutElement(this.props.worldNames, this.props.world.info.name)
-            }
+        if (this.state.myCanvas !== null && !this.state.started) {
+            this.starting();
+            this.setState({
+                started : true
+            })
         }
-        this.setState({
-            started : true
-        })
+        this.listOfNames = []
+        if (this.props.world !== null) {
+            this.listOfNames = this.getListWithoutElement(this.props.worldNames, this.props.world.info.name)
+        }
     }
 
     componentWillUnmount() {
@@ -528,16 +521,15 @@ export default class CreateEnvironment extends React.Component {
     }
 
     generateGridworld() {
-        console.log(this.state.myCanvas)
         if (this.world !== null) {
             this.world.onclick = null
         }
-        this.world = this.buildGrid(this.state.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode)
+        this.world = this.buildGrid(this.state.myCanvas, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode)
     }
 
     setRef = (ref) => {
         this.setState({
-            myCanvas : ref
+            myCanvas : ref.current
         })
     }
 
@@ -596,7 +588,7 @@ export default class CreateEnvironment extends React.Component {
         this.addAllElements(sensors, 2)
         if (this.world !== null) this.world.onclick = null;
         this.size = (json.size.width / 2);
-        this.world = this.buildGrid(this.state.myCanvas.current, (json.size.width / 2), this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode);
+        this.world = this.buildGrid(this.state.myCanvas, (json.size.width / 2), this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode);
         this.world.actualiseIsColorTable();
     }
 
@@ -821,7 +813,7 @@ export default class CreateEnvironment extends React.Component {
             }
 
             this.world.onclick = null
-            this.world = this.buildGrid(this.state.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode)
+            this.world = this.buildGrid(this.state.myCanvas, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode)
         }
     }
 
@@ -877,11 +869,11 @@ export default class CreateEnvironment extends React.Component {
     clearGridworld() {
         this.world.clearAttributeTable()
         this.world.resetInColorTable()
-        const context = this.state.myCanvas.current.getContext('2d')
-        context.clearRect(0, 0, this.state.myCanvas.current.width, this.state.myCanvas.current.height)
+        const context = this.state.myCanvas.getContext('2d')
+        context.clearRect(0, 0, this.state.myCanvas.width, this.state.myCanvas.height)
         this.map = this.buildMap(this.map, this.size);
         this.world.onclick = null
-        this.world = this.buildGrid(this.state.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode)
+        this.world = this.buildGrid(this.state.myCanvas, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode)
     }
 
     saveInToJSON() {
@@ -1024,7 +1016,7 @@ export default class CreateEnvironment extends React.Component {
                                                     </Link>
                                                 </div>
                                                 <div ref = {this.test}>
-                                                    <CustomDownload setRef = {this.setRef}/>
+                                                    <CustomDownload currentRef={this.state.myCanvas} setRef={this.setRef}/>
                                                 </div>
                                                 <UncontrolledPopover
                                                     placement={window.innerWidth > 991 ? "left" : "top"}
