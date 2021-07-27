@@ -5,6 +5,8 @@ from os import path, walk
 import time
 from pathlib import Path
 
+import base64
+
 from flask import Flask, request, session
 from flask_socketio import SocketIO, emit, join_room
 import json
@@ -47,7 +49,6 @@ def get_projects(data):
                 list_of_projects.append(default_project)
 
     emit("receive-projects", list_of_projects, room=request.sid)
-
 
 
 @socketio.on('save-project')
@@ -247,6 +248,20 @@ def check_if_session_exist(session_id):
         if dir_name == session_id and dir_name != "default":
             found = True
     emit("receive-answer", found, room=request.sid)
+
+
+@socketio.on('save-image')
+def save_image(data):
+    print("SAVE IMAGE")
+    print(data["image"])
+    print(data["session"])
+    img_data = (bytes(data["image"], 'utf-8'))
+
+    current_project_image = Path(
+        os.path.join(storage_folder, f"sessions/{data['session']}/a_623503/environment.png"))
+
+    with open(current_project_image, "wb") as fh:
+        fh.write(base64.decodebytes(img_data))
 
 
 @socketio.on('disconnect')

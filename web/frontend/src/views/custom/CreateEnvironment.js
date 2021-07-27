@@ -1016,7 +1016,7 @@ export default class CreateEnvironment extends React.Component {
                                                     </Link>
                                                 </div>
                                                 <div ref = {this.test}>
-                                                    <CustomDownload currentRef={this.state.myCanvas} setRef={this.setRef}/>
+                                                    <CustomDownload currentRef={this.state.myCanvas} session={this.props.session} setRef={this.setRef}/>
                                                 </div>
                                                 <UncontrolledPopover
                                                     placement={window.innerWidth > 991 ? "left" : "top"}

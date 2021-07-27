@@ -1,35 +1,35 @@
 import React, {createRef, useEffect} from "react";
-import { useScreenshot, createFileName } from "use-react-screenshot";
+import { useScreenshot } from "use-react-screenshot";
+import {useSocket} from "../../contexts/SocketProvider";
 
 export default function CustomDownload (props) {
-  const myCanvas = createRef()
-  const divCanvas = createRef()
+    const myCanvas = createRef()
+    const divCanvas = createRef()
+
+    const socket = useSocket()
 
     // eslint-disable-next-line no-unused-vars
-  const [screenImage, takeScreenShot] = useScreenshot({
-    type: "image/jpeg",
-    quality: 1.0
-  });
+    const [screenImage, takeScreenShot] = useScreenshot({
+        type: "image/jpeg",
+        quality: 1.0
+    });
 
-   useEffect(() => {
+    useEffect(() => {
         if ((props.currentRef === null) && myCanvas.current !== null) {
             props.setRef(myCanvas)
         }
     }, [myCanvas]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const download = (screenImage, { name = "img", extension = "jpg" } = {}) => {
-    const a = document.createElement("a");
-    a.href = screenImage;
-    a.download = createFileName(extension, name);
-    a.click();
-  };
+    const download = (screenImage = {}) => {
+        socket.emit("save-image", {"image": screenImage.split(",")[1], "session": props.session})
+    };
 
-  const downloadScreenshot = () => takeScreenShot(divCanvas.current).then(download);
+    const downloadScreenshot = () => takeScreenShot(divCanvas.current).then(download);
 
-  return (
-    <div>
-      <button onClick={downloadScreenshot}>Download screenshot</button>
-      <div ref={divCanvas}><canvas className="shifted-canvas-margin" ref={myCanvas} id='canvas'/></div>
-    </div>
-  );
+    return (
+        <div>
+            <button onClick={downloadScreenshot}>Download screenshot</button>
+            <div ref={divCanvas}><canvas className="shifted-canvas-margin" ref={myCanvas} id='canvas'/></div>
+        </div>
+    );
 };

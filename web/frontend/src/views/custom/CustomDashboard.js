@@ -59,7 +59,7 @@ export default function CustomDashboard(props) {
                     switch (props.page) {
                         case 'world':
                             return (
-                                <CreateEnvironment world={world} worldNames={listOfWorldNames} saveEnvironment={saveEnvironment}/>
+                                <CreateEnvironment world={world} session={id} worldNames={listOfWorldNames} saveEnvironment={saveEnvironment}/>
                             )
                         default:
                             return (
