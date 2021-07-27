@@ -20,16 +20,26 @@ export default function CustomDownload (props) {
         }
     }, [myCanvas]) // eslint-disable-line react-hooks/exhaustive-deps
 
+    useEffect(() => {
+        if (props.project !== null) {
+            downloadScreenshot()
+        }
+    }, [props.project]) // eslint-disable-line react-hooks/exhaustive-deps
+
     const download = (screenImage = {}) => {
-        socket.emit("save-image", {"image": screenImage.split(",")[1], "session": props.session})
+        socket.emit("save-image", {"image": screenImage.split(",")[1], "session": props.session, "project": props.project})
+        props.resetProject()
+        props.goToIndex()
     };
 
     const downloadScreenshot = () => takeScreenShot(divCanvas.current).then(download);
 
     return (
-        <div>
-            <button onClick={downloadScreenshot}>Download screenshot</button>
-            <div ref={divCanvas}><canvas className="shifted-canvas-margin" ref={myCanvas} id='canvas'/></div>
-        </div>
+        <>
+            <div>
+                <button onClick={() => downloadScreenshot()}>Download screenshot</button>
+                <div ref={divCanvas}><canvas className="shifted-canvas-margin" ref={myCanvas} id='canvas'/></div>
+            </div>
+        </>
     );
 };

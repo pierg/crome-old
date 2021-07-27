@@ -252,13 +252,10 @@ def check_if_session_exist(session_id):
 
 @socketio.on('save-image')
 def save_image(data):
-    print("SAVE IMAGE")
-    print(data["image"])
-    print(data["session"])
     img_data = (bytes(data["image"], 'utf-8'))
 
     current_project_image = Path(
-        os.path.join(storage_folder, f"sessions/{data['session']}/a_623503/environment.png"))
+        os.path.join(storage_folder, f"sessions/{data['session']}/{data['project']}/environment.png"))
 
     with open(current_project_image, "wb") as fh:
         fh.write(base64.decodebytes(img_data))

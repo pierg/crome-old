@@ -24,7 +24,6 @@ import LocationIdEdit from "../../components/Custom/LocationIdEdit";
 import {Link} from "react-router-dom";
 import CustomDownload from "../../components/Custom/CustomDownload";
 
-
 export default class CreateEnvironment extends React.Component {
 
     state = {
@@ -47,13 +46,10 @@ export default class CreateEnvironment extends React.Component {
         gridJson: null,
         environmentToBeSaved: null,
         myCanvas : null,
-        started : false
+        started : false,
     }
 
     /* GENERAL FUNCTIONS */
-    componentDidMount() {
-    }
-
     starting() {
         this.setState({
             started : true
@@ -72,6 +68,8 @@ export default class CreateEnvironment extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
+        console.log("update")
+        console.log(this.state.savingInfos)
         if (this.state.myCanvas !== null && !this.state.started) {
             this.starting();
             this.setState({
@@ -163,6 +161,14 @@ export default class CreateEnvironment extends React.Component {
     saveWorld = () => {
         this.setModalSaving(false)
         this.props.saveEnvironment(this.state.savingInfos, this.state.environmentToBeSaved)
+
+        /*this.setState({
+            triggerSave: true,
+        }/*, () => );*/
+    }
+
+    goToIndex = () => {
+        this.inputElement.click()
     }
 
     getListWithoutElement = (array, element) => {
@@ -501,7 +507,6 @@ export default class CreateEnvironment extends React.Component {
     /* GRID FUNCTIONS */
     constructor(props) {
         super(props);
-        this.test = React.createRef();
         this.saveInToJSON = this.saveInToJSON.bind(this);
         this.map = [];
         this.clearGridworld = this.clearGridworld.bind(this);
@@ -990,6 +995,7 @@ export default class CreateEnvironment extends React.Component {
         }
         return (
             <>
+                <Link to="/index" ref={input => this.inputElement = input}/>
                 <div className="relative pt-32 pb-32 bg-orange-500">
                     <div className="px-4 md:px-6 mx-auto w-full">
                         <div>
@@ -1015,8 +1021,13 @@ export default class CreateEnvironment extends React.Component {
                                                         </Button>
                                                     </Link>
                                                 </div>
-                                                <div ref = {this.test}>
-                                                    <CustomDownload currentRef={this.state.myCanvas} session={this.props.session} setRef={this.setRef}/>
+                                                <div>
+                                                    <CustomDownload currentRef={this.state.myCanvas}
+                                                                    session={this.props.session}
+                                                                    setRef={this.setRef}
+                                                                    project={this.props.returnedProjectId}
+                                                                    resetProject={this.props.resetProject}
+                                                                    goToIndex={this.goToIndex}/>
                                                 </div>
                                                 <UncontrolledPopover
                                                     placement={window.innerWidth > 991 ? "left" : "top"}
