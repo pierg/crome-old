@@ -48,18 +48,10 @@ export default class CreateEnvironment extends React.Component {
         node: false,
         gridJson: null,
         environmentToBeSaved: null,
-        myCanvas : null,
-        started : false
     }
 
     /* GENERAL FUNCTIONS */
     componentDidMount() {
-    }
-
-    starting() {
-        this.setState({
-            started : true
-        })
         this.map = this.buildMap(this.map, this.size)
         this.deleteAllElements()
         if (this.props.world !== null) {
@@ -73,22 +65,13 @@ export default class CreateEnvironment extends React.Component {
         }
     }
 
+
     componentDidUpdate(prevProps, prevState, snapshot) {
-        console.log(prevState)
-        console.log(this.state)
-        if (!this.state.started) {
-            if (this.state.myCanvas.current !== null) {
-                console.log("test")
-                this.starting();
-            }
-            this.listOfNames = []
-            if (this.props.world !== null) {
-                this.listOfNames = this.getListWithoutElement(this.props.worldNames, this.props.world.info.name)
-            }
+
+        this.listOfNames = []
+        if (this.props.world !== null) {
+            this.listOfNames = this.getListWithoutElement(this.props.worldNames, this.props.world.info.name)
         }
-        this.setState({
-            started : true
-        })
     }
 
     componentWillUnmount() {
@@ -509,6 +492,8 @@ export default class CreateEnvironment extends React.Component {
     constructor(props) {
         super(props);
         this.test = React.createRef();
+        this.generateGridworld = this.generateGridworld.bind(this);
+        this.generateGridworldWithJSON = this.generateGridworldWithJSON.bind(this);
         this.saveInToJSON = this.saveInToJSON.bind(this);
         this.map = [];
         this.clearGridworld = this.clearGridworld.bind(this);
@@ -528,14 +513,13 @@ export default class CreateEnvironment extends React.Component {
     }
 
     generateGridworld() {
-        console.log(this.state.myCanvas)
         if (this.world !== null) {
             this.world.onclick = null
         }
         this.world = this.buildGrid(this.state.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode)
     }
 
-    setRef = (ref) => {
+    setRef(ref) {
         this.setState({
             myCanvas : ref
         })
