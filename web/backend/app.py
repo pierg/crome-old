@@ -54,11 +54,16 @@ def get_projects(data):
                 project_path, project_directories, project_files = next(walk(project_folder))
                 default_project = []
                 for file in project_files:
-                    with open(Path(os.path.join(project_path, file))) as json_file:
-                        if os.path.splitext(file)[1] == ".json":
+                    if os.path.splitext(file)[1] == ".json":
+                        with open(Path(os.path.join(project_path, file))) as json_file:
                             json_obj = json.load(json_file)
                             json_str = json.dumps(json_obj)
                             default_project.append({"title": os.path.splitext(file)[0], "content": json_str})
+                    if os.path.splitext(file)[1] == ".png":
+                        with open(Path(os.path.join(project_path, file)), "rb") as png_file:
+                            read_png_file = base64.b64encode(png_file.read())
+                            default_project.append({"title": "image", "content": read_png_file})
+
                 list_of_projects.append(default_project)
 
     emit("receive-projects", list_of_projects, room=request.sid)

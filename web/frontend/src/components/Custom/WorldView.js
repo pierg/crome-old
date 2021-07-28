@@ -2,6 +2,17 @@ import React from 'react';
 import {Link} from "react-router-dom";
 
 function WorldView(props) {
+    function arrayBufferToBase64( buffer ) {
+        let binary = '';
+        let bytes = new Uint8Array( buffer );
+        let len = bytes.byteLength;
+        for (let i = 0; i < len; i++) {
+            binary += String.fromCharCode( bytes[ i ] );
+        }
+        return binary;
+    }
+
+    console.log(arrayBufferToBase64(props.image))
 
     return(
         <>
@@ -22,6 +33,9 @@ function WorldView(props) {
                                 </span>
                                 </div>
                                 <div className="relative w-full pr-4 max-w-full flex-grow flex-1"/>
+                            </div>
+                            <div>
+                                <img src={"data:image/png;base64," + arrayBufferToBase64(props.image)} alt="world image"/>
                             </div>
                         </div>
                         <div className="flex flex-col min-content">

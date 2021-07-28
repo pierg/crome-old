@@ -1,5 +1,5 @@
-import React, {createRef, useEffect} from "react";
-import { useScreenshot } from "use-react-screenshot";
+import React, {createRef, useEffect, useState} from "react";
+import {createFileName, useScreenshot} from "use-react-screenshot";
 import {useSocket} from "../../contexts/SocketProvider";
 
 export default function CustomDownload (props) {
@@ -7,6 +7,7 @@ export default function CustomDownload (props) {
     const divCanvas = createRef()
 
     const socket = useSocket()
+
 
     // eslint-disable-next-line no-unused-vars
     const [screenImage, takeScreenShot] = useScreenshot({
@@ -26,7 +27,7 @@ export default function CustomDownload (props) {
         }
     }, [props.project]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    const download = (screenImage = {}) => {
+    const download = (screenImage, { name = "img", extension = "jpg" } = {}) => {
         socket.emit("save-image", {"image": screenImage.split(",")[1], "session": props.session, "project": props.project})
         props.resetProject()
         props.goToIndex()
@@ -35,6 +36,11 @@ export default function CustomDownload (props) {
     const downloadScreenshot = () => takeScreenShot(divCanvas.current).then(download);
 
     return (
-        <div><div ref={divCanvas}><canvas className="shifted-canvas-margin" ref={myCanvas} id='canvas'/></div></div>
+        <>
+            <div>
+                <div ref={divCanvas}><canvas className="shifted-canvas-margin" ref={myCanvas} id='canvas'/></div>
+            </div>
+        </>
+
     );
 };
