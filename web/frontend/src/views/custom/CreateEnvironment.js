@@ -68,8 +68,6 @@ export default class CreateEnvironment extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        console.log("update")
-        console.log(this.state.savingInfos)
         if (this.state.myCanvas !== null && !this.state.started) {
             this.starting();
             this.setState({

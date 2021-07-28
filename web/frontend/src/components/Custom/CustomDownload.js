@@ -35,11 +35,6 @@ export default function CustomDownload (props) {
     const downloadScreenshot = () => takeScreenShot(divCanvas.current).then(download);
 
     return (
-        <>
-            <div>
-                <button onClick={() => downloadScreenshot()}>Download screenshot</button>
-                <div ref={divCanvas}><canvas className="shifted-canvas-margin" ref={myCanvas} id='canvas'/></div>
-            </div>
-        </>
+        <div ref={divCanvas}><canvas className="shifted-canvas-margin" ref={myCanvas} id='canvas'/></div>
     );
 };
