@@ -383,11 +383,7 @@ GridWorld.prototype = {
       }
 
       else {
-        for (let i = minX; i < maxX + 1; i += 1) {
-          for (let j = minY; j < maxY + 1; j += 1) {
-            this.setBackgroundColor(i, j, previousColorArray[i][j - minY]);
-          }
-        }
+        this.cancelFirstClick();
         callbackError(createenvironment.errorMsg.splitLocations)
         this.reset();
         return false;

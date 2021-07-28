@@ -45,6 +45,8 @@ export default class CreateEnvironment extends React.Component {
         node: false,
         gridJson: null,
         environmentToBeSaved: null,
+        myCanvas : null,
+        started : false,
     }
 
     /* GENERAL FUNCTIONS */
@@ -530,7 +532,7 @@ export default class CreateEnvironment extends React.Component {
         this.world = this.buildGrid(this.state.myCanvas, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode)
     }
 
-    setRef(ref) {
+    setRef = (ref) => {
         this.setState({
             myCanvas : ref.current
         })
