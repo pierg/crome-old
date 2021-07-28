@@ -7,11 +7,12 @@ from pathlib import Path
 
 import base64
 
-from flask import Flask, request, session
-from flask_socketio import SocketIO, emit, join_room
+from flask import Flask, request
+from flask_socketio import SocketIO, emit
 import json
 
 import threading
+from time import strftime
 
 if path.exists('../frontend/build'):
     app = Flask(__name__, static_folder='../frontend/build', static_url_path='/')
@@ -20,10 +21,22 @@ else:
 
 storage_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'storage'))
 
-# socketio = SocketIO(app, cors_allowed_origins="*")
 socketio = SocketIO(app, cors_allowed_origins='http://localhost:3000')
 
-messages = {}
+users = {}
+
+
+@socketio.on('connect')
+def connected():
+    print('Connected')
+    print(request.args)
+    print(f'ID {request.args.get("id")}')
+    lock = threading.Lock()
+    lock.acquire()
+    users[request.args.get("id")] = request.sid
+    now = time.localtime(time.time())
+    emit("send-message", strftime("%H:%M:%S", now) + " Connected", room=request.sid)
+    lock.release()
 
 
 @socketio.on('get-projects')
@@ -80,53 +93,21 @@ def save_project(data):
         json_formatted = json.dumps(data['world'][filename], indent=4, sort_keys=True)
         json_file.write(json_formatted)
         json_file.close()
+    name = data['world']['info']['name']
+    now = time.localtime(time.time())
+    emit("send-message", strftime("%H:%M:%S", now) + " The project \"" + name + "\" has been saved.",
+         room=users[session_id])
 
 
-@socketio.on('save-goals')
-def save_goals(data):
-    project_id = data['projectId']
-    is_simple = str(project_id) == "simple"
-    if is_simple:
-        number_of_copies = 1
-        while os.path.isdir(os.path.join(storage_folder, f"sessions/{data['session']}/simple_{number_of_copies}")):
-            number_of_copies += 1
-        project_id = f"simple_{number_of_copies}"
-        shutil.copytree(os.path.join(storage_folder, "sessions/default/simple"),
-                        os.path.join(storage_folder,  f"sessions/{data['session']}/{project_id}"))
-        with open(os.path.join(storage_folder, f"sessions/{data['session']}/{project_id}/info.json"), "r") as file:
-            json_data = json.load(file)
-        json_data["name"] = f"Simple Gridworld ({number_of_copies})"
-        json_data["project_id"] = project_id
-        json_data["session_id"] = data['session']
-        with open(os.path.join(storage_folder, f"sessions/{data['session']}/{project_id}/info.json"), "w") as file:
-            json_formatted = json.dumps(json_data, indent=4, sort_keys=True)
-            file.write(json_formatted)
+@socketio.on('save-image')
+def save_image(data):
+    img_data = (bytes(data["image"], 'utf-8'))
 
-        with open(os.path.join(storage_folder, f"sessions/{data['session']}/{project_id}/environment.json"), "r") as file:
-            json_data = json.load(file)
-        json_data["project_id"] = project_id
-        json_data["session_id"] = data['session']
-        with open(os.path.join(storage_folder, f"sessions/{data['session']}/{project_id}/environment.json"), "w") as file:
-            json_formatted = json.dumps(json_data, indent=4, sort_keys=True)
-            file.write(json_formatted)
+    current_project_image = Path(
+        os.path.join(storage_folder, f"sessions/{data['session']}/{data['project']}/environment.png"))
 
-    goals_dir = os.path.join(storage_folder, f"sessions/{data['session']}/{project_id}/goals")
-    dir_path, dir_names, filenames = next(walk(goals_dir))
-    greatest_id = -1 if len(filenames) == 0 else max(filenames)[0:4]
-    greatest_id = int(greatest_id) + 1
-    for i in range(len(data['goals'])):
-        if 'id' not in data['goals'][i]:
-            data['goals'][i]['id'] = greatest_id
-            greatest_id += 1
-        filename = str(data['goals'][i]['id']).zfill(4) + ".json"
-        json_file = open(os.path.join(goals_dir, filename), "w")
-        json_formatted = json.dumps(data['goals'][i], indent=4, sort_keys=True)
-        json_file.write(json_formatted)
-        json_file.close()
-    if is_simple:
-        emit("saving-simple", project_id, room=request.sid)
-    else:
-        emit("saving-complete", True, room=request.sid)
+    with open(current_project_image, "wb") as fh:
+        fh.write(base64.decodebytes(img_data))
 
 
 @socketio.on('delete-project')
@@ -143,7 +124,9 @@ def delete_project(data):
                 shutil.rmtree(dir_to_delete)
         i += 1
     emit("deletion-complete", True, room=request.sid)
-    messages['4eb16664-0e6e-4532-92fb-778f454e2fb2'].append("test lock")
+    now = time.localtime(time.time())
+    emit("send-message", strftime("%H:%M:%S", now) + " The project has been deleted.",
+         room=users[data['session']])
 
 
 @socketio.on('get-goals')
@@ -167,6 +150,51 @@ def get_goals(data):
         emit("receive-goals", list_of_goals, room=request.sid)
 
 
+@socketio.on('save-goals')
+def save_goals(data):
+    project_id = data['projectId']
+    is_simple = str(project_id) == "simple"
+    if is_simple:
+        number_of_copies = 1
+        while os.path.isdir(os.path.join(storage_folder, f"sessions/{data['session']}/simple_{number_of_copies}")):
+            number_of_copies += 1
+        project_id = f"simple_{number_of_copies}"
+        shutil.copytree(os.path.join(storage_folder, "sessions/default/simple"),
+                        os.path.join(storage_folder,  f"sessions/{data['session']}/{project_id}"))
+        list_save = ["info", "environment"]
+        for i in list_save:
+            with open(os.path.join(storage_folder, f"sessions/{data['session']}/{project_id}/{i}.json"), "r") as file:
+                json_data = json.load(file)
+            if i == "info":
+                json_data["name"] = f"Simple Gridworld ({number_of_copies})"
+            json_data["project_id"] = project_id
+            json_data["session_id"] = data['session']
+            with open(os.path.join(storage_folder, f"sessions/{data['session']}/{project_id}/info.json"), "w") as file:
+                json_formatted = json.dumps(json_data, indent=4, sort_keys=True)
+                file.write(json_formatted)
+
+    goals_dir = os.path.join(storage_folder, f"sessions/{data['session']}/{project_id}/goals")
+    dir_path, dir_names, filenames = next(walk(goals_dir))
+    greatest_id = -1 if len(filenames) == 0 else max(filenames)[0:4]
+    greatest_id = int(greatest_id) + 1
+    for i in range(len(data['goals'])):
+        if 'id' not in data['goals'][i]:
+            data['goals'][i]['id'] = greatest_id
+            greatest_id += 1
+        filename = str(data['goals'][i]['id']).zfill(4) + ".json"
+        json_file = open(os.path.join(goals_dir, filename), "w")
+        json_formatted = json.dumps(data['goals'][i], indent=4, sort_keys=True)
+        json_file.write(json_formatted)
+        json_file.close()
+    if is_simple:
+        emit("saving-simple", project_id, room=request.sid)
+    else:
+        emit("saving-complete", True, room=request.sid)
+
+    now = time.localtime(time.time())
+    emit("send-message", strftime("%H:%M:%S", now) + " The goal has been saved.", room=users[data['session']])
+
+
 @socketio.on('delete-goal')
 def delete_goal(data):
     current_goals_folder = Path(os.path.join(storage_folder, f"sessions/{data['session']}/{data['project']}/goals"))
@@ -177,6 +205,9 @@ def delete_goal(data):
             goal_to_delete = Path(os.path.join(current_goals_folder, goal_file))
             os.remove(goal_to_delete)
         i += 1
+
+    now = time.localtime(time.time())
+    emit("send-message", strftime("%H:%M:%S", now) + " The goal has been deleted.", room=users[data['session']])
 
 
 @socketio.on('get-patterns')
@@ -192,27 +223,6 @@ def get_patterns():
     emit("receive-patterns", {'robotic': json.dumps(robotic_patterns)}, room=request.sid)
 
 
-@socketio.on('connect')
-def connected():
-    print('Connected')
-    print(request.args)
-    print(f'ID {request.args.get("id")}')
-    lock = threading.Lock()
-    lock.acquire()
-    messages[request.args.get("id")] = []
-    lock.release()
-
-
-@socketio.on('test-console')
-def console_message_every_3_seconds():
-    i = 0
-    while True:
-        print("sent "+str(i))
-        emit("receive-message", i, room=request.sid)
-        i += 1
-        time.sleep(3)
-
-
 @socketio.on('process-goals')
 def process_goals(session_id):
     print("BEGIN SLEEP")
@@ -221,21 +231,10 @@ def process_goals(session_id):
 
 
 @socketio.on('process-cgg')
-def process_goals(session_id):
+def process_cgg(session_id):
     print("BEGIN SLEEP")
     time.sleep(6)
     print("STOP SLEEP")
-
-
-@socketio.on('ask-console-messages')
-def send_console_message(session_id):
-    lock = threading.Lock()
-    lock.acquire()
-    for i in range(len(messages[session_id])):
-        print("sent an update with : "+str(messages[session_id][i]))
-        emit("receive-message", messages[session_id][i], room=request.sid)
-    messages[session_id] = []
-    lock.release()
 
 
 @socketio.on('session-existing')
@@ -250,32 +249,11 @@ def check_if_session_exist(session_id):
     emit("receive-answer", found, room=request.sid)
 
 
-@socketio.on('save-image')
-def save_image(data):
-    img_data = (bytes(data["image"], 'utf-8'))
-
-    current_project_image = Path(
-        os.path.join(storage_folder, f"sessions/{data['session']}/{data['project']}/environment.png"))
-
-    with open(current_project_image, "wb") as fh:
-        fh.write(base64.decodebytes(img_data))
-
-
 @socketio.on('disconnect')
 def disconnected():
     print('Disconnected')
     print(request.args)
     print(f'ID {request.args.get("id")}')
-
-
-@socketio.on('get-message')
-def get_message_test():
-    print('GET ENVIRONMENTS')
-    print(request.args)
-    print(f'ID {request.args.get("id")}')
-    emit("receive-message", {'data': "Message from Server"}, room=request.sid)
-    time.sleep(3)
-    emit("receive-message", {'data': "Message after 3 seconds from the first"}, room=request.sid)
 
 
 @app.route('/')
