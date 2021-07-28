@@ -1,7 +1,6 @@
 import React from 'react';
 import {Button, ModalFooter} from "reactstrap";
 import Input from "../Elements/Input";
-import {Link} from "react-router-dom";
 
 function  SavingEdit(props) {
 
@@ -19,7 +18,6 @@ function  SavingEdit(props) {
     function handleKeyEvent(event) {
         if (event.key === "Enter" && element !== "" && !arrayIncludesWithoutCase(props.listOfNames, element.name)) {
             props.save(element)
-            // TODO manual redirection
         }
     }
 
@@ -55,9 +53,9 @@ function  SavingEdit(props) {
                 <Button color={props.info.modal.cancelColor} onClick={props.close}>
                     {props.info.modal.cancelText}
                 </Button>
-                <Link to="/index" className="hover-no-underline"><Button color={props.info.modal.saveColor} disabled={element.name === "" || arrayIncludesWithoutCase(props.listOfNames, element.name)} onClick={() => props.save(element)}>
+                <Button color={props.info.modal.saveColor} disabled={element.name === "" || arrayIncludesWithoutCase(props.listOfNames, element.name)} onClick={() => props.save(element)}>
                     {props.info.modal.saveText}
-                </Button></Link>
+                </Button>
             </ModalFooter>
         </>
     );

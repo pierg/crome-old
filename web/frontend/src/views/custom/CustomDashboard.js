@@ -24,6 +24,7 @@ export default function CustomDashboard(props) {
     let [world, setWorld] = React.useState(null);
     let [savedEnvironment, setSavedEnvironment] = React.useState(null);
     let [listOfWorldNames, setListOfWorldNames] = React.useState(null);
+    let [projectId, setProjectId] = React.useState(null);
     let [triggerSave, setTriggerSave] = React.useState(false);
 
     function updateMessage(msg) {
@@ -53,13 +54,13 @@ export default function CustomDashboard(props) {
             <CustomSidebar {...customsidebar} currentRoute={"#" + location.pathname} id={id} setId={setId}/>
             <Console {...consoleinfo} customText={message}/>
             <SocketIoConsoleMessage modifyMessage={(e) => updateMessage(e)} session={id}/>
-            <SocketSaveEnvironment session={id} world={savedEnvironment} trigger={triggerSave} setTrigger={setTriggerSave}/>
+            <SocketSaveEnvironment session={id} world={savedEnvironment} trigger={triggerSave} returnProjectId={setProjectId} setTrigger={setTriggerSave}/>
             <div className="relative xxl:ml-64 bg-blueGray-100 min-h-screen">
                 {(() => {
                     switch (props.page) {
                         case 'world':
                             return (
-                                <CreateEnvironment world={world} worldNames={listOfWorldNames} saveEnvironment={saveEnvironment}/>
+                                <CreateEnvironment world={world} session={id} worldNames={listOfWorldNames} returnedProjectId={projectId} resetProject={() => setProjectId(null)} saveEnvironment={saveEnvironment}/>
                             )
                         default:
                             return (

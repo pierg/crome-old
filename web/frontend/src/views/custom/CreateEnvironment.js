@@ -22,10 +22,7 @@ import img from "./robot1.png";
 import SavingEdit from "../../components/Custom/SavingEdit";
 import LocationIdEdit from "../../components/Custom/LocationIdEdit";
 import {Link} from "react-router-dom";
-import {useScreenshot} from "use-react-screenshot";
-import SocketIoScreenshot from "../../components/Custom/Examples/GetScreenshot";
 import CustomDownload from "../../components/Custom/CustomDownload";
-
 
 export default class CreateEnvironment extends React.Component {
 
@@ -51,7 +48,10 @@ export default class CreateEnvironment extends React.Component {
     }
 
     /* GENERAL FUNCTIONS */
-    componentDidMount() {
+    starting() {
+        this.setState({
+            started : true
+        })
         this.map = this.buildMap(this.map, this.size)
         this.deleteAllElements()
         if (this.props.world !== null) {
@@ -67,7 +67,14 @@ export default class CreateEnvironment extends React.Component {
 
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-
+        console.log("update")
+        console.log(this.state.savingInfos)
+        if (this.state.myCanvas !== null && !this.state.started) {
+            this.starting();
+            this.setState({
+                started : true
+            })
+        }
         this.listOfNames = []
         if (this.props.world !== null) {
             this.listOfNames = this.getListWithoutElement(this.props.worldNames, this.props.world.info.name)
@@ -153,6 +160,14 @@ export default class CreateEnvironment extends React.Component {
     saveWorld = () => {
         this.setModalSaving(false)
         this.props.saveEnvironment(this.state.savingInfos, this.state.environmentToBeSaved)
+
+        /*this.setState({
+            triggerSave: true,
+        }/*, () => );*/
+    }
+
+    goToIndex = () => {
+        this.inputElement.click()
     }
 
     getListWithoutElement = (array, element) => {
@@ -492,8 +507,6 @@ export default class CreateEnvironment extends React.Component {
     constructor(props) {
         super(props);
         this.test = React.createRef();
-        this.generateGridworld = this.generateGridworld.bind(this);
-        this.generateGridworldWithJSON = this.generateGridworldWithJSON.bind(this);
         this.saveInToJSON = this.saveInToJSON.bind(this);
         this.map = [];
         this.clearGridworld = this.clearGridworld.bind(this);
@@ -516,12 +529,12 @@ export default class CreateEnvironment extends React.Component {
         if (this.world !== null) {
             this.world.onclick = null
         }
-        this.world = this.buildGrid(this.state.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode)
+        this.world = this.buildGrid(this.state.myCanvas, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode)
     }
 
     setRef(ref) {
         this.setState({
-            myCanvas : ref
+            myCanvas : ref.current
         })
     }
 
@@ -580,7 +593,7 @@ export default class CreateEnvironment extends React.Component {
         this.addAllElements(sensors, 2)
         if (this.world !== null) this.world.onclick = null;
         this.size = (json.size.width / 2);
-        this.world = this.buildGrid(this.state.myCanvas.current, (json.size.width / 2), this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode);
+        this.world = this.buildGrid(this.state.myCanvas, (json.size.width / 2), this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode);
         this.world.actualiseIsColorTable();
     }
 
@@ -805,7 +818,7 @@ export default class CreateEnvironment extends React.Component {
             }
 
             this.world.onclick = null
-            this.world = this.buildGrid(this.state.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode)
+            this.world = this.buildGrid(this.state.myCanvas, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode)
         }
     }
 
@@ -861,11 +874,11 @@ export default class CreateEnvironment extends React.Component {
     clearGridworld() {
         this.world.clearAttributeTable()
         this.world.resetInColorTable()
-        const context = this.state.myCanvas.current.getContext('2d')
-        context.clearRect(0, 0, this.state.myCanvas.current.width, this.state.myCanvas.current.height)
+        const context = this.state.myCanvas.getContext('2d')
+        context.clearRect(0, 0, this.state.myCanvas.width, this.state.myCanvas.height)
         this.map = this.buildMap(this.map, this.size);
         this.world.onclick = null
-        this.world = this.buildGrid(this.state.myCanvas.current, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode)
+        this.world = this.buildGrid(this.state.myCanvas, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode)
     }
 
     saveInToJSON() {
@@ -982,6 +995,7 @@ export default class CreateEnvironment extends React.Component {
         }
         return (
             <>
+                <Link to="/index" ref={input => this.inputElement = input}/>
                 <div className="relative pt-32 pb-32 bg-orange-500">
                     <div className="px-4 md:px-6 mx-auto w-full">
                         <div>
@@ -1007,8 +1021,13 @@ export default class CreateEnvironment extends React.Component {
                                                         </Button>
                                                     </Link>
                                                 </div>
-                                                <div ref = {this.test}>
-                                                    <CustomDownload setRef = {this.setRef}/>
+                                                <div>
+                                                    <CustomDownload currentRef={this.state.myCanvas}
+                                                                    session={this.props.session}
+                                                                    setRef={this.setRef}
+                                                                    project={this.props.returnedProjectId}
+                                                                    resetProject={this.props.resetProject}
+                                                                    goToIndex={this.goToIndex}/>
                                                 </div>
                                                 <UncontrolledPopover
                                                     placement={window.innerWidth > 991 ? "left" : "top"}

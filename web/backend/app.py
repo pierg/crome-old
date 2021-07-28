@@ -5,6 +5,8 @@ from os import path, walk
 import time
 from pathlib import Path
 
+import base64
+
 from flask import Flask, request, session
 from flask_socketio import SocketIO, emit, join_room
 import json
@@ -47,7 +49,6 @@ def get_projects(data):
                 list_of_projects.append(default_project)
 
     emit("receive-projects", list_of_projects, room=request.sid)
-
 
 
 @socketio.on('save-project')
@@ -212,6 +213,20 @@ def console_message_every_3_seconds():
         time.sleep(3)
 
 
+@socketio.on('process-goals')
+def process_goals(session_id):
+    print("BEGIN SLEEP")
+    time.sleep(15)
+    print("STOP SLEEP")
+
+
+@socketio.on('process-cgg')
+def process_goals(session_id):
+    print("BEGIN SLEEP")
+    time.sleep(6)
+    print("STOP SLEEP")
+
+
 @socketio.on('ask-console-messages')
 def send_console_message(session_id):
     lock = threading.Lock()
@@ -221,6 +236,29 @@ def send_console_message(session_id):
         emit("receive-message", messages[session_id][i], room=request.sid)
     messages[session_id] = []
     lock.release()
+
+
+@socketio.on('session-existing')
+def check_if_session_exist(session_id):
+    print("check if following session exists : "+str(session_id))
+    sessions_folder = Path(os.path.join(storage_folder, "sessions"))
+    dir_path, dir_names, filenames = next(walk(sessions_folder))
+    found = False
+    for dir_name in dir_names:
+        if dir_name == session_id and dir_name != "default":
+            found = True
+    emit("receive-answer", found, room=request.sid)
+
+
+@socketio.on('save-image')
+def save_image(data):
+    img_data = (bytes(data["image"], 'utf-8'))
+
+    current_project_image = Path(
+        os.path.join(storage_folder, f"sessions/{data['session']}/{data['project']}/environment.png"))
+
+    with open(current_project_image, "wb") as fh:
+        fh.write(base64.decodebytes(img_data))
 
 
 @socketio.on('disconnect')
