@@ -7,9 +7,6 @@ function SocketIoConsoleMessage(props) {
 
     const [message, setMessage] = useState("");
 
-    const timeBetweenEachCheck = 2000
-
-
     const setMessageFunction = useCallback((message_received) => {
         setMessage(message_received);
     }, [setMessage])
@@ -17,14 +14,10 @@ function SocketIoConsoleMessage(props) {
     useEffect(() => {
         if (socket == null) return
 
-        let askForMessages = setInterval(function() {
-            socket.emit('ask-console-messages', props.session)
-            socket.on('receive-message', setMessageFunction)
-        }, timeBetweenEachCheck)
+        socket.on('send-message', setMessageFunction)
 
         return () => {
-            clearInterval(askForMessages)
-            socket.off('receive-message')
+            socket.off('send-message')
         }
 
     }, [socket, setMessageFunction, props.session])
