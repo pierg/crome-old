@@ -12,8 +12,6 @@ function WorldView(props) {
         return binary;
     }
 
-    console.log(arrayBufferToBase64(props.image))
-
     return(
         <>
             <div onClick={props.onClick} className={"w-full lg:w-6/12 xl:w-5/12 mt-8 ml-4 mr-4 px-4 relative flex cursor-pointer flex-col min-w-0 break-words border-lightBlue-700 bg-white rounded mb-6 xl:mb-0 shadow-lg opacity-1 transform duration-300 transition-all ease-in-out "
@@ -35,7 +33,7 @@ function WorldView(props) {
                                 <div className="relative w-full pr-4 max-w-full flex-grow flex-1"/>
                             </div>
                             <div>
-                                <img src={"data:image/png;base64," + arrayBufferToBase64(props.image)} alt="world image"/>
+                                <img src={"data:image/png;base64," + arrayBufferToBase64(props.image)} alt={"World"}/>
                             </div>
                         </div>
                         <div className="flex flex-col min-content">
