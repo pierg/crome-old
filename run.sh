@@ -12,12 +12,20 @@ else
           exit 0
           ;;
         -w)
-          echo "Launching the web-server..."
-          python3 ./web/backend/app.py
+          echo "Deploy the web server without rebuilding..."
+          cd ./web/backend
+          python3 app.py
           ;;
         -s)
           echo "Going to scripts folder..."
           cd scripts
+          ;;
+        -d)
+          echo "Build and deploy..."
+          cd ./web/frontend
+          npm run deploy
+          cd ../backend
+          python3 app.py
           ;;
         *)
           break
