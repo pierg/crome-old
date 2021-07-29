@@ -15,6 +15,7 @@ import Analysis from "./Analysis";
 import Synthesis from "./Synthesis";
 import CustomNavButton from "../../components/Custom/CustomNavButton";
 import {UncontrolledTooltip} from "reactstrap";
+import {useSocket} from "../../contexts/SocketProvider";
 
 export default function CustomPlayer({ items, defaultOpened, id, setWorld, setListOfWorldNames }) {
   const [open, setOpen] = React.useState(defaultOpened);
@@ -26,6 +27,8 @@ export default function CustomPlayer({ items, defaultOpened, id, setWorld, setLi
 
   const [headerStates, setHeaderStates] = React.useState([true, false, false, false]);
 
+  const socket = useSocket()
+
   function addProjectFromGoalModeling(projectId) {
       setProject(projectId)
       setProjectAdded(!projectAdded)
@@ -34,6 +37,9 @@ export default function CustomPlayer({ items, defaultOpened, id, setWorld, setLi
   const toggleNew = (e, newOpen) => {
 
       if (((newOpen !== 1 || project !== 0) && (open !== 0 || newOpen !== 3) && (open !== 3 || newOpen !== 0)) && !changingPage) {
+
+
+          if (open ===1 && newOpen === 2) socket.emit("process-goals", id)
 
           setChangingPage(true)
 

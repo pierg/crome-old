@@ -12,6 +12,7 @@ export default class WorldModeling extends React.Component {
     state = {
         worlds: [],
         info: [],
+        images: [],
         selectedWorldIndex: 0,
         selectedWorldToDelete: 0,
         numChildren: 0,
@@ -32,6 +33,7 @@ export default class WorldModeling extends React.Component {
         let worlds = []
         let info = []
         let names = []
+        let images = []
 
         for (let i=0; i<list.length; i++) {
             for (let j=0; j<list[i].length; j++) {
@@ -42,6 +44,9 @@ export default class WorldModeling extends React.Component {
                     info.push(JSON.parse(list[i][j]["content"]))
                     names.push(JSON.parse(list[i][j]["content"]).name)
                 }
+                else if (list[i][j]["title"] === "image") {
+                    images.push(list[i][j]["content"])
+                }
             }
         }
 
@@ -50,6 +55,7 @@ export default class WorldModeling extends React.Component {
         this.setState({
             worlds: worlds,
             info: info,
+            images: images,
             numChildren: worlds.length
         })
     }
@@ -123,6 +129,7 @@ export default class WorldModeling extends React.Component {
             children.push(<WorldView key={i} number={i}
                                     title={this.state.info[i].name}
                                     description={this.state.info[i].description}
+                                    image={this.state.images[i]}
                                     statIconName={this.props.info.goalComponent.editIconName}
                                     statSecondIconName={this.props.info.goalComponent.deleteIconName}
                                     statIconColor={this.props.info.goalComponent.iconColor}
