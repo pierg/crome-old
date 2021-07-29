@@ -19,7 +19,7 @@ else
           echo "Going to scripts folder..."
           cd scripts
           ;;
-        -b)
+        -d)
           echo "Build and deploy..."
           cd ./web/frontend
           npm run deploy
