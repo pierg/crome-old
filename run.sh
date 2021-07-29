@@ -13,7 +13,8 @@ else
           ;;
         -w)
           echo "Deploy the web server without rebuilding..."
-          python3 ./web/backend/app.py
+          cd ./web/backend
+          python3 app.py
           ;;
         -s)
           echo "Going to scripts folder..."
