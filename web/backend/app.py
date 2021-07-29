@@ -21,7 +21,7 @@ else:
 
 storage_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'storage'))
 
-socketio = SocketIO(app, cors_allowed_origins='http://0.0.0.0:3000')
+socketio = SocketIO(app, cors_allowed_origins='http://localhost:3000')
 
 users = {}
 
