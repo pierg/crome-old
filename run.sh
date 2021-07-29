@@ -12,7 +12,7 @@ else
           exit 0
           ;;
         -w)
-          echo "Launching the web-server..."
+          echo "Deploy the web server without rebuilding..."
           python3 ./web/backend/app.py
           ;;
         -s)
