@@ -21,7 +21,7 @@ else:
 
 storage_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'storage'))
 
-socketio = SocketIO(app, cors_allowed_origins='http://localhost:5000')
+socketio = SocketIO(app, cors_allowed_origins='http://localhost:3030')
 
 users = {}
 
@@ -272,4 +272,4 @@ def get_current_time():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True, port=5000)
+    app.run(host='0.0.0.0', debug=True, port=3030)
