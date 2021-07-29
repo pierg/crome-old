@@ -19,6 +19,13 @@ else
           echo "Going to scripts folder..."
           cd scripts
           ;;
+        -b)
+          echo "Build and deploy..."
+          cd ./web/frontend
+          npm run deploy
+          cd ../backend
+          python3 app.py
+          ;;
         *)
           break
           ;;
