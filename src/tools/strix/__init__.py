@@ -5,6 +5,7 @@ from typing import Tuple
 from tools.logic import Logic
 
 import time
+import docker
 
 from tools.strings import StringMng
 from tools.strix.exceptions import *
@@ -45,10 +46,8 @@ class Strix:
             else:
                 strix_specs = f"-f '{Logic.implies_(assumptions, guarantees)}' --ins='{ins}' --outs='{outs}'"
 
-            if platform.system() != "Linux":
-                strix_bin = "docker run pmallozzi/ltltools strix "
-            else:
-                strix_bin = "strix "
+            strix_bin = "strix "
+            docker_image = "pmallozzi/ltltools"
 
             if kiss:
                 """Kiss format"""
@@ -60,8 +59,16 @@ class Strix:
             timeout = 3600
             print("\n\nRUNNING COMMAND:\n\n" + command + "\n\n")
             start_time = time.time()
-            result = subprocess.check_output([command], shell=True, timeout=timeout,
-                                             encoding='UTF-8').splitlines()
+
+            if platform.system() != "Linux":
+                client = docker.from_env()
+                result = str(client.containers.run(image=docker_image,
+                                               command=command,
+                                               remove=True)).split("\\n")
+                result.pop()
+                result[0] = result[0][2:]
+            else:
+                result = subprocess.check_output([command], shell=True, timeout=timeout, encoding='UTF-8').splitlines()
 
         except subprocess.TimeoutExpired:
             raise SynthesisTimeout(command=command, timeout=timeout)

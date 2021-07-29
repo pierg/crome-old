@@ -64,6 +64,8 @@ class BoundReaction(Trigger):
 
         super().__init__(formula=(f, new_typeset))
 
+if __name__ == '__main__':
+    print(BoundReaction(Boolean("person"), Boolean("greet"), Boolean("active"), Boolean("true")))
 
 class BoundDelay(Trigger):
     """Applies when a counteraction must be performed every time and only when a specific location is entered."""

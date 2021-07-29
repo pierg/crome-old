@@ -1,0 +1,30 @@
+{
+  "name": "Greet Person",
+  "id": 2,
+  "description": "Always => if see a person, greet in the same step, Only if see a person, greet immediately",
+  "contract": {
+    "assumptions": [
+      {
+        "ltl_value": "G(F(person))"
+      }
+    ],
+    "guarantees": [
+      {
+        "pattern": {
+          "name": "InstantaneousReaction",
+          "arguments": [
+            {
+              "name": "trigger",
+              "value": "person"
+            },
+            {
+              "name": "reaction",
+              "value": "greet"
+            }
+          ]
+        },
+        "ltl_value": "G(person -> greet)"
+      }
+    ]
+  }
+}

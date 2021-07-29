@@ -1,0 +1,34 @@
+{
+  "name": "Night Patrolling",
+  "id": 1,
+  "description": "During context night => start from r3, patrol r3, r4 in strict order, Strict Ordered Patrolling Location r3, r4",
+  "context": [
+    "night"
+  ],
+  "contract": {
+    "assumptions": [
+      {
+        "ltl_value": "true"
+      }
+    ],
+    "guarantees": [
+      {
+        "pattern": {
+          "name": "StrictOrderedPatrolling",
+          "arguments": [
+            {
+              "name": "locations",
+              "format": "list",
+              "type": "location",
+              "value": [
+                "r3",
+                "r4"
+              ]
+            }
+          ]
+        },
+        "ltl_value": "GF(r3) & GF(r4)"
+      }
+    ]
+  }
+}

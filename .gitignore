@@ -21,10 +21,9 @@ output/
 .Python
 env/
 venv/
-build/
 develop-eggs/
 dist/
-downloads/
+downloads/github
 eggs/
 .eggs/
 lib64/
@@ -67,3 +66,7 @@ docs/_build/
 
 # PyBuilder
 target/
+/web/frontend/package-lock.json
+/web/frontend/node_modules/
+/web/frontend/.idea
+

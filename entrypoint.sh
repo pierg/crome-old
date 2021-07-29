@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 echo "...updating repository from server..."
+git reset --hard
 git config pull.rebase true
 git pull
 

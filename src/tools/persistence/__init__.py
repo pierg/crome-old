@@ -5,7 +5,7 @@ from typing import Set
 
 from cgg import Node
 from controller import Controller
-
+from pathlib import Path
 
 class Persistence:
     output_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'output'))
@@ -19,6 +19,9 @@ class Persistence:
             output_folder = f"{Persistence.output_folder}"
 
         output_file = f"{output_folder}/cgg.dat"
+
+        output_folder = Path(output_folder)
+        output_file = Path(output_file)
 
         if not os.path.exists(output_folder):
             os.makedirs(output_folder)
@@ -36,6 +39,8 @@ class Persistence:
             output_folder = f"{Persistence.output_folder}"
 
         output_file = f"{output_folder}/goals.dat"
+
+        output_file = Path(output_file)
 
         if not os.path.exists(output_folder):
             os.makedirs(output_folder)
@@ -55,6 +60,8 @@ class Persistence:
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
 
+        output_file = Path(output_file)
+
         file = open(output_file, 'wb')
         pickle.dump(controller, file)
         file.close()
@@ -69,6 +76,8 @@ class Persistence:
 
         file = f"{output_folder}/cgg.dat"
 
+        file = Path(file)
+
         file = open(file, 'rb')
         cgg = pickle.load(file)
         file.close()
@@ -82,6 +91,8 @@ class Persistence:
             file = f"{folder_path}/controller.dat"
         else:
             file = f"{folder_path}/{name}.dat"
+
+        file = Path(file)
 
         file = open(file, 'rb')
         controller = pickle.load(file)
@@ -98,6 +109,8 @@ class Persistence:
             output_folder = f"{Persistence.output_folder}"
 
         file = f"{output_folder}/goals.dat"
+
+        output_file = Path(file)
 
         file = open(file, 'rb')
         set_goals = pickle.load(file)
