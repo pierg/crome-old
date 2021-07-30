@@ -79,6 +79,9 @@ export default class CreateEnvironment extends React.Component {
         if (this.props.world !== null) {
             this.listOfNames = this.getListWithoutElement(this.props.worldNames, this.props.world.info.name)
         }
+        if (this.props.returnedProjectId !== null) {
+            this.inputElement.scrollIntoView();
+        }
     }
 
     componentWillUnmount() {
