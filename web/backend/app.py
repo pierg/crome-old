@@ -15,13 +15,15 @@ import threading
 from time import strftime
 
 backend_folder = Path(__file__).parent.absolute()
-print(backend_folder)
-
 front_end_folder = Path(__file__).parents[1].absolute() / 'frontend'
 build_folder = front_end_folder / 'build'
-print(build_folder)
-storage_folder = Path(__file__).parents[1].absolute() / 'storage'
-print(storage_folder)
+storage_folder = Path(__file__).parents[2].absolute() / 'storage'
+if backend_folder.exists():
+    print(backend_folder)
+if build_folder.exists():
+    print(build_folder)
+if storage_folder.exists():
+    print(storage_folder)
 
 
 if build_folder.exists():
@@ -55,6 +57,7 @@ def get_projects(data):
 
     for sessions in list_of_sessions:
         session_folder = storage_folder / sessions
+        print(session_folder)
         if os.path.isdir(session_folder):  # if there is a folder for this session #
             dir_path, dir_names, filenames = next(walk(session_folder))
             for subdir in dir_names:
