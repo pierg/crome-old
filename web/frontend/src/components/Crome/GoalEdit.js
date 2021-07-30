@@ -71,6 +71,12 @@ function GoalEdit(props) {
                 <Input type="textarea" placeholder="Description" name="description" value={goal.description} onChange={changeParameter}/>
                 <Checkbox label="Day" name="context-day" checked={parseContext(goal.context)[0]} onChange={changeParameter}/>
                 <Checkbox label="Night" name="context-night" checked={parseContext(goal.context)[1]} onChange={changeParameter}/>
+                <div className="mt-2 text-center">
+                    <span className="font-semibold">List of Locations : </span>
+                    {props.listOfLocations.map((prop, key) => (
+                        <span key={key}>{prop}{key !== (props.listOfLocations.length - 1) ? ", " : ""}</span>
+                    ))}
+                </div>
                 {props.info.contract.map((prop, key) => (
                     <div key={key}><h4 className="title title-up">{prop.title}</h4>
                     <ContractContentEditor

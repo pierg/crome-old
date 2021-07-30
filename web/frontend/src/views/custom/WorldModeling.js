@@ -69,6 +69,7 @@ export default class WorldModeling extends React.Component {
                 this.props.setProject(0)
             }
             else {
+                this.props.setListOfLocations(this.getListOfLocations(this.state.worlds[index]))
                 this.setState({
                     worldSelected: index,
                 })
@@ -120,6 +121,14 @@ export default class WorldModeling extends React.Component {
             }
         }
         return this.state.worlds.length
+    }
+
+    getListOfLocations(world) {
+        let locations = []
+        for (let i=0; i<world.grid.locations.length; i++) {
+            locations.push(world.grid.locations[i].id)
+        }
+        return locations
     }
 
     render() {

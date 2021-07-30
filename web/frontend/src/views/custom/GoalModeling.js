@@ -60,6 +60,7 @@ export default class GoalModeling extends React.Component {
                         tmpedited={this.state.editedGoals}
                         tmpindex={this.state.currentGoalIndex}
                         goal={this.state.editedGoals[this.state.currentGoalIndex]}
+                        listOfLocations={this.props.listOfLocations}
                         patterns={this.state.patterns}
                         edit={this.editCurrentGoal}
                         save={this.saveCurrentGoal}
