@@ -14,12 +14,17 @@ import json
 import threading
 from time import strftime
 
-if path.exists('../frontend/build'):
-    app = Flask(__name__, static_folder='../frontend/build', static_url_path='/')
+backend_folder = Path(__file__).parent.absolute()
+print(backend_folder)
+
+front_end_folder = Path(__file__).parent.absolute()
+build_folder = front_end_folder / 'build'
+storage_folder = Path(__file__).parents[1].absolute() / 'storage'
+
+if build_folder.exists():
+    app = Flask(__name__, static_folder=str(build_folder), static_url_path='/')
 else:
     app = Flask(__name__)
-
-storage_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'storage'))
 
 socketio = SocketIO(app, cors_allowed_origins='*')
 
@@ -46,7 +51,7 @@ def get_projects(data):
     list_of_sessions = [f"sessions/default", f"sessions/{data['session']}"]
 
     for sessions in list_of_sessions:
-        session_folder = Path(os.path.join(storage_folder, sessions))
+        session_folder = storage_folder / sessions
         if os.path.isdir(session_folder):  # if there is a folder for this session #
             dir_path, dir_names, filenames = next(walk(session_folder))
             for subdir in dir_names:

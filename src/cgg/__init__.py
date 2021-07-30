@@ -22,7 +22,10 @@ from tools.strings import StringMng
 from type import Types, Boolean
 from type.subtypes.location import ReachLocation
 from typeset import Typeset
-from world import World
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from world import World
 from tools.strix import Strix
 
 
@@ -213,8 +216,11 @@ class Node(Goal):
                 while new_scenario is active_scenario:
                     new_scenario = random.sample(scenarios, 1)[0]
 
-                start = active_scenario.controller.entry_locations_next_step(self.world.typeset)[0]
-                destinations = new_scenario.controller.entry_locations_next_step(self.world.typeset)
+                start = active_scenario.controller.current_location
+                destination = new_scenario.controller.next_location_to_visit
+
+                """Locations adjacent to destination"""
+                adjacent_locations = self.world.adjacent_types(destination)
 
                 """Set new active scenario"""
                 active_scenario = new_scenario
@@ -224,14 +230,16 @@ class Node(Goal):
                 """Choose the destination reachable in the least number of steps"""
                 n_states = None
                 optimal_destination = None
-                for destination in destinations:
+                for destination in adjacent_locations:
                     if n_states is None:
-                        n_states = len(self.__t_controllers[(start, destination)].states)
-                        optimal_destination = destination
-                    else:
-                        if len(self.__t_controllers[(start, destination)].states) < n_states:
+                        if (start, destination) in self.__t_controllers:
                             n_states = len(self.__t_controllers[(start, destination)].states)
                             optimal_destination = destination
+                    else:
+                        if (start, destination) in self.__t_controllers:
+                            if len(self.__t_controllers[(start, destination)].states) < n_states:
+                                n_states = len(self.__t_controllers[(start, destination)].states)
+                                optimal_destination = destination
                 t_ctrl = self.__t_controllers[(start, optimal_destination)]
                 ctrl_str = t_ctrl.name
 
@@ -281,6 +289,7 @@ class Node(Goal):
             inputs_str = ', '.join(inputs_str)
             outputs_str = ', '.join(outputs_str)
             # print(f"{i}\t{context_str}\t{inputs_str}\t{outputs_str}")
+            print("\t".join([str(current_t), str(context_str), str(ctrl_str), str(inputs_str), str(outputs_str)]))
             history.append([current_t, context_str, ctrl_str, inputs_str, outputs_str])
             current_t += 1
 
@@ -311,9 +320,13 @@ class Node(Goal):
             # locs_b = scenario_a.controller.locations
             #  TODO
             # for loc_source, loc_target in itertools.product(locs_a, locs_b):
-
+            #
             scenario_a_entry_points = scenario_a.controller.all_entry_locations(self.world.typeset)
             scenario_b_entry_points = scenario_b.controller.all_entry_locations(self.world.typeset)
+            #
+            # scenario_a_entry_points = scenario_a.controller.locations
+            # scenario_b_entry_points = scenario_b.controller.locations
+
             print(", ".join([x.name for x in scenario_a_entry_points]))
             print(", ".join([x.name for x in scenario_b_entry_points]))
             for start, finish in itertools.product(scenario_a_entry_points, scenario_b_entry_points):

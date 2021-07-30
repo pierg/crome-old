@@ -1,5 +1,5 @@
 from world import World
-from running_example.types import *
+from running_example.variables import *
 
 
 class RunningExample(World):
