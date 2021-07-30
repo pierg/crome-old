@@ -15,8 +15,12 @@ function SocketSaveGoals(props) {
         if (socket == null) return
         
         if (props.goals !== null && props.triggerSave) {
+
+            console.log("about to save : ")
+            console.log(props.goals[props.index])
+
             props.toggleTrigger(0, false)
-            socket.emit('save-goals', {goals : props.goals, session : props.session, projectId : props.projectId})
+            socket.emit('add-goal', {goal : props.goals[props.index], session : props.session, projectId : props.projectId})
 
             if (props.projectId === "simple") {
                 socket.on('saving-simple', setIdFunction)

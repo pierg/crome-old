@@ -21,7 +21,7 @@ else:
 
 storage_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'storage'))
 
-socketio = SocketIO(app, cors_allowed_origins='http://localhost:3030')
+socketio = SocketIO(app, cors_allowed_origins='*')
 
 users = {}
 
@@ -155,8 +155,8 @@ def get_goals(data):
         emit("receive-goals", list_of_goals, room=request.sid)
 
 
-@socketio.on('save-goals')
-def save_goals(data):
+@socketio.on('add-goal')
+def add_goal(data):
     project_id = data['projectId']
     is_simple = str(project_id) == "simple"
     if is_simple:
@@ -182,22 +182,23 @@ def save_goals(data):
     dir_path, dir_names, filenames = next(walk(goals_dir))
     greatest_id = -1 if len(filenames) == 0 else max(filenames)[0:4]
     greatest_id = int(greatest_id) + 1
-    for i in range(len(data['goals'])):
-        if 'id' not in data['goals'][i]:
-            data['goals'][i]['id'] = greatest_id
-            greatest_id += 1
-        filename = str(data['goals'][i]['id']).zfill(4) + ".json"
-        json_file = open(os.path.join(goals_dir, filename), "w")
-        json_formatted = json.dumps(data['goals'][i], indent=4, sort_keys=True)
-        json_file.write(json_formatted)
-        json_file.close()
+    if 'id' not in data['goal']:
+        data['goal']['id'] = greatest_id
+        greatest_id += 1
+    filename = str(data['goal']['id']).zfill(4) + ".json"
+    json_file = open(os.path.join(goals_dir, filename), "w")
+    json_formatted = json.dumps(data['goal'], indent=4, sort_keys=True)
+    json_file.write(json_formatted)
+    json_file.close()
     if is_simple:
         emit("saving-simple", project_id, room=request.sid)
     else:
         emit("saving-complete", True, room=request.sid)
 
     now = time.localtime(time.time())
-    emit("send-message", strftime("%H:%M:%S", now) + " The goal has been saved.", room=users[data['session']])
+    name = data['goal']['name']
+    emit("send-message", strftime("%H:%M:%S", now) + " The goal \"" + name + "\" has been saved.",
+         room=users[data['session']])
 
 
 @socketio.on('delete-goal')
@@ -272,4 +273,4 @@ def get_current_time():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True, port=3030)
+    app.run(host='127.0.0.1', debug=True, port=3030)
