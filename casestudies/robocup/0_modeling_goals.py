@@ -1,19 +1,28 @@
 from cgg import Node
 from cgg.exceptions import CGGException
 from contract import Contract
-from robocup.modeling_environement import RobocupHome
 from robocup import output_folder_name
-from specification.atom.pattern.basic import GF
+from robocup.modeling_environment import RobocupHome
+from specification.atom.pattern.basic import GF, X
 from specification.atom.pattern.robotics.coremovement.surveillance import *
 from specification.atom.pattern.robotics.trigger.triggers import *
 from specification.formula import Formula
 from tools.persistence import Persistence
+from world import Rule
 
 """We import the environment"""
 w = RobocupHome()
 
-"""if the robot has the object, then disable the sensor for new objects"""
-no_objects_when_hold = PromptReaction(w["hold"], ~w["object_recognized"])
+# all_locations = [w["l1"], w["l2"], w["l3"], w["l4"], w["l5"], w["l6"],
+#                  w["k1"], w["k2"], w["k3"],
+#                  w["r1"], w["r2"],
+#                  w["h1"], w["h2"],
+#                  w["b1"], w["b2"], w["b3"],
+#                  w["e1"], w["e2"]]
+
+print("CIAO")
+print(OrderedPatrolling([w["k3"], w["e1"]]))
+print("CEAYSD")
 
 living_room = [w["l1"], w["l2"], w["l3"], w["l4"], w["l5"], w["l6"]]
 kitchen = [w["k1"], w["k2"]]
@@ -23,6 +32,43 @@ patrol_living_room = Patrolling(living_room)
 
 """patrol kitchen"""
 patrol_kitchen = Patrolling(kitchen)
+
+"""Modeling the rules of the variables"""
+env_rules = {
+    Rule(
+        rule=PromptReaction(w["hold"], w["!object_recognized"]),
+        trigger=w["clean"],
+        description="if the robot has the object, then disable the sensor for new objects",
+        system=False
+    )
+}
+
+sys_rules = {
+    Rule(
+        rule=GF(w["!hold"]),
+        trigger=w["clean"],
+        description="keep robots with free hands",
+        system=True
+    ),
+    Rule(
+        rule=PromptReaction(w["hold"] & X(w["!drop"]), w["hold"]),
+        trigger=w["clean"],
+        description="keep holding unless the robot drops the object",
+        system=True
+    ),
+    Rule(
+        rule=PromptReaction(w["drop"], w["!hold"]),
+        trigger=w["clean"],
+        description="if it drops the object then it does not hold anymore",
+        system=True
+    ),
+    Rule(
+        rule=PromptReaction(X(w["drop"]), w["hold"]),
+        trigger=w["clean"],
+        description="if it wants to drops then it is holding an object",
+        system=True
+    )
+}
 
 """if the robot is available to hold and its in the location where it recognises an object 
 then it should not move from that location"""
@@ -44,7 +90,7 @@ keep_free_hands = GF(~w["hold"])
 
 try:
 
-    """Modeling the set of goals using robotic robotic.json"""
+    """Modeling the set of goals using robotic patterns"""
     set_of_goals = {
         Node(name="cleanup",
              description="Inside the living room are some misplaced objects. "
@@ -60,7 +106,7 @@ try:
                             drop_near_garbage &
                             keep_free_hands
              ),
-             world=w_types),
+             world=w),
         Node(name="gpse",
              description="General Purpose Service Robot."
                          "Similar to a modern smart-speaker,"
@@ -68,7 +114,7 @@ try:
              specification=Contract(
                  guarantees=BoundReaction(w["alexa"], w["reply"])
              ),
-             world=w_types),
+             world=w),
         Node(name="groceries",
              description="The robot stores groceries into a pantry shelf while paying attention"
                          " to sorting objects in their appropriate place, i.e. storing an apple next to other fruits.",
@@ -77,7 +123,7 @@ try:
                  guarantees=patrol_kitchen &
                             PromptReaction(w["groceries_recognized"], w["store"] & w["k2"])
              ),
-             world=w_types),
+             world=w),
     }
 
     """Save set of goals so that they can be loaded later"""

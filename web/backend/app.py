@@ -1,6 +1,6 @@
 import os
 import shutil
-from os import path, walk
+from os import walk
 
 import time
 from pathlib import Path
@@ -14,12 +14,22 @@ import json
 import threading
 from time import strftime
 
-if path.exists('../frontend/build'):
-    app = Flask(__name__, static_folder='../frontend/build', static_url_path='/')
+backend_folder = Path(__file__).parent.absolute()
+front_end_folder = Path(__file__).parents[1].absolute() / 'frontend'
+build_folder = front_end_folder / 'build'
+storage_folder = Path(__file__).parents[2].absolute() / 'storage'
+if backend_folder.exists():
+    print(backend_folder)
+if build_folder.exists():
+    print(build_folder)
+if storage_folder.exists():
+    print(storage_folder)
+
+
+if build_folder.exists():
+    app = Flask(__name__, static_folder=str(build_folder), static_url_path='/')
 else:
     app = Flask(__name__)
-
-storage_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'storage'))
 
 socketio = SocketIO(app, cors_allowed_origins='*')
 

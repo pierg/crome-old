@@ -128,7 +128,7 @@ class Contract:
         else:
             instance_ts = (a_typeset | g_typeset)
 
-        """Extracting Inputs and Outputs Including the world"""
+        """Extracting Inputs and Outputs Including the variables"""
         i_set, o_set = instance_ts.extract_inputs_outputs()
 
         i_typeset = Typeset(i_set)

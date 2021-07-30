@@ -50,7 +50,7 @@ class Formula(Specification):
             self.__dnf: List[Set[Atom]] = [{atom}]
 
         else:
-            raise Exception("Wrong parameters LTL construction")
+            raise Exception("Wrong parameters LTL_forced construction")
 
     from ._printing import pretty_print
 
