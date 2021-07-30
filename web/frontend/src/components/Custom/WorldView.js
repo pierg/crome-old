@@ -32,8 +32,8 @@ function WorldView(props) {
                                 </div>
                                 <div className="relative w-full pr-4 max-w-full flex-grow flex-1"/>
                             </div>
-                            <div>
-                                <img src={"data:image/png;base64," + arrayBufferToBase64(props.image)} alt={"World"}/>
+                            <div className="w-full">
+                                <img src={"data:image/png;base64," + arrayBufferToBase64(props.image)} alt={"World"} className="w-full"/>
                             </div>
                         </div>
                         <div className="flex flex-col min-content">
