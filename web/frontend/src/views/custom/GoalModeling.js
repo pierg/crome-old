@@ -46,7 +46,7 @@ export default class GoalModeling extends React.Component {
         }
         return (
             <>
-                <SocketIoGaols projectId={this.props.project} session={this.props.id} updateGoals={this.getGoals} deleteIndex={this.state.deletionIndex} triggerGoals={this.state.triggers[1]} deleteTrigger={this.deleteTrigger}/>
+                <SocketIoGaols projectId={this.props.project} session={this.props.id} updateGoals={this.getGoals} deleteIndex={this.state.deletionIndex} triggerGoals={this.state.triggers[1]} deleteTrigger={this.deleteTrigger} switchWorld={this.switchWorld}/>
                 <SocketIoPatterns patterns={this.getPatterns} />
                 <SocketSaveGoals projectId={this.props.project} session={this.props.id} index={this.state.currentGoalIndex} goals={this.state.editedGoals} triggerSave={this.state.triggers[0]} toggleTrigger={this.toggleTrigger} switchWorld={this.switchWorld}/>
                 <ParentComponent addChild={this.onAddChild}>
@@ -177,7 +177,7 @@ const ParentComponent = props => (
         <div className="px-4 md:px-10 mx-auto w-full">
             <div>
                 <div className="flex justify-center">
-                    <div onClick={props.addChild} className="w-full lg:w-6/12 xl:w-3/12 mt-8 ml-4 mr-4 px-4 relative flex flex-col min-w-0 break-words bg-lightBlue-600 rounded mb-6 xl:mb-0 shadow-lg opacity-1 transform duration-300 transition-all ease-in-out">
+                    <div onClick={props.addChild} className="w-full lg:w-6/12 xl:w-3/12 mt-8 ml-4 mr-4 px-4 relative flex flex-col min-w-0 break-words bg-lightBlue-600 rounded mb-6 xl:mb-0 shadow-lg cursor-pointer opacity-1 transform duration-300 transition-all ease-in-out">
                         <AddButton
                             statText="Add a Goal"
                             statIconName="fas fa-plus-square"

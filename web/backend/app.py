@@ -171,24 +171,7 @@ def add_goal(data):
     project_id = data['projectId']
     is_simple = str(project_id) == "simple"
     if is_simple:
-        number_of_copies = 1
-        while os.path.isdir(os.path.join(storage_folder, f"sessions/{data['session']}/simple_{number_of_copies}")):
-            number_of_copies += 1
-        project_id = f"simple_{number_of_copies}"
-        shutil.copytree(os.path.join(storage_folder, "sessions/default/simple"),
-                        os.path.join(storage_folder,  f"sessions/{data['session']}/{project_id}"))
-        list_save = ["info", "environment"]
-        for i in list_save:
-            with open(os.path.join(storage_folder, f"sessions/{data['session']}/{project_id}/{i}.json"), "r") as file:
-                json_data = json.load(file)
-            if i == "info":
-                json_data["name"] = f"Simple Gridworld ({number_of_copies})"
-            json_data["project_id"] = project_id
-            json_data["session_id"] = data['session']
-            with open(os.path.join(storage_folder, f"sessions/{data['session']}/{project_id}/{i}.json"), "w") as file:
-                json_formatted = json.dumps(json_data, indent=4, sort_keys=True)
-                file.write(json_formatted)
-
+        project_id = copy_simple(data['session'])
     goals_dir = os.path.join(storage_folder, f"sessions/{data['session']}/{project_id}/goals")
     dir_path, dir_names, filenames = next(walk(goals_dir))
     greatest_id = -1 if len(filenames) == 0 else max(filenames)[0:4]
@@ -214,7 +197,11 @@ def add_goal(data):
 
 @socketio.on('delete-goal')
 def delete_goal(data):
-    current_goals_folder = Path(os.path.join(storage_folder, f"sessions/{data['session']}/{data['project']}/goals"))
+    project_id = data['project']
+    is_simple = str(project_id) == "simple"
+    if is_simple:
+        project_id = copy_simple(data['session'])
+    current_goals_folder = Path(os.path.join(storage_folder, f"sessions/{data['session']}/{project_id}/goals"))
     dir_path, dir_names, filenames = next(walk(current_goals_folder))
     i = 0
     for goal_file in filenames:
@@ -222,6 +209,8 @@ def delete_goal(data):
             goal_to_delete = Path(os.path.join(current_goals_folder, goal_file))
             os.remove(goal_to_delete)
         i += 1
+    if is_simple:
+        emit("deleting-simple", project_id, room=request.sid)
 
     now = time.localtime(time.time())
     emit("send-message", strftime("%H:%M:%S", now) + " The goal has been deleted.", room=users[data['session']])
@@ -281,6 +270,27 @@ def index():
 @app.route('/time')
 def get_current_time():
     return {'time': time.time()}
+
+
+def copy_simple(session_id):
+    number_of_copies = 1
+    while os.path.isdir(os.path.join(storage_folder, f"sessions/{session_id}/simple_{number_of_copies}")):
+        number_of_copies += 1
+    project_id = f"simple_{number_of_copies}"
+    shutil.copytree(os.path.join(storage_folder, "sessions/default/simple"),
+                    os.path.join(storage_folder, f"sessions/{session_id}/{project_id}"))
+    list_save = ["info", "environment"]
+    for i in list_save:
+        with open(os.path.join(storage_folder, f"sessions/{session_id}/{project_id}/{i}.json"), "r") as file:
+            json_data = json.load(file)
+        if i == "info":
+            json_data["name"] = f"Simple Gridworld ({number_of_copies})"
+        json_data["project_id"] = project_id
+        json_data["session_id"] = session_id
+        with open(os.path.join(storage_folder, f"sessions/{session_id}/{project_id}/{i}.json"), "w") as file:
+            json_formatted = json.dumps(json_data, indent=4, sort_keys=True)
+            file.write(json_formatted)
+    return project_id
 
 
 if __name__ == '__main__':

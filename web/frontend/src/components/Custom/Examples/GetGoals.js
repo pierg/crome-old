@@ -7,6 +7,11 @@ function SocketIoGaols(props) {
 
     const [message, setMessage] = useState(0);
 
+    const [id, setId] = useState(0);
+
+    const setIdFunction = useCallback((project_id) => {
+        setId(project_id);
+    }, [setId])
 
     const setMessageFunction = useCallback((list_of_goals) => {
         setMessage(list_of_goals);
@@ -20,8 +25,11 @@ function SocketIoGaols(props) {
         socket.emit('delete-goal', {index: props.deleteIndex, session: props.session, project: props.projectId})
 
         props.deleteTrigger()
-        /*socket.on('deletion-complete', props.deleteTrigger())
-        return () => socket.off('deletion-complete')*/
+
+        if (props.projectId === "simple") {
+            socket.on('deleting-simple', setIdFunction)
+        }
+
     }, [socket, props.deleteIndex, props.deleteTrigger, props.session, props.projectId])  // eslint-disable-line react-hooks/exhaustive-deps
 
 
@@ -38,6 +46,10 @@ function SocketIoGaols(props) {
     useEffect(() => {
         props.updateGoals(message)
     }, [message])  // eslint-disable-line react-hooks/exhaustive-deps
+
+    useEffect(() => {
+        props.switchWorld(id)
+    }, [id])  // eslint-disable-line react-hooks/exhaustive-deps
 
     return (<></>);
 }

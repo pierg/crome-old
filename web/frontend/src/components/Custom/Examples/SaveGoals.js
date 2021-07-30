@@ -21,7 +21,6 @@ function SocketSaveGoals(props) {
 
             if (props.projectId === "simple") {
                 socket.on('saving-simple', setIdFunction)
-                return () => socket.off('saving-simple-complete')
             }
             else {
                 socket.on('saving-complete', props.toggleTrigger(1, true))
