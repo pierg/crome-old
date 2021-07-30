@@ -17,9 +17,12 @@ from time import strftime
 backend_folder = Path(__file__).parent.absolute()
 print(backend_folder)
 
-front_end_folder = Path(__file__).parent.absolute()
+front_end_folder = Path(__file__).parents[1].absolute() / 'frontend'
 build_folder = front_end_folder / 'build'
+print(build_folder)
 storage_folder = Path(__file__).parents[1].absolute() / 'storage'
+print(storage_folder)
+
 
 if build_folder.exists():
     app = Flask(__name__, static_folder=str(build_folder), static_url_path='/')
