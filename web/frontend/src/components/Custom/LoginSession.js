@@ -2,9 +2,9 @@ import React, {useCallback, useEffect, useRef, useState} from 'react'
 import Button from "../../components/Elements/Button.js";
 import {Form} from 'react-bootstrap'
 import {v4 as uuidV4} from 'uuid'
-import {PopoverBody, PopoverHeader, UncontrolledPopover, UncontrolledTooltip} from "reactstrap";
 import {CSSTransition, SwitchTransition} from "react-transition-group";
 import {useSocket} from "../../contexts/SocketProvider";
+import {UncontrolledTooltip} from "reactstrap";
 
 export default function LoginSession({id, onIdSubmit}) {
     const idRef = useRef()
@@ -12,11 +12,10 @@ export default function LoginSession({id, onIdSubmit}) {
     const socket = useSocket()
 
     const [errorMsg, setErrorMsg] = useState("")
-    const [warningPopover, setWarningPopover] = useState(false)
     
     const handleAnswer = useCallback((answer) => {
-        answer ? onIdSubmit(idRef.current.value) : displayWarning()
-    }, [onIdSubmit])
+        answer ? onIdSubmit(idRef.current.value) : setErrorMsg("This session doesn't exist or is empty")
+    }, [onIdSubmit])  // eslint-disable-line react-hooks/exhaustive-deps
     
     
     
@@ -31,14 +30,6 @@ export default function LoginSession({id, onIdSubmit}) {
             socket.off('receive-answer')
         }
 
-    }
-    
-    function displayWarning() {
-        setWarningPopover(true)
-        setErrorMsg("This session doesn't exist or is empty")
-        setTimeout(function (){
-            setWarningPopover(false)
-        }, 4000)
     }
     
     const createNewId = useCallback(() => {
@@ -106,24 +97,14 @@ export default function LoginSession({id, onIdSubmit}) {
 
             <Form onSubmit={handleSubmit} className="w-full mt-4">
                 <Form.Group>
-                    <Form.Control type="text" className="border-lightBlue-200" ref={idRef} required placeholder={"Load another session"}/>
+                    <Form.Control type="text" className="border-lightBlue-200" ref={idRef} id={"inputSession"} required onChange={() => setErrorMsg("")} placeholder={"Load another session"}/>
+                    <span className="text-red-500 text-xs mt-1">{errorMsg}</span>
                 </Form.Group>
                 <div className="flex w-full justify-center">
                     <Button onClick={createNewId} color="teal" variant="secondary" type="reset">Reset</Button>
                     <Button type="submit" color="lightBlue" id="loadButton">Load</Button>
                 </div>
             </Form>
-            <UncontrolledPopover
-                placement="bottom"
-                target="loadButton"
-                className="popover-warning"
-                isOpen={warningPopover}
-            >
-                <PopoverHeader>Warning!</PopoverHeader>
-                <PopoverBody>
-                    {errorMsg}
-                </PopoverBody>
-            </UncontrolledPopover>
         </>
     )
 }
