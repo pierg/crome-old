@@ -56,8 +56,7 @@ def get_projects(data):
     list_of_sessions = [f"sessions/default", f"sessions/{data['session']}"]
 
     for sessions in list_of_sessions:
-        session_folder = storage_folder / sessions
-        print(session_folder)
+        session_folder = Path(os.path.join(storage_folder, sessions))
         if os.path.isdir(session_folder):  # if there is a folder for this session #
             dir_path, dir_names, filenames = next(walk(session_folder))
             for subdir in dir_names:
