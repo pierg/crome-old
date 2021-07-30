@@ -110,6 +110,7 @@ def save_project(data):
         json_file.close()
     name = data['world']['info']['name']
     now = time.localtime(time.time())
+    emit("project-saved", data['world']['info']['project_id'], room=users[session_id])
     emit("send-message", strftime("%H:%M:%S", now) + " The project \"" + name + "\" has been saved.",
          room=users[session_id])
 
@@ -184,7 +185,7 @@ def add_goal(data):
                 json_data["name"] = f"Simple Gridworld ({number_of_copies})"
             json_data["project_id"] = project_id
             json_data["session_id"] = data['session']
-            with open(os.path.join(storage_folder, f"sessions/{data['session']}/{project_id}/info.json"), "w") as file:
+            with open(os.path.join(storage_folder, f"sessions/{data['session']}/{project_id}/{i}.json"), "w") as file:
                 json_formatted = json.dumps(json_data, indent=4, sort_keys=True)
                 file.write(json_formatted)
 
