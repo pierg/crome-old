@@ -180,13 +180,13 @@
             ]
         }
     },
-    "project_id": "simple_1",
+    "project_id": "simple",
     "sensors": [
         {
             "name": "person"
         }
     ],
-    "session_id": "1e224f67-44cb-4e57-8ec2-7ee5afc2c109",
+    "session_id": "default",
     "size": {
         "height": 10,
         "width": 10
