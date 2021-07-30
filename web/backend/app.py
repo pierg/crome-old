@@ -1,6 +1,6 @@
 import os
 import shutil
-from os import path, walk
+from os import walk
 
 import time
 from pathlib import Path
