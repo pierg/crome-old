@@ -1,0 +1,241 @@
+{
+	"filetype": "environment",
+  	"session_id": "default",
+  	"project_id": "simple",
+  	"simulation" : [
+  		{
+  			"t" : 0,
+  			"context" : "night & !(day)",
+  			"controller" : "SCENARIO_1",
+  			"inputs" : "person",
+  			"outputs" : "r3, greet",
+  			"x" : 1,
+  			"y" : 5
+  		},
+  		{
+  			"t" : 1,
+  			"context" : "night & !(day)",
+  			"controller" : "SCENARIO_1",
+  			"inputs" : "",
+  			"outputs" : "r4",
+  			"x" : 1,
+  			"y" : 3
+  		},
+  		{
+  			"t" : 2,
+  			"context" : "night & !(day)",
+  			"controller" : "SCENARIO_1",
+  			"inputs" : "person",
+  			"outputs" : "r3, greet",
+  			"x" : 1,
+  			"y" : 1
+  		},
+  		{
+  			"t" : 3,
+  			"context" : "night & !(day)",
+  			"controller" : "SCENARIO_1",
+  			"inputs" : "",
+  			"outputs" : "r4",
+  			"x" : 3,
+  			"y" : 1
+  		},
+  		{
+  			"t" : 4,
+  			"context" : "night & !(day)",
+  			"controller" : "SCENARIO_1",
+  			"inputs" : "person",
+  			"outputs" : "r3, greet",
+  			"x" : 3,
+  			"y" : 3
+  		},
+  		{
+  			"t" : 5,
+  			"context" : "night & !(day)",
+  			"controller" : "SCENARIO_1",
+  			"inputs" : "person",
+  			"outputs" : "r4, greet",
+  			"x" : 5,
+  			"y" : 3
+  		},
+  		{
+  			"t" : 6,
+  			"context" : "night & !(day)",
+  			"controller" : "SCENARIO_1",
+  			"inputs" : "",
+  			"outputs" : "r3",
+  			"x" : 5,
+  			"y" : 1
+  		},
+  		{
+  			"t" : 7,
+  			"context" : "night & !(day)",
+  			"controller" : "SCENARIO_1",
+  			"inputs" : "",
+  			"outputs" : "r4",
+  			"x" : 7,
+  			"y" : 1
+  		},
+  		{
+  			"t" : 8,
+  			"context" : "night & !(day)",
+  			"controller" : "SCENARIO_1",
+  			"inputs" : "person",
+  			"outputs" : "r3, greet",
+  			"x" : 9,
+  			"y" : 1
+  		},
+  		{
+  			"t" : 9,
+  			"context" : "night & !(day)",
+  			"controller" : "SCENARIO_1",
+  			"inputs" : "person",
+  			"outputs" : "r4, greet",
+  			"x" : 9,
+  			"y" : 3
+  		},
+  		{
+  			"t" : 10,
+  			"context" : "day & !(night)",
+  			"controller" : "SCENARIO_1",
+  			"inputs" : "person",
+  			"outputs" : "r3, greet",
+  			"x" : 7,
+  			"y" : 3
+  		},
+  		{
+  			"t" : 11,
+  			"context" : "day & !(night)",
+  			"controller" : "TRANS_r3-r5",
+  			"inputs" : "",
+  			"outputs" : "r5",
+  			"x" : 5,
+  			"y" : 3
+  		},
+  		{
+  			"t" : 12,
+  			"context" : "night & !(day)",
+  			"controller" : "SCENARIO_0",
+  			"inputs" : "",
+  			"outputs" : "r1, register",
+  			"x" : 5,
+  			"y" : 5
+  		},
+  		{
+  			"t" : 13,
+  			"context" : "day & !(night)",
+  			"controller" : "SCENARIO_0",
+  			"inputs" : "",
+  			"outputs" : "r2",
+  			"x" : 3,
+  			"y" : 5
+  		},
+  		{
+  			"t" : 14,
+  			"context" : "day & !(night)",
+  			"controller" : "SCENARIO_0",
+  			"inputs" : "",
+  			"outputs" : "r1",
+  			"x" : 1,
+  			"y" : 5
+  		},
+  		{
+  			"t" : 15,
+  			"context" : "day & !(night)",
+  			"controller" : "SCENARIO_0",
+  			"inputs" : "",
+  			"outputs" : "r2",
+  			"x" : 1,
+  			"y" : 3
+  		},
+  		{
+  			"t" : 16,
+  			"context" : "day & !(night)",
+  			"controller" : "SCENARIO_0",
+  			"inputs" : "",
+  			"outputs" : "r1",
+  			"x" : 1,
+  			"y" : 1
+  		},
+  		{
+  			"t" : 17,
+  			"context" : "day & !(night)",
+  			"controller" : "SCENARIO_0",
+  			"inputs" : "person",
+  			"outputs" : "r2, greet",
+  			"x" : 3,
+  			"y" : 1
+  		},
+  		{
+  			"t" : 18,
+  			"context" : "night & !(day)",
+  			"controller" : "TRANS_r2-r3",
+  			"inputs" : "",
+  			"outputs" : "r5",
+  			"x" : 5,
+  			"y" : 1
+  		},
+  		{
+  			"t" : 19,
+  			"context" : "night & !(day)",
+  			"controller" : "TRANS_r2-r3",
+  			"inputs" : "",
+  			"outputs" : "r3",
+  			"x" : 7,
+  			"y" : 1
+  		},
+  		{
+  			"t" : 20,
+  			"context" : "night & !(day)",
+  			"controller" : "SCENARIO_1",
+  			"inputs" : "person",
+  			"outputs" : "r4, greet",
+  			"x" : 7,
+  			"y" : 3
+  		},
+  		{
+  			"t" : 21,
+  			"context" : "night & !(day)",
+  			"controller" : "SCENARIO_1",
+  			"inputs" : "person",
+  			"outputs" : "r3, greet",
+  			"x" : 5,
+  			"y" : 3
+  		},
+  		{
+  			"t" : 22,
+  			"context" : "night & !(day)",
+  			"controller" : "SCENARIO_1",
+  			"inputs" : "",
+  			"outputs" : "r4",
+  			"x" : 5,
+  			"y" : 5
+  		},
+  		{
+  			"t" : 23,
+  			"context" : "night & !(day)",
+  			"controller" : "SCENARIO_1",
+  			"inputs" : "",
+  			"outputs" : "r3",
+  			"x" : 5,
+  			"y" : 7
+  		},
+  		{
+  			"t" : 24,
+  			"context" : "night & !(day)",
+  			"controller" : "SCENARIO_1",
+  			"inputs" : "person",
+  			"outputs" : "r4, greet",
+  			"x" : 5,
+  			"y" : 9
+  		},
+  		{
+  			"t" : 25,
+  			"context" : "night & !(day)",
+  			"controller" : "SCENARIO_1",
+  			"inputs" : "person",
+  			"outputs" : "r3, greet",
+  			"x" : 7,
+  			"y" : 9
+  		}
+  	]
+}
