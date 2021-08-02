@@ -117,8 +117,9 @@
     "start": "react-scripts start",
     "build": "npm run build:tailwind && react-scripts build",
     "test": "react-scripts test",
-    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm run build:tailwind",
-    "build:tailwind": "tailwind build src/assets/styles/index.css -o src/assets/styles/tailwind.css"
+    "install:clean": "rm -rf build/ && rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm run build:tailwind",
+    "build:tailwind": "tailwind build src/assets/styles/index.css -o src/assets/styles/tailwind.css",
+    "deploy": "npm run install:clean && npm run build"
   },
   "eslintConfig": {
     "extends": [

@@ -1,5 +1,5 @@
-import React, {createRef, useEffect, useState} from "react";
-import {createFileName, useScreenshot} from "use-react-screenshot";
+import React, {createRef, useEffect} from "react";
+import {useScreenshot} from "use-react-screenshot";
 import {useSocket} from "../../contexts/SocketProvider";
 
 export default function CustomDownload (props) {
@@ -27,7 +27,7 @@ export default function CustomDownload (props) {
         }
     }, [props.project]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    const download = (screenImage, { name = "img", extension = "jpg" } = {}) => {
+    const download = (screenImage = {}) => {
         socket.emit("save-image", {"image": screenImage.split(",")[1], "session": props.session, "project": props.project})
         props.resetProject()
         props.goToIndex()

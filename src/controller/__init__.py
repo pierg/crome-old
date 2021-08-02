@@ -11,7 +11,11 @@ from tools.strings import StringMng
 from type import Boolean, TypeKinds
 from type.subtypes.location import ReachLocation
 from typeset import Typeset
-from world import World
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from world import World
 
 
 class Controller:
@@ -144,7 +148,6 @@ class Controller:
             history.append([i, inputs_str, outputs_str])
 
         return tabulate(history, headers=headers)
-
 
     def simulate_day_night(self, steps: int = 50):
         """Simulate a run of 50 steps"""
@@ -299,16 +302,16 @@ class Controller:
         return self.__input_alphabet
 
     @property
-    def output_alphabet(self) -> List[Boolean]:
-        return self.__output_alphabet
-
-    @property
     def locations(self) -> List[ReachLocation]:
         locations = []
         for element in self.__output_alphabet:
             if element.kind == TypeKinds.LOCATION and isinstance(element, ReachLocation):
                 locations.append(element)
         return locations
+
+    @property
+    def output_alphabet(self) -> List[Boolean]:
+        return self.__output_alphabet
 
     def all_entry_locations(self, typeset: Typeset) -> Set[ReachLocation]:
         """List of all locations from where it is possible to reach any of the locations of the controller"""
@@ -333,29 +336,39 @@ class Controller:
     def current_state(self) -> str:
         return self.__current_state
 
-    def entry_locations_next_step(self, typeset: Typeset) -> List[ReachLocation]:
-        """Returns a set of locations from where it is possible to reach the next location the controller will visit"""
-        if self.__current_location is not None:
-            """The last visited location is for sure a location from where the robot can reach the next location"""
-            return [self.__current_location]
-        """The mealy-machine has never reacted before"""
-        """Extracting the first location to visit"""
-        first_location_to_visit = None
+    @property
+    def current_location(self) -> ReachLocation:
+        return self.__current_location
+
+    @property
+    def next_location_to_visit(self) -> ReachLocation:
+        """Next location that the robot will need to visit, if it depends on the input, then current location"""
+        next_location_to_visit = None
+
         for inputs in self.get_all_inputs_from_state(self.__current_state):
             (next_state, outputs) = self.__transitions[(inputs, self.__current_state)]
-            output_choice = random.sample(outputs, 1)[0]
-            for o in output_choice:
-                if o.kind == AtomKind.LOCATION and not o.negated:
-                    loc = list(o.typeset.values())[0]
-                    if first_location_to_visit is not None:
-                        if loc is not first_location_to_visit:
-                            raise Exception("Location depends on future inputs!")
-                    else:
-                        first_location_to_visit = loc
+            for output_choice in outputs:
+                for o in output_choice:
+                    if o.kind == AtomKind.LOCATION and not o.negated:
+                        loc = list(o.typeset.values())[0]
+                        if next_location_to_visit is not None:
+                            if loc is not next_location_to_visit:
+                                """Checking if current location is valid"""
+                                if self.__current_location is not None:
+                                    return self.__current_location
+                                else:
+                                    raise Exception("Mealy machine has never been active and \n"
+                                                    "First location depends on future inputs or it can be different!")
+                        else:
+                            next_location_to_visit = loc
+
+        return next_location_to_visit
+
+
         """Extracting the locations from where 'first_location_to_visit' is reachable"""
         reachable_locations = []
-        for class_name in first_location_to_visit.adjacency_set:
-            for t in typeset.values():
+        for class_name in next_location_to_visit.adjacency_set:
+            for t in self.world.values():
                 if type(t).__name__ == class_name:
                     reachable_locations.append(t)
         return reachable_locations

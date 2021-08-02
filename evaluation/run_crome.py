@@ -2,13 +2,11 @@ import os
 
 from cgg import Node
 from cgg.exceptions import CGGException
+from running_example.modeling_environment import RunningExample
 from specification.atom.pattern.robotics.coremovement.surveillance import *
 from specification.atom.pattern.robotics.trigger.triggers import *
 from tools.storage import Store
-from examples.running_example.modeling_environment import RunningExample
 import time
-
-folder_name = "crome_evaluation"
 
 """Illustrative Example:
 GOALS to model:
@@ -18,6 +16,8 @@ always => if see a person, greet in the next step
 """
 
 path = os.path.abspath(os.path.dirname(__file__))
+
+result_folder = f"{path}/results/CROME"
 
 """We import the world"""
 w = RunningExample()
@@ -61,7 +61,7 @@ try:
 
     t_cgg = t_cgg_end - t_cgg_start
 
-    cgg.set_session_name(folder_name)
+    cgg.set_session_name("crome_evaluation")
     cgg.save()
     print(cgg)
 
@@ -69,9 +69,13 @@ try:
 
     t_s_controllers = 0
     n_s_controllers = 0
+    states = []
+    transitions = []
     for node in cgg.get_scenarios():
         t_s_controllers += node.synth_time
         n_s_controllers += 1
+        states.append(str(len(node.controller.states)))
+        transitions.append(str(len(node.controller.transitions)))
 
     t_t_controllers = 0
     n_t_controllers = 0
@@ -82,15 +86,24 @@ try:
     res = ""
     res += f"TIME CGG BUILD  \t= {t_cgg}\n"
     res += f"NUMBER OF S-CTRL\t= {n_s_controllers}\n"
-    res += f"NUMBER OF T-CTRL\t= {n_t_controllers}\n"
+    res += f"NUMBER OF STATES\t= {', '.join(states)}\n"
+    res += f"NUMBER OF TRANSITIONS\t= {', '.join(transitions)}\n"
+    res += f"\nNUMBER OF T-CTRL\t= {n_t_controllers}\n"
     res += f"TIME S-CTRL     \t= {t_s_controllers}\n"
     res += f"TIME T-CTRL     \t= {t_t_controllers}\n"
     res += f"TIME TOTAL      \t= {t_cgg + t_s_controllers + t_t_controllers}\n\n"
 
-    print(res)
+    print(f"\n\nRESULTS:\n{res}")
 
-    Store.save_to_file(f"{res}", f"crome_times.txt",
-                       absolute_folder_path=f"{path}")
+    """Launch a simulation of n_steps where each contexts does change for at least t_min_context """
+    run = cgg.orchestrate(n_steps=50, t_min_context=6)
+    print(run)
+
+    Store.save_to_file(f"{res}", f"results.txt", absolute_folder_path=f"{result_folder}")
+
+    """Save simulation as text file"""
+    Store.save_to_file(str(run), file_name="run.txt", absolute_folder_path=f"{result_folder}")
+
 
 except CGGException as e:
     raise e

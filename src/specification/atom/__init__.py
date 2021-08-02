@@ -18,7 +18,7 @@ class Atom(Specification):
                  kind: AtomKind = None,
                  check: bool = True,
                  dontcare: bool = False):
-        """Atomic Specification (can be an AP, but also an LTL formula that cannot be broken down, e.g. a Pattern)"""
+        """Atomic Specification (can be an AP, but also an LTL_forced formula that cannot be broken down, e.g. a Pattern)"""
 
         if kind is None:
             self.__kind = AtomKind.UNDEFINED

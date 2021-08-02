@@ -30,6 +30,16 @@ class Strix:
         assumptions = StringMng.strix_syntax_fix(assumptions)
         guarantees = StringMng.strix_syntax_fix(guarantees)
 
+        print("\n\n")
+        print(assumptions)
+        print("\n")
+        print(guarantees)
+        print("\n")
+        print(ins)
+        print("\n")
+        print(outs)
+        print("\n\n")
+
         try:
             if ins == "":
                 strix_specs = f"-f '{Logic.implies_(assumptions, guarantees)}' --outs='{outs}'"

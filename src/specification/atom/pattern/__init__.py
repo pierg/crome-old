@@ -8,7 +8,7 @@ from typeset import Typeset
 
 class Pattern(Atom):
     """
-    General LTL Pattern
+    General LTL_forced Pattern
     """
 
     def __init__(self,
