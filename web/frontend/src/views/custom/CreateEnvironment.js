@@ -18,7 +18,6 @@ import deleteSubArrays from "../../hooks/deleteSubArrays";
 
 import createenvironment from "_texts/custom/createenvironment.js";
 
-import img from "./robot1.png";
 import SavingEdit from "../../components/Custom/SavingEdit";
 import LocationIdEdit from "../../components/Custom/LocationIdEdit";
 import {Link} from "react-router-dom";
@@ -525,6 +524,7 @@ export default class CreateEnvironment extends React.Component {
             this.world.onclick = null
         }
         this.world = this.buildGrid(this.state.myCanvas, this.size, this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode)
+        this.world.clearAttributeTable();
     }
 
     setRef = (ref) => {
@@ -590,6 +590,7 @@ export default class CreateEnvironment extends React.Component {
         this.size = (json.size.width / 2);
         this.world = this.buildGrid(this.state.myCanvas, (json.size.width / 2), this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode);
         this.world.actualiseIsColorTable();
+        this.world.clearAttributeTable();
     }
 
     buildGrid(canvas, size, map, addLocation, callbackMap, updateErrorMsg, setNode) {
@@ -727,8 +728,6 @@ export default class CreateEnvironment extends React.Component {
             world.updateMap(map);
         }
         updateErrorMsg("")
-
-        world.clearAttributeTable()
 
         for (let i = 0; i < size * 2 + 1; i++) {
             for (let j = 0; j < size * 2 + 1; j++) {
