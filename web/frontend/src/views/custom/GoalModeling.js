@@ -146,7 +146,7 @@ export default class GoalModeling extends React.Component {
     getPatterns = (list) => {
         this.setState({
             patterns: JSON.parse(list)
-        })
+        }, () => this.props.setPatterns(this.state.patterns))
     }
 
     toggleTrigger = (index, bool) => {

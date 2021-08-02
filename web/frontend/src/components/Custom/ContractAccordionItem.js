@@ -159,7 +159,7 @@ const ContractAccordionItem = ({
               </div>
           ))}
 
-          <div className="flex justify-center"><Button onClick={() => modal(true)}>Show Details</Button></div>
+          {modal !== undefined && (<div className="flex justify-center"><Button onClick={() => modal(true)}>Show Details</Button></div>)}
         </div>
       </>
   );

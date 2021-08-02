@@ -2,13 +2,19 @@ import React from 'react';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../assets/styles/tailwind.css";
 import Graph from "react-graph-vis";
+import * as cgg from "./cgg.json"
+import goaleditinfo from "../../_texts/custom/goaleditinfo";
+import {Modal} from "reactstrap";
+import GoalModalView from "../../components/Custom/GoalModalView";
 
 
 export default class Analysis extends React.Component {
 
     state = {
         network: null,
-        ready: false
+        ready: false,
+        modalGoal: false,
+        currentGoalIndex: 0
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -24,11 +30,36 @@ export default class Analysis extends React.Component {
         })
     }
 
+    setModalGoal = (bool) => {
+        this.setState({
+            modalGoal: bool
+        })
+    }
+
+    setCurrentGoalIndex = (id) => {
+        this.setState({
+            currentGoalIndex: id
+        })
+    }
+
     render() {
 
         console.log(this.props.goals)
 
+        let nodesArray = []
+
+        cgg.nodes.forEach(function(node) {
+            nodesArray.push({id: node.id, group: "input", label: "tempGoal"})
+        });
+
         const graph = {
+            nodes: nodesArray,
+            edges: [
+                { from: 0, to: 1, arrows: {to: {type: "circle" }} },
+            ]
+        }
+
+        /*const graph = {
             nodes: [
                 { id: 1, group: "new", label: "Node 1" },
                 { id: 2, group: "input", label: "Node 2" },
@@ -65,7 +96,7 @@ export default class Analysis extends React.Component {
                 { from: 16, to: 14, arrows: {to: {type: "diamond" }} },
 
             ]
-        };
+        };*/
 
         const options = {
             layout: {
@@ -127,28 +158,47 @@ export default class Analysis extends React.Component {
             }*/
         };
 
+        let that = this
+
+        function clickOnGoal(id) {
+            that.setModalGoal(true)
+            that.setCurrentGoalIndex(id)
+        }
         const events = {
             select: function(event) {
                 const {nodes, edges} = event;
                 console.log(nodes+edges)
+                clickOnGoal(nodes)
             }
         };
 
         return (
-            <div className="bg-lightBlue-500 bg-opacity-25">
-                {this.state.ready && (<Graph
-                    graph={graph}
-                    options={options}
-                    events={events}
-                    getNetwork={network => {
-                        this.setState({
-                            network: network
-                        })
-                        //  if you want access to vis.js network api you can set the state in a parent component using this property
-                    }}
-                />)}
-                {this.props.active && (<DelayActivation callBack={this.setReady}/>)}
-            </div>
+            <>
+                <div className="bg-lightBlue-500 bg-opacity-25">
+                    {this.state.ready && (<Graph
+                        graph={graph}
+                        options={options}
+                        events={events}
+                        getNetwork={network => {
+                            this.setState({
+                                network: network
+                            })
+                            //  if you want access to vis.js network api you can set the state in a parent component using this property
+                        }}
+                    />)}
+                    {this.props.active && (<DelayActivation callBack={this.setReady}/>)}
+                </div>
+                <Modal
+                    isOpen={this.state.modalGoal}
+                    toggle={() => this.setModalGoal(false)}
+                    className={"custom-modal-dialog sm:c-m-w-70 md:c-m-w-60 lg:c-m-w-50 xl:c-m-w-40"}>
+                    {this.props.goals !== null && (<GoalModalView
+                        goal={this.props.goals[this.state.currentGoalIndex]}
+                        close={() => this.setModalGoal(false)}
+                        patterns={this.props.patterns}
+                        {...goaleditinfo}/>)}
+                </Modal>
+            </>
         );
     }
 }
