@@ -26,6 +26,8 @@ export default class Analysis extends React.Component {
 
     render() {
 
+        console.log(this.props.goals)
+
         const graph = {
             nodes: [
                 { id: 1, group: "new", label: "Node 1" },

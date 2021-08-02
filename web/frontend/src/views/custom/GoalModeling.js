@@ -140,6 +140,7 @@ export default class GoalModeling extends React.Component {
             editedGoals: tmpArray,
             numChildren: list.length
         })
+        this.props.setGoals(tmpArray)
     }
 
     getPatterns = (list) => {

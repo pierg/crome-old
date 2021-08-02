@@ -22,6 +22,7 @@ export default function CustomPlayer({ items, defaultOpened, id, setWorld, setLi
   const [oldInTransition, setOldInTransition] = React.useState(false);
   const [newInTransition, setNewInTransition] = React.useState(false);
   const [project, setProject] = React.useState(null);
+  const [goals, setGoals] = React.useState(null);
   const [projectAdded, setProjectAdded] = React.useState(false);
   const [changingPage, setChangingPage] = React.useState(false);
   const [listOfLocations, setListOfLocations] = React.useState(null);
@@ -110,8 +111,8 @@ export default function CustomPlayer({ items, defaultOpened, id, setWorld, setLi
                           {
                             {
                               'world': <WorldModeling id={id} setListOfWorldNames={setListOfWorldNames} setListOfLocations={setListOfLocations} projectAdded={projectAdded} project={project} setProject={setProject} setWorld={setWorld} {...worldmodelinginfo}/>,
-                              'goal': <GoalModeling id={id} {...goalmodelinginfo} project={project} listOfLocations={listOfLocations} setProject={(project) => addProjectFromGoalModeling(project)}/>,
-                              'analysis': <Analysis active={headerStates[2]}/>,
+                              'goal': <GoalModeling id={id} {...goalmodelinginfo} project={project} setGoals={setGoals} listOfLocations={listOfLocations} setProject={(project) => addProjectFromGoalModeling(project)}/>,
+                              'analysis': <Analysis active={headerStates[2]} goals={goals}/>,
                               'synthesis':<Synthesis world={props.world} />
                             }[prop.component]
                           }
