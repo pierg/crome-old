@@ -13,8 +13,7 @@ else
           ;;
         -w)
           echo "Deploy the web server without rebuilding..."
-          cd ./web/backend
-          python3 app.py
+          python3 ./web/backend/app.py
           ;;
         -s)
           echo "Going to scripts folder..."
@@ -24,8 +23,8 @@ else
           echo "Build and deploy..."
           cd ./web/frontend
           npm run deploy
-          cd ../backend
-          python3 app.py
+          cd ../../
+          python3 ./web/backend/app.py
           ;;
         *)
           break

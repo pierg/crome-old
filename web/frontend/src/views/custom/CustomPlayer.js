@@ -17,7 +17,7 @@ import CustomNavButton from "../../components/Custom/CustomNavButton";
 import {UncontrolledTooltip} from "reactstrap";
 import {useSocket} from "../../contexts/SocketProvider";
 
-export default function CustomPlayer({ items, defaultOpened, id, setWorld, setListOfWorldNames }) {
+export default function CustomPlayer({ items, defaultOpened, id, setWorld, setListOfWorldNames }, props) {
   const [open, setOpen] = React.useState(defaultOpened);
   const [oldInTransition, setOldInTransition] = React.useState(false);
   const [newInTransition, setNewInTransition] = React.useState(false);
@@ -112,7 +112,7 @@ export default function CustomPlayer({ items, defaultOpened, id, setWorld, setLi
                               'world': <WorldModeling id={id} setListOfWorldNames={setListOfWorldNames} setListOfLocations={setListOfLocations} projectAdded={projectAdded} project={project} setProject={setProject} setWorld={setWorld} {...worldmodelinginfo}/>,
                               'goal': <GoalModeling id={id} {...goalmodelinginfo} project={project} listOfLocations={listOfLocations} setProject={(project) => addProjectFromGoalModeling(project)}/>,
                               'analysis': <Analysis active={headerStates[2]}/>,
-                              'synthesis': <Synthesis />
+                              'synthesis':<Synthesis world={props.world} />
                             }[prop.component]
                           }
                         </div>
