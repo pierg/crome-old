@@ -1,20 +1,21 @@
 {
   "nodes": [
     {
-      "id": 0,
-      "synthesis": ""
+      "id": 0
     },
     {
-      "id": 1,
-      "synthesis": ""
+      "id": 1
     },
     {
-      "id": 2,
-      "synthesis": ""
+      "id": 2
     },
     {
-      "id": 3,
-      "synthesis": ""
+      "id": 3
+    },
+    {
+      "id": 4,
+      "group": "new",
+      "name": "New Goal"
     }
   ],
   "edges": [
@@ -22,6 +23,16 @@
       "from": 0,
       "to": 1,
       "type": "conjunction"
+    },
+    {
+      "from": 1,
+      "to": 2,
+      "type": "refinement"
+    },
+    {
+      "from": 1,
+      "to": 3,
+      "type": "refinement"
     }
   ]
 }

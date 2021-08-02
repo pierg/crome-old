@@ -1,6 +1,7 @@
 import React from 'react';
 import Checkbox from "../Elements/Checkbox";
 import ContractAccordionItem from "./ContractAccordionItem";
+import {Button, ModalFooter} from "reactstrap";
 
 function GoalModalView(props) {
 
@@ -63,6 +64,13 @@ function GoalModalView(props) {
                     </div>
                 </div>
             </div>
+            <ModalFooter>
+                <div className="w-full flex justify-center">
+                    <Button color={props.info.modal.cancelColor} onClick={props.close}>
+                        {props.info.modal.cancelText}
+                    </Button>
+                </div>
+            </ModalFooter>
         </>
     );
 }

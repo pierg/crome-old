@@ -1,33 +1,19 @@
 import React from 'react';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../assets/styles/tailwind.css";
-import Graph from "react-graph-vis";
 import * as cgg from "./cgg.json"
 import goaleditinfo from "../../_texts/custom/goaleditinfo";
+import cggsymbols from "../../_texts/custom/cggsymbols";
 import {Modal} from "reactstrap";
 import GoalModalView from "../../components/Custom/GoalModalView";
+import CGG from "../../components/Crome/CGG";
 
 
 export default class Analysis extends React.Component {
 
     state = {
-        network: null,
-        ready: false,
         modalGoal: false,
-        currentGoalIndex: 0
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-
-    }
-    componentDidMount() {
-
-    }
-
-    setReady = (bool) => {
-        this.setState({
-            ready: bool
-        })
+        currentGoalIndex: 0,
     }
 
     setModalGoal = (bool) => {
@@ -44,59 +30,52 @@ export default class Analysis extends React.Component {
 
     render() {
 
-        console.log(this.props.goals)
+        let that = this
 
         let nodesArray = []
+        let edgesArray = []
 
-        cgg.nodes.forEach(function(node) {
-            nodesArray.push({id: node.id, group: "input", label: "tempGoal"})
+        let goal
+
+        function findGoalInCGGById(id) {
+            for (const property in cgg.nodes) {
+                if (cgg.nodes.hasOwnProperty(property)) {
+                    if (cgg.nodes[property]["id"] === id[0]) return cgg.nodes[property]
+                }
+            }
+            return {id: null}
+        }
+
+        function findGoalById(id) {
+            for (let i=0; i<that.props.goals.length; i++) {
+                if (that.props.goals[i].id === id) return that.props.goals[i]
+            }
+            return {name: "error"}
+        }
+
+        if (this.props.goals !== null) {
+            cgg.nodes.forEach(function (node) {
+                goal = findGoalById(node.id)
+                nodesArray.push({
+                    id: node.id,
+                    group: node.hasOwnProperty("group") ? node.group : "input",
+                    label: node.hasOwnProperty("name") ? node.name : goal.name
+                })
+            });
+        }
+
+        cgg.edges.forEach(function (node) {
+            edgesArray.push({
+                from: node.from,
+                to: node.to,
+                arrows: {to: {type: cggsymbols[node.type]}}
+            })
         });
 
         const graph = {
             nodes: nodesArray,
-            edges: [
-                { from: 0, to: 1, arrows: {to: {type: "circle" }} },
-            ]
+            edges: edgesArray
         }
-
-        /*const graph = {
-            nodes: [
-                { id: 1, group: "new", label: "Node 1" },
-                { id: 2, group: "input", label: "Node 2" },
-                { id: 3, group: "input", label: "Node 3" },
-                { id: 4, group: "input", label: "Node 4" },
-                { id: 5, group: "new", label: "Node 5" },
-                { id: 6, group: "input", label: "Node 6" },
-                { id: 7, group: "new", label: "Node 7" },
-                { id: 8, group: "input", label: "Node 8" },
-                { id: 9, group: "input", label: "Node 9" },
-                { id: 10, group: "input", label: "Node 10" },
-                { id: 11, group: "library", label: "Node 11" },
-                { id: 12, group: "library", label: "Node 12" },
-                { id: 13, group: "library", label: "Node 13" },
-                { id: 14, group: "new", label: "Node 14" },
-                { id: 15, group: "library", label: "Node 15" },
-                { id: 16, group: "library", label: "Node 16" },
-            ],
-            edges: [
-                { from: 2, to: 1, arrows: {to: {type: "circle" }} },
-                { from: 3, to: 1, arrows: {to: {type: "circle" }} },
-                { from: 4, to: 1, arrows: {to: {type: "circle" }} },
-                { from: 5, to: 2, arrows: {to: {type: "vee" }} },
-                { from: 6, to: 3, arrows: {to: {type: "vee" }} },
-                { from: 7, to: 4, arrows: {to: {type: "vee" }} },
-                { from: 8, to: 5, arrows: {to: {type: "diamond" }} },
-                { from: 9, to: 5, arrows: {to: {type: "diamond" }} },
-                { from: 10, to: 5, arrows: {to: {type: "diamond" }} },
-                { from: 11, to: 6, arrows: {to: {type: "vee" }} },
-                { from: 12, to: 7, arrows: {to: {type: "diamond" }} },
-                { from: 13, to: 7, arrows: {to: {type: "diamond" }} },
-                { from: 14, to: 13, arrows: {to: {type: "vee" }} },
-                { from: 15, to: 14, arrows: {to: {type: "diamond" }} },
-                { from: 16, to: 14, arrows: {to: {type: "diamond" }} },
-
-            ]
-        };*/
 
         const options = {
             layout: {
@@ -158,57 +137,42 @@ export default class Analysis extends React.Component {
             }*/
         };
 
-        let that = this
+
 
         function clickOnGoal(id) {
-            that.setModalGoal(true)
-            that.setCurrentGoalIndex(id)
+            const goal = findGoalInCGGById(id)
+            if (!goal.hasOwnProperty("group")) {
+                that.setModalGoal(true)
+                that.setCurrentGoalIndex(id)
+            }
         }
         const events = {
-            select: function(event) {
-                const {nodes, edges} = event;
-                console.log(nodes+edges)
-                clickOnGoal(nodes)
+            doubleClick: function (event) {
+                if (event.nodes.length !== 0) clickOnGoal(event.nodes)
             }
         };
 
         return (
             <>
-                <div className="bg-lightBlue-500 bg-opacity-25">
-                    {this.state.ready && (<Graph
-                        graph={graph}
-                        options={options}
-                        events={events}
-                        getNetwork={network => {
-                            this.setState({
-                                network: network
-                            })
-                            //  if you want access to vis.js network api you can set the state in a parent component using this property
-                        }}
-                    />)}
-                    {this.props.active && (<DelayActivation callBack={this.setReady}/>)}
-                </div>
+                <CGG
+                    active={this.props.active}
+                    graph={graph}
+                    options={options}
+                    events={events}
+                />
                 <Modal
                     isOpen={this.state.modalGoal}
                     toggle={() => this.setModalGoal(false)}
                     className={"custom-modal-dialog sm:c-m-w-70 md:c-m-w-60 lg:c-m-w-50 xl:c-m-w-40"}>
-                    {this.props.goals !== null && (<GoalModalView
+                    {this.props.goals !== null && this.props.goals[this.state.currentGoalIndex] !== undefined && (
+                        <GoalModalView
                         goal={this.props.goals[this.state.currentGoalIndex]}
                         close={() => this.setModalGoal(false)}
                         patterns={this.props.patterns}
-                        {...goaleditinfo}/>)}
+                        {...goaleditinfo}/>
+                    )}
                 </Modal>
             </>
         );
-    }
-}
-
-class DelayActivation extends React.Component {
-    componentDidMount() {
-        let callBack = this.props.callBack
-        setTimeout(function(){callBack(true)},1000)
-    }
-    render() {
-        return null;
     }
 }
