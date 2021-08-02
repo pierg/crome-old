@@ -650,12 +650,10 @@ export default class CreateEnvironment extends React.Component {
                             world.setColorIdBlocked(startWall[0], startWall[1], "white", false, null);
                             world.reset();
                             world.updateMap(map);
-                            return;
                         } else if (previousColorWall === "white" || previousColorWall === null) { // if the wall was white the background color will be black
                             world.setColorIdBlocked(startWall[0], startWall[1], "black", true, null);
                             world.reset();
                             world.updateMap(map);
-                            return;
                         }
                     } else if (startWall[0] === endWall[0]) { // when the users select a column
                         if (startWall[0] % 2 === 1) { // when he clicks on a case that he can't choose
@@ -700,6 +698,7 @@ export default class CreateEnvironment extends React.Component {
                             for (let i = min; i < max +1; i+= 1) {
                                 world.setBackgroundColorWall(i, startWall[1], previousColorWall);
                             }
+                            world.updateMap(map);
                         }
                     } else {
                         world.setBackgroundColor(startWall[0], startWall[1], "white");
@@ -724,6 +723,7 @@ export default class CreateEnvironment extends React.Component {
                     }
                 }
             }
+            world.drawCorner(map);
             callbackMap(map)
             world.updateMap(map);
         }

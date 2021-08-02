@@ -622,6 +622,16 @@ GridWorld.prototype = {
     }
   },
 
+  drawCorner : function(map) {
+    for (let i = 2; i < map.length - 1; i+= 2) {
+      for (let j= 2; j < map.length - 1; j+= 2) {
+        if ((map[i - 1][j][0] === "black" || map[i + 1][j][0] === "black") && (map[i][j - 1][0] === "black" || map[i][j + 1][0] === "black")) {
+          this.setColorIdBlocked(i, j, "black", true, null);
+        }
+      }
+    }
+  },
+
   updateMap : function(map) {
     for (let i = 0; i < map.length; i++) {
       for (let j = 0; j < map[0].length; j++) {
