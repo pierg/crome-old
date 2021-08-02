@@ -25,6 +25,7 @@ export default class Synthesis extends React.Component {
     componentDidMount() {
         this.generateGridworldWithJSON();
         this.generate();
+        this.robot(0)
     }
 
 

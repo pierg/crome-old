@@ -64,7 +64,7 @@ export default function CustomDashboard(props) {
                             )
                         default:
                             return (
-                                <CustomPlayer {...custommediaplayerteaminfo} setWorld={updateWorld} setListOfWorldNames={updateListOfWorldNames} id={id}/>
+                                <CustomPlayer world={world} {...custommediaplayerteaminfo} setWorld={updateWorld} setListOfWorldNames={updateListOfWorldNames} id={id}/>
                             )
                     }
                 })()}
