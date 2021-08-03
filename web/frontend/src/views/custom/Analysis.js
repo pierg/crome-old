@@ -3,10 +3,13 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../assets/styles/tailwind.css";
 import * as cgg from "./cgg.json"
 import goaleditinfo from "../../_texts/custom/goaleditinfo";
-import cggsymbols from "../../_texts/custom/cggsymbols";
+import cgginfo from "../../_texts/custom/cgginfo";
 import {Modal} from "reactstrap";
 import GoalModalView from "../../components/Custom/GoalModalView";
 import CGG from "../../components/Crome/CGG";
+import Radio from "../../components/Elements/Radio";
+import Checkbox from "../../components/Elements/Checkbox";
+import Button from "../../components/Elements/Button";
 
 
 export default class Analysis extends React.Component {
@@ -47,8 +50,10 @@ export default class Analysis extends React.Component {
         }
 
         function findGoalById(id) {
-            for (let i=0; i<that.props.goals.length; i++) {
-                if (that.props.goals[i].id === id) return that.props.goals[i]
+            if (that.props.goals !== null) {
+                for (let i = 0; i < that.props.goals.length; i++) {
+                    if (that.props.goals[i].id === id) return that.props.goals[i]
+                }
             }
             return {name: "error"}
         }
@@ -68,7 +73,7 @@ export default class Analysis extends React.Component {
             edgesArray.push({
                 from: node.from,
                 to: node.to,
-                arrows: {to: {type: cggsymbols[node.type]}}
+                arrows: {to: {type: cgginfo.symbols[node.type]}}
             })
         });
 
@@ -154,6 +159,21 @@ export default class Analysis extends React.Component {
 
         return (
             <>
+                <div className="w-full flex justify-center my-4">
+                    {cgginfo.operators.map((prop, key) => (
+                        <Radio key={key} label={prop} name="operator"/>
+                    ))}
+                </div>
+                <div className="flex">
+                    <div className="w-1/2 flex flex-col">
+                        {cgg.nodes.map((prop, key) => (
+                            <Checkbox key={key} label={prop.hasOwnProperty("name") ? prop.name : findGoalById(prop.id)["name"]}/>
+                        ))}
+                    </div>
+                    <div className="w-1/2 flex justify-center items-center">
+                        <Button>Apply Operator</Button>
+                    </div>
+                </div>
                 <CGG
                     active={this.props.active}
                     graph={graph}
