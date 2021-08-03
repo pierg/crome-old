@@ -14,6 +14,8 @@ import json
 import threading
 from time import strftime
 
+from web.backend.operations.modelling import Modelling
+
 backend_folder = Path(__file__).parent.absolute()
 front_end_folder = Path(__file__).parents[1].absolute() / 'frontend'
 build_folder = front_end_folder / 'build'
@@ -113,6 +115,11 @@ def save_project(data):
     emit("project-saved", data['world']['info']['project_id'], room=users[session_id])
     emit("send-message", strftime("%H:%M:%S", now) + " The project \"" + name + "\" has been saved.",
          room=users[session_id])
+
+    #TODO: call create_environemnt
+    print("creating environment test")
+    Modelling.create_environment(storage_folder)
+    print("saved")
 
 
 @socketio.on('save-image')
