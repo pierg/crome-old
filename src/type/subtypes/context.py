@@ -13,12 +13,18 @@ class ContextInteger(BoundedInteger):
 
 class ContextBoolean(Boolean):
 
-    def __init__(self, name: str = "boolean_context"):
+    def __init__(self, name: str = "boolean_context", mutex: str = None):
         super().__init__(name)
+
+        self.mutex = mutex
 
     @property
     def kind(self):
         return TypeKinds.CONTEXT
+
+    @property
+    def mutex_group(self):
+        return self.mutex
 
     def to_atom(self):
         from specification.atom import Atom, AtomKind

@@ -13,8 +13,12 @@ class IntegerAction(BoundedInteger):
 
 class BooleanAction(Boolean):
 
-    def __init__(self, name: str):
+    def __init__(self,
+                 name: str,
+                 mutex: str = None):
         super().__init__(name)
+
+        self.mutex = mutex
 
     @property
     def kind(self):
@@ -25,3 +29,6 @@ class BooleanAction(Boolean):
         from typeset import Typeset
         return Atom(formula=(self.name, Typeset({self})), check=False, kind=AtomKind.ACTION)
 
+    @property
+    def mutex_group(self):
+        return self.mutex
