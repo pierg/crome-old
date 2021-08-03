@@ -13,7 +13,7 @@ class IntegerSensor(BoundedInteger):
 
 class BooleanSensor(Boolean):
 
-    def __init__(self, name: str):
+    def __init__(self, name: str, mutex: str = None):
         super().__init__(name)
 
     def to_atom(self):

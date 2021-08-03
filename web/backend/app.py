@@ -116,7 +116,6 @@ def save_project(data):
     emit("send-message", strftime("%H:%M:%S", now) + " The project \"" + name + "\" has been saved.",
          room=users[session_id])
 
-    # TODO: call create_environment and fix the storage folder to tbe the project folder
     print("creating environment test")
     Modelling.create_environment(project_dir)
     print("saved")

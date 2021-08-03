@@ -91,8 +91,8 @@ class World(dict):
         elem = BooleanAction(name, mutex)
         self.add_type(name, elem)
 
-    def new_boolean_sensor(self, name):
-        elem = BooleanSensor(name)
+    def new_boolean_sensor(self, name, mutex: str = None):
+        elem = BooleanSensor(name, mutex)
         self.add_type(name, elem)
 
     def new_boolean_location(self, name, mutex: str = None, adjacency: Set[str] = None):

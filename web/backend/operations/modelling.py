@@ -18,11 +18,18 @@ class Modelling:
 
         w = World(project_name=json_obj["project_id"])
         for action in json_obj["actions"]:
-            w.new_boolean_action(action["name"])
+            if action["mutex_group"]:
+                w.new_boolean_action(action["name"], mutex=action["mutex_group"])
+            else:
+                w.new_boolean_action(action["name"])
+        for sensor in json_obj["sensors"]:
+            if sensor["mutex_group"]:
+                w.new_boolean_sensor(sensor["name"], mutex=sensor["mutex_group"])
+            else:
+                w.new_boolean_sensor(sensor["name"])
         for location in json_obj["grid"]["locations"]:
             w.new_boolean_location(location["id"], mutex="locations", adjacency=location["adjacency"])
         w.new_boolean_context("day", mutex="time")
         w.new_boolean_context("night", mutex="time")
 
-        # TODO: save the world instance in the project_folder
         Persistence.dump_world(w, project_folder)
