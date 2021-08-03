@@ -7,50 +7,68 @@ from cgg import Node
 from controller import Controller
 from pathlib import Path
 
+from world import World
+
+
 class Persistence:
-    output_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'output'))
+    default_folder_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'output'))
 
     @staticmethod
-    def dump_cgg(cgg: Node):
+    def dump_cgg(cgg: Node, folder_path: str = None):
 
-        if cgg.session_name is not None:
-            output_folder = f"{Persistence.output_folder}/{cgg.session_name}"
-        else:
-            output_folder = f"{Persistence.output_folder}"
+        if folder_path is None:
+            folder_path = Persistence.default_folder_path
 
-        output_file = f"{output_folder}/cgg.dat"
+        output_file = f"{folder_path}/cgg.dat"
 
-        output_folder = Path(output_folder)
+        folder_path = Path(folder_path)
         output_file = Path(output_file)
 
-        if not os.path.exists(output_folder):
-            os.makedirs(output_folder)
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
 
         file = open(output_file, 'wb')
         pickle.dump(cgg, file)
         file.close()
 
     @staticmethod
-    def dump_goals(set_goals: Set[Node], subfolder_name: str = None):
+    def dump_world(world: World, folder_path: str = None):
 
-        if subfolder_name is not None:
-            output_folder = f"{Persistence.output_folder}/{subfolder_name}"
-        else:
-            output_folder = f"{Persistence.output_folder}"
+        if folder_path is None:
+            folder_path = Persistence.default_folder_path
 
-        output_file = f"{output_folder}/goals.dat"
+        output_file = f"{folder_path}/world.dat"
 
         output_file = Path(output_file)
 
-        if not os.path.exists(output_folder):
-            os.makedirs(output_folder)
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+
+        file = open(output_file, 'wb')
+        pickle.dump(world, file)
+        file.close()
+
+    @staticmethod
+    def dump_goals(set_goals: Set[Node], folder_path: str = None):
+
+        if subfolder_name is not None:
+            folder_path = f"{Persistence.default_folder_path}/{subfolder_name}"
+        else:
+            folder_path = f"{Persistence.default_folder_path}"
+
+        output_file = f"{folder_path}/goals.dat"
+
+        output_file = Path(output_file)
+
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
 
         file = open(output_file, 'wb')
         pickle.dump(set_goals, file)
         file.close()
 
     @staticmethod
-    def dump_controller(controller: Controller, folder_path: str, name: str = None):
+    def dump_controller(controller: Controller, folder_path: str = None, name: str = None):
 
         if name is None:
             name = "controller"
@@ -67,14 +85,9 @@ class Persistence:
         file.close()
 
     @staticmethod
-    def load_cgg(session_folder_name: str) -> Node:
+    def load_cgg(folder_path: str) -> Node:
 
-        if session_folder_name is not None:
-            output_folder = f"{Persistence.output_folder}/{session_folder_name}"
-        else:
-            output_folder = f"{Persistence.output_folder}"
-
-        file = f"{output_folder}/cgg.dat"
+        file = f"{folder_path}/cgg.dat"
 
         file = Path(file)
 
@@ -101,16 +114,11 @@ class Persistence:
         return controller
 
     @staticmethod
-    def load_goals(subfolder_name: str = None) -> Set[Node]:
+    def load_goals(folder_path: str) -> Set[Node]:
 
-        if subfolder_name is not None:
-            output_folder = f"{Persistence.output_folder}/{subfolder_name}"
-        else:
-            output_folder = f"{Persistence.output_folder}"
+        file = f"{folder_path}/goals.dat"
 
-        file = f"{output_folder}/goals.dat"
-
-        output_file = Path(file)
+        file = Path(file)
 
         file = open(file, 'rb')
         set_goals = pickle.load(file)
