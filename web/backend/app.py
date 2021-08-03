@@ -237,10 +237,11 @@ def process_goals(session_id):
 
 
 @socketio.on('process-cgg')
-def process_cgg(session_id):
-    print("BEGIN SLEEP")
-    time.sleep(6)
-    print("STOP SLEEP")
+def process_cgg(data):
+    cgg_file_path = Path(os.path.join(storage_folder, 'crome/cgg.json'))
+    with open(cgg_file_path) as json_file:
+        cgg_file = json.load(json_file)
+    emit("receive-cgg", {'cgg': json.dumps(cgg_file)}, room=users[data['session']])
 
 
 @socketio.on('session-existing')
