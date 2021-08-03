@@ -1,3 +1,8 @@
+import json
+import os
+from os import walk
+from pathlib import Path
+
 from tools.persistence import Persistence
 from world import World
 
@@ -7,16 +12,15 @@ class Modelling:
     @staticmethod
     def create_environment(project_folder):
 
-        # TODO: Substitute below with the parameters loaded from the JSON in 'project_folder'
-        w = World(project_name="fill_project_id")
-        w.new_boolean_action("greet")
-        w.new_boolean_action("register")
-        w.new_boolean_sensor("person")
-        w.new_boolean_location("r1", mutex="locations", adjacency={"r2", "r5"})
-        w.new_boolean_location("r2", mutex="locations", adjacency={"r1", "r5"})
-        w.new_boolean_location("r5", mutex="locations", adjacency={"r1", "r2", "r3", "r4"})
-        w.new_boolean_location("r3", mutex="locations", adjacency={"r4", "r5"})
-        w.new_boolean_location("r4", mutex="locations", adjacency={"r3", "r5"})
+        # dir_path, dir_names, filenames = next(walk(project_folder))
+        with open(Path(os.path.join(project_folder, "environment.json"))) as json_file:
+            json_obj = json.load(json_file)
+
+        w = World(project_name=json_obj["project_id"])
+        for action in json_obj["actions"]:
+            w.new_boolean_action(action["name"])
+        for location in json_obj["grid"]["locations"]:
+            w.new_boolean_location(location["id"], mutex="locations", adjacency=location["adjacency"])
         w.new_boolean_context("day", mutex="time")
         w.new_boolean_context("night", mutex="time")
 
