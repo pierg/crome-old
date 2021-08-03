@@ -103,6 +103,11 @@ export default class Analysis extends React.Component {
                     if (that.props.goals[i].id === id) return that.props.goals[i]
                 }
             }
+            if (that.state.cgg !== null) {
+                for (let i = 0; i < that.state.cgg.nodes.length; i++) {
+                    if (that.state.cgg.nodes[i].id === id) return that.state.cgg.nodes[i]
+                }
+            }
             return {name: "error"}
         }
 

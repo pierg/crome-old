@@ -30,13 +30,22 @@ function BuildCGG(props) {
             if (props.selectedOperator === "Refinement") {
                 switch (tmpSelectedGoals.length) {
                     case 0: setRefinementMessage(props.infos.refinementMessages[1]); break;
-                    case 1: setRefinementMessage(props.selectedGoals[0]+" --> "+goal); break;
+                    case 1: setRefinementMessage(getGoalName(props.selectedGoals[0])+" --> "+getGoalName(goal)); break;
                     case 2: setRefinementMessage(props.infos.refinementMessages[2]); return;
                     default: break
                 }
             }
             tmpSelectedGoals.push(goal)
             props.updateSelectedGoals(tmpSelectedGoals)
+        }
+    }
+
+    function getGoalName(node) {
+        if (node.hasOwnProperty("name")) {
+            return node.name
+        }
+        else {
+            return typeof node === "object" && node.hasOwnProperty("id") ? props.findGoalById(node.id)["name"] : props.findGoalById(node)["name"]
         }
     }
 
@@ -53,7 +62,7 @@ function BuildCGG(props) {
             <div className="flex">
                 <div className="w-1/2 flex flex-col">
                     {props.cgg !== null && props.cgg.nodes.map((prop, key) => (
-                        <Checkbox key={key} onChange={() => changeGoals(prop.id)} checked={props.selectedGoals.includes(prop.id) ? "checked" : ""} label={prop.hasOwnProperty("name") ? prop.name : props.findGoalById(prop.id)["name"]}/>
+                        <Checkbox key={key} onChange={() => changeGoals(prop.id)} checked={props.selectedGoals.includes(prop.id) ? "checked" : ""} label={getGoalName(prop)}/>
                     ))}
                 </div>
                 <div className="w-1/2 flex justify-center items-center">
