@@ -5,14 +5,39 @@ import Button from "../Elements/Button";
 
 function BuildCGG(props) {
 
+    const [refinementMessage, setRefinementMessage] = React.useState("")
+
     function changeOperator(operator) {
+        if (operator === "Refinement" || props.selectedOperator === "Refinement") {
+            operator === "Refinement" ? setRefinementMessage(props.infos.refinementMessages[0]) : setRefinementMessage("")
+            props.updateSelectedGoals([])
+        }
         props.setOperator(operator)
     }
 
     function changeGoals(goal) {
+
         let tmpSelectedGoals = JSON.parse(JSON.stringify(props.selectedGoals))
-        tmpSelectedGoals.includes(goal) ? tmpSelectedGoals.splice(tmpSelectedGoals.indexOf(goal), 1) : tmpSelectedGoals.push(goal)
-        props.updateSelectedGoals(tmpSelectedGoals)
+
+        if (props.selectedGoals.includes(goal)) { // Removing a goal
+            if (props.selectedOperator === "Refinement") {
+                setRefinementMessage(props.infos.refinementMessages[tmpSelectedGoals.length - 1])
+            }
+            tmpSelectedGoals.splice(tmpSelectedGoals.indexOf(goal), 1)
+            props.updateSelectedGoals(tmpSelectedGoals)
+        }
+        else { // Adding a goal
+            if (props.selectedOperator === "Refinement") {
+                switch (tmpSelectedGoals.length) {
+                    case 0: setRefinementMessage(props.infos.refinementMessages[1]); break;
+                    case 1: setRefinementMessage(props.selectedGoals[0]+" --> "+goal); break;
+                    case 2: setRefinementMessage(props.infos.refinementMessages[2]); return;
+                    default: break
+                }
+            }
+            tmpSelectedGoals.push(goal)
+            props.updateSelectedGoals(tmpSelectedGoals)
+        }
     }
 
     return(
@@ -21,6 +46,9 @@ function BuildCGG(props) {
                 {props.infos.operators.map((prop, key) => (
                     <Radio key={key} label={prop} onChange={() => changeOperator(prop)} checked={props.selectedOperator === prop} name="operator"/>
                 ))}
+            </div>
+            <div className="flex w-full justify-center">
+                {refinementMessage}
             </div>
             <div className="flex">
                 <div className="w-1/2 flex flex-col">

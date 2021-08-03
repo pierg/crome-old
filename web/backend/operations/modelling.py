@@ -12,7 +12,6 @@ class Modelling:
     @staticmethod
     def create_environment(project_folder):
 
-        # dir_path, dir_names, filenames = next(walk(project_folder))
         with open(Path(os.path.join(project_folder, "environment.json"))) as json_file:
             json_obj = json.load(json_file)
 

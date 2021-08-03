@@ -5,6 +5,11 @@ const textProps = {
         composition: "diamond",
         refinement: "vee"
     },
+    refinementMessages: [
+        "Select the Abstract Goal",
+        "Select the Refined Goal",
+        "Please select only 2 Goals"
+    ],
     buttonText: "Apply Operator"
 };
 export default textProps;

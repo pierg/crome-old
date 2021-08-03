@@ -12,8 +12,8 @@ function SocketBuildCGG(props) {
             case "conjunction": socket.emit('apply-conjunction', {session: props.session, goals: props.goals }); break;
             case "composition": socket.emit('apply-composition', {session: props.session, goals: props.goals }); break;
             case "disjunction": socket.emit('apply-disjunction', {session: props.session, goals: props.goals }); break;
-            case "refinement": socket.emit('apply-refinement', {session: props.session, abstract: props.firstGoal, refined: props.secondGoal }); break;
-            case "extension": socket.emit('apply-extension', {session: props.session, input: props.firstGoal, library: props.library }); break;
+            case "refinement": socket.emit('apply-refinement', {session: props.session, abstract: props.goals[0], refined: props.goals[1] }); break;
+            case "extension": socket.emit('apply-extension', {session: props.session, input: props.goals[0], library: props.library }); break;
             default: return
         }
         
