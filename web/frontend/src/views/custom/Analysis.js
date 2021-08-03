@@ -6,10 +6,9 @@ import cgginfo from "../../_texts/custom/cgginfo";
 import {Modal} from "reactstrap";
 import GoalModalView from "../../components/Custom/GoalModalView";
 import CGG from "../../components/Crome/CGG";
-import Radio from "../../components/Elements/Radio";
-import Checkbox from "../../components/Elements/Checkbox";
-import Button from "../../components/Elements/Button";
 import GetCGG from "../../components/Custom/Examples/GetCGG";
+import BuildCGG from "../../components/Custom/BuildCGG";
+import SocketBuildCGG from "../../components/Custom/Examples/SocketBuildCGG";
 
 
 export default class Analysis extends React.Component {
@@ -17,7 +16,13 @@ export default class Analysis extends React.Component {
     state = {
         modalGoal: false,
         currentGoalIndex: 0,
-        cgg: null
+        cgg: null,
+        operator: null,
+        selectedGoals: [],
+        orderedGoals: [],
+        library: null,
+        triggerOperation: false,
+        triggerCGG: false
     }
 
     setModalGoal = (bool) => {
@@ -38,6 +43,45 @@ export default class Analysis extends React.Component {
                 cgg: JSON.parse(cgg)
             })
         }
+    }
+
+    setOperator = (operator) => {
+        this.setState({
+            operator: operator
+        })
+    }
+
+    setSelectedGoals = (selectedGoals) => {
+        this.setState({
+            selectedGoals: selectedGoals
+        })
+    }
+
+    setOrderedGoals = (goal, index) => {
+        let tmpGoals = this.state.orderedGoals
+        tmpGoals[index] = goal
+        this.setState({
+            orderedGoals: tmpGoals
+        })
+    }
+
+    applyOperator = () => {
+        this.setTriggerOperation(true)
+    }
+
+    setTriggerOperation = (bool) => {
+        if (!bool) {
+            this.setTriggerCGG(!this.state.triggerCGG)
+        }
+        this.setState({
+            triggerOperation: bool
+        })
+    }
+
+    setTriggerCGG = (bool) => {
+        this.setState({
+            triggerCGG: bool
+        })
     }
 
     render() {
@@ -174,22 +218,29 @@ export default class Analysis extends React.Component {
 
         return (
             <>
-                <GetCGG updateCGG={this.setCGG} session={this.props.id}/>
-                <div className="w-full flex justify-center my-4">
-                    {cgginfo.operators.map((prop, key) => (
-                        <Radio key={key} label={prop} name="operator"/>
-                    ))}
-                </div>
-                <div className="flex">
-                    <div className="w-1/2 flex flex-col">
-                        {this.state.cgg !== null && this.state.cgg.nodes.map((prop, key) => (
-                            <Checkbox key={key} label={prop.hasOwnProperty("name") ? prop.name : findGoalById(prop.id)["name"]}/>
-                        ))}
-                    </div>
-                    <div className="w-1/2 flex justify-center items-center">
-                        <Button>Apply Operator</Button>
-                    </div>
-                </div>
+                <GetCGG updateCGG={this.setCGG} session={this.props.id} trigger={this.state.triggerCGG}/>
+                <SocketBuildCGG
+                    session={this.props.id}
+                    operator={this.state.operator}
+                    goals={this.state.selectedGoals}
+                    firstGoal={this.state.orderedGoals[0]}
+                    secondGoal={this.state.orderedGoals[1]}
+                    library={this.state.library}
+                    trigger={this.state.triggerOperation}
+                    setTrigger={this.setTriggerOperation}
+                />
+                <BuildCGG
+                    infos={cgginfo}
+                    cgg={this.state.cgg}
+                    findGoalById={findGoalById}
+                    selectedOperator={this.state.operator}
+                    setOperator={this.setOperator}
+                    selectedGoals={this.state.selectedGoals}
+                    updateSelectedGoals={this.setSelectedGoals}
+                    firstGoal={this.state.orderedGoals[0]}
+                    secondGoal={this.state.orderedGoals[1]}
+                    updateOrderedGoals={this.setOrderedGoals}
+                    applyOperator={this.applyOperator}/>
                 <CGG
                     active={this.props.active}
                     graph={graph}

@@ -244,6 +244,41 @@ def process_cgg(data):
     emit("receive-cgg", {'cgg': json.dumps(cgg_file)}, room=users[data['session']])
 
 
+@socketio.on('apply-conjunction')
+def conjunction(data):
+    print("APPLY OPERATION : conjunction")
+    print(data)
+    emit("operation-complete", True, room=users[data['session']])
+
+
+@socketio.on('apply-composition')
+def composition(data):
+    print("APPLY OPERATION : composition")
+    print(data)
+    emit("operation-complete", True, room=users[data['session']])
+
+
+@socketio.on('apply-disjunction')
+def disjunction(data):
+    print("APPLY OPERATION : disjunction")
+    print(data)
+    emit("operation-complete", True, room=users[data['session']])
+
+
+@socketio.on('apply-refinement')
+def refinement(data):
+    print("APPLY OPERATION : refinement")
+    print(data)
+    emit("operation-complete", True, room=users[data['session']])
+
+
+@socketio.on('apply-extension')
+def extension(data):
+    print("APPLY OPERATION : extension")
+    print(data)
+    emit("operation-complete", True, room=users[data['session']])
+
+
 @socketio.on('session-existing')
 def check_if_session_exist(session_id):
     print("check if following session exists : "+str(session_id))

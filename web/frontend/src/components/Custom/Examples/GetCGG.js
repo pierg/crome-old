@@ -20,7 +20,7 @@ function GetCGG(props) {
         socket.on('receive-cgg', setMessageFunction)
 
         return () => socket.off('receive-cgg')
-    }, [socket, setMessageFunction, props.session])
+    }, [socket, setMessageFunction, props.session, props.trigger])
 
     useEffect(() => {
         props.updateCGG(message)
