@@ -190,6 +190,9 @@ class Node(Goal):
         else:
             return {self}
 
+    def refine_by(self, goal: Node):
+        pass
+
     def orchestrate(self, n_steps: int, t_min_context: int = 10):
         if t_min_context < self.t_trans:
             raise Exception("T context min < T transition max")
