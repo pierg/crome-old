@@ -906,7 +906,9 @@ export default class CreateEnvironment extends React.Component {
                 }
             }
         }
-        obj.grid.adjacency = this.getAdjacencyTable(obj.grid.locations)
+        for (let i = 0; i < idTable.length; i++) {
+            obj.grid.locations[i].adjacency = this.getAdjacencyTable(obj.grid.locations, obj.grid.locations[i].id)
+        }
         let lists = ["actions", "sensors"]
         for (let i = 1; i < this.state.lists.length; i++) {
             obj[lists[i-1]] = []
@@ -925,21 +927,19 @@ export default class CreateEnvironment extends React.Component {
         //const name = window.prompt("What is the name of the file ?");
     }
 
-    getAdjacencyTable(adjTable) {
+    getAdjacencyTable(adjTable, id) {
         let adjacency = []
-        for (let i = 0; i < adjTable.length; i++) {
+        /*for (let i = 0; i < adjTable.length; i++) {
             adjacency.push({"id" : adjTable[i]["id"]})
-        }
-        for (let i = 0; i < adjTable.length; i++) {
-            let liste_adj = []
-            for (let j = 0; j < adjTable.length; j++) {
-                if (i !== j) {
-                    if (this.isAdjacent(adjTable[i]["coordinates"], adjTable[j]["coordinates"])) {
-                        liste_adj.push(adjTable[j]["id"])
-                    }
+        }*/
+        let liste_adj = []
+        for (let j = 0; j < adjTable.length; j++) {
+            if (id !== j) {
+                if (this.isAdjacent(adjTable[id]["coordinates"], adjTable[j]["coordinates"])) {
+                    liste_adj.push(adjTable[j]["id"])
                 }
             }
-            adjacency[i]["array"] = liste_adj
+            adjacency[id]["array"] = liste_adj
         }
         return adjacency
     }
