@@ -34,5 +34,16 @@
       "to": 3,
       "type": "refinement"
     }
+  ],
+  "libraries" : [
+    {
+      "name": "library_1"
+    },
+    {
+      "name": "library_2"
+    },
+    {
+      "name": "library_3"
+    }
   ]
 }

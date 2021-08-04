@@ -19,7 +19,7 @@ export default class Analysis extends React.Component {
         cgg: null,
         operator: null,
         selectedGoals: [],
-        orderedGoals: [],
+        selectedLibrary: null,
         library: null,
         triggerOperation: false,
         triggerCGG: false
@@ -57,11 +57,9 @@ export default class Analysis extends React.Component {
         })
     }
 
-    setOrderedGoals = (goal, index) => {
-        let tmpGoals = this.state.orderedGoals
-        tmpGoals[index] = goal
+    setLibrary = (library) => {
         this.setState({
-            orderedGoals: tmpGoals
+            selectedLibrary: library
         })
     }
 
@@ -228,7 +226,7 @@ export default class Analysis extends React.Component {
                     session={this.props.id}
                     operator={this.state.operator}
                     goals={this.state.selectedGoals}
-                    library={this.state.library}
+                    library={this.state.selectedLibrary}
                     trigger={this.state.triggerOperation}
                     setTrigger={this.setTriggerOperation}
                 />
@@ -240,7 +238,8 @@ export default class Analysis extends React.Component {
                     setOperator={this.setOperator}
                     selectedGoals={this.state.selectedGoals}
                     updateSelectedGoals={this.setSelectedGoals}
-                    updateOrderedGoals={this.setOrderedGoals}
+                    selectedLibrary={this.state.selectedLibrary}
+                    setLibrary={this.setLibrary}
                     applyOperator={this.applyOperator}/>
                 <CGG
                     active={this.props.active}

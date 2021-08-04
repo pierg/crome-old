@@ -5,14 +5,22 @@ import Button from "../Elements/Button";
 
 function BuildCGG(props) {
 
-    const [refinementMessage, setRefinementMessage] = React.useState("")
+    const [infoMessage, setInfoMessage] = React.useState("")
 
     function changeOperator(operator) {
         if (operator === "Refinement" || props.selectedOperator === "Refinement") {
-            operator === "Refinement" ? setRefinementMessage(props.infos.refinementMessages[0]) : setRefinementMessage("")
+            operator === "Refinement" ? setInfoMessage(props.infos.refinementMessages[0]) : setInfoMessage("")
             props.updateSelectedGoals([])
         }
+        if (operator === "Extension" || props.selectedOperator === "Extension") {
+            props.updateSelectedGoals([])
+            props.setLibrary(null)
+        }
         props.setOperator(operator)
+    }
+
+    function changeLibrary(name) {
+        props.setLibrary(name)
     }
 
     function changeGoals(goal) {
@@ -21,7 +29,10 @@ function BuildCGG(props) {
 
         if (props.selectedGoals.includes(goal)) { // Removing a goal
             if (props.selectedOperator === "Refinement") {
-                setRefinementMessage(props.infos.refinementMessages[tmpSelectedGoals.length - 1])
+                setInfoMessage(props.infos.refinementMessages[tmpSelectedGoals.length - 1])
+            }
+            if (props.selectedOperator === "Extension") {
+                setInfoMessage("")
             }
             tmpSelectedGoals.splice(tmpSelectedGoals.indexOf(goal), 1)
             props.updateSelectedGoals(tmpSelectedGoals)
@@ -29,11 +40,15 @@ function BuildCGG(props) {
         else { // Adding a goal
             if (props.selectedOperator === "Refinement") {
                 switch (tmpSelectedGoals.length) {
-                    case 0: setRefinementMessage(props.infos.refinementMessages[1]); break;
-                    case 1: setRefinementMessage(getGoalName(props.selectedGoals[0])+" --> "+getGoalName(goal)); break;
-                    case 2: setRefinementMessage(props.infos.refinementMessages[2]); return;
+                    case 0: setInfoMessage(props.infos.refinementMessages[1]); break;
+                    case 1: setInfoMessage(getGoalName(props.selectedGoals[0])+" --> "+getGoalName(goal)); break;
+                    case 2: setInfoMessage(props.infos.refinementMessages[2]); return;
                     default: break
                 }
+            }
+            if (props.selectedOperator === "Extension" && tmpSelectedGoals.length === 1) {
+                setInfoMessage(props.infos.libraryWarning)
+                return
             }
             tmpSelectedGoals.push(goal)
             props.updateSelectedGoals(tmpSelectedGoals)
@@ -57,13 +72,20 @@ function BuildCGG(props) {
                 ))}
             </div>
             <div className="flex w-full justify-center">
-                {refinementMessage}
+                {infoMessage}
             </div>
             <div className="flex">
-                <div className="w-1/2 flex flex-col">
-                    {props.cgg !== null && props.cgg.nodes.map((prop, key) => (
-                        <Checkbox key={key} onChange={() => changeGoals(prop.id)} checked={props.selectedGoals.includes(prop.id) ? "checked" : ""} label={getGoalName(prop)}/>
-                    ))}
+                <div className="w-1/2 flex">
+                    <div className="flex flex-col">
+                        {props.cgg !== null && props.cgg.nodes.map((prop, key) => (
+                            <Checkbox key={key} onChange={() => changeGoals(prop.id)} checked={props.selectedGoals.includes(prop.id) ? "checked" : ""} label={getGoalName(prop)}/>
+                        ))}
+                    </div>
+                    {props.selectedOperator === "Extension" && (<div className="flex flex-col">
+                        {props.cgg !== null && props.cgg.libraries.map((prop, key) => (
+                            <Radio key={key} onChange={() => changeLibrary(prop.name)} checked={props.selectedLibrary === prop.name} label={prop.name}/>
+                        ))}
+                    </div>)}
                 </div>
                 <div className="w-1/2 flex justify-center items-center">
                     <Button onClick={props.applyOperator}>{props.infos.buttonText}</Button>
