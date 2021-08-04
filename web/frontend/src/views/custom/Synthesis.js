@@ -26,7 +26,6 @@ export default class Synthesis extends React.Component {
     componentDidMount() {
         this.generateGridworldWithJSON();
         this.generate();
-
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -140,9 +139,6 @@ export default class Synthesis extends React.Component {
         this.x = Math.trunc(this.tab[this.index][0] - 1) * 32 + 24;
         this.y = Math.trunc(this.tab[this.index][1] - 1) * 32 + 24;
         ctx.drawImage(image, this.x, this.y, 50, 50);
-        console.log("draw with "+this.x+" "+this.y)
-        console.log(image)
-        console.log(ctx)
     }
 
     robot(i) {
