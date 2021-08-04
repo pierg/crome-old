@@ -46,6 +46,7 @@ class Node(Goal):
     def __init__(self,
                  name: str = None,
                  description: str = None,
+                 id: str = None,
                  specification: Union[Specification, Contract] = None,
                  context: Specification = None,
                  world: World = None,
@@ -53,9 +54,9 @@ class Node(Goal):
         """Graph properties"""
 
         if goal is None:
-            super().__init__(name, description, specification, context, world)
+            super().__init__(name, description, id, specification, context, world)
         elif goal is not None and name is None and description is None and specification is None and context is None and world is None:
-            super().__init__(goal.name, goal.description, goal.specification, goal.context, goal.world)
+            super().__init__(goal.name, goal.description, goal.id, goal.specification, goal.context, goal.world)
         else:
             raise AttributeError
 

@@ -27,6 +27,7 @@ class Goal:
     def __init__(self,
                  name: str = None,
                  description: str = None,
+                 id: str = None,
                  specification: Union[Specification, Contract] = None,
                  context: Union[Specification, Boolean] = None,
                  world: World = None):
@@ -34,6 +35,8 @@ class Goal:
         """Read only properties"""
         self.__realizable = None
         self.__controller = None
+
+        self._custom_id = id
 
         """Properties defined on first instantiation"""
         self.name: str = name
@@ -82,6 +85,8 @@ class Goal:
     @name.setter
     def name(self, value: str):
         self.__name, self.__id = StringMng.get_name_and_id(value)
+        if self._custom_id is not None:
+            self.__id = self._custom_id
 
     @property
     def description(self) -> str:

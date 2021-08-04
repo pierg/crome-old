@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Set
 
 from cgg import Node
+from contract import Contract
 from specification.atom.pattern.robotics.coremovement.surveillance import *
 from specification.formula import Formula
 from tools.persistence import Persistence
@@ -39,8 +40,45 @@ class Modelling:
         Persistence.dump_world(w, project_folder)
 
     @staticmethod
+    def add_goal_updated(project_folder):
+
+        """Load existing list of goals objects and world"""
+        set_of_goals = Persistence.load_goals(project_folder)
+        w = Persistence.load_world(project_folder)
+
+        """Create a new goal"""
+
+        """Assumptions (if inserted by the designer"""
+        a1 = Formula(Atom(formula=("G(F(r1 & r2))", Typeset({w["r1"], w["r1"]}))))
+        a2 = Patrolling([w["r1"], w["r2"]])
+
+        """Guarantees"""
+        g1 = Formula(Atom(formula=("G(F(r3 & r4))", Typeset({w["r3"], w["r4"]}))))
+        g2 = StrictOrderedPatrolling([w["r1"], w["r2"]])
+
+        """Context"""
+        context = w["day"]
+
+        contract = Contract(
+            assumptions=a1 & a2,
+            guarantees=g1 & g2
+        )
+
+        """Instanciate the goal"""
+
+        new_goal = Node(name="Day patrolling",
+                        description="description",
+                        specification=contract,
+                        context=context,
+                        world=w)
+
+        set_of_goals.add(new_goal)
+
+        Persistence.dump_goals(set_of_goals, project_folder)
+
+    @staticmethod
     def add_goal(project_folder):
-        set_of_goals = Modelling.get_goals(project_folder)
+        set_of_goals = Persistence.load_goals(project_folder)
 
         # TODO: Mockup - Fix me
 
@@ -50,25 +88,22 @@ class Modelling:
         ltl_formula = Formula(Atom(formula=("G(F(r1 & r2))", Typeset({w["r1"], w["r1"]}))))
 
         new_goal = Node(name="Day patrolling",
-                          description="description",
-                          specification=ltl_formula)
+                        description="description",
+                        specification=ltl_formula)
 
         set_of_goals.add(new_goal)
-
 
         # CASE 2: designer has inserted a patter:
         pattern_formula = StrictOrderedPatrolling([w["r1"], w["r2"]])
 
         new_goal = Node(name="Day patrolling 2",
-                          description="description",
-                          specification=pattern_formula)
+                        description="description",
+                        specification=pattern_formula)
 
         set_of_goals.add(new_goal)
 
         Persistence.dump_goals(set_of_goals, project_folder)
 
-
-
     @staticmethod
-    def get_goals(project_folder) -> Set[Node]:
+    def get_goals(project_folder) -> str:
         set_of_goals = Persistence.load_goals(project_folder)
