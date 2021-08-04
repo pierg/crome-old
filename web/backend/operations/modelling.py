@@ -104,6 +104,3 @@ class Modelling:
 
         Persistence.dump_goals(set_of_goals, project_folder)
 
-    @staticmethod
-    def get_goals(project_folder) -> str:
-        set_of_goals = Persistence.load_goals(project_folder)
