@@ -2,8 +2,13 @@ import json
 import os
 from os import walk
 from pathlib import Path
+from typing import Set
 
+from cgg import Node
+from specification.atom.pattern.robotics.coremovement.surveillance import *
+from specification.formula import Formula
 from tools.persistence import Persistence
+from typeset import Typeset
 from world import World
 
 
@@ -32,3 +37,38 @@ class Modelling:
         w.new_boolean_context("night", mutex="time")
 
         Persistence.dump_world(w, project_folder)
+
+    @staticmethod
+    def add_goal(project_folder):
+        set_of_goals = Modelling.get_goals(project_folder)
+
+        # TODO: Mockup - Fix me
+
+        w = Persistence.load_world(project_folder)
+
+        # CASE 1: designer inserted a LTL formula, i.e. a string on some world variables
+        ltl_formula = Formula(Atom(formula=("G(F(r1 & r2))", Typeset({w["r1"], w["r1"]}))))
+
+        new_goal = Node(name="Day patrolling",
+                          description="description",
+                          specification=ltl_formula)
+
+        set_of_goals.add(new_goal)
+
+
+        # CASE 2: designer has inserted a patter:
+        pattern_formula = StrictOrderedPatrolling([w["r1"], w["r2"]])
+
+        new_goal = Node(name="Day patrolling 2",
+                          description="description",
+                          specification=pattern_formula)
+
+        set_of_goals.add(new_goal)
+
+        Persistence.dump_goals(set_of_goals, project_folder)
+
+
+
+    @staticmethod
+    def get_goals(project_folder) -> Set[Node]:
+        set_of_goals = Persistence.load_goals(project_folder)
