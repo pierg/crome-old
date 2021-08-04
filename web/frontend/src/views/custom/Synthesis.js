@@ -20,6 +20,7 @@ export default class Synthesis extends React.Component {
         this.x = null;
         this.y = null;
         this.robotButton = React.createRef();
+        this.running = false;
     }
 
     componentDidMount() {
@@ -132,8 +133,8 @@ export default class Synthesis extends React.Component {
         const image = new Image();
         image.src = img;
         const ctx = document.getElementById('canvas').getContext('2d');
-        this.x = Math.trunc(this.tab[this.index][0]/ 2 ) * 64 + 24;
-        this.y = Math.trunc(this.tab[this.index][1]/ 2 ) * 64 + 24;
+        this.x = Math.trunc(this.tab[this.index][0] - 1) * 32 + 24;
+        this.y = Math.trunc(this.tab[this.index][1] - 1) * 32 + 24;
         ctx.drawImage(image, this.x, this.y, 50, 50);
     }
 
@@ -148,6 +149,10 @@ export default class Synthesis extends React.Component {
         if (this.index === this.tab.length) {
             this.drawPreviousCase(ctx, 1);
             this.clear();
+            if (this.timer !== null) {
+                clearInterval(this.timer)
+                this.timer = null;
+            }
             return;
         }
         else if (this.index > 0) {
@@ -159,6 +164,21 @@ export default class Synthesis extends React.Component {
         }
         this.drawRobot();
     }
+
+    run() {
+        if (this.running) {
+            clearInterval(this.timer)
+            this.timer = null;
+            this.running = false;
+        }
+        else {
+            this.timer = setInterval(() => {
+                this.robot(1)
+            }, 1000);
+            this.running = true;
+        }
+    }
+
 
     drawPreviousCase(ctx, index) {
         ctx.fillRect(this.x, this.y, 50, 50);
@@ -218,7 +238,7 @@ export default class Synthesis extends React.Component {
             table += "<td>" + simulation[i].controller + "</td>";
             table += "<td>" + simulation[i].inputs + "</td>";
             table += "<td>" + simulation[i].outputs + "</td></tr>";
-            this.tab.push([simulation[i].x, simulation[i].y]);
+            this.tab.push([(simulation[i].x1 + simulation[i].x2) / 2 , (simulation[i].y1 + simulation[i].y2) / 2]);
         }
         document.getElementById("test").innerHTML = table;
     }
@@ -240,6 +260,7 @@ export default class Synthesis extends React.Component {
                     <Button onClick={() =>this.robot(1)}>+</Button>
                     <Button onClick={() =>this.robot(-1)}>-</Button>
                     <Button onClick={() =>this.clear()}>clear</Button>
+                    <Button onClick={() =>this.run()}>Run</Button>
                 </div>
             </>
         );
