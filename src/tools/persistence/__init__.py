@@ -51,10 +51,8 @@ class Persistence:
     @staticmethod
     def dump_goals(set_goals: Set[Node], folder_path: str = None):
 
-        if subfolder_name is not None:
-            folder_path = f"{Persistence.default_folder_path}/{subfolder_name}"
-        else:
-            folder_path = f"{Persistence.default_folder_path}"
+        if folder_path is None:
+            folder_path = Persistence.default_folder_path
 
         output_file = f"{folder_path}/goals.dat"
 
@@ -112,6 +110,19 @@ class Persistence:
         file.close()
 
         return controller
+
+    @staticmethod
+    def load_world(folder_path: str) -> World:
+
+        file = f"{folder_path}/world.dat"
+
+        file = Path(file)
+
+        file = open(file, 'rb')
+        world = pickle.load(file)
+        file.close()
+
+        return world
 
     @staticmethod
     def load_goals(folder_path: str) -> Set[Node]:
