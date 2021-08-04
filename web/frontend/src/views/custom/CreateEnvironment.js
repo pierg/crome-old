@@ -23,6 +23,7 @@ import LocationIdEdit from "../../components/Custom/LocationIdEdit";
 import {Link} from "react-router-dom";
 import CustomDownload from "../../components/Custom/CustomDownload";
 
+
 export default class CreateEnvironment extends React.Component {
 
     state = {
@@ -905,6 +906,7 @@ export default class CreateEnvironment extends React.Component {
                 }
             }
         }
+        obj.grid.adjacency = this.getAdjacencyTable(obj.grid.locations)
         let lists = ["actions", "sensors"]
         for (let i = 1; i < this.state.lists.length; i++) {
             obj[lists[i-1]] = []
@@ -921,6 +923,36 @@ export default class CreateEnvironment extends React.Component {
         }, () => this.setModalSaving(true))
         //const myJSON = JSON.stringify(obj);
         //const name = window.prompt("What is the name of the file ?");
+    }
+
+    getAdjacencyTable(adjTable) {
+        let adjacency = []
+        for (let i = 0; i < adjTable.length; i++) {
+            adjacency.push({"id" : adjTable[i]["id"]})
+        }
+        for (let i = 0; i < adjTable.length; i++) {
+            let liste_adj = []
+            for (let j = 0; j < adjTable.length; j++) {
+                if (i !== j) {
+                    if (this.isAdjacent(adjTable[i]["coordinates"], adjTable[j]["coordinates"])) {
+                        liste_adj.push(adjTable[j]["id"])
+                    }
+                }
+            }
+            adjacency[i]["array"] = liste_adj
+        }
+        return adjacency
+    }
+
+    isAdjacent(coord_a, coord_b) {
+        for (let i = 0; i < coord_a.length; i++) {
+            for (let j = 0; j < coord_b.length; j++) {
+                if(Math.abs(coord_a[i]["x"] - coord_b[j]["x"]) + Math.abs(coord_a[i]["y"] - coord_b[j]["y"]) === 1) {
+                    return true
+                }
+            }
+        }
+        return false
     }
 
     setNode = (node) => {
