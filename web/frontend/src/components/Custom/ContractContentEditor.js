@@ -12,8 +12,8 @@ import {
     Table,
     UncontrolledDropdown
 } from "reactstrap";
-import Input from "../Elements/Input";
 import searchPatterns from "hooks/searchPatterns.js";
+import LTLTextArea from "./LTLTextArea";
 
 function NamesOf(obj) {
     let list = []
@@ -23,7 +23,7 @@ function NamesOf(obj) {
     return list
 }
 
-export default function ContractContentEditor({ items, patterns, color, changeParameter, deleteContent, addContent, contractType, infos }) {
+export default function ContractContentEditor({ items, patterns, color, changeParameter, deleteContent, addContent, contractType, listOfWorldVariables, infos }) {
   const [open, setOpen] = React.useState();
 
   let callBackAction = (key) => {
@@ -67,11 +67,12 @@ export default function ContractContentEditor({ items, patterns, color, changePa
                                     </UncontrolledDropdown>
                                 </td>
                                 <td>
-                                    {prop.pattern === undefined && (<Input
+                                    {prop.pattern === undefined && (<LTLTextArea
                                                                         value={prop.ltl_value}
                                                                         name="ltl_value"
                                                                         placeholder={infos.placeholders.ltl}
-                                                                        onChange={(e) => changeParameter(e, contractType, key)}/>)}
+                                                                        onChange={(e) => changeParameter(e, contractType, key)}
+                                                                        listOfWorldVariables={listOfWorldVariables}/>)}
                                     {prop.pattern !== undefined && (<CustomSelect
                                                                         items={NamesOf(patterns)}
                                                                         placeholder={infos.placeholders.pattern}

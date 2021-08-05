@@ -9,6 +9,7 @@ import CGG from "../../components/Crome/CGG";
 import GetCGG from "../../components/Custom/Examples/GetCGG";
 import BuildCGG from "../../components/Custom/BuildCGG";
 import SocketBuildCGG from "../../components/Custom/Examples/SocketBuildCGG";
+import IndexCGG from "../../components/Custom/IndexCGG";
 
 
 export default class Analysis extends React.Component {
@@ -37,10 +38,21 @@ export default class Analysis extends React.Component {
         })
     }
 
-    setCGG = (cgg) => {
-        if (cgg !== null) {
+    callCGG = (mode) => {
+        if (mode === "auto") {
             this.setState({
-                cgg: JSON.parse(cgg)
+                triggerCGG: true
+            })
+        }
+    }
+
+    setCGG = (cgg) => {
+        console.log("set with null")
+        if (cgg !== null) {
+            console.log("set")
+            this.setState({
+                cgg: JSON.parse(cgg),
+                triggerCGG: false
             })
         }
     }
@@ -69,7 +81,7 @@ export default class Analysis extends React.Component {
 
     setTriggerOperation = (bool) => {
         if (!bool) {
-            this.setTriggerCGG(!this.state.triggerCGG)
+            this.setTriggerCGG(true)
         }
         this.setState({
             triggerOperation: bool
@@ -221,7 +233,7 @@ export default class Analysis extends React.Component {
 
         return (
             <>
-                <GetCGG updateCGG={this.setCGG} session={this.props.id} trigger={this.state.triggerCGG}/>
+                <GetCGG updateCGG={this.setCGG} session={this.props.id} trigger={this.state.triggerCGG} setTrigger={this.setTriggerCGG}/>
                 <SocketBuildCGG
                     session={this.props.id}
                     operator={this.state.operator}
@@ -230,9 +242,11 @@ export default class Analysis extends React.Component {
                     trigger={this.state.triggerOperation}
                     setTrigger={this.setTriggerOperation}
                 />
+                {this.state.cgg === null && (<IndexCGG callCGG={this.callCGG}/>)}
                 <BuildCGG
                     infos={cgginfo}
                     cgg={this.state.cgg}
+                    goals={this.props.goals}
                     findGoalById={findGoalById}
                     selectedOperator={this.state.operator}
                     setOperator={this.setOperator}
@@ -241,24 +255,25 @@ export default class Analysis extends React.Component {
                     selectedLibrary={this.state.selectedLibrary}
                     setLibrary={this.setLibrary}
                     applyOperator={this.applyOperator}/>
-                <CGG
-                    active={this.props.active}
-                    graph={graph}
-                    options={options}
-                    events={events}
-                />
-                <Modal
-                    isOpen={this.state.modalGoal}
-                    toggle={() => this.setModalGoal(false)}
-                    className={"custom-modal-dialog sm:c-m-w-70 md:c-m-w-60 lg:c-m-w-50 xl:c-m-w-40"}>
-                    {this.props.goals !== null && this.props.goals[this.state.currentGoalIndex] !== undefined && (
-                        <GoalModalView
-                        goal={this.props.goals[this.state.currentGoalIndex]}
-                        close={() => this.setModalGoal(false)}
-                        patterns={this.props.patterns}
-                        {...goaleditinfo}/>
-                    )}
-                </Modal>
+                {this.state.cgg !== null && (<>
+                    <CGG
+                        active={this.props.active}
+                        graph={graph}
+                        options={options}
+                        events={events}
+                    />
+                    <Modal
+                        isOpen={this.state.modalGoal}
+                        toggle={() => this.setModalGoal(false)}
+                        className={"custom-modal-dialog sm:c-m-w-70 md:c-m-w-60 lg:c-m-w-50 xl:c-m-w-40"}>
+                        {this.props.goals !== null && this.props.goals[this.state.currentGoalIndex] !== undefined && (
+                            <GoalModalView
+                                goal={this.props.goals[this.state.currentGoalIndex]}
+                                close={() => this.setModalGoal(false)}
+                                patterns={this.props.patterns}
+                                {...goaleditinfo}/>
+                        )}
+                    </Modal></>)}
             </>
         );
     }

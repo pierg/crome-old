@@ -13,14 +13,14 @@ function GetCGG(props) {
 
 
     useEffect(() => {
-        if (socket == null) return
+        if (socket == null || !props.trigger) return
 
         socket.emit('process-cgg', {session: props.session})
 
         socket.on('receive-cgg', setMessageFunction)
 
         return () => socket.off('receive-cgg')
-    }, [socket, setMessageFunction, props.session, props.trigger])
+    }, [socket, setMessageFunction, props.trigger, props.session])
 
     useEffect(() => {
         props.updateCGG(message)

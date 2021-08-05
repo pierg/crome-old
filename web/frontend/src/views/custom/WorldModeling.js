@@ -69,7 +69,7 @@ export default class WorldModeling extends React.Component {
                 this.props.setProject(0)
             }
             else {
-                this.props.setListOfLocations(this.getListOfLocations(this.state.worlds[index]))
+                this.props.setListOfWorldVariables(this.getListOfWorldVariables(this.state.worlds[index]))
                 this.setState({
                     worldSelected: index,
                 })
@@ -123,12 +123,18 @@ export default class WorldModeling extends React.Component {
         return this.state.worlds.length
     }
 
-    getListOfLocations(world) {
-        let locations = []
+    getListOfWorldVariables(world) {
+        let worldVariables = [[], [], []]
         for (let i=0; i<world.grid.locations.length; i++) {
-            locations.push(world.grid.locations[i].id)
+            worldVariables[0].push(world.grid.locations[i].id)
         }
-        return locations
+        for (let i=0; i<world.actions.length; i++) {
+            worldVariables[1].push(world.actions[i].name)
+        }
+        for (let i=0; i<world.sensors.length; i++) {
+            worldVariables[2].push(world.sensors[i].name)
+        }
+        return worldVariables
     }
 
     render() {

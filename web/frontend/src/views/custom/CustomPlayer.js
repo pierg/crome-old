@@ -25,7 +25,7 @@ export default function CustomPlayer({ items, defaultOpened, id, setWorld, setLi
   const [patterns, setPatterns] = React.useState(null);
   const [projectAdded, setProjectAdded] = React.useState(false);
   const [changingPage, setChangingPage] = React.useState(false);
-  const [listOfLocations, setListOfLocations] = React.useState(null);
+  const [listOfWorldVariables, setListOfWorldVariables] = React.useState(null);
 
   const [headerStates, setHeaderStates] = React.useState([true, false, false, false]);
 
@@ -105,8 +105,8 @@ export default function CustomPlayer({ items, defaultOpened, id, setWorld, setLi
                         <div className="container mx-auto px-4">
                           {
                             {
-                              'world': <WorldModeling id={id} setListOfWorldNames={setListOfWorldNames} setListOfLocations={setListOfLocations} projectAdded={projectAdded} project={project} setProject={setProject} setWorld={setWorld} {...worldmodelinginfo}/>,
-                              'goal': <GoalModeling id={id} {...goalmodelinginfo} project={project} setGoals={setGoals} setPatterns={setPatterns} listOfLocations={listOfLocations} setProject={(project) => addProjectFromGoalModeling(project)}/>,
+                              'world': <WorldModeling id={id} setListOfWorldNames={setListOfWorldNames} setListOfWorldVariables={setListOfWorldVariables} projectAdded={projectAdded} project={project} setProject={setProject} setWorld={setWorld} {...worldmodelinginfo}/>,
+                              'goal': <GoalModeling id={id} {...goalmodelinginfo} project={project} setGoals={setGoals} setPatterns={setPatterns} listOfWorldVariables={listOfWorldVariables} setProject={(project) => addProjectFromGoalModeling(project)}/>,
                               'analysis': <Analysis id={id} active={headerStates[2]} goals={goals} patterns={patterns}/>,
                               'synthesis':<Synthesis world={props.world} active={headerStates[3]} />
                             }[prop.component]

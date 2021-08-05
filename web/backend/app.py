@@ -199,6 +199,7 @@ def add_goal(data):
     name = data['goal']['name']
     emit("send-message", strftime("%H:%M:%S", now) + " The goal \"" + name + "\" has been saved.",
          room=users[data['session']])
+    Modelling.add_goal(os.path.join(storage_folder, f"sessions/{data['session']}/{project_id}"), data['goal']['id'])
 
 
 @socketio.on('delete-goal')
@@ -336,4 +337,4 @@ def copy_simple(session_id):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True, port=5000)
+    app.run(host='127.0.0.1', debug=True, port=5000)

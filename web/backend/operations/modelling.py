@@ -55,6 +55,7 @@ class Modelling:
         """Guarantees"""
         g1 = Formula(Atom(formula=("G(F(r3 & r4))", Typeset({w["r3"], w["r4"]}))))
         g2 = StrictOrderedPatrolling([w["r1"], w["r2"]])
+        # g3 = InstantaneousReaction() // need to import every pattern method ?
 
         """Context"""
         context = w["day"]
@@ -77,14 +78,45 @@ class Modelling:
         Persistence.dump_goals(set_of_goals, project_folder)
 
     @staticmethod
-    def add_goal(project_folder):
+    def add_goal(project_folder, goal_id):
         set_of_goals = Persistence.load_goals(project_folder)
 
         # TODO: Mockup - Fix me
 
         w = Persistence.load_world(project_folder)
 
+        goal_path = Path(os.path.join(project_folder, f"goals/{goal_id}"))
+
+        with open(goal_path) as json_file:
+            json_obj = json.load(json_file)
+            contract_names = ["assumptions", "guarantees"]
+            contract_lists = [[], []]
+            for i in range(len(contract_lists)):
+                for contract_element in json_obj["contract"][contract_names[i]]:
+                    if "ltl_value" in contract_element:
+                        contract_lists[i].append(Formula(Atom(formula=(contract_element["ltl_value"], Typeset({w["r1"], w["r1"]})))))
+                    elif "pattern" in contract_element:
+                        args = contract_element["pattern"]["arguments"]
+                        if "format" in args & args["format"] == "list":
+                            list_of_locations = []
+                            for location in args["value"]:
+                                list_of_locations.append(w[location])
+                            contract_lists[i].append(contract_element["pattern"]["name"](list_of_locations))
+                        else:
+                            contract_lists[i].append(contract_element["pattern"]["name"](args["value"]))
+            context = w["day"]
+
+            '''contract = Contract(
+                assumptions=a1 & a2,
+                guarantees=g1 & g2
+            )'''
+
+
+
+
+
         # CASE 1: designer inserted a LTL formula, i.e. a string on some world variables
+
         ltl_formula = Formula(Atom(formula=("G(F(r1 & r2))", Typeset({w["r1"], w["r1"]}))))
 
         new_goal = Node(name="Day patrolling",

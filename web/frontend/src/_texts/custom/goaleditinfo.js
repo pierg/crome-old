@@ -17,6 +17,10 @@ const textProps = {
             cancelColor: "danger",
             saveText: "Save",
             saveColor: "info"
+        },
+        lists: {
+            title: "List of",
+            elements: ["Locations", "Actions", "Sensors"]
         }
     }
 };
