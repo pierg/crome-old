@@ -19,7 +19,7 @@ function GoalEdit(props) {
             case "context-day": case "context-night" : goal.context = writeContext(e.target.name); break;
             case "ltl_value": contractTypeIndex.ltl_value = value; break;
             case "contentName": contractTypeIndex.pattern.name = value; break;
-            case "type": if(value === "Pattern") { if (contractTypeIndex.pattern === undefined) contractTypeIndex.pattern={name: "", arguments: []} } else { delete contractTypeIndex.pattern } break;
+            case "type": if(value === "Pattern") { if (contractTypeIndex.pattern === undefined) {contractTypeIndex.pattern={name: "", arguments: []}; delete contractTypeIndex.world_values }} else { delete contractTypeIndex.pattern } break;
             case "subValue": contractTypeIndex.pattern.arguments[subKey] = {"value": makeListOf(value)}; break;
             default: break;
         }
@@ -33,6 +33,11 @@ function GoalEdit(props) {
 
     function addContractContent(contractType, key = -1) {
         goal.contract[contractType].push({ltl_value: ""})
+        props.edit(goal)
+    }
+
+    function setLTLWorldValues(key, contractType, values) {
+        goal.contract[contractType][key].world_values = values
         props.edit(goal)
     }
 
@@ -90,6 +95,7 @@ function GoalEdit(props) {
                         addContent={addContractContent}
                         contractType={prop.title}
                         listOfWorldVariables={props.listOfWorldVariables}
+                        setLTLWorldValues={setLTLWorldValues}
                         {...contracteditorinfo}/></div>
                 ))}
             </div>

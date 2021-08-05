@@ -23,7 +23,7 @@ function NamesOf(obj) {
     return list
 }
 
-export default function ContractContentEditor({ items, patterns, color, changeParameter, deleteContent, addContent, contractType, listOfWorldVariables, infos }) {
+export default function ContractContentEditor({ items, patterns, color, changeParameter, deleteContent, addContent, contractType, listOfWorldVariables, setLTLWorldValues, infos }) {
   const [open, setOpen] = React.useState();
 
   let callBackAction = (key) => {
@@ -72,7 +72,8 @@ export default function ContractContentEditor({ items, patterns, color, changePa
                                                                         name="ltl_value"
                                                                         placeholder={infos.placeholders.ltl}
                                                                         onChange={(e) => changeParameter(e, contractType, key)}
-                                                                        listOfWorldVariables={listOfWorldVariables}/>)}
+                                                                        listOfWorldVariables={listOfWorldVariables}
+                                                                        setLTLWorldValues={(values) => setLTLWorldValues(key, contractType, values)}/>)}
                                     {prop.pattern !== undefined && (<CustomSelect
                                                                         items={NamesOf(patterns)}
                                                                         placeholder={infos.placeholders.pattern}

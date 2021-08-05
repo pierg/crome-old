@@ -131,6 +131,13 @@ class Persistence:
 
         file = Path(file)
 
+        # Added this
+        if not os.path.exists(file):
+            create_file = open(file, 'wb')
+            pickle.dump({}, create_file)
+            create_file.close()
+        # Added this
+
         file = open(file, 'rb')
         set_goals = pickle.load(file)
         file.close()

@@ -81,8 +81,6 @@ class Modelling:
     def add_goal(project_folder, goal_id):
         set_of_goals = Persistence.load_goals(project_folder)
 
-        # TODO: Mockup - Fix me
-
         w = Persistence.load_world(project_folder)
 
         goal_path = Path(os.path.join(project_folder, f"goals/{goal_id}"))
@@ -93,9 +91,7 @@ class Modelling:
             contract_lists = [[], []]
             for i in range(len(contract_lists)):
                 for contract_element in json_obj["contract"][contract_names[i]]:
-                    if "ltl_value" in contract_element:
-                        contract_lists[i].append(Formula(Atom(formula=(contract_element["ltl_value"], Typeset({w["r1"], w["r1"]})))))
-                    elif "pattern" in contract_element:
+                    if "pattern" in contract_element:
                         args = contract_element["pattern"]["arguments"]
                         if "format" in args & args["format"] == "list":
                             list_of_locations = []
@@ -104,35 +100,39 @@ class Modelling:
                             contract_lists[i].append(contract_element["pattern"]["name"](list_of_locations))
                         else:
                             contract_lists[i].append(contract_element["pattern"]["name"](args["value"]))
+                    elif "ltl_value" in contract_element:
+                        if "world_values" in contract_element:
+                            values = []
+                            for array in contract_element["world_values"]:
+                                for value in array:
+                                    values.append(w[value])
+                            contract_lists[i].append(Formula(Atom(formula=(contract_element["ltl_value"],
+                                                                           Typeset({Union[values, None]})))))
             context = w["day"]
 
-            '''contract = Contract(
-                assumptions=a1 & a2,
-                guarantees=g1 & g2
-            )'''
+            lists_with_and_operators = []
+            for i in range(len(contract_lists)):
+                lists_with_and_operators.append(None)
+                for j in range(len(contract_lists[i])):
+                    if j == 0:
+                        lists_with_and_operators[i] = contract_lists[i][0]
+                    else:
+                        lists_with_and_operators[i] = lists_with_and_operators[i] & contract_lists[i][j]
 
+            print("LISTS WITH OPERATORS")
+            print(lists_with_and_operators)
 
+            contract = Contract(
+                assumptions=lists_with_and_operators[0],
+                guarantees=lists_with_and_operators[1]
+            )
 
+            new_goal = Node(name="Day patrolling",
+                            description="description",
+                            specification=contract,
+                            context=context,
+                            world=w)
 
+            set_of_goals.add(new_goal)
 
-        # CASE 1: designer inserted a LTL formula, i.e. a string on some world variables
-
-        ltl_formula = Formula(Atom(formula=("G(F(r1 & r2))", Typeset({w["r1"], w["r1"]}))))
-
-        new_goal = Node(name="Day patrolling",
-                        description="description",
-                        specification=ltl_formula)
-
-        set_of_goals.add(new_goal)
-
-        # CASE 2: designer has inserted a patter:
-        pattern_formula = StrictOrderedPatrolling([w["r1"], w["r2"]])
-
-        new_goal = Node(name="Day patrolling 2",
-                        description="description",
-                        specification=pattern_formula)
-
-        set_of_goals.add(new_goal)
-
-        Persistence.dump_goals(set_of_goals, project_folder)
-
+            Persistence.dump_goals(set_of_goals, project_folder)

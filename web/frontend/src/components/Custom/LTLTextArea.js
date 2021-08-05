@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import PropTypes from "prop-types";
 
 const LTLTextArea = React.forwardRef(
-  ({ border, size, leftIcon, rightIcon, type, onChange, value, listOfWorldVariables, ...rest }, ref) => {
+  ({ border, size, leftIcon, rightIcon, type, onChange, value, listOfWorldVariables, setLTLWorldValues, ...rest }, ref) => {
     const sizes = {
       sm: "px-2 py-2 text-sm ",
       lg: "px-3 py-3 text-sm ",
@@ -87,7 +87,8 @@ const LTLTextArea = React.forwardRef(
         let result = strToReplace === "" ? inputValue : inputValue.replace(new RegExp(strToReplace, 'g'), function(a) { return "<span class='text-red-500'>"+a+"</span>"})
 
         setSpanValue(result)
-    }, [listOfWorldVariables, value])
+        setLTLWorldValues(valuesInLTL)
+    }, [listOfWorldVariables, value])  // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
       <>
