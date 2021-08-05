@@ -83,7 +83,7 @@ class Modelling:
 
         w = Persistence.load_world(project_folder)
 
-        goal_path = Path(os.path.join(project_folder, f"goals/{goal_id}"))
+        goal_path = Path(os.path.join(project_folder, f"goals/{str(goal_id).zfill(4)}.json"))
 
         with open(goal_path) as json_file:
             json_obj = json.load(json_file)
@@ -107,7 +107,12 @@ class Modelling:
                                 for value in array:
                                     values.append(w[value])
                             contract_lists[i].append(Formula(Atom(formula=(contract_element["ltl_value"],
-                                                                           Typeset({Union[values, None]})))))
+                                                                           Typeset({w["r1"], w["r2"]})))))
+                            # TODO FIX FOR PIER
+                            # we have to change w["r1"], w["r2"] by the real array called values which
+                            # contains the real used locations/actions/sensors of the LTL
+                            # TODO FIX FOR PIER
+
             context = w["day"]
 
             lists_with_and_operators = []
