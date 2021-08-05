@@ -196,21 +196,24 @@ class Typeset(dict):
         self.update_adjacenttypes()
 
     def update_subtypes(self):
-        if len(self.values()) > 1:
-            for (a, b) in combinations(self.values(), 2):
-                if a.__class__.__name__ in BASE_CLASS_TYPES or b.__class__.__name__ in BASE_CLASS_TYPES:
-                    continue
-                """If they are not base variables"""
-                if isinstance(a, type(b)):
-                    if a in self.__super_types:
-                        self.__super_types[a].add(b)
-                    else:
-                        self.__super_types[a] = {b}
-                if isinstance(b, type(a)):
-                    if b in self.__super_types:
-                        self.__super_types[b].add(a)
-                    else:
-                        self.__super_types[b] = {a}
+        pass
+        #TODO FOR PIER: FIXME
+
+        # if len(self.values()) > 1:
+        #     for (a, b) in combinations(self.values(), 2):
+        #         if a.__class__.__name__ in BASE_CLASS_TYPES or b.__class__.__name__ in BASE_CLASS_TYPES:
+        #             continue
+        #         """If they are not base variables"""
+        #         if isinstance(a, type(b)):
+        #             if a in self.__super_types:
+        #                 self.__super_types[a].add(b)
+        #             else:
+        #                 self.__super_types[a] = {b}
+        #         if isinstance(b, type(a)):
+        #             if b in self.__super_types:
+        #                 self.__super_types[b].add(a)
+        #             else:
+        #                 self.__super_types[b] = {a}
 
     def update_mutextypes(self):
         if len(self.values()) > 1:
