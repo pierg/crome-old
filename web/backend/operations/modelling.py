@@ -102,16 +102,19 @@ class Modelling:
                             contract_lists[i].append(contract_element["pattern"]["name"](args["value"]))
                     elif "ltl_value" in contract_element:
                         if "world_values" in contract_element:
-                            values = []
+                            values = set()
                             for array in contract_element["world_values"]:
                                 for value in array:
-                                    values.append(w[value])
+                                    values.add(w[value])
                             contract_lists[i].append(Formula(Atom(formula=(contract_element["ltl_value"],
                                                                            Typeset({w["r1"], w["r2"]})))))
                             # TODO FIX FOR PIER
                             # we have to change w["r1"], w["r2"] by the real array called values which
                             # contains the real used locations/actions/sensors of the LTL
                             # TODO FIX FOR PIER
+                            # TODO PIER REPLIES
+                            # Try now. Typeset() does not get an array but a set it's {}, not [] :)
+
 
             context = w["day"]
 
