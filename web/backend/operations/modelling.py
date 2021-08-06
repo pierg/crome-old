@@ -6,8 +6,9 @@ from typing import Set
 
 from cgg import Node
 from contract import Contract
+from specification.atom.pattern.robotics.coremovement.coverage import *
 from specification.atom.pattern.robotics.coremovement.surveillance import *
-from specification.atom.pattern.robotics.coremovement.surveillance import Patrolling as patrol
+from specification.atom.pattern.robotics.trigger.triggers_modified import InstantaneousReaction
 from specification.formula import Formula
 from tools.persistence import Persistence
 from typeset import Typeset
@@ -79,15 +80,12 @@ class Modelling:
         Persistence.dump_goals(set_of_goals, project_folder)
 
     @staticmethod
-    def add_goal(project_folder, goal_id):
+    def add_goal(project_folder, goal_file, goal_id):
         set_of_goals = Persistence.load_goals(project_folder)
-        print("set_of_goals")
-        print(set_of_goals)
-        print(type(set_of_goals))
 
         w = Persistence.load_world(project_folder)
 
-        goal_path = Path(os.path.join(project_folder, f"goals/{str(goal_id).zfill(4)}.json"))
+        goal_path = Path(os.path.join(project_folder, f"goals/{str(goal_file).zfill(4)}.json"))
 
         with open(goal_path) as json_file:
             json_obj = json.load(json_file)
@@ -96,14 +94,27 @@ class Modelling:
             for i in range(len(contract_lists)):
                 for contract_element in json_obj["contract"][contract_names[i]]:
                     if "pattern" in contract_element:
-                        for arg in contract_element["pattern"]["arguments"]:
-                            if type(arg["value"]) == list:
+                        args = contract_element["pattern"]["arguments"]
+                        if len(args) == 1:
+                            if type(args[0]["value"]) == list:
                                 list_of_locations = []
-                                for location in arg["value"]:
+                                for location in args[0]["value"]:
                                     list_of_locations.append(w[location])
-                                contract_lists[i].append(globals()[contract_element["pattern"]["name"]](list_of_locations))
+                                contract_lists[i].append(
+                                    globals()[contract_element["pattern"]["name"]](list_of_locations))
                             else:
-                                contract_lists[i].append(globals()[contract_element["pattern"]["name"]](w[arg["value"]]))
+                                contract_lists[i].append(
+                                    globals()[contract_element["pattern"]["name"]]([w[args[0]["value"]]]))
+                        else:
+                            arguments_list = []
+                            for arg in args:
+                                arguments_list.append(arg)
+                            contract_lists[i].append(
+                                globals()[contract_element["pattern"]["name"]](arguments_list))
+                            # TODO FIX FOR PIER
+                            # How to do when the Pattern is a Reaction, and needs 2 arguments that are not values ?
+                            # For example : InstantaneousReaction, BoundDelay, Wait...
+                            # Just putting the string values in a list doesn't seem to work
                     elif "ltl_value" in contract_element:
                         if "world_values" in contract_element:
                             values = set()
@@ -115,7 +126,6 @@ class Modelling:
                             # TODO FIX FOR PIER
                             # In case the designer enters a LTL (not a Pattern), I have the error saying that
                             # Atom must have an attribute 'name' but I don't see how to add it here
-
 
             context = w["day"]
 
@@ -138,13 +148,10 @@ class Modelling:
 
             new_goal = Node(name="Day patrolling",
                             description="description",
+                            id=goal_id,
                             specification=contract,
                             context=context,
                             world=w)
-
-            print("new goal")
-            print(new_goal)
-            print(set_of_goals)
 
             set_of_goals.add(new_goal)
 

@@ -12,7 +12,7 @@
     ]
   },
   {
-    "name": "OrderedPatrollingOrderPatrol",
+    "name": "OrderedPatrolling",
     "description": "test_description",
     "ltl_example": "",
     "arguments": [

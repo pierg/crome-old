@@ -183,9 +183,8 @@ def add_goal(data):
     greatest_id = -1 if len(filenames) == 0 else max(filenames)[0:4]
     greatest_id = int(greatest_id) + 1
     if 'id' not in data['goal']:
-        data['goal']['id'] = greatest_id
-        greatest_id += 1
-    filename = str(data['goal']['id']).zfill(4) + ".json"
+        data['goal']['id'] = data['session']+"-"+project_id+"-"+str(greatest_id).zfill(4)
+    filename = str(greatest_id).zfill(4) + ".json"
     json_file = open(os.path.join(goals_dir, filename), "w")
     json_formatted = json.dumps(data['goal'], indent=4, sort_keys=True)
     json_file.write(json_formatted)
@@ -199,7 +198,8 @@ def add_goal(data):
     name = data['goal']['name']
     emit("send-message", strftime("%H:%M:%S", now) + " The goal \"" + name + "\" has been saved.",
          room=users[data['session']])
-    Modelling.add_goal(os.path.join(storage_folder, f"sessions/{data['session']}/{project_id}"), data['goal']['id'])
+    Modelling.add_goal(os.path.join(storage_folder, f"sessions/{data['session']}/{project_id}"),
+                       greatest_id, data['goal']['id'])
 
 
 @socketio.on('delete-goal')
