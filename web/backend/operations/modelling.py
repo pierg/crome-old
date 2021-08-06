@@ -92,14 +92,31 @@ class Modelling:
             for i in range(len(contract_lists)):
                 for contract_element in json_obj["contract"][contract_names[i]]:
                     if "pattern" in contract_element:
-                        args = contract_element["pattern"]["arguments"]
-                        if "format" in args & args["format"] == "list":
-                            list_of_locations = []
-                            for location in args["value"]:
-                                list_of_locations.append(w[location])
-                            contract_lists[i].append(contract_element["pattern"]["name"](list_of_locations))
-                        else:
-                            contract_lists[i].append(contract_element["pattern"]["name"](args["value"]))
+                        for arg in contract_element["pattern"]["arguments"]:
+                            if type(arg["value"]) == list:
+                                list_of_locations = []
+                                for location in arg["value"]:
+                                    list_of_locations.append(w[location])
+                                contract_lists[i].append(globals()[contract_element["pattern"]["name"]](list_of_locations))
+                            else:
+                                contract_lists[i].append(globals()[contract_element["pattern"]["name"]](w[arg["value"]]))
+                        # TODO FIX FOR PIER
+                        # In case the designer enters a Pattern, I have the following error
+                        # (this error is the screen I sent on Discord at 12:17)
+                        '''File "web/backend/app.py", line 203, in add_goal
+                            Modelling.add_goal(os.path.join(storage_folder, f"sessions/{data['session']}/{project_id}"), data['goal']['id'])
+                          File "web/backend/operations/modelling.py", line 130, in add_goal
+                            contract = Contract(
+                          File "src/contract/__init__.py", line 24, in __init__
+                            self.__setguarantees(guarantees, saturate)
+                          File "src/contract/__init__.py", line 73, in __setguarantees
+                            self.__guarantees = Formula()
+                          File "src/specification/formula/__init__.py", line 53, in __init__
+                        127.0.0.1 - - [06/Aug/2021 12:11:22] "POST /socket.io/?id=2d7ceea7-a339-4337-a243-698ac7975d28&EIO=4&transport=polling&t=NiQyYN1&sid=jP_gRhJQMcb11VX-AAAB HTTP/1.1" 200 -
+                        127.0.0.1 - - [06/Aug/2021 12:11:22] "GET /socket.io/?id=2d7ceea7-a339-4337-a243-698ac7975d28&EIO=4&transport=polling&t=NiQyYNB&sid=jP_gRhJQMcb11VX-AAAB HTTP/1.1" 200 -
+                            raise Exception("Wrong parameters LTL_forced construction")
+                        Exception: Wrong parameters LTL_forced construction
+                        '''
                     elif "ltl_value" in contract_element:
                         if "world_values" in contract_element:
                             values = set()
@@ -109,8 +126,8 @@ class Modelling:
                             contract_lists[i].append(Formula(Atom(formula=(contract_element["ltl_value"],
                                                                            Typeset(values)))))
                             # TODO FIX FOR PIER
-                            # Atom needs a name? but I thought the first argument i.e. contract_element["ltl_value"]
-                            # was the name?
+                            # In case the designer enters a LTL (not a Pattern), I have the error saying that
+                            # Atom must have an attribute 'name' but I don't see how to add it here
 
 
             context = w["day"]
