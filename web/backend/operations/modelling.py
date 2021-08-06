@@ -107,13 +107,10 @@ class Modelling:
                                 for value in array:
                                     values.add(w[value])
                             contract_lists[i].append(Formula(Atom(formula=(contract_element["ltl_value"],
-                                                                           Typeset({w["r1"], w["r2"]})))))
+                                                                           Typeset(values)))))
                             # TODO FIX FOR PIER
-                            # we have to change w["r1"], w["r2"] by the real array called values which
-                            # contains the real used locations/actions/sensors of the LTL
-                            # TODO FIX FOR PIER
-                            # TODO PIER REPLIES
-                            # Try now. Typeset() does not get an array but a set it's {}, not [] :)
+                            # Atom needs a name? but I thought the first argument i.e. contract_element["ltl_value"]
+                            # was the name?
 
 
             context = w["day"]
