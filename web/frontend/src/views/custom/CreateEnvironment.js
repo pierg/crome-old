@@ -591,7 +591,6 @@ export default class CreateEnvironment extends React.Component {
         this.size = (json.size.width / 2);
         this.world = this.buildGrid(this.state.myCanvas, (json.size.width / 2), this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode);
         this.world.actualiseIsColorTable();
-        this.world.clearAttributeTable();
     }
 
     buildGrid(canvas, size, map, addLocation, callbackMap, updateErrorMsg, setNode) {
@@ -603,6 +602,8 @@ export default class CreateEnvironment extends React.Component {
             padding: {top: 10, left: 10, right: 10, bottom: 60},
             resizeCanvas: true,
             drawBorder: true});
+
+        world.clearAttributeTable()
 
         world.onclick = function (node) {
             /*
