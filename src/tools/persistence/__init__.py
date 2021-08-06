@@ -133,9 +133,7 @@ class Persistence:
 
         # Added this
         if not os.path.exists(file):
-            create_file = open(file, 'wb')
-            pickle.dump({}, create_file)
-            create_file.close()
+            Persistence.dump_goals(set(), folder_path)
         # Added this
 
         file = open(file, 'rb')

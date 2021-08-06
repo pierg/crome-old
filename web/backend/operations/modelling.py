@@ -7,6 +7,7 @@ from typing import Set
 from cgg import Node
 from contract import Contract
 from specification.atom.pattern.robotics.coremovement.surveillance import *
+from specification.atom.pattern.robotics.coremovement.surveillance import Patrolling as patrol
 from specification.formula import Formula
 from tools.persistence import Persistence
 from typeset import Typeset
@@ -80,6 +81,9 @@ class Modelling:
     @staticmethod
     def add_goal(project_folder, goal_id):
         set_of_goals = Persistence.load_goals(project_folder)
+        print("set_of_goals")
+        print(set_of_goals)
+        print(type(set_of_goals))
 
         w = Persistence.load_world(project_folder)
 
@@ -100,23 +104,6 @@ class Modelling:
                                 contract_lists[i].append(globals()[contract_element["pattern"]["name"]](list_of_locations))
                             else:
                                 contract_lists[i].append(globals()[contract_element["pattern"]["name"]](w[arg["value"]]))
-                        # TODO FIX FOR PIER
-                        # In case the designer enters a Pattern, I have the following error
-                        # (this error is the screen I sent on Discord at 12:17)
-                        '''File "web/backend/app.py", line 203, in add_goal
-                            Modelling.add_goal(os.path.join(storage_folder, f"sessions/{data['session']}/{project_id}"), data['goal']['id'])
-                          File "web/backend/operations/modelling.py", line 130, in add_goal
-                            contract = Contract(
-                          File "src/contract/__init__.py", line 24, in __init__
-                            self.__setguarantees(guarantees, saturate)
-                          File "src/contract/__init__.py", line 73, in __setguarantees
-                            self.__guarantees = Formula()
-                          File "src/specification/formula/__init__.py", line 53, in __init__
-                        127.0.0.1 - - [06/Aug/2021 12:11:22] "POST /socket.io/?id=2d7ceea7-a339-4337-a243-698ac7975d28&EIO=4&transport=polling&t=NiQyYN1&sid=jP_gRhJQMcb11VX-AAAB HTTP/1.1" 200 -
-                        127.0.0.1 - - [06/Aug/2021 12:11:22] "GET /socket.io/?id=2d7ceea7-a339-4337-a243-698ac7975d28&EIO=4&transport=polling&t=NiQyYNB&sid=jP_gRhJQMcb11VX-AAAB HTTP/1.1" 200 -
-                            raise Exception("Wrong parameters LTL_forced construction")
-                        Exception: Wrong parameters LTL_forced construction
-                        '''
                     elif "ltl_value" in contract_element:
                         if "world_values" in contract_element:
                             values = set()
@@ -154,6 +141,10 @@ class Modelling:
                             specification=contract,
                             context=context,
                             world=w)
+
+            print("new goal")
+            print(new_goal)
+            print(set_of_goals)
 
             set_of_goals.add(new_goal)
 
