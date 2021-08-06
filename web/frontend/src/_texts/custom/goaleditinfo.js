@@ -15,6 +15,7 @@ const textProps = {
             close: "now-ui-icons ui-1_simple-remove",
             cancelText: "Cancel",
             cancelColor: "danger",
+            warningGuarantees: "A Goal must have at least 1 Guarantee",
             saveText: "Save",
             saveColor: "info"
         },

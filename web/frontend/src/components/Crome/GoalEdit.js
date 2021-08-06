@@ -100,12 +100,18 @@ function GoalEdit(props) {
                 ))}
             </div>
             <ModalFooter>
-                <Button color={props.info.modal.cancelColor} onClick={props.close}>
+                <div className="flex flex-col w-full">
+                {goal.contract.guarantees.length === 0 && (
+                    <div className="flex justify-end mb-2"><span className={"text-red-500 "}>{props.info.modal.warningGuarantees}</span></div>
+                )}
+                    <div className="flex w-full justify-between">
+                    <Button color={props.info.modal.cancelColor} onClick={props.close}>
                     {props.info.modal.cancelText}
                 </Button>
-                <Button color={props.info.modal.saveColor} onClick={() => props.save(goal)}>
+                <Button color={props.info.modal.saveColor} disabled={goal.contract.guarantees.length === 0} onClick={() => props.save(goal)}>
                     {props.info.modal.saveText}
-                </Button>
+                </Button></div>
+                </div>
             </ModalFooter>
         </>
     );
