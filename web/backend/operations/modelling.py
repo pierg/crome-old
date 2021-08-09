@@ -34,10 +34,16 @@ class Modelling:
                 w.new_boolean_sensor(sensor["name"], mutex=sensor["mutex_group"])
             else:
                 w.new_boolean_sensor(sensor["name"])
+        for context in json_obj["context"]:
+            if "mutex_group" in context:
+                w.new_boolean_context(context["name"], mutex=context["mutex_group"])
+            else:
+                w.new_boolean_context(context["name"])
         for location in json_obj["grid"]["locations"]:
             w.new_boolean_location(location["id"], mutex="locations", adjacency=location["adjacency"])
-        w.new_boolean_context("day", mutex="time")
-        w.new_boolean_context("night", mutex="time")
+
+        # w.new_boolean_context("day", mutex="time")
+        # w.new_boolean_context("night", mutex="time")
 
         Persistence.dump_world(w, project_folder)
 
@@ -127,7 +133,9 @@ class Modelling:
                             # In case the designer enters a LTL (not a Pattern), I have the error saying that
                             # Atom must have an attribute 'name' but I don't see how to add it here
 
-            context = w["day"]
+            for context_json in json_obj["context"]:
+                context = w[context_json]
+                # TODO context is an array?
 
             lists_with_and_operators = []
             for i in range(len(contract_lists)):
