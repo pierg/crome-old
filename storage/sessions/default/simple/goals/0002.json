@@ -2,6 +2,8 @@
   "name": "Greet Person",
   "id": "default-simple-0002",
   "description": "Always => if see a person, greet in the same step, Only if see a person, greet immediately",
+  "filename": "0002.json",
+  "context": [],
   "contract": {
     "assumptions": [
       {
