@@ -14,6 +14,8 @@ import json
 import threading
 from time import strftime
 
+from cgg import Node
+from tools.persistence import Persistence
 from web.backend.operations.modelling import Modelling
 
 backend_folder = Path(__file__).parent.absolute()
@@ -179,13 +181,14 @@ def add_goal(data):
     if is_simple:
         project_id = copy_simple(data['session'])
     goals_dir = os.path.join(storage_folder, f"sessions/{data['session']}/{project_id}/goals")
-    dir_path, dir_names, filenames = next(walk(goals_dir))
-    greatest_id = -1 if len(filenames) == 0 else max(filenames)[0:4]
-    greatest_id = int(greatest_id) + 1
     if 'id' not in data['goal']:
+        dir_path, dir_names, filenames = next(walk(goals_dir))
+        greatest_id = -1 if len(filenames) == 0 else max(filenames)[0:4]
+        greatest_id = int(greatest_id) + 1
         data['goal']['id'] = data['session']+"-"+project_id+"-"+str(greatest_id).zfill(4)
-    filename = str(greatest_id).zfill(4) + ".json"
-    json_file = open(os.path.join(goals_dir, filename), "w")
+        filename = str(greatest_id).zfill(4) + ".json"
+        data['goal']['filename'] = filename
+    json_file = open(os.path.join(goals_dir, data['goal']['filename']), "w")
     json_formatted = json.dumps(data['goal'], indent=4, sort_keys=True)
     json_file.write(json_formatted)
     json_file.close()
@@ -199,7 +202,7 @@ def add_goal(data):
     emit("send-message", strftime("%H:%M:%S", now) + " The goal \"" + name + "\" has been saved.",
          room=users[data['session']])
     Modelling.add_goal(os.path.join(storage_folder, f"sessions/{data['session']}/{project_id}"),
-                       greatest_id, data['goal']['id'])
+                       data['goal']['filename'], data['goal']['id'])
 
 
 @socketio.on('delete-goal')
@@ -237,10 +240,12 @@ def get_patterns():
 
 
 @socketio.on('process-goals')
-def process_goals(session_id):
-    print("BEGIN SLEEP")
-    time.sleep(15)
-    print("STOP SLEEP")
+def process_goals(data):
+    print("BEGIN BUILD CGG")
+    project_folder = os.path.join(storage_folder, f"sessions/{data['session']}/{data['project']}")
+    set_of_goals = Persistence.load_goals(project_folder)
+    Node.build_cgg(set_of_goals)
+    print("STOP BUILD CGG")
 
 
 @socketio.on('process-cgg')

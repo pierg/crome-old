@@ -25,12 +25,12 @@ class Modelling:
 
         w = World(project_name=json_obj["project_id"])
         for action in json_obj["actions"]:
-            if action["mutex_group"]:
+            if "mutex_group" in action:
                 w.new_boolean_action(action["name"], mutex=action["mutex_group"])
             else:
                 w.new_boolean_action(action["name"])
         for sensor in json_obj["sensors"]:
-            if sensor["mutex_group"]:
+            if "mutex_group" in sensor:
                 w.new_boolean_sensor(sensor["name"], mutex=sensor["mutex_group"])
             else:
                 w.new_boolean_sensor(sensor["name"])
