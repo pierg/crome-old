@@ -16,7 +16,7 @@ function GoalEdit(props) {
         switch (e.target.name) {
             case "name": goal.name = value; break;
             case "description": goal.description = value; break;
-            case "context-day": case "context-night" : goal.context = writeContext(e.target.name); break;
+            case "context": goal.context.includes(value) ? goal.context.splice(goal.context.indexOf(value), 1) : goal.context.push(value); break;
             case "ltl_value": contractTypeIndex.ltl_value = value; break;
             case "contentName": contractTypeIndex.pattern.name = value; break;
             case "type": if(value === "Pattern") { if (contractTypeIndex.pattern === undefined) {contractTypeIndex.pattern={name: "", arguments: []}; delete contractTypeIndex.world_values }} else { delete contractTypeIndex.pattern } break;
@@ -41,17 +41,6 @@ function GoalEdit(props) {
         props.edit(goal)
     }
 
-    function parseContext(context) {
-        return context === undefined ? ["",""] : [context.includes("day") ? "checked" : "", context.includes("night") ? "checked" : ""]
-    }
-
-    function writeContext(context) {
-        let day = goal.context === undefined ? false : goal.context.includes("day")
-        let night = goal.context === undefined ? false : goal.context.includes("night")
-        context === "context-day" ? day ? day = false : day = true : night ? night = false : night = true
-        return day ? night ? ["day", "night"] : ["day"] : night ? ["night"] : undefined
-    }
-
     function handleKeyEvent(event) {
         if (event.key === "Enter") {
             props.save(goal)
@@ -74,14 +63,22 @@ function GoalEdit(props) {
             <div className="modal-body justify-content-center" onKeyPress={handleKeyEvent}>
                 <Input type="text" placeholder="Name" name="name" value={goal.name} onChange={changeParameter}/>
                 <Input type="textarea" placeholder="Description" name="description" value={goal.description} onChange={changeParameter}/>
-                <Checkbox label="Day" name="context-day" checked={parseContext(goal.context)[0]} onChange={changeParameter}/>
-                <Checkbox label="Night" name="context-night" checked={parseContext(goal.context)[1]} onChange={changeParameter}/>
+                <h4 className="font-bold title-up mb-2">{props.info.context.title}</h4>
+                {props.listOfWorldVariables[props.listOfWorldVariables.length - 1].map((prop, key) => (
+                    <Checkbox key={key} label={prop} name="context" checked={goal.context.includes(prop)} onChange={(e) => changeParameter(e, false, 0, prop)}/>
+                ))}
+                {/*<Checkbox label="Day" name="context-day" checked={parseContext(goal.context)[0]} onChange={changeParameter}/>
+                <Checkbox label="Night" name="context-night" checked={parseContext(goal.context)[1]} onChange={changeParameter}/>*/}
                 <div className="mt-2 text-center">
                     {props.listOfWorldVariables.map((prop, key) => (
-                        <div key={key}><span className="font-semibold">{props.info.lists.title} {props.info.lists.elements[key]} : </span>
-                        {prop.map((subProp, subKey) => (
-                            <span key={subKey}>{subProp}{subKey !== (prop.length - 1) ? ", " : ""}</span>
-                        ))}</div>
+                        (key !== (props.listOfWorldVariables.length - 1) && (
+                            <div key={key}>
+                                <span className="font-semibold">{props.info.lists.title} {props.info.lists.elements[key]} : </span>
+                                {prop.map((subProp, subKey) => (
+                                    <span key={subKey}>{subProp}{subKey !== (prop.length - 1) ? ", " : ""}</span>
+                                ))}
+                            </div>
+                        ))
                     ))}
                 </div>
                 {props.info.contract.map((prop, key) => (

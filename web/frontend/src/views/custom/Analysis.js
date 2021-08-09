@@ -231,7 +231,7 @@ export default class Analysis extends React.Component {
 
         return (
             <>
-                <GetCGG updateCGG={this.setCGG} session={this.props.id} trigger={this.state.triggerCGG} setTrigger={this.setTriggerCGG}/>
+                <GetCGG updateCGG={this.setCGG} session={this.props.id} project={this.props.project} trigger={this.state.triggerCGG} setTrigger={this.setTriggerCGG}/>
                 <SocketBuildCGG
                     session={this.props.id}
                     operator={this.state.operator}

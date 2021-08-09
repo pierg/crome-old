@@ -27,12 +27,12 @@ import CustomDownload from "../../components/Custom/CustomDownload";
 export default class CreateEnvironment extends React.Component {
 
     state = {
-        lists: [[], [], []],
-        editedLists: [[], [], []],
-        mutexGroups: [[], []],
+        lists: [[], [], [], []],
+        editedLists: [[], [], [], []],
+        mutexGroups: [[], [], []],
         mutexList: [],
         colors: [],
-        numChildren: [0, 0, 0],
+        numChildren: [0, 0, 0, 0],
         errorMsg: "",
         warningPop: false,
         currentList: 0,
@@ -380,7 +380,7 @@ export default class CreateEnvironment extends React.Component {
         this.setState({
             lists: tmpLists,
             editedLists: tmpLists,
-            mutexGroups: [[], []],
+            mutexGroups: [[], [], []],
             colors: [],
             numChildren: tmpNumChildren
         })
@@ -472,6 +472,9 @@ export default class CreateEnvironment extends React.Component {
 
     getMutexElements = (element) => { // get every element exclusive to the specified element
         let elements = []
+        console.log("mutexgroups")
+        console.log(this.state.mutexGroups)
+        console.log(this.state.currentList)
         let mutexGroup = this.state.mutexGroups[this.state.currentList - 1]
         if(this.state.currentList > 0) {
             for (let i = 0; i < mutexGroup.length; i++) {
@@ -541,6 +544,7 @@ export default class CreateEnvironment extends React.Component {
         const locations = json.grid.locations;
         const actions = json.actions;
         const sensors = json.sensors;
+        const context = json.context;
 
         let  x;
         let  y;
@@ -587,6 +591,7 @@ export default class CreateEnvironment extends React.Component {
         this.addAllLocations(locations)
         this.addAllElements(actions, 1)
         this.addAllElements(sensors, 2)
+        this.addAllElements(context, 3)
         if (this.world !== null) this.world.onclick = null;
         this.size = (json.size.width / 2);
         this.world = this.buildGrid(this.state.myCanvas, (json.size.width / 2), this.map, this.onAddLocation, this.callbackMap, this.updateErrorMsg, this.setNode);
@@ -910,7 +915,7 @@ export default class CreateEnvironment extends React.Component {
         for (let i = 0; i < idTable.length; i++) {
             obj.grid.locations[i].adjacency = this.getAdjacencyTable(obj.grid.locations, i)
         }
-        let lists = ["actions", "sensors"]
+        let lists = ["actions", "sensors", "context"]
         for (let i = 1; i < this.state.lists.length; i++) {
             obj[lists[i-1]] = []
             for (let j = 0; j < this.state.lists[i].length; j++) {

@@ -1,6 +1,9 @@
 const textProps = {
     info: {
         title: "Edit a Goal",
+        context: {
+            title: "Context"
+        },
         contract: [
             {
                 title: "assumptions",
@@ -9,7 +12,7 @@ const textProps = {
             {
                 title: "guarantees",
                 color: "lightBlue"
-            }
+            },
         ],
         modal: {
             close: "now-ui-icons ui-1_simple-remove",

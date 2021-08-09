@@ -124,7 +124,7 @@ export default class WorldModeling extends React.Component {
     }
 
     getListOfWorldVariables(world) {
-        let worldVariables = [[], [], []]
+        let worldVariables = [[], [], [], []]
         for (let i=0; i<world.grid.locations.length; i++) {
             worldVariables[0].push(world.grid.locations[i].id)
         }
@@ -133,6 +133,9 @@ export default class WorldModeling extends React.Component {
         }
         for (let i=0; i<world.sensors.length; i++) {
             worldVariables[2].push(world.sensors[i].name)
+        }
+        for (let i=0; i<world.context.length; i++) {
+            worldVariables[3].push(world.context[i].name)
         }
         return worldVariables
     }

@@ -42,6 +42,11 @@ const textProps = {
             content: [],
             title: "Sensors",
             displayAddButton: true
+        },
+        {
+            content: [],
+            title: "Context",
+            displayAddButton: true
         }
     ],
     buttons: {
