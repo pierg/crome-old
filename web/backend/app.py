@@ -39,6 +39,15 @@ socketio = SocketIO(app, cors_allowed_origins='*')
 
 users = {}
 
+'''
+HOW TO SEND A NOTIFICATION :
+emit("send-notification", {"type": "error", "content": "message appearing"}, room=users[data['session']])
+types : error = red, 
+        success = green, 
+        warning = yellow, 
+        info = blue
+'''
+
 
 @socketio.on('connect')
 def connected():

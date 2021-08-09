@@ -12,7 +12,7 @@ function GetCGG(props) {
     }, [setMessage])
 
 
-    /*useEffect(() => {
+    useEffect(() => {
         if (socket == null || !props.trigger) return
 
         socket.emit('process-cgg', {session: props.session})
@@ -20,17 +20,17 @@ function GetCGG(props) {
         socket.on('receive-cgg', setMessageFunction)
 
         return () => socket.off('receive-cgg')
-    }, [socket, setMessageFunction, props.trigger, props.session])*/
+    }, [socket, setMessageFunction, props.trigger, props.session])
     
-    useEffect(() => {
+    /*useEffect(() => {
         if (socket == null || !props.trigger) return
 
         socket.emit('process-goals', {session: props.session, project: props.project})
 
-        /*socket.on('receive-cgg', setMessageFunction)
+        socket.on('receive-cgg', setMessageFunction)
 
-        return () => socket.off('receive-cgg')*/
-    }, [socket, props.trigger, props.session, props.project])
+        return () => socket.off('receive-cgg')
+    }, [socket, props.trigger, props.session, props.project])*/
 
     useEffect(() => {
         props.updateCGG(message)
