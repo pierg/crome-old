@@ -133,6 +133,23 @@
   --tw-ring-color: rgba(14, 165, 233, var(--tw-ring-opacity));
 }
 
+#synthesisTable {
+    border-collapse: collapse;
+    border-spacing: 0 0.5em;
+}
+
+#synthesisTable th, #synthesisTable td {
+    padding: 1em;
+}
+
+#synthesisTable, #synthesisTable th, #synthesisTable td {
+    border-top: 1px solid rgb(203, 213, 225);
+    border-bottom: 1px solid rgb(203, 213, 225);
+}
+
+.h-fit {
+    height: fit-content;
+}
 
 
 @media (min-width: 640px) {

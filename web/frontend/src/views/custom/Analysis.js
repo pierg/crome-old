@@ -47,9 +47,7 @@ export default class Analysis extends React.Component {
     }
 
     setCGG = (cgg) => {
-        console.log("set with null")
         if (cgg !== null) {
-            console.log("set")
             this.setState({
                 cgg: JSON.parse(cgg),
                 triggerCGG: false

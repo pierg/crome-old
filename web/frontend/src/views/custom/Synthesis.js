@@ -5,7 +5,7 @@ import GridWorld from "../../components/Crome/IndexEnvironment";
 import * as json from "./environment.json"
 import img from "./robot1.png";
 import * as jsoninfo from "./test.json"
-import {Button} from "reactstrap";
+import Button from "../../components/Elements/Button";
 
 
 export default class Synthesis extends React.Component {
@@ -20,7 +20,11 @@ export default class Synthesis extends React.Component {
         this.x = null;
         this.y = null;
         this.robotButton = React.createRef();
-        this.running = false;
+    }
+
+    state = {
+        table: null,
+        running: false
     }
 
     componentDidMount() {
@@ -169,16 +173,20 @@ export default class Synthesis extends React.Component {
     }
 
     run() {
-        if (this.running) {
+        if (this.state.running) {
             clearInterval(this.timer)
             this.timer = null;
-            this.running = false;
+            this.setState({
+                running: false
+            })
         }
         else {
             this.timer = setInterval(() => {
                 this.robot(1)
             }, 1000);
-            this.running = true;
+            this.setState({
+                running: true
+            })
         }
     }
 
@@ -234,7 +242,7 @@ export default class Synthesis extends React.Component {
 
     generate() {
         const simulation = jsoninfo.simulation;
-        let table = "<tr> <th>t</th> <th>context</th> <th>controller</th> <th>inputs</th> <th>outputs</th> </tr>"
+        let table = "<tr> <th>T</th> <th>CONTEXT</th> <th>CONTROLLER</th> <th>INPUTS</th> <th>OUTPUTS</th> </tr>"
         for (let i = 0; i < simulation.length; i++) {
             table += "<tr class='line' ><td>" + simulation[i].t + "</td>";
             table += "<td>" + simulation[i].context + "</td>";
@@ -243,27 +251,35 @@ export default class Synthesis extends React.Component {
             table += "<td>" + simulation[i].outputs + "</td></tr>";
             this.tab.push([(simulation[i].x1 + simulation[i].x2) / 2 , (simulation[i].y1 + simulation[i].y2) / 2]);
         }
-        document.getElementById("test").innerHTML = table;
+        document.getElementById("synthesisTable").innerHTML = table;
     }
+
     render() {
         return (
             <>
-                <div className="flex container px-4 justify-center" >
+                <div className="flex justify-center" >
                     <div className="flex justify-center">
                         <div className="flex flex-col items-center">
-                            <div className="w-full ml-4">
-                                <canvas className="shifted-canvas-margin" ref={this.myCanvas} id='canvas'/>
-                                <table id='test'/>
+                            <div className="w-full ml-4 flex">
+                                <div>
+                                    <div>
+                                        <canvas className="shifted-canvas-margin" ref={this.myCanvas} id='canvas'/>
+                                    </div>
+                                    <div className="flex mt-4 justify-end items-center">
+                                        <div className="flex h-fit">
+                                            <Button color="amber" className="text-xl" onClick={() =>this.clear()}>Reset</Button>
+                                            <Button color="emerald" onClick={() =>this.run()}><i className={"text-xl "+(this.state.running ? this.props.info.buttons.pause : this.props.info.buttons.run)}/></Button>
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <Button color="lightBlue" onClick={() =>this.robot(-1)}><i className={"text-xl "+this.props.info.buttons.up}/></Button>
+                                            <Button color="red" onClick={() =>this.robot(1)}><i className={"text-xl "+this.props.info.buttons.down}/></Button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div><table id='synthesisTable' className="ml-4"/></div>
                             </div>
                         </div>
                     </div>
-
-                </div>
-                <div className="flex container px-4 justify-center">
-                    <Button onClick={() =>this.robot(1)}>+</Button>
-                    <Button onClick={() =>this.robot(-1)}>-</Button>
-                    <Button onClick={() =>this.clear()}>clear</Button>
-                    <Button onClick={() =>this.run()}>Run</Button>
                 </div>
             </>
         );

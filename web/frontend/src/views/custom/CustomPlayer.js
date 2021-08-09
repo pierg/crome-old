@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import goalmodelinginfo from "_texts/custom/goalmodelinginfo.js";
 import worldmodelinginfo from "_texts/custom/worldmodelinginfo.js";
+import synthesisinfo from "_texts/custom/synthesisinfo.js";
 
 // components
 import GoalModeling from "./GoalModeling";
@@ -108,7 +109,7 @@ export default function CustomPlayer({ items, defaultOpened, id, setWorld, setLi
                               'world': <WorldModeling id={id} setListOfWorldNames={setListOfWorldNames} setListOfWorldVariables={setListOfWorldVariables} projectAdded={projectAdded} project={project} setProject={setProject} setWorld={setWorld} {...worldmodelinginfo}/>,
                               'goal': <GoalModeling id={id} {...goalmodelinginfo} project={project} setGoals={setGoals} setPatterns={setPatterns} listOfWorldVariables={listOfWorldVariables} setProject={(project) => addProjectFromGoalModeling(project)}/>,
                               'analysis': <Analysis id={id} active={headerStates[2]} goals={goals} patterns={patterns}/>,
-                              'synthesis':<Synthesis world={props.world} active={headerStates[3]} />
+                              'synthesis':<Synthesis world={props.world} {...synthesisinfo} active={headerStates[3]} />
                             }[prop.component]
                           }
                         </div>
