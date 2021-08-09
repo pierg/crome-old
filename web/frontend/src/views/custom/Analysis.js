@@ -108,7 +108,7 @@ export default class Analysis extends React.Component {
         function findGoalById(id) {
             if (that.props.goals !== null) {
                 for (let i = 0; i < that.props.goals.length; i++) {
-                    if (that.props.goals[i].id === id) return that.props.goals[i]
+                    if (getIndexFromString(that.props.goals[i].id) === id) return that.props.goals[i]
                 }
             }
             if (that.state.cgg !== null) {
@@ -127,6 +127,10 @@ export default class Analysis extends React.Component {
             }
         }
 
+        function getIndexFromString(str) {
+            return parseInt(str.split("-")[str.split("-").length - 1])
+        }
+
         let nodesArray = []
         let edgesArray = []
 
@@ -136,6 +140,8 @@ export default class Analysis extends React.Component {
             /* FILL CGG NODES FROM RECEIVED JSON */
             if (this.props.goals !== null) {
                 let goal
+                console.log("about to foreach on")
+                console.log(this.state.cgg.nodes)
                 this.state.cgg.nodes.forEach(function (node) {
                     goal = findGoalById(node.id)
                     nodesArray.push({
@@ -144,6 +150,8 @@ export default class Analysis extends React.Component {
                         label: node.hasOwnProperty("name") ? node.name : goal.name
                     })
                 });
+                console.log("nodesArray")
+                console.log(nodesArray)
             }
 
             /* FILL CGG EDGES FROM RECEIVED JSON */
@@ -162,6 +170,8 @@ export default class Analysis extends React.Component {
             nodes: nodesArray,
             edges: edgesArray
         }
+        console.log("graph")
+        console.log(graph)
 
         const options = {
             layout: {

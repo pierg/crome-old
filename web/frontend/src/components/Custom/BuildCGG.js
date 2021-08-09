@@ -80,9 +80,6 @@ function BuildCGG(props) {
                         {props.cgg !== null && props.cgg.nodes.map((prop, key) => (
                             <Checkbox key={key} onChange={() => changeGoals(prop.id)} checked={props.selectedGoals.includes(prop.id) ? "checked" : ""} label={getGoalName(prop)}/>
                         ))}
-                        {props.cgg !== null && props.cgg.nodes.map((prop, key) => (
-                            <Checkbox key={key} onChange={() => changeGoals(prop.id)} checked={props.selectedGoals.includes(prop.id) ? "checked" : ""} label={getGoalName(prop)}/>
-                        ))}
                     </div>
                     {props.selectedOperator === "Extension" && (<div className="flex flex-col">
                         {props.cgg !== null && props.cgg.libraries.map((prop, key) => ( // TODO change origin of libraries (by putting them not in cgg.json)
