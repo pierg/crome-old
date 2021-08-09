@@ -1,6 +1,6 @@
 {
   "name": "Register Person",
-  "id": 3,
+  "id": "default-simple-0003",
   "description": "During context day => if see a person, register in the next step, Only if see a person, register in the next step",
   "context": [
     "day"

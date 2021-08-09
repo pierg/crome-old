@@ -13,6 +13,20 @@
             "name": "b"
         }
     ],
+    "context": [
+        {
+            "mutex_group": [
+                0
+            ],
+            "name": "day"
+        },
+        {
+            "mutex_group": [
+                0
+            ],
+            "name": "night"
+        }
+    ],
     "filetype": "environment",
     "grid": {
         "locations": [

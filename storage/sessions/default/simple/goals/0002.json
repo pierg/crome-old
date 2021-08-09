@@ -1,6 +1,6 @@
 {
   "name": "Greet Person",
-  "id": 2,
+  "id": "default-simple-0002",
   "description": "Always => if see a person, greet in the same step, Only if see a person, greet immediately",
   "contract": {
     "assumptions": [

@@ -1,6 +1,6 @@
 {
   "name": "Day patrolling",
-  "id": 0,
+  "id": "default-simple-0000",
   "description": "During context day => start from r1, patrol r1, r2 in strict order, Strict Ordered Patrolling Location r1, r2",
   "context": [
     "day"
