@@ -13,7 +13,7 @@
     "guarantees": [
       {
         "pattern": {
-          "name": "InstantaneousReaction",
+          "name": "BoundReaction",
           "arguments": [
             {
               "name": "trigger",
