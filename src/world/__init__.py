@@ -127,3 +127,7 @@ class World(dict):
                     adjacent_types.add(t)
 
         return adjacent_types
+
+    def equals(self, world) -> bool:
+        return self.typeset == world.typeset
+

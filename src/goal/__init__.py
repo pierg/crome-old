@@ -233,7 +233,7 @@ class Goal:
                 if new_goal_world is None:
                     new_goal_world = g.world
                 else:
-                    if new_goal_world is not g.world:
+                    if not new_goal_world.equals(g.world):
                         raise GoalException("conjoining goals that have different 'variables'")
 
         try:
@@ -279,7 +279,7 @@ class Goal:
                 if new_goal_world is None:
                     new_goal_world = g.world
                 else:
-                    if new_goal_world is not g.world:
+                    if not new_goal_world.equals(g.world):
                         raise GoalException("conjoining goals that have different 'variables'")
 
         try:
@@ -317,7 +317,7 @@ class Goal:
                 if new_goal_world is None:
                     new_goal_world = g.world
                 else:
-                    if new_goal_world is not g.world:
+                    if not new_goal_world.equals(g.world):
                         raise GoalException("disjoining goals that have different 'variables'")
 
         try:
