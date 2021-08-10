@@ -8,7 +8,7 @@ from cgg import Node
 from contract import Contract
 from specification.atom.pattern.robotics.coremovement.coverage import *
 from specification.atom.pattern.robotics.coremovement.surveillance import *
-from specification.atom.pattern.robotics.trigger.triggers_modified import InstantaneousReaction
+from specification.atom.pattern.robotics.trigger.triggers import *
 from specification.formula import Formula
 from tools.persistence import Persistence
 from typeset import Typeset
@@ -26,24 +26,25 @@ class Modelling:
         w = World(project_name=json_obj["project_id"])
         for action in json_obj["actions"]:
             if "mutex_group" in action:
-                w.new_boolean_action(action["name"], mutex=action["mutex_group"])
+                w.new_boolean_action(action["name"], mutex=action["mutex_group"][0])
             else:
                 w.new_boolean_action(action["name"])
         for sensor in json_obj["sensors"]:
             if "mutex_group" in sensor:
-                w.new_boolean_sensor(sensor["name"], mutex=sensor["mutex_group"])
+                w.new_boolean_sensor(sensor["name"], mutex=sensor["mutex_group"][0])
             else:
                 w.new_boolean_sensor(sensor["name"])
         for context in json_obj["context"]:
             if "mutex_group" in context:
-                w.new_boolean_context(context["name"], mutex=context["mutex_group"])
+                w.new_boolean_context(context["name"], mutex=context["mutex_group"][0])
             else:
                 w.new_boolean_context(context["name"])
         for location in json_obj["grid"]["locations"]:
             w.new_boolean_location(location["id"], mutex="locations", adjacency=location["adjacency"])
 
-        # w.new_boolean_context("day", mutex="time")
-        # w.new_boolean_context("night", mutex="time")
+        # TODO FIX FOR PIER
+        #  mutex_group has to be an array, that's why there is a [0] on each mutex
+        #  todo : change mutex to be arrays
 
         Persistence.dump_world(w, project_folder)
 
@@ -91,7 +92,7 @@ class Modelling:
 
         w = Persistence.load_world(project_folder)
 
-        goal_path = Path(os.path.join(project_folder, f"goals/{str(goal_file).zfill(4)}"))
+        goal_path = Path(os.path.join(project_folder, f"goals/{str(goal_file).zfill(4)}.json"))
 
         with open(goal_path) as json_file:
             json_obj = json.load(json_file)
@@ -111,16 +112,11 @@ class Modelling:
                             else:
                                 contract_lists[i].append(
                                     globals()[contract_element["pattern"]["name"]]([w[args[0]["value"]]]))
-                        else:
-                            arguments_list = []
-                            for arg in args:
-                                arguments_list.append(arg)
+                        elif len(args) == 2:
                             contract_lists[i].append(
-                                globals()[contract_element["pattern"]["name"]](arguments_list))
-                            # TODO FIX FOR PIER
-                            # How to do when the Pattern is a Reaction, and needs 2 arguments that are not values ?
-                            # For example : InstantaneousReaction, BoundDelay, Wait...
-                            # Just putting the string values in a list doesn't seem to work
+                                globals()[contract_element["pattern"]["name"]](w[args[0]["value"]], w[args[1]["value"]]))
+                        else:
+                            raise Exception("Unknown Pattern, the pattern included only have 1 or 2 arguments")
                     elif "ltl_value" in contract_element:
                         if "world_values" in contract_element:
                             values = set()
@@ -130,14 +126,17 @@ class Modelling:
                             contract_lists[i].append(Formula(Atom(formula=(contract_element["ltl_value"],
                                                                            Typeset(values)))))
                             # TODO FIX FOR PIER
-                            # In case the designer enters a LTL (not a Pattern), I have the error saying that
-                            # Atom must have an attribute 'name' but I don't see how to add it here
+                            #  In case the designer enters a LTL (not a Pattern), I have the error saying that
+                            #  Atom must have an attribute 'name' but I don't see how to add it here
 
-            for context_json in json_obj["context"]:
-                context = w[context_json]
-                # TODO context is an array?
+            # TODO FIX
+            #  context is an array?
 
-            context = w["day"]
+            context = None
+            if len(json_obj["context"]) == 1:
+                context = w[json_obj["context"][0]]
+            elif len(json_obj["context"]) > 1:
+                context = w[json_obj["context"]]
 
             lists_with_and_operators = []
             for i in range(len(contract_lists)):
@@ -148,16 +147,13 @@ class Modelling:
                     else:
                         lists_with_and_operators[i] = lists_with_and_operators[i] & contract_lists[i][j]
 
-            print("LISTS WITH OPERATORS")
-            print(lists_with_and_operators)
-
             contract = Contract(
                 assumptions=lists_with_and_operators[0],
                 guarantees=lists_with_and_operators[1]
             )
 
-            new_goal = Node(name="Day patrolling",
-                            description="description",
+            new_goal = Node(name=json_obj["name"],
+                            description=json_obj["description"],
                             id=goal_id,
                             specification=contract,
                             context=context,

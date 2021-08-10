@@ -251,9 +251,11 @@ def get_patterns():
 @socketio.on('process-goals')
 def process_goals(data):
     print("BEGIN BUILD CGG")
-    project_folder = os.path.join(storage_folder, f"sessions/{data['session']}/{data['project']}")
+    session = "default" if data['project'] == "simple" else data['session']
+    project_folder = os.path.join(storage_folder, f"sessions/{session}/{data['project']}")
     set_of_goals = Persistence.load_goals(project_folder)
-    Node.build_cgg(set_of_goals)
+    cgg = Node.build_cgg(set_of_goals)
+    print(cgg)
     print("STOP BUILD CGG")
 
 
@@ -348,6 +350,15 @@ def copy_simple(session_id):
             json_formatted = json.dumps(json_data, indent=4, sort_keys=True)
             file.write(json_formatted)
     return project_id
+
+
+def build_simple_project():
+    project_dir = os.path.join(storage_folder, f"sessions/default/simple")
+    Modelling.create_environment(project_dir)
+    Modelling.add_goal(project_dir, 0, "default-simple-0000")
+    Modelling.add_goal(project_dir, 1, "default-simple-0001")
+    Modelling.add_goal(project_dir, 2, "default-simple-0002")
+    Modelling.add_goal(project_dir, 3, "default-simple-0003")
 
 
 if __name__ == '__main__':
