@@ -92,7 +92,7 @@ class Modelling:
 
         w = Persistence.load_world(project_folder)
 
-        goal_path = Path(os.path.join(project_folder, f"goals/{str(goal_file).zfill(4)}.json"))
+        goal_path = Path(os.path.join(project_folder, f"goals/{goal_file}"))
 
         with open(goal_path) as json_file:
             json_obj = json.load(json_file)

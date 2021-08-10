@@ -10,13 +10,13 @@
     "context": [
         {
             "mutex_group": [
-                "time"
+                0
             ],
             "name": "day"
         },
         {
             "mutex_group": [
-                "time"
+                0
             ],
             "name": "night"
         }

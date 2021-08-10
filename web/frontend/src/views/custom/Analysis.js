@@ -140,8 +140,6 @@ export default class Analysis extends React.Component {
             /* FILL CGG NODES FROM RECEIVED JSON */
             if (this.props.goals !== null) {
                 let goal
-                console.log("about to foreach on")
-                console.log(this.state.cgg.nodes)
                 this.state.cgg.nodes.forEach(function (node) {
                     goal = findGoalById(node.id)
                     nodesArray.push({
@@ -150,8 +148,6 @@ export default class Analysis extends React.Component {
                         label: node.hasOwnProperty("name") ? node.name : goal.name
                     })
                 });
-                console.log("nodesArray")
-                console.log(nodesArray)
             }
 
             /* FILL CGG EDGES FROM RECEIVED JSON */
@@ -170,8 +166,6 @@ export default class Analysis extends React.Component {
             nodes: nodesArray,
             edges: edgesArray
         }
-        console.log("graph")
-        console.log(graph)
 
         const options = {
             layout: {
@@ -245,7 +239,9 @@ export default class Analysis extends React.Component {
                 <SocketBuildCGG
                     session={this.props.id}
                     operator={this.state.operator}
-                    goals={this.state.selectedGoals}
+                    goals={this.props.goals}
+                    nodes={this.state.cgg !== null ? this.state.cgg.nodes : null}
+                    selectedGoals={this.state.selectedGoals}
                     library={this.state.selectedLibrary}
                     trigger={this.state.triggerOperation}
                     setTrigger={this.setTriggerOperation}

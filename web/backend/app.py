@@ -355,10 +355,10 @@ def copy_simple(session_id):
 def build_simple_project():
     project_dir = os.path.join(storage_folder, f"sessions/default/simple")
     Modelling.create_environment(project_dir)
-    Modelling.add_goal(project_dir, 0, "default-simple-0000")
-    Modelling.add_goal(project_dir, 1, "default-simple-0001")
-    Modelling.add_goal(project_dir, 2, "default-simple-0002")
-    Modelling.add_goal(project_dir, 3, "default-simple-0003")
+    Modelling.add_goal(project_dir, "0000.json", "default-simple-0000")
+    Modelling.add_goal(project_dir, "0001.json", "default-simple-0001")
+    Modelling.add_goal(project_dir, "0002.json", "default-simple-0002")
+    Modelling.add_goal(project_dir, "0003.json", "default-simple-0003")
 
 
 if __name__ == '__main__':
