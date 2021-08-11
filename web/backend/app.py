@@ -254,10 +254,13 @@ def process_goals(data):
     session = "default" if data['project'] == "simple" else data['session']
     project_folder = os.path.join(storage_folder, f"sessions/{session}/{data['project']}")
     set_of_goals = Persistence.load_goals(project_folder)
+    if session == "default" and not os.path.exists(os.path.join(project_folder, "goals.dat")):
+        build_simple_project()
     cgg = Node.build_cgg(set_of_goals)
     print("cgg exported :")
     exported_json = cgg.export_to_json()
     print(exported_json)
+    emit("receive-cgg", {'cgg': exported_json}, room=users[data['session']])
     print("STOP BUILD CGG")
 
 

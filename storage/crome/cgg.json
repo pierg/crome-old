@@ -1,16 +1,16 @@
 {
   "nodes": [
     {
-      "id": 0
+      "id": "default-simple-0000"
     },
     {
-      "id": 1
+      "id": "default-simple-0001"
     },
     {
-      "id": 2
+      "id": "default-simple-0002"
     },
     {
-      "id": 3
+      "id": "default-simple-0003"
     },
     {
       "id": 4,
@@ -20,18 +20,23 @@
   ],
   "edges": [
     {
-      "from": 0,
-      "to": 1,
+      "from": "default-simple-0000",
+      "to": "default-simple-0001",
       "type": "conjunction"
     },
     {
-      "from": 1,
-      "to": 2,
+      "from": "default-simple-0001",
+      "to": "default-simple-0002",
       "type": "refinement"
     },
     {
-      "from": 1,
-      "to": 3,
+      "from": "default-simple-0001",
+      "to": "default-simple-0003",
+      "type": "refinement"
+    },
+    {
+      "from": 4,
+      "to": "default-simple-0003",
       "type": "refinement"
     }
   ],

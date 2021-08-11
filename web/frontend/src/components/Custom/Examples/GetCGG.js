@@ -27,10 +27,10 @@ function GetCGG(props) {
 
         socket.emit('process-goals', {session: props.session, project: props.project})
 
-        /*socket.on('receive-cgg', setMessageFunction)
+        socket.on('receive-cgg', setMessageFunction)
 
-        return () => socket.off('receive-cgg')*/
-    }, [socket, props.trigger, props.session, props.project])
+        return () => socket.off('receive-cgg')
+    }, [socket, props.trigger, props.session, props.project, setMessageFunction])
 
     useEffect(() => {
         props.updateCGG(message)

@@ -472,9 +472,6 @@ export default class CreateEnvironment extends React.Component {
 
     getMutexElements = (element) => { // get every element exclusive to the specified element
         let elements = []
-        console.log("mutexgroups")
-        console.log(this.state.mutexGroups)
-        console.log(this.state.currentList)
         let mutexGroup = this.state.mutexGroups[this.state.currentList - 1]
         if(this.state.currentList > 0) {
             for (let i = 0; i < mutexGroup.length; i++) {

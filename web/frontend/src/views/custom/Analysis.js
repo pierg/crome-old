@@ -48,11 +48,22 @@ export default class Analysis extends React.Component {
 
     setCGG = (cgg) => {
         if (cgg !== null) {
+            let parsedCGG = JSON.parse(cgg)
+            let nodes = []
+            let edges = []
+            this.recParseCGG(parsedCGG, nodes, edges)
+            let tmpCGG = {"nodes": nodes, "edges": edges}
+            this.setState({
+                triggerCGG: false,
+                cgg: tmpCGG
+            })
+        }
+        /*if (cgg !== null) {
             this.setState({
                 cgg: JSON.parse(cgg),
                 triggerCGG: false
             })
-        }
+        }*/
     }
 
     setOperator = (operator) => {
@@ -92,6 +103,30 @@ export default class Analysis extends React.Component {
         })
     }
 
+    isExistingGoal = (id) => {
+        return id.split("-").length >= 2
+    }
+
+    idIncludes = (nodes, id) => {
+        for (let i=0; i<nodes.length; i++) {
+            if (nodes[i].id === id) return true
+        }
+        return false
+    }
+
+    recParseCGG = (cgg, nodes, edges) => {
+        if (!this.idIncludes(nodes, cgg.id)) {
+            let group = this.isExistingGoal(cgg.id) ? "input" : "new"
+            nodes.push({"id": cgg.id, "group": group, "label": cgg.goal})
+        }
+        if (cgg.children !== undefined) {
+            for (let i=0; i<cgg.children.length; i++) {
+                edges.push({"from": cgg.children[i].id, "to": cgg.id, "arrows": {to: {type: cgginfo.symbols[cgg.link.toLowerCase()]}}})
+                this.recParseCGG(cgg.children[i], nodes, edges)
+            }
+        }
+    }
+
     render() {
 
         let that = this
@@ -108,7 +143,7 @@ export default class Analysis extends React.Component {
         function findGoalById(id) {
             if (that.props.goals !== null) {
                 for (let i = 0; i < that.props.goals.length; i++) {
-                    if (getIndexFromString(that.props.goals[i].id) === id) return that.props.goals[i]
+                    if (that.props.goals[i].id === id) return that.props.goals[i]
                 }
             }
             if (that.state.cgg !== null) {
@@ -127,17 +162,21 @@ export default class Analysis extends React.Component {
             }
         }
 
-        function getIndexFromString(str) {
+        /*function getIndexFromString(str) {
             return parseInt(str.split("-")[str.split("-").length - 1])
-        }
+        }*/
 
         let nodesArray = []
         let edgesArray = []
 
-
-        /* IF JSON IS RECEIVED */
         if (this.state.cgg !== null) {
-            /* FILL CGG NODES FROM RECEIVED JSON */
+            nodesArray = this.state.cgg.nodes
+            edgesArray = this.state.cgg.edges
+        }
+
+        /* IF JSON IS RECEIVED
+        if (this.state.cgg !== null) {
+            /* FILL CGG NODES FROM RECEIVED JSON
             if (this.props.goals !== null) {
                 let goal
                 this.state.cgg.nodes.forEach(function (node) {
@@ -150,7 +189,7 @@ export default class Analysis extends React.Component {
                 });
             }
 
-            /* FILL CGG EDGES FROM RECEIVED JSON */
+            /* FILL CGG EDGES FROM RECEIVED JSON
             this.state.cgg.edges.forEach(function (node) {
                 edgesArray.push({
                     from: node.from,
@@ -158,7 +197,7 @@ export default class Analysis extends React.Component {
                     arrows: {to: {type: cgginfo.symbols[node.type]}}
                 })
             });
-        }
+        }*/
 
 
         /* DEFINE CGG PARAMETERS PASSED TO CGG COMPONENT */
@@ -169,7 +208,7 @@ export default class Analysis extends React.Component {
 
         const options = {
             layout: {
-                hierarchical: true
+                hierarchical: false
             },
             edges: {
                 color: "#000000",
