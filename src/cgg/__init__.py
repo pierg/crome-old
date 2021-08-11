@@ -378,10 +378,9 @@ class Node(Goal):
     def save(self):
         Store.save_to_file(str(self), "cgg.txt", self.session_name)
 
-
     def export_to_json(self) -> str:
-        """TODO FIX ME"""
         """
+        TODO FIX ME
         id (str): self.id
         name (str): self.name
         description: (str)self.description
@@ -389,9 +388,24 @@ class Node(Goal):
         self.parents and self.children
          returns a dictionary with Link as key (i.e. CONJUNCTION, COMPOSITION etc...) and a set of Node objects as value
         for example if the goal is the result of a composition of other 3 goals
-        the self.children dictionary will have at least one entry with key -> value be Link.COMPOSITION -> {goal_1, goal_2, goal_3}
-        where goal_1, goal_2, goal_3 are other Node objects, so you can access name, id etc...and then link them together for rendering"""
+        the self.children dictionary will have at least one entry with key -> value be
+        Link.COMPOSITION -> {goal_1, goal_2, goal_3} where goal_1, goal_2, goal_3 are other Node objects,
+        so you can access name, id etc...and then link them together for rendering
+        """
+        exported_cgg = self.rec_exporting_to_json()
+        import json
+        return json.dumps(exported_cgg)
 
+    def rec_exporting_to_json(self):
+        if len(self.children) != 0:
+            copy = {"goal": self.name, "id": self.id}
+            for link, goals in self.children.items():
+                copy["link"] = link.name
+                copy["children"] = []
+                for goal in goals:
+                    copy["children"].append(goal.rec_exporting_to_json())
+            return copy
+        return {"goal": self.name, "id": self.id}
 
     def create_transition_controller(self, start: Types, finish: Types, t_trans: int) -> Controller:
 

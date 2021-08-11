@@ -255,7 +255,9 @@ def process_goals(data):
     project_folder = os.path.join(storage_folder, f"sessions/{session}/{data['project']}")
     set_of_goals = Persistence.load_goals(project_folder)
     cgg = Node.build_cgg(set_of_goals)
-    print(cgg)
+    print("cgg exported :")
+    exported_json = cgg.export_to_json()
+    print(exported_json)
     print("STOP BUILD CGG")
 
 
