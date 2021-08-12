@@ -1,6 +1,6 @@
 const textProps = {
   brand: {
-    text: "NAME",
+    text: "CROME",
     image: require("assets/img/brand/tim_60x61.png").default,
     link: {
       href: "#/index",
@@ -19,46 +19,6 @@ const textProps = {
       text: "Run CROME",
       link: {
         href: "#/index",
-      },
-    },
-    {
-      divider: true,
-    },
-    {
-      title: "Documentation",
-    },
-    {
-      icon: "fas fa-puzzle-piece",
-      text: "Components",
-      link: {
-        href: "#/components",
-      },
-    },
-    {
-      icon: "fas fa-file-alt",
-      text: "Overview",
-      link: {
-        href: "#/documentation",
-      },
-    },
-    {
-      divider: true,
-    },
-    {
-      title: "LTL Tools",
-    },
-    {
-      icon: "fas fa-map-marked",
-      text: "Check Fomulae",
-      link: {
-        href: "#ltlformulae",
-      },
-    },
-    {
-      icon: "fas fa-fingerprint",
-      text: "Synthesis Tool",
-      link: {
-        href: "#ltlsynthesis",
       },
     },
   ],

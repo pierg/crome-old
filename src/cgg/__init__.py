@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import itertools
+import json
 import os
 from enum import Enum, auto
 import random
+from pathlib import Path
 from typing import Dict, Set, Union, Tuple, List
 
 from tabulate import tabulate
@@ -378,7 +380,7 @@ class Node(Goal):
     def save(self):
         Store.save_to_file(str(self), "cgg.txt", self.session_name)
 
-    def export_to_json(self) -> str:
+    def export_to_json(self, goals_folder: str):
         """
         TODO FIX ME
         id (str): self.id
@@ -391,21 +393,49 @@ class Node(Goal):
         the self.children dictionary will have at least one entry with key -> value be
         Link.COMPOSITION -> {goal_1, goal_2, goal_3} where goal_1, goal_2, goal_3 are other Node objects,
         so you can access name, id etc...and then link them together for rendering
-        """
-        exported_cgg = self.rec_exporting_to_json()
+
+        exported_cgg = self.rec_exporting_to_json(goals_folder)
         import json
         return json.dumps(exported_cgg)
+        """
+        self.rec_exporting_to_json(goals_folder)
 
-    def rec_exporting_to_json(self):
+    def rec_exporting_to_json(self, goals_folder: str, parent_goal_id: str = None):
         if len(self.children) != 0:
             copy = {"goal": self.name, "id": self.id}
             for link, goals in self.children.items():
                 copy["link"] = link.name
                 copy["children"] = []
                 for goal in goals:
-                    copy["children"].append(goal.rec_exporting_to_json())
+                    child = goal.rec_exporting_to_json(goals_folder, self.id)
+                    Node.exporting_in_files(self.id, goals_folder, "children", child["id"], self.name, link.name)
+                    copy["children"].append(child)
             return copy
+        if parent_goal_id is not None:
+            Node.exporting_in_files(self.id, goals_folder, "parents", parent_goal_id, self.name)
         return {"goal": self.name, "id": self.id}
+
+    @staticmethod
+    def exporting_in_files(node_id: str, goals_folder: str, mode: str, new_element: str, goal_name: str, link: str = None):
+        filename = str(node_id).split("-")
+        goal_folder = Path(os.path.join(goals_folder, f"{filename[len(filename) - 1].zfill(4)}.json"))
+        if os.path.exists(goal_folder):
+            with open(goal_folder, "r") as json_file:
+                json_goal = json.load(json_file)
+        else:
+            json_goal = {"group": "new", "name": goal_name}
+        with open(goal_folder, "w") as json_file:
+            existing_array = []
+            if mode in json_goal:
+                for element in json_goal[mode]:
+                    existing_array.append(element)
+            if new_element not in existing_array:
+                existing_array.append(new_element)
+            if link is not None:
+                json_goal["link"] = link
+            json_goal[mode] = existing_array
+            json_formatted = json.dumps(json_goal, indent=4, sort_keys=True)
+            json_file.write(json_formatted)
 
     def create_transition_controller(self, start: Types, finish: Types, t_trans: int) -> Controller:
 

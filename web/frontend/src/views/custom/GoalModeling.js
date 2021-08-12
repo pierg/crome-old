@@ -24,7 +24,7 @@ export default class GoalModeling extends React.Component {
         currentGoalIndex: 0,
         numChildren: 0,
         patterns: [],
-        triggers: [false, false], // the first one is the saving trigger, the second one is the getting trigger
+        saveTrigger: false,
         deletionIndex: null
     }
 
@@ -46,9 +46,9 @@ export default class GoalModeling extends React.Component {
         }
         return (
             <>
-                <SocketIoGaols projectId={this.props.project} session={this.props.id} updateGoals={this.getGoals} deleteIndex={this.state.deletionIndex} triggerGoals={this.state.triggers[1]} deleteTrigger={this.deleteTrigger} switchWorld={this.switchWorld}/>
+                <SocketIoGaols projectId={this.props.project} session={this.props.id} updateGoals={this.getGoals} deleteIndex={this.state.deletionIndex} triggerGoals={this.props.triggerGetGoals} deleteTrigger={this.deleteTrigger} switchWorld={this.switchWorld}/>
                 <SocketIoPatterns patterns={this.getPatterns} />
-                <SocketSaveGoals projectId={this.props.project} session={this.props.id} index={this.state.currentGoalIndex} goals={this.state.editedGoals} triggerSave={this.state.triggers[0]} toggleTrigger={this.toggleTrigger} switchWorld={this.switchWorld}/>
+                <SocketSaveGoals projectId={this.props.project} session={this.props.id} index={this.state.currentGoalIndex} goals={this.state.editedGoals} triggerSave={this.state.saveTrigger} toggleSaveTrigger={this.toggleSaveTrigger} toggleGetTrigger={this.props.toggleGetTrigger} switchWorld={this.switchWorld}/>
                 <ParentComponent addChild={this.onAddChild}>
                     {children}
                 </ParentComponent>
@@ -125,22 +125,30 @@ export default class GoalModeling extends React.Component {
             return {
                 goals,
             };
-        }, () => this.toggleTrigger(0, true));
+        }, () => this.toggleSaveTrigger(true));
         this.setModalClassic(false)
     }
 
     getGoals = (list) => {
         let tmpArray = []
+        let allGoals = []
         for (let i=0; i<list.length; i++) {
-            tmpArray.push(JSON.parse(list[i]))
+            let parsedGoal = JSON.parse(list[i])
+            if (!parsedGoal.hasOwnProperty("group") || parsedGoal.group !== "new") {
+                tmpArray.push(parsedGoal)
+            }
+            allGoals.push(parsedGoal)
         }
         this.setState({
             goals: tmpArray,
             receivedGoals: tmpArray,
             editedGoals: tmpArray,
-            numChildren: list.length
+            numChildren: tmpArray.length
         })
-        this.props.setGoals(tmpArray)
+        console.log("props.setGoals allGoals with :")
+        console.log(allGoals)
+        console.log("end allGoals")
+        this.props.setGoals(allGoals)
     }
 
     getPatterns = (list) => {
@@ -149,24 +157,21 @@ export default class GoalModeling extends React.Component {
         }, () => this.props.setPatterns(this.state.patterns))
     }
 
-    toggleTrigger = (index, bool) => {
-        let tmpTriggers = this.state.triggers
-        if (index === 1) bool = !tmpTriggers[1]
-        tmpTriggers[index] = bool
+    toggleSaveTrigger = (bool) => {
         this.setState({
-            triggers: tmpTriggers
+            saveTrigger: bool
         })
     }
 
     deleteTrigger = () => {
         this.setState({
             deletionIndex: null
-        }, () => this.toggleTrigger(1, true))
+        }, () => this.props.toggleGetTrigger())
     }
 
     switchWorld = (id) => {
         this.props.setProject(id)
-        this.toggleTrigger(1, true)
+        this.props.toggleGetTrigger()
     }
 }
 

@@ -10,7 +10,7 @@ import GoalModeling from "./GoalModeling";
 import CustomHeader from "../../components/Crome/CustomHeader";
 import customheadercards from "../../_texts/custom/customheadercards";
 import CustomFooter from "../../components/Custom/CustomFooter";
-import footeradmin from "../../_texts/admin/footers/footeradmin";
+import customfooter from "../../_texts/custom/customfooter";
 import WorldModeling from "./WorldModeling";
 import Analysis from "./Analysis";
 import Synthesis from "./Synthesis";
@@ -27,12 +27,24 @@ export default function CustomPlayer({ items, defaultOpened, id, setWorld, setLi
   const [projectAdded, setProjectAdded] = React.useState(false);
   const [changingPage, setChangingPage] = React.useState(false);
   const [listOfWorldVariables, setListOfWorldVariables] = React.useState(null);
+  const [triggerGoals, setTriggerGoals] = React.useState(false);
 
   const [headerStates, setHeaderStates] = React.useState([true, false, false, false]);
 
   function addProjectFromGoalModeling(projectId) {
       setProject(projectId)
       setProjectAdded(!projectAdded)
+  }
+
+  function toggleGetTrigger() {
+      setTriggerGoals(!triggerGoals)
+  }
+
+  function settingGoals(goals) {
+      console.log("setGoals")
+      console.log(goals)
+      console.log("end of setting goals")
+      setGoals(goals)
   }
 
   const toggleNew = (e, newOpen) => {
@@ -107,8 +119,8 @@ export default function CustomPlayer({ items, defaultOpened, id, setWorld, setLi
                           {
                             {
                               'world': <WorldModeling id={id} setListOfWorldNames={setListOfWorldNames} setListOfWorldVariables={setListOfWorldVariables} projectAdded={projectAdded} project={project} setProject={setProject} setWorld={setWorld} {...worldmodelinginfo}/>,
-                              'goal': <GoalModeling id={id} {...goalmodelinginfo} project={project} setGoals={setGoals} setPatterns={setPatterns} listOfWorldVariables={listOfWorldVariables} setProject={(project) => addProjectFromGoalModeling(project)}/>,
-                              'analysis': <Analysis id={id} active={headerStates[2]} project={project} goals={goals} patterns={patterns}/>,
+                              'goal': <GoalModeling id={id} {...goalmodelinginfo} project={project} setGoals={settingGoals} setPatterns={setPatterns} triggerGetGoals={triggerGoals} toggleGetTrigger={toggleGetTrigger} listOfWorldVariables={listOfWorldVariables} setProject={(project) => addProjectFromGoalModeling(project)}/>,
+                              'analysis': <Analysis id={id} active={headerStates[2]} project={project} goals={goals} toggleGoalsTrigger={toggleGetTrigger} patterns={patterns}/>,
                               'synthesis':<Synthesis world={props.world} {...synthesisinfo} active={headerStates[3]} />
                             }[prop.component]
                           }
@@ -119,7 +131,7 @@ export default function CustomPlayer({ items, defaultOpened, id, setWorld, setLi
               </div>
             </div>
           </div>
-          <CustomFooter {...footeradmin} />
+          <CustomFooter {...customfooter} />
         </div>
       </>
   );

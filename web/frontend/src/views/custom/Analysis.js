@@ -26,6 +26,10 @@ export default class Analysis extends React.Component {
         triggerCGG: false
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        console.log(this.props.goals)
+    }
+
     setModalGoal = (bool) => {
         this.setState({
             modalGoal: bool
@@ -54,16 +58,9 @@ export default class Analysis extends React.Component {
             this.recParseCGG(parsedCGG, nodes, edges)
             let tmpCGG = {"nodes": nodes, "edges": edges}
             this.setState({
-                triggerCGG: false,
                 cgg: tmpCGG
             })
         }
-        /*if (cgg !== null) {
-            this.setState({
-                cgg: JSON.parse(cgg),
-                triggerCGG: false
-            })
-        }*/
     }
 
     setOperator = (operator) => {
@@ -103,6 +100,13 @@ export default class Analysis extends React.Component {
         })
     }
 
+    setGoalsTrigger = () => {
+        // TODO display the CGG (fill nodes and edges)
+        this.setState({
+            triggerCGG: false
+        }, () => this.props.toggleGoalsTrigger())
+    }
+
     isExistingGoal = (id) => {
         return id.split("-").length >= 2
     }
@@ -131,14 +135,6 @@ export default class Analysis extends React.Component {
 
         let that = this
 
-        function findGoalInCGGById(id) {
-            for (const property in that.state.cgg.nodes) {
-                if (that.state.cgg.nodes.hasOwnProperty(property)) {
-                    if (that.state.cgg.nodes[property]["id"] === id[0]) return that.state.cgg.nodes[property]
-                }
-            }
-            return {id: null}
-        }
 
         function findGoalById(id) {
             if (that.props.goals !== null) {
@@ -154,11 +150,22 @@ export default class Analysis extends React.Component {
             return {name: "error"}
         }
 
+        function findGoalIndexById(id) {
+            if (that.props.goals !== null) {
+                for (let i = 0; i < that.props.goals.length; i++) {
+                    if (that.props.goals[i].id === id) {
+                        return {"index": i, "goal": that.props.goals[i]}
+                    }
+                }
+            }
+        }
+
         function clickOnGoal(id) {
-            const goal = findGoalInCGGById(id)
-            if (!goal.hasOwnProperty("group")) {
+            console.log("id : "+id)
+            const result = findGoalIndexById(id[0])
+            if (result !== undefined && !result.goal.hasOwnProperty("group")) {
                 that.setModalGoal(true)
-                that.setCurrentGoalIndex(id)
+                that.setCurrentGoalIndex(result.index)
             }
         }
 
@@ -173,6 +180,15 @@ export default class Analysis extends React.Component {
             nodesArray = this.state.cgg.nodes
             edgesArray = this.state.cgg.edges
         }
+
+        /*function findGoalInCGGById(id) {
+            for (const property in that.state.cgg.nodes) {
+                if (that.state.cgg.nodes.hasOwnProperty(property)) {
+                    if (that.state.cgg.nodes[property]["id"] === id[0]) return that.state.cgg.nodes[property]
+                }
+            }
+            return {id: null}
+        }*/
 
         /* IF JSON IS RECEIVED
         if (this.state.cgg !== null) {
@@ -274,7 +290,7 @@ export default class Analysis extends React.Component {
 
         return (
             <>
-                <GetCGG updateCGG={this.setCGG} session={this.props.id} project={this.props.project} trigger={this.state.triggerCGG} setTrigger={this.setTriggerCGG}/>
+                <GetCGG updateCGG={this.setCGG} session={this.props.id} project={this.props.project} trigger={this.state.triggerCGG} setGoalsTrigger={this.setGoalsTrigger}/>
                 <SocketBuildCGG
                     session={this.props.id}
                     operator={this.state.operator}

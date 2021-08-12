@@ -1,32 +1,36 @@
 {
-  "name": "Greet Person",
-  "id": "default-simple-0002",
-  "description": "Always => if see a person, greet in the same step, Only if see a person, greet immediately",
-  "filename": "0002.json",
-  "context": [],
-  "contract": {
-    "assumptions": [
-      {
-        "ltl_value": "G(F(person))"
-      }
-    ],
-    "guarantees": [
-      {
-        "pattern": {
-          "name": "BoundReaction",
-          "arguments": [
+    "context": [],
+    "contract": {
+        "assumptions": [
             {
-              "name": "trigger",
-              "value": "person"
-            },
-            {
-              "name": "reaction",
-              "value": "greet"
+                "ltl_value": "G(F(person))"
             }
-          ]
-        },
-        "ltl_value": "G(person -> greet)"
-      }
+        ],
+        "guarantees": [
+            {
+                "ltl_value": "G(person -> greet)",
+                "pattern": {
+                    "arguments": [
+                        {
+                            "name": "trigger",
+                            "value": "person"
+                        },
+                        {
+                            "name": "reaction",
+                            "value": "greet"
+                        }
+                    ],
+                    "name": "BoundReaction"
+                }
+            }
+        ]
+    },
+    "description": "Always => if see a person, greet in the same step, Only if see a person, greet immediately",
+    "filename": "0002.json",
+    "id": "default-simple-0002",
+    "name": "Greet Person",
+    "parents": [
+        "d20fb",
+        "4df2c"
     ]
-  }
 }

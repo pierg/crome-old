@@ -16,14 +16,14 @@ function SocketSaveGoals(props) {
         
         if (props.goals !== null && props.triggerSave) {
 
-            props.toggleTrigger(0, false)
+            props.toggleSaveTrigger(false)
             socket.emit('add-goal', {goal : props.goals[props.index], session : props.session, projectId : props.projectId})
 
             if (props.projectId === "simple") {
                 socket.on('saving-simple', setIdFunction)
             }
             else {
-                socket.on('saving-complete', props.toggleTrigger(1, true))
+                socket.on('saving-complete', props.toggleGetTrigger())
                 return () => socket.off('saving-complete')
             }
         }

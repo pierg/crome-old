@@ -13,10 +13,6 @@ function GoalModalView(props) {
       setOpen(bool)
     };
 
-    function parseContext(context) {
-        return context===undefined ? ["",""] : [context.includes("day") ? "checked" : "", context.includes("night") ? "checked" : ""]
-    }
-
     for (const property in props.goal.contract) {
         if (props.goal.contract.hasOwnProperty(property)) {
             contract[Object.keys(props.goal.contract).indexOf(property)] = []
@@ -43,8 +39,9 @@ function GoalModalView(props) {
                                 </span>
                                 </div>
                                 <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
-                                    <Checkbox className="mr-4" label="Day" readOnly checked={parseContext(props.context)[0]}/>
-                                    <Checkbox label="Night" readOnly checked={parseContext(props.context)[1]}/>
+                                    {props.goal.context.map((prop, key) => (
+                                        <Checkbox key={key} label={prop} name="context" readOnly checked={true}/>
+                                    ))}
                                 </div>
                             </div>
                         </div>

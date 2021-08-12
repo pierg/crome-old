@@ -250,18 +250,25 @@ def get_patterns():
 
 @socketio.on('process-goals')
 def process_goals(data):
-    print("BEGIN BUILD CGG")
+    now = time.localtime(time.time())
+    emit("send-message", strftime("%H:%M:%S", now) + " The CGG is being built", room=users[data['session']])
     session = "default" if data['project'] == "simple" else data['session']
     project_folder = os.path.join(storage_folder, f"sessions/{session}/{data['project']}")
     set_of_goals = Persistence.load_goals(project_folder)
     if session == "default" and not os.path.exists(os.path.join(project_folder, "goals.dat")):
         build_simple_project()
-    cgg = Node.build_cgg(set_of_goals)
-    print("cgg exported :")
-    exported_json = cgg.export_to_json()
-    print(exported_json)
-    emit("receive-cgg", {'cgg': exported_json}, room=users[data['session']])
-    print("STOP BUILD CGG")
+    from goal import GoalException
+    try:
+        cgg = Node.build_cgg(set_of_goals)
+        cgg.export_to_json(os.path.join(project_folder, "goals"))
+        emit("send-notification", {"type": "success", "content": "CGG has been built!"},
+             room=users[data['session']])
+        time.sleep(3)
+        emit("receive-cgg", True, room=users[data['session']])
+    except GoalException as e:
+        # TODO fix this : the exception appears in build_cgg and can't be sent since the program fails
+        emit("send-notification", {"type": "error", "content": "CGG cannot be built, see console for more info"}, room=users[data['session']])
+        emit("send-message", strftime("%H:%M:%S", now) + " Cannot build CGG : "+str(e), room=users[data['session']])
 
 
 @socketio.on('process-cgg')

@@ -10,7 +10,10 @@ function GetCGG(props) {
     const setMessageFunction = useCallback((received_json) => {
         setMessage(received_json.cgg);
     }, [setMessage])
-
+    
+    const cggCallback = useCallback((received_answer) => {
+        props.setGoalsTrigger()
+    }, [props])
 
     /*useEffect(() => {
         if (socket == null || !props.trigger) return
@@ -27,10 +30,10 @@ function GetCGG(props) {
 
         socket.emit('process-goals', {session: props.session, project: props.project})
 
-        socket.on('receive-cgg', setMessageFunction)
+        socket.on('receive-cgg', cggCallback)
 
         return () => socket.off('receive-cgg')
-    }, [socket, props.trigger, props.session, props.project, setMessageFunction])
+    }, [socket, props.trigger, props.session, props.project, setMessageFunction, cggCallback])
 
     useEffect(() => {
         props.updateCGG(message)

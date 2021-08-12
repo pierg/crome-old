@@ -67,8 +67,6 @@ function GoalEdit(props) {
                 {props.listOfWorldVariables[props.listOfWorldVariables.length - 1].map((prop, key) => (
                     <Checkbox key={key} label={prop} name="context" checked={goal.context.includes(prop)} onChange={(e) => changeParameter(e, false, 0, prop)}/>
                 ))}
-                {/*<Checkbox label="Day" name="context-day" checked={parseContext(goal.context)[0]} onChange={changeParameter}/>
-                <Checkbox label="Night" name="context-night" checked={parseContext(goal.context)[1]} onChange={changeParameter}/>*/}
                 <div className="mt-2 text-center">
                     {props.listOfWorldVariables.map((prop, key) => (
                         (key !== (props.listOfWorldVariables.length - 1) && (
