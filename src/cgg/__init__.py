@@ -381,23 +381,6 @@ class Node(Goal):
         Store.save_to_file(str(self), "cgg.txt", self.session_name)
 
     def export_to_json(self, goals_folder: str):
-        """
-        TODO FIX ME
-        id (str): self.id
-        name (str): self.name
-        description: (str)self.description
-        contract: (assumptions, guarantees): self.specification
-        self.parents and self.children
-         returns a dictionary with Link as key (i.e. CONJUNCTION, COMPOSITION etc...) and a set of Node objects as value
-        for example if the goal is the result of a composition of other 3 goals
-        the self.children dictionary will have at least one entry with key -> value be
-        Link.COMPOSITION -> {goal_1, goal_2, goal_3} where goal_1, goal_2, goal_3 are other Node objects,
-        so you can access name, id etc...and then link them together for rendering
-
-        exported_cgg = self.rec_exporting_to_json(goals_folder)
-        import json
-        return json.dumps(exported_cgg)
-        """
         self.rec_exporting_to_json(goals_folder)
 
     def rec_exporting_to_json(self, goals_folder: str, parent_goal_id: str = None):
@@ -423,7 +406,7 @@ class Node(Goal):
             with open(goal_folder, "r") as json_file:
                 json_goal = json.load(json_file)
         else:
-            json_goal = {"group": "new", "name": goal_name}
+            json_goal = {"group": "new", "name": goal_name, "id": node_id}
         with open(goal_folder, "w") as json_file:
             existing_array = []
             if mode in json_goal:

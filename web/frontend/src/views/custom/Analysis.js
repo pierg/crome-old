@@ -17,17 +17,13 @@ export default class Analysis extends React.Component {
     state = {
         modalGoal: false,
         currentGoalIndex: 0,
-        cgg: null,
+        cgg: false,
         operator: null,
         selectedGoals: [],
         selectedLibrary: null,
         library: null,
         triggerOperation: false,
         triggerCGG: false
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        console.log(this.props.goals)
     }
 
     setModalGoal = (bool) => {
@@ -101,9 +97,9 @@ export default class Analysis extends React.Component {
     }
 
     setGoalsTrigger = () => {
-        // TODO display the CGG (fill nodes and edges)
         this.setState({
-            triggerCGG: false
+            triggerCGG: false,
+            cgg: true,
         }, () => this.props.toggleGoalsTrigger())
     }
 
@@ -142,11 +138,6 @@ export default class Analysis extends React.Component {
                     if (that.props.goals[i].id === id) return that.props.goals[i]
                 }
             }
-            if (that.state.cgg !== null) {
-                for (let i = 0; i < that.state.cgg.nodes.length; i++) {
-                    if (that.state.cgg.nodes[i].id === id) return that.state.cgg.nodes[i]
-                }
-            }
             return {name: "error"}
         }
 
@@ -161,7 +152,6 @@ export default class Analysis extends React.Component {
         }
 
         function clickOnGoal(id) {
-            console.log("id : "+id)
             const result = findGoalIndexById(id[0])
             if (result !== undefined && !result.goal.hasOwnProperty("group")) {
                 that.setModalGoal(true)
@@ -169,51 +159,23 @@ export default class Analysis extends React.Component {
             }
         }
 
-        /*function getIndexFromString(str) {
-            return parseInt(str.split("-")[str.split("-").length - 1])
-        }*/
-
         let nodesArray = []
         let edgesArray = []
 
-        if (this.state.cgg !== null) {
-            nodesArray = this.state.cgg.nodes
-            edgesArray = this.state.cgg.edges
-        }
+        if (this.state.cgg) {
+            // the cgg state is a boolean, true if the cgg has been built
+            // if you don't see how to fill the graph, there is an example in storage/crome/cgg.json
+            for (let i=0; i<that.props.goals.length; i++) {
+                nodesArray.push({"id": that.props.goals[i].id, "label": that.props.goals[i].name})
+                nodesArray[nodesArray.length - 1].group = that.props.goals[i].hasOwnProperty("group") ? that.props.goals[i].group : "input"
 
-        /*function findGoalInCGGById(id) {
-            for (const property in that.state.cgg.nodes) {
-                if (that.state.cgg.nodes.hasOwnProperty(property)) {
-                    if (that.state.cgg.nodes[property]["id"] === id[0]) return that.state.cgg.nodes[property]
+                if (that.props.goals[i].hasOwnProperty("link")) {
+                    for (let j=0; j<that.props.goals[i].children.length; j++) {
+                        edgesArray.push({"from": that.props.goals[i].children[j], "to": that.props.goals[i].id, "arrows": {to: {type: cgginfo.symbols[that.props.goals[i].link.toLowerCase()]}}})
+                    }
                 }
             }
-            return {id: null}
-        }*/
-
-        /* IF JSON IS RECEIVED
-        if (this.state.cgg !== null) {
-            /* FILL CGG NODES FROM RECEIVED JSON
-            if (this.props.goals !== null) {
-                let goal
-                this.state.cgg.nodes.forEach(function (node) {
-                    goal = findGoalById(node.id)
-                    nodesArray.push({
-                        id: node.id,
-                        group: node.hasOwnProperty("group") ? node.group : "input",
-                        label: node.hasOwnProperty("name") ? node.name : goal.name
-                    })
-                });
-            }
-
-            /* FILL CGG EDGES FROM RECEIVED JSON
-            this.state.cgg.edges.forEach(function (node) {
-                edgesArray.push({
-                    from: node.from,
-                    to: node.to,
-                    arrows: {to: {type: cgginfo.symbols[node.type]}}
-                })
-            });
-        }*/
+        }
 
 
         /* DEFINE CGG PARAMETERS PASSED TO CGG COMPONENT */
@@ -271,7 +233,7 @@ export default class Analysis extends React.Component {
             },
             height: "1200px",
             autoResize: true,
-            /*"physics": {
+            /*"physics": { // PARAMETERS FOR THE CGG, see documentation for more info
                 "forceAtlas2Based": {
                     "gravitationalConstant": -138,
                     "centralGravity": 0.02,
@@ -290,18 +252,17 @@ export default class Analysis extends React.Component {
 
         return (
             <>
-                <GetCGG updateCGG={this.setCGG} session={this.props.id} project={this.props.project} trigger={this.state.triggerCGG} setGoalsTrigger={this.setGoalsTrigger}/>
+                <GetCGG session={this.props.id} project={this.props.project} trigger={this.state.triggerCGG} setGoalsTrigger={this.setGoalsTrigger}/>
                 <SocketBuildCGG
                     session={this.props.id}
                     operator={this.state.operator}
                     goals={this.props.goals}
-                    nodes={this.state.cgg !== null ? this.state.cgg.nodes : null}
                     selectedGoals={this.state.selectedGoals}
                     library={this.state.selectedLibrary}
                     trigger={this.state.triggerOperation}
                     setTrigger={this.setTriggerOperation}
                 />
-                {this.state.cgg === null && (<IndexCGG callCGG={this.callCGG}/>)}
+                {!this.state.cgg && (<IndexCGG callCGG={this.callCGG}/>)}
                 <BuildCGG
                     infos={cgginfo}
                     cgg={this.state.cgg}
@@ -314,7 +275,7 @@ export default class Analysis extends React.Component {
                     selectedLibrary={this.state.selectedLibrary}
                     setLibrary={this.setLibrary}
                     applyOperator={this.applyOperator}/>
-                {this.state.cgg !== null && (<>
+                {this.state.cgg && (<>
                     <CGG
                         active={this.props.active}
                         graph={graph}

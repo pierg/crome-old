@@ -781,7 +781,7 @@ export default class CreateEnvironment extends React.Component {
         let minIdY = this.map[0].length; // table corresponding to the node with the smallest y and its colour as ordinates
         let maxIdY = 0; // table corresponding to the node with the largest x and its colour as ordinates
         for (let i = 0; i < this.map.length; i++) {
-            for (let j = 0; j < this.map[0].length; j++) { // if the colour of the node is not white check if it is the point corresponding to one of the 4 ends
+            for (let j = 0; j < this.map[0].length; j++) { // if the color of the node is not white check if it is the point corresponding to one of the 4 ends
                 if (this.map[i][j][0] !== "white") {
                     minIdX = this.end(minIdX, i, this.map[i][j][0], minIdX >= i);
                     minIdY = this.end(minIdY, j, this.map[i][j][0], minIdY >= j);
@@ -926,8 +926,6 @@ export default class CreateEnvironment extends React.Component {
         this.setState({
             environmentToBeSaved: obj,
         }, () => this.setModalSaving(true))
-        //const myJSON = JSON.stringify(obj);
-        //const name = window.prompt("What is the name of the file ?");
     }
 
     getAdjacencyTable(adjTable, i) {
@@ -1037,7 +1035,6 @@ export default class CreateEnvironment extends React.Component {
                                                     <div className="flex pl-2">
                                                         <Button color="red" onClick={() => this.modifyGridSize(-1)}><i className="text-xl fas fa-minus-square"/></Button>
                                                         <Button color="lightBlue" onClick={() => this.modifyGridSize(1)}><i className="text-xl fas fa-plus-square"/></Button>
-                                                        {/*<Button ref={this.robotButton} onClick={this.launchRobot}>Robot</Button>*/}
                                                     </div>
                                                 </div>
                                             </div>

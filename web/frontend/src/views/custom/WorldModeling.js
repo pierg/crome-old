@@ -74,6 +74,7 @@ export default class WorldModeling extends React.Component {
                     worldSelected: index,
                 })
                 this.props.setProject(this.state.worlds[index].project_id)
+                this.props.setWorld({"environment": this.state.worlds[index], "info": this.state.info[index]})
             }
         }
     }

@@ -17,7 +17,7 @@ import Synthesis from "./Synthesis";
 import CustomNavButton from "../../components/Custom/CustomNavButton";
 import {UncontrolledTooltip} from "reactstrap";
 
-export default function CustomPlayer({ items, defaultOpened, id, setWorld, setListOfWorldNames }, props) {
+export default function CustomPlayer({ world, items, defaultOpened, id, setWorld, setListOfWorldNames }) {
   const [open, setOpen] = React.useState(defaultOpened);
   const [oldInTransition, setOldInTransition] = React.useState(false);
   const [newInTransition, setNewInTransition] = React.useState(false);
@@ -41,9 +41,6 @@ export default function CustomPlayer({ items, defaultOpened, id, setWorld, setLi
   }
 
   function settingGoals(goals) {
-      console.log("setGoals")
-      console.log(goals)
-      console.log("end of setting goals")
       setGoals(goals)
   }
 
@@ -121,7 +118,7 @@ export default function CustomPlayer({ items, defaultOpened, id, setWorld, setLi
                               'world': <WorldModeling id={id} setListOfWorldNames={setListOfWorldNames} setListOfWorldVariables={setListOfWorldVariables} projectAdded={projectAdded} project={project} setProject={setProject} setWorld={setWorld} {...worldmodelinginfo}/>,
                               'goal': <GoalModeling id={id} {...goalmodelinginfo} project={project} setGoals={settingGoals} setPatterns={setPatterns} triggerGetGoals={triggerGoals} toggleGetTrigger={toggleGetTrigger} listOfWorldVariables={listOfWorldVariables} setProject={(project) => addProjectFromGoalModeling(project)}/>,
                               'analysis': <Analysis id={id} active={headerStates[2]} project={project} goals={goals} toggleGoalsTrigger={toggleGetTrigger} patterns={patterns}/>,
-                              'synthesis':<Synthesis world={props.world} {...synthesisinfo} active={headerStates[3]} />
+                              'synthesis':<Synthesis world={world} {...synthesisinfo} active={headerStates[3]} />
                             }[prop.component]
                           }
                         </div>

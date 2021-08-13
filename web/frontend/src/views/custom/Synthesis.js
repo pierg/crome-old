@@ -2,7 +2,6 @@ import React from 'react';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../assets/styles/tailwind.css";
 import GridWorld from "../../components/Crome/IndexEnvironment";
-import * as json from "./environment.json"
 import img from "./robot1.png";
 import * as jsoninfo from "./test.json"
 import Button from "../../components/Elements/Button";
@@ -27,18 +26,17 @@ export default class Synthesis extends React.Component {
         running: false
     }
 
-    componentDidMount() {
-        this.generateGridworldWithJSON();
-        this.generate();
-    }
-
     componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props.world !== null) {
+            this.generateGridworldWithJSON();
+            this.generate();
+        }
         if (this.props.active) this.drawRobot()
     }
 
 
     generateGridworldWithJSON() {
-        //const json = this.props.world.environment
+        const json = this.props.world.environment
         const locations = json.grid.locations;
 
         let x;
@@ -97,6 +95,7 @@ export default class Synthesis extends React.Component {
     }
 
     displayWall(orientation) {
+        const json = this.props.world.environment
         const wall = json.grid.walls[orientation];
         let x;
         let y;
@@ -241,15 +240,26 @@ export default class Synthesis extends React.Component {
     }
 
     generate() {
+        const locations = this.props.world.environment.grid.locations
         const simulation = jsoninfo.simulation;
         let table = "<tr> <th>T</th> <th>CONTEXT</th> <th>CONTROLLER</th> <th>INPUTS</th> <th>OUTPUTS</th> </tr>"
+        this.tab = []
         for (let i = 0; i < simulation.length; i++) {
             table += "<tr class='line' ><td>" + simulation[i].t + "</td>";
             table += "<td>" + simulation[i].context + "</td>";
             table += "<td>" + simulation[i].controller + "</td>";
             table += "<td>" + simulation[i].inputs + "</td>";
             table += "<td>" + simulation[i].outputs + "</td></tr>";
-            this.tab.push([(simulation[i].x1 + simulation[i].x2) / 2 , (simulation[i].y1 + simulation[i].y2) / 2]);
+            let locationInSimulation = simulation[i].outputs.split(",")[0]
+            for (let j=0; j<locations.length; j++) {
+                if (locations[j].id === locationInSimulation) {
+                    let x1 = locations[j].coordinates[0].x
+                    let x2 = locations[j].coordinates[locations[j].coordinates.length - 1].x
+                    let y1 = locations[j].coordinates[0].y
+                    let y2 = locations[j].coordinates[locations[j].coordinates.length - 1].y
+                    this.tab.push([(x1 + x2) - 1 , (y1 + y2) - 1]);
+                }
+            }
         }
         document.getElementById("synthesisTable").innerHTML = table;
     }

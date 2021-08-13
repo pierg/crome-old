@@ -145,9 +145,6 @@ export default class GoalModeling extends React.Component {
             editedGoals: tmpArray,
             numChildren: tmpArray.length
         })
-        console.log("props.setGoals allGoals with :")
-        console.log(allGoals)
-        console.log("end allGoals")
         this.props.setGoals(allGoals)
     }
 

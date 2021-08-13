@@ -8,11 +8,8 @@ function SocketBuildCGG(props) {
     useEffect(() => {
         if (socket == null || !props.trigger) return
 
-        console.log("socketbuildCgg")
-        console.log(props.goals)
-        console.log(props.nodes)
-        console.log(props.selectedGoals)
-
+        // TODO Send goals to the back-end when applying an operation
+        //  selectedGoals should be containing the right goals
         let realGoals = []
         let selectedGoals = JSON.parse(JSON.stringify(props.selectedGoals))
         for (let i=0; i<props.goals.length; i++) {
@@ -24,8 +21,6 @@ function SocketBuildCGG(props) {
         for (let i=0; i<selectedGoals.length; i++) {
 
         }
-        console.log("realGoals")
-        console.log(realGoals)
         
         switch(props.operator.toLowerCase()) {
             case "conjunction": socket.emit('apply-conjunction', {session: props.session, goals: props.selectedGoals }); break;

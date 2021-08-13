@@ -31,8 +31,5 @@
     "description": "During context night => start from r3, patrol r3, r4 in strict order, Strict Ordered Patrolling Location r3, r4",
     "filename": "0001.json",
     "id": "default-simple-0001",
-    "name": "Night Patrolling",
-    "parents": [
-        "d20fb"
-    ]
+    "name": "Night Patrolling"
 }

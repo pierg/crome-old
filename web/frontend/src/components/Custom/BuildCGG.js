@@ -19,9 +19,9 @@ function BuildCGG(props) {
         props.setOperator(operator)
     }
 
-    function changeLibrary(name) {
+    /*function changeLibrary(name) {
         props.setLibrary(name)
-    }
+    }*/
 
     function changeGoals(goal) {
 
@@ -77,15 +77,15 @@ function BuildCGG(props) {
             <div className="flex">
                 <div className="w-1/2 flex">
                     <div className="flex flex-col">
-                        {props.cgg !== null && props.cgg.nodes.map((prop, key) => (
-                            <Checkbox key={key} onChange={() => changeGoals(prop.id)} checked={props.selectedGoals.includes(prop.id) ? "checked" : ""} label={prop.label}/>
+                        {props.goals !== null && props.goals.map((prop, key) => (
+                            <Checkbox key={key} onChange={() => changeGoals(prop.id)} checked={props.selectedGoals.includes(prop.id) ? "checked" : ""} label={prop.name}/>
                         ))}
                     </div>
-                    {props.selectedOperator === "Extension" && (<div className="flex flex-col">
+                    {/*props.selectedOperator === "Extension" && (<div className="flex flex-col">
                         {props.cgg !== null && props.cgg.libraries.map((prop, key) => ( // TODO change origin of libraries (by putting them not in cgg.json)
                             <Radio key={key} onChange={() => changeLibrary(prop.name)} checked={props.selectedLibrary === prop.name} label={prop.name}/>
                         ))}
-                    </div>)}
+                    </div>)*/}
                 </div>
                 <div className="w-1/2 flex justify-center items-center">
                     <Button onClick={props.applyOperator}>{props.infos.buttonText}</Button>
