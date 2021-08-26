@@ -25,10 +25,9 @@ services:
 
     backend:
       image: pmallozzi/crome:latest
-        container_name: crome_backend
-        volumes:
-          - ~/docker_crome/build:/home/crome/web/frontend/build
-        ports:
-          - "80:5000"
-        command: -w
+      container_name: backend
+      volumes:
+        - ~/docker_crome/build:/home/crome/web/frontend/build
+      ports:
+        - "80:5000"
       command: -w
