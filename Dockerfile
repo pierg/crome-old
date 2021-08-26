@@ -1,5 +1,7 @@
 FROM pmallozzi/ltltools:web
 
+ENV LISTEN_PORT 5000
+EXPOSE 5000
 
 ENV GIT_SSL_NO_VERIFY=1
 
