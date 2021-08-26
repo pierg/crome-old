@@ -28,5 +28,5 @@ services:
       volumes:
         - ~/docker_crome/build:/home/crome/web/frontend/build
       ports:
-        - "80:5000"
+        - "5000:5000"
       command: -w
