@@ -20,7 +20,6 @@ services:
         - ~/docker_crome/build:/config/www
       ports:
         - 443:443
-        - 80:80
       restart: unless-stopped
 
     backend:
