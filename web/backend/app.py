@@ -377,4 +377,4 @@ def build_simple_project():
 
 
 if __name__ == '__main__':
-    app.run(host='https://crometool.duckdns.org', debug=True, port=5000)
+    app.run(host='http://crometool.duckdns.org', debug=True, port=5000)
