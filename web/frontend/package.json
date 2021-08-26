@@ -2,7 +2,7 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:5000",
+  "proxy": "http://localhost:80",
   "dependencies": {
     "@babel/core": "7.12.3",
     "@fortawesome/fontawesome-free": "5.15.3",
