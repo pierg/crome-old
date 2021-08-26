@@ -30,13 +30,13 @@ if storage_folder.exists():
     print(storage_folder)
 
 
-if build_folder.exists():
-    print("serving math as well")
-    app = Flask(__name__, static_folder=str(build_folder), static_url_path='/')
-else:
-    app = Flask(__name__)
+# if build_folder.exists():
+#     print("serving math as well")
+#     app = Flask(__name__, static_folder=str(build_folder), static_url_path='/')
+# else:
+#     app = Flask(__name__)
 
-# app = Flask(__name__)
+app = Flask(__name__)
 
 socketio = SocketIO(app, cors_allowed_origins='*')
 
