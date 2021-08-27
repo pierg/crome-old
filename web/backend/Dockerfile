@@ -1,4 +1,4 @@
-FROM pmallozzi/ltltools:web
+FROM pmallozzi/ltltools
 
 ENV GIT_SSL_NO_VERIFY=1
 
@@ -8,4 +8,7 @@ WORKDIR /home/crome
 RUN pip3 install -r requirements.txt
 ENV PYTHONPATH "${PYTHONPATH}:/home/crome/src:/home/crome/examples:/home/crome/casestudies"
 
-ENTRYPOINT ["./entrypoint.sh"]
+WORKDIR /home/crome/web/backend
+
+ENTRYPOINT [ "flask" ]
+CMD ["run", "--host=0.0.0.0", "--port=5000"]
