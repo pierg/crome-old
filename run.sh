@@ -11,8 +11,8 @@ else
           echo "-w,                       launch web-server"
           exit 0
           ;;
-        -w)
-          echo "Deploy the web server without rebuilding..."
+        -b)
+          echo "Launch backend server"
           python3 ./web/backend/app.py
           ;;
         -s)
