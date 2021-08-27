@@ -9,6 +9,7 @@ services:
       - 80:80
       - 443:443
     volumes:
+      - ./frontend/build:/usr/share/nginx/html
       - /etc/letsencrypt/live/crometool.duckdns.org:/etc/nginx/certs
 
   backend:
