@@ -16,17 +16,22 @@ services:
         - DUCKDNSTOKEN=40ec2401-1546-484c-a2cd-26691ecc0ebb
         - EMAIL=ashdiashdiijsdjsid2827839aiwjdiwd@gmail.com
       volumes:
-        - ~/docker_crome/config/swag:/config
+        - keys:/config/keys
         - ~/docker_crome/build:/config/www
       ports:
         - 443:443
       restart: unless-stopped
 
-#    backend:
-#      image: pmallozzi/crome:latest
-#      container_name: backend
-#      volumes:
-#        - ~/docker_crome/config/swag/config/keys:/home/crome/web/backend/keys
-#      ports:
-#        - 80:80
-#      command: -w
+
+    backend:
+      image: pmallozzi/crome:latest
+      container_name: backend
+      volumes:
+        - keys:/home/crome/web/backend/keys
+      ports:
+        - 80:80
+      command: -w
+
+
+volumes:
+  keys:
