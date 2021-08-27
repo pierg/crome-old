@@ -1,1 +1,1 @@
-docker run -it -v ./build:/home/crome/web/frontend/build pmallozzi/crome:latest -d
+docker run -it -v build:/home/crome/web/frontend/build pmallozzi/crome:latest -d
