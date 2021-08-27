@@ -9,7 +9,7 @@ export function useSocket() {
 
 export function SocketProvider({ id, children }) {
     useEffect(() => {
-        console.log("Connecting new 2")
+        console.log("Connecting new 3")
         const newSocket = io(
             { query: { id }, path: "/socket.io"}
         )
