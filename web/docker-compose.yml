@@ -25,6 +25,8 @@ services:
     backend:
       image: pmallozzi/crome:latest
       container_name: backend
+      volumes:
+        - ~/docker_crome/config/swag/config/keys:/home/crome/web/backend/keys
       ports:
         - 80:80
       command: -w
