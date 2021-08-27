@@ -380,7 +380,7 @@ def build_simple_project():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True, port=5000)
+    app.run(debug=True, port=5000)
 
     # print(glob.glob("/home/crome/web/backend/keys"))
     # app.run(host='localhost', port=5000, debug=True,

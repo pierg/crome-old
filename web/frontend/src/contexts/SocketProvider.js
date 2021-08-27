@@ -11,7 +11,8 @@ export function SocketProvider({ id, children }) {
     useEffect(() => {
         console.log("Connecting new")
         const newSocket = io(
-            { query: { id } }
+            'https://0.0.0.0:80',
+            { query: { id }, path: "/socket.io"}
         )
         setSocket(newSocket)
 
