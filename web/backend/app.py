@@ -2,6 +2,8 @@ import os
 import shutil
 from os import walk
 
+import glob
+
 import time
 from pathlib import Path
 
@@ -28,7 +30,6 @@ if build_folder.exists():
     print(build_folder)
 if storage_folder.exists():
     print(storage_folder)
-
 
 # if build_folder.exists():
 #     print("serving math as well")
@@ -98,7 +99,7 @@ def get_projects(data):
 
 @socketio.on('save-project')
 def save_project(data):
-    print("SAVE PROJECT : "+str(data['session']))
+    print("SAVE PROJECT : " + str(data['session']))
     session_id = data['world']['info']['session_id']
     session_dir = os.path.join(storage_folder, f"sessions/{session_id}")
     if not os.path.isdir(session_dir):
@@ -198,7 +199,7 @@ def add_goal(data):
         dir_path, dir_names, filenames = next(walk(goals_dir))
         greatest_id = -1 if len(filenames) == 0 else max(filenames)[0:4]
         greatest_id = int(greatest_id) + 1
-        data['goal']['id'] = data['session']+"-"+project_id+"-"+str(greatest_id).zfill(4)
+        data['goal']['id'] = data['session'] + "-" + project_id + "-" + str(greatest_id).zfill(4)
         filename = str(greatest_id).zfill(4) + ".json"
         data['goal']['filename'] = filename
     json_file = open(os.path.join(goals_dir, data['goal']['filename']), "w")
@@ -271,8 +272,9 @@ def process_goals(data):
         emit("receive-cgg", True, room=users[data['session']])
     except GoalException as e:
         # TODO fix this : the exception appears in build_cgg and can't be sent since the program fails
-        emit("send-notification", {"type": "error", "content": "CGG cannot be built, see console for more info"}, room=users[data['session']])
-        emit("send-message", strftime("%H:%M:%S", now) + " Cannot build CGG : "+str(e), room=users[data['session']])
+        emit("send-notification", {"type": "error", "content": "CGG cannot be built, see console for more info"},
+             room=users[data['session']])
+        emit("send-message", strftime("%H:%M:%S", now) + " Cannot build CGG : " + str(e), room=users[data['session']])
 
 
 @socketio.on('process-cgg')
@@ -320,7 +322,7 @@ def extension(data):
 
 @socketio.on('session-existing')
 def check_if_session_exist(session_id):
-    print("check if following session exists : "+str(session_id))
+    print("check if following session exists : " + str(session_id))
     sessions_folder = Path(os.path.join(storage_folder, "sessions"))
     dir_path, dir_names, filenames = next(walk(sessions_folder))
     found = False
@@ -379,4 +381,7 @@ def build_simple_project():
 
 if __name__ == '__main__':
     # app.run(host='0.0.0.0', debug=True, port=5000)
-    app.run(host='0.0.0.0', port=80, debug=True, ssl_context=('./keys/cert.crt', './keys/cert.key'))
+
+    print(glob.glob("/home/crome/web/backend/keys"))
+    app.run(host='0.0.0.0', port=80, debug=True,
+            ssl_context=('/home/crome/web/backend/keys/cert.crt', '/home/crome/web/backend/keys/cert.key'))
