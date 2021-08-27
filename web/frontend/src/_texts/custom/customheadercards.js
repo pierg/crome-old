@@ -17,7 +17,7 @@ const textProps = {
       statIconColor: "bg-pink-500",
     },
     {
-      statTitle: "Synthesis",
+      statTitle: "Simulation",
       statIconName: "fas fa-check-circle",
       statIconColor: "bg-lightBlue-500",
     },
