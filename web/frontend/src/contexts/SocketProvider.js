@@ -11,7 +11,7 @@ export function SocketProvider({ id, children }) {
     useEffect(() => {
         console.log("Connecting new 5")
         const newSocket = io(
-            "https://crometool.duckdns.org",
+            "https://crometool.duckdns.org/",
             { query: { id }}
         )
         setSocket(newSocket)
