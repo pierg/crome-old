@@ -1,15 +1,14 @@
 FROM pmallozzi/ltltools:web as build
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
-COPY package.json /usr/src/app
 
-RUN npm run install:clean
 
-COPY . /usr/src/app
-RUN npm run build
+ENV GIT_SSL_NO_VERIFY=1
+RUN git clone https://github.com/pierg/crome.git --branch master --single-branch
+WORKDIR /home/crome/web/frontend
+
+RUN npm deploy
 
 FROM nginx:alpine
-COPY --from=build /usr/src/app/build /usr/share/nginx/html
+COPY --from=build /home/crome/web/frontend/build /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 80
