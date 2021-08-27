@@ -12,7 +12,7 @@ export function SocketProvider({ id, children }) {
         console.log("Connecting new 5")
         const newSocket = io(
             "https://crometool.duckdns.org",
-            { query: { id }, path: "/socket.io"}
+            { query: { id }}
         )
         setSocket(newSocket)
 
