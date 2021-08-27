@@ -18,7 +18,7 @@ from time import strftime
 
 from cgg import Node
 from tools.persistence import Persistence
-from web.backend.operations.modelling import Modelling
+from operations.modelling import Modelling
 
 backend_folder = Path(__file__).parent.absolute()
 front_end_folder = Path(__file__).parents[1].absolute() / 'frontend'
