@@ -10,6 +10,7 @@ export function useSocket() {
 export function SocketProvider({ id, children }) {
     useEffect(() => {
         console.log("Connecting new 5")
+        console.log(id)
         const newSocket = io(
             "https://crometool.duckdns.org/",
             { query: { id }}
