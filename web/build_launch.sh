@@ -1,0 +1,1 @@
+docker run -it -v /home/ubuntu/www:/home/crome/web/frontend/build -p 80:5000 pmallozzi/crome:dev -d
