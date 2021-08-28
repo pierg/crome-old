@@ -9,11 +9,8 @@ export function useSocket() {
 
 export function SocketProvider({ id, children }) {
     useEffect(() => {
-        console.log("Connecting new 5")
-        console.log(id)
-        const newSocket = io(
-            "https://crometool.duckdns.org:5000",
-            { query: { id }, transports: ['websocket']}
+        console.log("Connecting merged")
+        const newSocket = io({ query: { id } }
         )
         setSocket(newSocket)
 
