@@ -374,4 +374,5 @@ def build_simple_project():
 
 
 if __name__ == '__main__':
-    app.run(host='localhost', debug=True, port=3000)
+    # app.run(host='localhost', debug=True, port=3000)
+    socketio.run(app)
