@@ -43,7 +43,7 @@ class LogicTuple:
             raise Exception("List of propositions is empty")
 
     @staticmethod
-    def implies_(prop_1: Tuple[str, Typeset], prop_2: Tuple[str, Typeset], brackets: bool = False) -> Tuple[
+    def implies_(prop_1: Tuple[str, Typeset], prop_2: Tuple[str, Typeset], brackets: bool = True) -> Tuple[
         str, Typeset]:
         """Returns an Tuple[str, Typeset] formula representing the logical IMPLIES of prop_1 and prop_2"""
         if prop_1[0] == "TRUE":

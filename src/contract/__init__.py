@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
+from typing import Tuple
 
 from contract.exceptions import *
 from controller.synthesisinfo import SynthesisInfo
@@ -25,6 +26,7 @@ class Contract:
         self.__checkfeasibility()
 
         self.composed_by = {self}
+        self.merged_by = {self}
         self.conjoined_by = {self}
         self.disjoined_by = {self}
 
@@ -49,7 +51,6 @@ class Contract:
     def guarantees(self, value: Specification):
         self.__setguarantees(value)
         self.__checkfeasibility()
-
 
     @property
     def typeset(self) -> Typeset:
@@ -271,3 +272,101 @@ class Contract:
         new_contract.disjoined_by = contracts
 
         return new_contract
+
+    @staticmethod
+    def quotient(dividend: Contract, divisor: Contract) -> Contract:
+        if dividend is None:
+            raise Exception("No dividend specified in the quotient")
+        if divisor is None:
+            raise Exception("No divisor specified in the quotient")
+
+        c = dividend
+        a = c.assumptions
+        g = c.guarantees
+
+        c1 = divisor
+        a1 = c1.assumptions
+        g1 = c1.guarantees
+
+        try:
+            a2 = a & g1
+        except NotSatisfiableException as e:
+            raise IncompatibleContracts(c, e)
+
+        try:
+            g2 = g & a1 | ~(a & g1)
+        except NotSatisfiableException as e:
+            raise InconsistentContracts(c, e)
+
+        quotient = Contract(assumptions=a2, guarantees=g2)
+
+        print("The quotient has been successfully computed")
+
+        return quotient
+
+    @staticmethod
+    def merging(contracts: Set[Contract]) -> Contract:
+        if len(contracts) == 1:
+            return next(iter(contracts))
+        if len(contracts) == 0:
+            raise Exception("No contract specified in the merging")
+
+        contract_list = list(contracts)
+        new_assumptions = deepcopy(contract_list[0].assumptions)
+        new_guarantees = deepcopy(contract_list[0].guarantees)
+
+        """Populate the data structure while checking for compatibility and consistency"""
+        for contract in contract_list[1:]:
+
+            try:
+                new_assumptions &= contract.assumptions
+            except NotSatisfiableException as e:
+                raise IncompatibleContracts(contract, e)
+
+            try:
+                new_guarantees &= contract.guarantees
+            except NotSatisfiableException as e:
+                raise InconsistentContracts(contract, e)
+
+        print("The merging is compatible and consistent")
+
+        """Guarantees relaxation"""
+        new_guarantees.relax_by(new_assumptions)
+
+        """New contracts without saturation cause it was already saturated"""
+        new_contract = Contract(assumptions=new_assumptions, guarantees=new_guarantees, saturate=False)
+
+        new_contract.merged_by = contracts
+
+        return new_contract
+
+    @staticmethod
+    def separation(dividend: Contract, divisor: Contract) -> Contract:
+        if dividend is None:
+            raise Exception("No dividend specified in the separation")
+        if divisor is None:
+            raise Exception("No divisor specified in the separation")
+
+        c = dividend
+        a = c.assumptions
+        g = c.guarantees
+
+        c1 = divisor
+        a1 = c1.assumptions
+        g1 = c1.guarantees
+
+        try:
+            a2 = a & g1 | ~(g & a1)
+        except NotSatisfiableException as e:
+            raise IncompatibleContracts(c, e)
+
+        try:
+            g2 = g & a1
+        except NotSatisfiableException as e:
+            raise InconsistentContracts(c, e)
+
+        separation = Contract(assumptions=a2, guarantees=g2)
+
+        print("The separation has been successfully computed")
+
+        return separation
