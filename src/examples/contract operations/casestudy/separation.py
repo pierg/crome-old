@@ -41,6 +41,9 @@ print(separation)
 print("now we can merge what we found with our original goal")
 merger = Node.merging({strict_order, separation})
 print(merger)
+print("our library goal now refines the merged specification")
 assert library_1_goal_z.specification <= merger.specification
 
-
+print("thanks to the separation and the merging the initial specification has been 'relaxed' "
+      "to acomodate what is available in the library")
+assert strict_order.specification <= merger.specification

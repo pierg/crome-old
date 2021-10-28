@@ -45,3 +45,4 @@ print(composition)
 
 print("now we have a goal that refine patrol")
 assert composition.specification <= patrol.specification
+
