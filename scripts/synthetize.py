@@ -1,5 +1,5 @@
 import os, sys
-from controller import Controller
+from core.controller import Controller
 from tools.persistence import Persistence
 from tools.storage import Store
 from tools.strings import StringMng

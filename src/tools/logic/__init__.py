@@ -1,7 +1,7 @@
 import re
 from typing import List, Tuple
 
-from typeset import Typeset
+from core.typeset import Typeset
 
 OPERATORS = r'\+|-|\*|==|<=|>=|<|>|!|\||->|&'
 TEMPORAL_OPS = r'^F|^G|^X|^U'

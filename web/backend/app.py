@@ -14,7 +14,7 @@ import json
 import threading
 from time import strftime
 
-from cgg import Node
+from core.cgg import Node
 from tools.persistence import Persistence
 from web.backend.operations.modelling import Modelling
 
@@ -260,7 +260,7 @@ def process_goals(data):
     set_of_goals = Persistence.load_goals(project_folder)
     if session == "default" and not os.path.exists(os.path.join(project_folder, "goals.dat")):
         build_simple_project()
-    from goal import GoalException
+    from core.goal import GoalException
     try:
         cgg = Node.build_cgg(set_of_goals)
         cgg.export_to_json(os.path.join(project_folder, "goals"))

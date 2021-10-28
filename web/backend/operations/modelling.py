@@ -4,15 +4,15 @@ from os import walk
 from pathlib import Path
 from typing import Set
 
-from cgg import Node
-from contract import Contract
-from specification.atom.pattern.robotics.coremovement.coverage import *
-from specification.atom.pattern.robotics.coremovement.surveillance import *
-from specification.atom.pattern.robotics.trigger.triggers import *
-from specification.formula import Formula
+from core.cgg import Node
+from core.contract import Contract
+from core.specification.atom.pattern.robotics.coremovement.coverage import *
+from core.specification.atom.pattern.robotics.coremovement.surveillance import *
+from core.specification.atom.pattern.robotics.trigger.triggers import *
+from core.specification.formula import Formula
 from tools.persistence import Persistence
-from typeset import Typeset
-from world import World
+from core.typeset import Typeset
+from core.world import World
 
 
 class Modelling:

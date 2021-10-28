@@ -4,7 +4,7 @@ import re
 import string
 from typing import Tuple, List
 
-from controller.synthesisinfo import SynthesisInfo
+from core.controller.synthesisinfo import SynthesisInfo
 from tools.logic import Logic
 
 

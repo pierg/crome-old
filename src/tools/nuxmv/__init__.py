@@ -4,8 +4,8 @@ from typing import List, Tuple
 from pathlib import Path
 
 from tools.logic import Logic
-from type import Boolean, BoundedInteger
-from typeset import Typeset
+from core.type import Boolean, BoundedInteger
+from core.typeset import Typeset
 
 
 

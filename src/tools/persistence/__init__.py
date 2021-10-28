@@ -3,11 +3,11 @@ import pickle
 
 from typing import Set
 
-from cgg import Node
-from controller import Controller
+from core.cgg import Node
+from core.controller import Controller
 from pathlib import Path
 
-from world import World
+from core.world import World
 
 
 class Persistence:

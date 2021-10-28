@@ -1,7 +1,7 @@
 
 from typing import Set
 
-from cgg import Node
+from core.cgg import Node
 from tools.persistence import Persistence
 
 
