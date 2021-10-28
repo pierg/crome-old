@@ -35,6 +35,9 @@ class Link(Enum):
     COMPOSITION = 1
     CONJUNCTION = 2
     DISJUNCTION = 3
+    MERGING = 4
+    QUOTIENT = 5
+    SEPARATION = 6
 
 
 class GraphTraversal(Enum):
@@ -398,7 +401,8 @@ class Node(Goal):
         return {"goal": self.name, "id": self.id}
 
     @staticmethod
-    def exporting_in_files(node_id: str, goals_folder: str, mode: str, new_element: str, goal_name: str, link: str = None):
+    def exporting_in_files(node_id: str, goals_folder: str, mode: str, new_element: str, goal_name: str,
+                           link: str = None):
         filename = str(node_id).split("-")
         goal_folder = Path(os.path.join(goals_folder, f"{filename[len(filename) - 1].zfill(4)}.json"))
         if os.path.exists(goal_folder):
@@ -486,6 +490,52 @@ class Node(Goal):
         new_node = Node(goal=new_goal)
 
         new_node.add_children(link=Link.CONJUNCTION, nodes=nodes)
+
+        return new_node
+
+    @staticmethod
+    def merging(nodes: Set[Node], name: str = None, description: str = None) -> Node:
+
+        try:
+            new_goal = Goal.merging(nodes, name, description)
+        except GoalException as e:
+            raise CGGOperationFail(nodes=nodes, operation=CGGFailOperations.algebra_op, goal_ex=e)
+
+        new_node = Node(goal=new_goal)
+
+        new_node.add_children(link=Link.MERGING, nodes=nodes)
+
+        return new_node
+
+    def quotient(self, divisor: Node) -> Node:
+
+        dividend = self
+
+        try:
+            new_goal = Goal.quotient(dividend, divisor)
+        except GoalException as e:
+            raise CGGOperationFail(nodes={dividend, divisor}, operation=CGGFailOperations.algebra_op, goal_ex=e)
+
+        new_node = Node(goal=new_goal)
+
+        """TODO: differenciate between dividend and divisor"""
+        new_node.add_children(link=Link.QUOTIENT, nodes={dividend, divisor})
+
+        return new_node
+
+    def separation(self, divisor: Node) -> Node:
+
+        dividend = self
+
+        try:
+            new_goal = Goal.separation(dividend, divisor)
+        except GoalException as e:
+            raise CGGOperationFail(nodes={dividend, divisor}, operation=CGGFailOperations.algebra_op, goal_ex=e)
+
+        new_node = Node(goal=new_goal)
+
+        """TODO: differenciate between dividend and divisor"""
+        new_node.add_children(link=Link.SEPARATION, nodes={dividend, divisor})
 
         return new_node
 

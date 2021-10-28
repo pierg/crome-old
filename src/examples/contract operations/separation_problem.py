@@ -6,10 +6,10 @@ p2 = Boolean("p2").to_atom()
 p3 = Boolean("p3").to_atom()
 p4 = Boolean("p4").to_atom()
 
-c1 = Contract(assumptions=p4 & p3, guarantees=p1 & p2)
+c1 = Contract(assumptions=p4, guarantees=p2)
 print(f"Contract c1:\n{c1}")
 
-c = Contract(assumptions=p4, guarantees=p2)
+c = Contract(assumptions=p4 & p3, guarantees=p2)
 print(f"Contract c:\n{c}")
 
 assert not (c <= c1)

@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 def __str__(self: Contract):
     """Override the print behavior"""
-    ret = "\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n"
+    ret = "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n"
     if isinstance(self.assumptions, Formula):
         ret += '  assumption'
         ret += '\n  DNF:\t' + self.assumptions.pretty_print(FormulaOutput.DNF) + ""

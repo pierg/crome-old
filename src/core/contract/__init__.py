@@ -332,6 +332,7 @@ class Contract:
 
         """Guarantees relaxation"""
         new_guarantees.relax_by(new_assumptions)
+        new_guarantees = new_guarantees | ~new_assumptions
 
         """New contracts without saturation cause it was already saturated"""
         new_contract = Contract(assumptions=new_assumptions, guarantees=new_guarantees, saturate=False)
@@ -355,6 +356,9 @@ class Contract:
         a1 = c1.assumptions
         g1 = c1.guarantees
 
+        print(c.guarantees)
+        print(c1.guarantees)
+
         try:
             a2 = a & g1 | ~(g & a1)
         except NotSatisfiableException as e:
@@ -368,5 +372,7 @@ class Contract:
         separation = Contract(assumptions=a2, guarantees=g2)
 
         print("The separation has been successfully computed")
+
+        print(g2)
 
         return separation

@@ -1,15 +1,14 @@
 from core.contract import Contract
 from core.type import Boolean
 
-p1 = Boolean("p1").to_atom()
-p2 = Boolean("p2").to_atom()
-p3 = Boolean("p3").to_atom()
-p4 = Boolean("p4").to_atom()
+x = Boolean("x").to_atom()
+y = Boolean("y").to_atom()
+z = Boolean("z").to_atom()
 
-c1 = Contract(assumptions=p4 & p3, guarantees=p1 & p2)
+c1 = Contract(guarantees=x)
 print(f"Contract c1:\n{c1}")
 
-c = Contract(assumptions=p4, guarantees=p2)
+c = Contract(assumptions=z, guarantees=y)
 print(f"Contract c:\n{c}")
 
 assert not (c <= c1)

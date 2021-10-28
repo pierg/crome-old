@@ -15,6 +15,9 @@ class GoalFailOperations(Enum):
     conjunction = 1
     refinement = 2
     synthesis = 3
+    merging = 4
+    quotient = 5
+    separation = 6
 
 
 class GoalFailMotivations(Enum):

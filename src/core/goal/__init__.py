@@ -19,8 +19,10 @@ from tools.strix import Strix
 from core.type import Boolean
 
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from core.world import World
+
 
 class Goal:
 
@@ -291,6 +293,145 @@ class Goal:
 
         new_goal = Goal(name=name,
                         description=description,
+                        specification=new_contract,
+                        world=new_goal_world)
+
+        return new_goal
+
+    @staticmethod
+    def merging(goals: Set[Goal], name: str = None, description: str = None) -> Goal:
+        if name is None:
+            names = []
+            for goal in goals:
+                names.append(goal.name)
+            names.sort()
+            conj_name = ""
+            for name in names:
+                conj_name += name + "**"
+            name = conj_name[:-2]
+
+        set_of_contracts = set()
+
+        new_goal_world = None
+        for g in goals:
+            set_of_contracts.add(g.specification)
+            if g.world is not None:
+                if new_goal_world is None:
+                    new_goal_world = g.world
+                else:
+                    if not new_goal_world.equals(g.world):
+                        raise GoalException("merging goals that have different 'variables'")
+
+        try:
+            new_contract = Contract.merging(set_of_contracts)
+
+        except InconsistentContracts as e:
+
+            raise GoalAlgebraOperationFail(goals=goals, operation=GoalFailOperations.merging, contr_ex=e)
+
+        new_goal = Goal(name=name,
+                        description=description,
+                        specification=new_contract,
+                        world=new_goal_world)
+
+        return new_goal
+
+    @staticmethod
+    def disjunction(goals: Set[Goal], name: str = None, description: str = None) -> Goal:
+        if name is None:
+            names = []
+            for goal in goals:
+                names.append(goal.name)
+            names.sort()
+            conj_name = ""
+            for name in names:
+                conj_name += name + "vv"
+            name = conj_name[:-2]
+
+        set_of_contracts = set()
+
+        new_goal_world = None
+        for g in goals:
+            set_of_contracts.add(g.specification)
+            if g.world is not None:
+                if new_goal_world is None:
+                    new_goal_world = g.world
+                else:
+                    if not new_goal_world.equals(g.world):
+                        raise GoalException("disjoining goals that have different 'variables'")
+
+        try:
+            new_contract = Contract.disjunction(set_of_contracts)
+
+        except InconsistentContracts as e:
+
+            raise GoalAlgebraOperationFail(goals=goals, operation=GoalFailOperations.conjunction, contr_ex=e)
+
+        new_goal = Goal(name=name,
+                        description=description,
+                        specification=new_contract,
+                        world=new_goal_world)
+
+        return new_goal
+
+    def quotient(self, divisor: Goal) -> Goal:
+        dividend = self
+
+        name = f"{dividend.name}/{divisor.name}"
+
+        set_of_contracts = set()
+
+        new_goal_world = None
+        for g in {dividend, divisor}:
+            set_of_contracts.add(g.specification)
+            if g.world is not None:
+                if new_goal_world is None:
+                    new_goal_world = g.world
+                else:
+                    if not new_goal_world.equals(g.world):
+                        raise GoalException("quotient on goals that have different 'variables'")
+
+        try:
+            new_contract = Contract.quotient(dividend.specification, divisor.specification)
+
+        except InconsistentContracts as e:
+
+            raise GoalAlgebraOperationFail(goals={dividend, divisor}, operation=GoalFailOperations.quotient, contr_ex=e)
+
+        new_goal = Goal(name=name,
+                        description=f"Quotient between {dividend.name} and {divisor.name}",
+                        specification=new_contract,
+                        world=new_goal_world)
+
+        return new_goal
+
+    def separation(self, divisor: Goal) -> Goal:
+        dividend = self
+
+        name = f"{dividend.name}:{divisor.name}"
+
+        set_of_contracts = set()
+
+        new_goal_world = None
+        for g in {dividend, divisor}:
+            set_of_contracts.add(g.specification)
+            if g.world is not None:
+                if new_goal_world is None:
+                    new_goal_world = g.world
+                else:
+                    if not new_goal_world.equals(g.world):
+                        raise GoalException("separation on goals that have different 'variables'")
+
+        try:
+            new_contract = Contract.separation(dividend.specification, divisor.specification)
+
+        except InconsistentContracts as e:
+
+            raise GoalAlgebraOperationFail(goals={dividend, divisor}, operation=GoalFailOperations.separation,
+                                           contr_ex=e)
+
+        new_goal = Goal(name=name,
+                        description=f"Separation between {dividend.name} and {divisor.name}",
                         specification=new_contract,
                         world=new_goal_world)
 
