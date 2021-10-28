@@ -45,5 +45,5 @@ print("our library goal now refines the merged specification")
 assert library_1_goal_z.specification <= merger.specification
 
 print("thanks to the separation and the merging the initial specification has been 'relaxed' "
-      "to acomodate what is available in the library")
+      "to accommodate what is available in the library")
 assert strict_order.specification <= merger.specification
