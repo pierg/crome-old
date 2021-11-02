@@ -100,6 +100,16 @@ class Contract:
         cond_g = self.guarantees <= other.guarantees
         return cond_a and cond_g
 
+    def __eq__(self: Contract, other: Contract):
+        """self == other. True if self is a refinement of other and viceversa"""
+        cond_a = self <= other
+        cond_g = other <= self
+        return cond_a and cond_g
+
+    def __hash__(self):
+        return hash(f"{self.assumptions.string} -> {self.guarantees.string}")
+
+
     def get_controller_info(self, world_ts: Typeset = None) -> SynthesisInfo:
         """Extract All Info Needed to Build a Controller from the Contract"""
 
