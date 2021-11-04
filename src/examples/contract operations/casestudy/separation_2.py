@@ -5,9 +5,9 @@ from custom_world import CustomWorld
 w = CustomWorld()
 
 original = Node(name="strict_patrolling",
-                    description="strict order patrolling regions r1 -> r2",
-                    specification=StrictOrderedPatrolling([w["r1"], w["r2"], w["r5"]]),
-                    world=w)
+                description="strict order patrolling regions r1 -> r2",
+                specification=StrictOrderedPatrolling([w["r1"], w["r2"], w["r5"]]),
+                world=w)
 """Contract
     A: TRUE
     G: G(F(r1 & F(r2))) & (!(r2) U r1) & G(((r2) -> (X((!(r2) U r1))))) & G(((r1) -> (X((!(r1) U r2))))) 
@@ -66,4 +66,3 @@ print("we can go back to the original 'original' specification my separating "
 separation_2 = merger.separation(separation_1)
 
 assert separation_2.specification == original.specification
-
