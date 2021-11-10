@@ -266,6 +266,7 @@ class Formula(Specification):
             return self
 
         new_other = deepcopy(other)
+        new_self = deepcopy(self)
 
         """Mutex Rules necessary for Satisfiability Check"""
         mutex_rules = Atom.extract_mutex_rules(self.typeset | other.typeset)
@@ -292,7 +293,7 @@ class Formula(Specification):
 
         """Append to list if not already there"""
         for other_elem in new_other.cnf:
-            if other_elem not in self.cnf:
+            if other_elem not in new_self.cnf:
                 self.__cnf.append(other_elem)
 
         return self

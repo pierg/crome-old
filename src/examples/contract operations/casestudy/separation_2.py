@@ -1,4 +1,6 @@
 from core.cgg import Node
+from core.contract import Contract
+from core.specification.atom.pattern.basic import GF
 from core.specification.atom.pattern.robotics.coremovement.surveillance import *
 from custom_world import CustomWorld
 
@@ -6,7 +8,9 @@ w = CustomWorld()
 
 original = Node(name="strict_patrolling",
                 description="strict order patrolling regions r1 -> r2",
-                specification=StrictOrderedPatrolling([w["r1"], w["r2"], w["r5"]]),
+                specification=Contract(
+                    assumptions=GF(w["picture"]),
+                    guarantees=StrictOrderedPatrolling([w["r1"], w["r2"], w["r5"]])),
                 world=w)
 """Contract
     A: TRUE
@@ -65,4 +69,6 @@ print("we can go back to the original 'original' specification my separating "
 
 separation_2 = merger.separation(separation_1)
 
+print(separation_2)
+print(original)
 assert separation_2.specification == original.specification
