@@ -192,7 +192,6 @@ class Formula(Specification):
         f_typeset = Typeset()
         f_string = []
 
-
         for f in formulas:
             f_typeset |= f.typeset
             f_string.append(f.string)
@@ -314,9 +313,26 @@ class Formula(Specification):
         else:
             self.__dnf = temp_dnf
 
+
         """Append to list if not already there"""
-        for other_elem in new_other.cnf:
-            if other_elem not in new_self.cnf:
+        for o_i, other_elem in enumerate(new_other.cnf):
+            other_s, other_t = LogicTuple.or_([atom.formula() for atom in other_elem])
+            other_atom = Atom(formula=(other_s, other_t), check=False)
+            """check if another clause is already a refinement of the existing one"""
+
+            for s_i, elem in enumerate(self.__cnf):
+                self_s, self_t = LogicTuple.or_([atom.formula() for atom in elem])
+                self_atom = Atom(formula=(self_s, self_t), check=False)
+
+                if self_atom <= other_atom:
+                    """If an existing clause is already a refinement then skip it"""
+                    break
+                if other_atom <= self_atom:
+                    """If the other is a refinement, then substitute it"""
+                    self.__cnf[s_i] = other_elem
+                    break
+
+                """Otherwise append it"""
                 self.__cnf.append(other_elem)
 
         return self
@@ -363,9 +379,32 @@ class Formula(Specification):
         else:
             self.__cnf = temp_cnf
 
+        # """Append to list if not already there"""
+        # for other_elem in new_other.dnf:
+        #     if other_elem not in self.dnf:
+        #         self.__dnf.append(other_elem)
+
+        appended_elements = []
         """Append to list if not already there"""
-        for other_elem in new_other.dnf:
-            if other_elem not in self.dnf:
+        for o_i, other_elem in enumerate(new_other.dnf):
+            other_s, other_t = LogicTuple.and_([atom.formula() for atom in other_elem])
+            other_atom = Atom(formula=(other_s, other_t), check=False)
+            """check if another clause is already a refinement of the existing one"""
+
+            for s_i, elem in enumerate(self.__dnf):
+                self_s, self_t = LogicTuple.and_([atom.formula() for atom in elem])
+                self_atom = Atom(formula=(self_s, self_t), check=False)
+
+                if other_atom <= self_atom:
+                    """If an existing clause is already a refinement then skip it"""
+                    break
+                if self_atom <= other_atom:
+                    """If the other is a refinement, then substitute it"""
+                    self.__dnf[s_i] = other_elem
+                    break
+
+                """Otherwise append it"""
                 self.__dnf.append(other_elem)
+                appended_elements.append(other_elem)
 
         return self
