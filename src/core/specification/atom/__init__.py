@@ -112,7 +112,7 @@ class Atom(Specification):
         return self.__dontcare
 
     @staticmethod
-    def extract_refinement_rules(typeset: Typeset, output=None) -> Union[Atom, Tuple[List[str], Typeset]]:
+    def extract_refinement_rules(typeset: Typeset, output=None) -> Union[Atom, Tuple[List[str], Typeset], None]:
         """Extract Refinement rules from the Formula"""
 
         rules_str = []
@@ -134,7 +134,7 @@ class Atom(Specification):
         return Atom(formula=(Logic.and_(rules_str, brackets=True), rules_typeset), kind=AtomKind.MUTEX_RULE)
 
     @staticmethod
-    def extract_mutex_rules(typeset: Typeset, output=None) -> Union[Atom, Tuple[List[str], Typeset]]:
+    def extract_mutex_rules(typeset: Typeset, output=None) -> Union[Atom, Tuple[List[str], Typeset], None]:
         """Extract Mutex rules from the Formula"""
 
         rules_str = []
@@ -161,7 +161,7 @@ class Atom(Specification):
         return Atom(formula=(Logic.and_(rules_str, brackets=True), rules_typeset), kind=AtomKind.MUTEX_RULE)
 
     @staticmethod
-    def extract_adjacency_rules(typeset: Typeset, output=None) -> Union[Atom, Tuple[List[str], Typeset]]:
+    def extract_adjacency_rules(typeset: Typeset, output=None) -> Union[Atom, Tuple[List[str], Typeset], None]:
         """Extract Adjacency rules from the Formula"""
 
         rules_str = []
@@ -184,7 +184,7 @@ class Atom(Specification):
         return Atom(formula=(Logic.and_(rules_str, brackets=True), rules_typeset), kind=AtomKind.ADJACENCY_RULE)
 
     @staticmethod
-    def extract_liveness_rules(typeset: Typeset, output=None) -> Union[Atom, Tuple[List[str], Typeset]]:
+    def extract_liveness_rules(typeset: Typeset, output=None) -> Union[Atom, Tuple[List[str], Typeset], None]:
         """Extract Liveness rules from the Formula"""
 
         rules_str = []
@@ -208,7 +208,7 @@ class Atom(Specification):
         return Atom(formula=(Logic.and_(rules_str, brackets=True), rules_typeset), kind=AtomKind.LIVENESS_RULE)
 
     @staticmethod
-    def context_active_rules(typeset: Typeset, output=None) -> Union[Atom, Tuple[List[str], Typeset]]:
+    def context_active_rules(typeset: Typeset, output=None) -> Union[Atom, Tuple[List[str], Typeset], None]:
         """Extract Liveness rules from the Formula"""
 
         rules_str = []

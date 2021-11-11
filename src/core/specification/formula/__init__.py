@@ -183,6 +183,30 @@ class Formula(Specification):
                 [LogicTuple.and_([atom.formula() for atom in clause], brackets=True) for clause in self.dnf],
                 brakets=False)
 
+    @staticmethod
+    def satcheck(formulas: Set[Formula]) -> bool:
+        print("\t\tSATCHECK")
+        for f in formulas:
+            if f.is_false():
+                return False
+        f_typeset = Typeset()
+        f_string = []
+
+
+        for f in formulas:
+            f_typeset |= f.typeset
+            f_string.append(f.string)
+
+        formula_check = Logic.and_(f_string)
+
+        from core.specification.atom import Atom
+        rules = Atom.extract_mutex_rules(f_typeset)
+        if rules is not None:
+            Logic.and_([formula_check, rules.string])
+            f_typeset |= rules.typeset
+
+        return Nuxmv.check_satisfiability((formula_check, f_typeset))
+
     def __and__(self, other: Union[Formula, Atom]) -> Formula:
         """self & other
         Returns a new Specification with the conjunction with other"""
@@ -280,8 +304,7 @@ class Formula(Specification):
             check_formula = LogicTuple.and_([f.formula() for f in new_set])
 
             """Adding Rules"""
-            if mutex_rules is not None:
-                check_formula = LogicTuple.and_([check_formula, mutex_rules.formula()])
+            check_formula = LogicTuple.and_([check_formula, mutex_rules.formula()])
 
             if Nuxmv.check_satisfiability(check_formula):
                 temp_dnf.append(new_set)

@@ -1,5 +1,7 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
+from typing import Set
+
 from core.specification.enums import *
 from core.specification.exceptions import NotSatisfiableException
 from tools.logic import LogicTuple
@@ -38,7 +40,6 @@ class Specification(ABC):
     @abstractmethod
     def spec_kind(self) -> SpecKind:
         pass
-
     @abstractmethod
     def __and__(self, other: Specification) -> Specification:
         """self & other
@@ -85,6 +86,10 @@ class Specification(ABC):
         pass
 
     """"Comparing Specifications"""
+    
+    @staticmethod
+    def satcheck(formulas: Set[Specification]) -> bool:
+        pass
 
     def is_satisfiable(self) -> bool:
 

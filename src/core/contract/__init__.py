@@ -86,9 +86,9 @@ class Contract:
 
     def __checkfeasibility(self):
         """Check Feasibility"""
-        if self.assumptions is not None:
+        if self.assumptions is not None or not self.assumptions.is_true():
             try:
-                self.__assumptions & self.__guarantees
+                Formula.satcheck({self.__assumptions, self.__guarantees})
             except NotSatisfiableException as e:
                 raise UnfeasibleContracts(self, e)
 
