@@ -142,6 +142,11 @@ if __name__ == "__main__":
     except NotSatisfiableException as e:
         print("r1 and r2 are two mutually exclusive locations!")
 
-    new_prop = w["ps"] & w["mv"]
     rules = w.rules
+    print(rules)
+    print(w["ps"] <= w["mv"])
+
+    print(w["ps"].string)
+
+    new_prop = w["ps"] & w["mv"]
     print(new_prop)
