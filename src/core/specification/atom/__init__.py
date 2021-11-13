@@ -1,32 +1,39 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from typing import Tuple, Union, List
+from typing import TYPE_CHECKING
+
 from core.specification import Specification
 from core.specification.enums import *
 from core.specification.exceptions import AtomNotSatisfiableException
-from core.specification.formula import Formula
-from tools.logic import Logic, LogicTuple
 from core.type import Boolean, TypeKinds
 from core.typeset import Typeset
+from tools.logic import Logic, LogicTuple
+
+if TYPE_CHECKING:
+    from core.specification.formula import Formula
 
 
 class Atom(Specification):
-
-    def __init__(self,
-                 formula: Union[str, Tuple[str, Typeset]] = None,
-                 kind: AtomKind = None,
-                 check: bool = True,
-                 dontcare: bool = False):
-        """Atomic Specification (can be an AP, but also an LTL_forced formula that cannot be broken down, e.g. a Pattern)"""
+    def __init__(
+        self,
+        formula: str | tuple[str, Typeset] = None,
+        kind: AtomKind = None,
+        check: bool = True,
+        dontcare: bool = False,
+    ):
+        """Atomic Specification (can be an AP, but also an LTL_forced formula
+        that cannot be broken down, e.g. a Pattern)"""
 
         if kind is None:
             self.__kind = AtomKind.UNDEFINED
         self.__kind = kind
 
-        if self.__kind == AtomKind.REFINEMENT_RULE or \
-                self.__kind == AtomKind.ADJACENCY_RULE or \
-                self.__kind == AtomKind.MUTEX_RULE:
+        if (
+            self.__kind == AtomKind.REFINEMENT_RULE
+            or self.__kind == AtomKind.ADJACENCY_RULE
+            or self.__kind == AtomKind.MUTEX_RULE
+        ):
             self.__spec_kind = SpecKind.RULE
         else:
             self.__spec_kind = SpecKind.UNDEFINED
@@ -44,15 +51,22 @@ class Atom(Specification):
             raise AttributeError
         if isinstance(formula, str):
             if formula == "TRUE":
-                self.__base_formula: Tuple[str, Typeset] = "TRUE", Typeset()
+                self.__base_formula: tuple[str, Typeset] = ("TRUE", Typeset())
             elif formula == "FALSE":
-                self.__base_formula: Tuple[str, Typeset] = "FALSE", Typeset()
+                self.__base_formula: tuple[str, Typeset] = ("FALSE", Typeset())
         else:
-            self.__base_formula: Tuple[str, Typeset] = formula
+            self.__base_formula: tuple[str, Typeset] = formula
 
-            if check and kind != AtomKind.ADJACENCY_RULE and kind != AtomKind.MUTEX_RULE and kind != AtomKind.REFINEMENT_RULE:
+            if (
+                check
+                and kind != AtomKind.ADJACENCY_RULE
+                and kind != AtomKind.MUTEX_RULE
+                and kind != AtomKind.REFINEMENT_RULE
+            ):
                 if not self.is_satisfiable():
-                    raise AtomNotSatisfiableException(formula=self.__base_formula)
+                    raise AtomNotSatisfiableException(
+                        formula=self.__base_formula,
+                    )
 
     def formula(self, type: FormulaType = FormulaType.SATURATED) -> (str, Typeset):
         expression, typeset = self.__base_formula
@@ -60,8 +74,11 @@ class Atom(Specification):
             if self.__saturation is None:
                 expression, typeset = self.__base_formula
             else:
-                expression, typeset = LogicTuple.implies_(self.__saturation.formula(), self.__base_formula,
-                                                          brackets=True)
+                expression, typeset = LogicTuple.implies_(
+                    self.__saturation.formula(),
+                    self.__base_formula,
+                    brackets=True,
+                )
         if self.negated:
             return Logic.not_(expression), typeset
         return expression, typeset
@@ -72,7 +89,10 @@ class Atom(Specification):
     def contains_rule(self, rule: AtomKind = None):
         if rule is None:
             return (
-                    self.kind == AtomKind.MUTEX_RULE or self.kind == AtomKind.REFINEMENT_RULE or self.kind == AtomKind.ADJACENCY_RULE)
+                self.kind == AtomKind.MUTEX_RULE
+                or self.kind == AtomKind.REFINEMENT_RULE
+                or self.kind == AtomKind.ADJACENCY_RULE
+            )
         else:
             return self.kind == rule
 
@@ -111,9 +131,85 @@ class Atom(Specification):
     def dontcare(self) -> bool:
         return self.__dontcare
 
+    def get_dontcare(self) -> Atom:
+        """Returns a new Atom which is a don't care of self."""
+        new_formula = deepcopy(self)
+        new_formula.__dontcare = True
+        return new_formula
+
+    """"BOOLEAN OPERATIONS"""
+
+    def __hash__(self):
+        return hash(self.__base_formula[0])
+
+    def __and__(self, other: Atom | Formula) -> Formula:
+        """self & other Returns a new Specification with the conjunction with
+        other."""
+        from core.specification.formula import Formula
+
+        if isinstance(other, Atom):
+            other = Formula(atom=other)
+
+        return Formula(atom=self) & other
+
+    def __or__(self, other: Atom | Formula) -> Formula:
+        """self | other Returns a new Specification with the disjunction with
+        other."""
+        from core.specification.formula import Formula
+
+        if isinstance(other, Atom):
+            other = Formula(atom=other)
+
+        return Formula(atom=self) | other
+
+    def __invert__(self) -> Atom:
+        """Returns a new Specification with the negation of self."""
+        new_formula = deepcopy(self)
+        new_formula.__negation = not new_formula.__negation
+        return new_formula
+
+    def __rshift__(self, other: Atom | Formula) -> Formula:
+        """>> Returns a new Specification that is the result of self -> other
+        (implies)"""
+        from core.specification.formula import Formula
+
+        if not (isinstance(other, Atom) or isinstance(other, Formula)):
+            raise AttributeError
+        if isinstance(other, Atom):
+            other = Formula(atom=other)
+
+        return Formula(atom=self) >> other
+
+    def __lshift__(self, other: Atom | Formula) -> Formula:
+        """<< Returns a new Specification that is the result of other -> self
+        (implies)"""
+        from core.specification.formula import Formula
+
+        if not (isinstance(other, Atom) or isinstance(other, Formula)):
+            raise AttributeError
+        if isinstance(other, Atom):
+            other = Formula(atom=other)
+
+        return Formula(atom=self) << other
+
+    def __iand__(self, other: Atom | Formula) -> Formula:
+        """self &= other Produces a Formula which is the conjunction of self
+        with other."""
+
+        return self & other
+
+    def __ior__(self, other: Atom | Formula) -> Formula:
+        """self |= other Produces a Formula which is the disjunction of self
+        with other."""
+
+        return self | other
+
     @staticmethod
-    def extract_refinement_rules(typeset: Typeset, output=None) -> Union[Atom, Tuple[List[str], Typeset], None]:
-        """Extract Refinement rules from the Formula"""
+    def extract_refinement_rules(
+        typeset: Typeset,
+        output=None,
+    ) -> Atom | tuple[list[str], Typeset] | None:
+        """Extract Refinement rules from the Formula."""
 
         rules_str = []
         rules_typeset = Typeset()
@@ -121,7 +217,14 @@ class Atom(Specification):
         for key_type, set_super_types in typeset.super_types.items():
             if isinstance(key_type, Boolean):
                 for super_type in set_super_types:
-                    rules_str.append(Logic.g_(Logic.implies_(key_type.name, super_type.name)))
+                    rules_str.append(
+                        Logic.g_(
+                            Logic.implies_(
+                                key_type.name,
+                                super_type.name,
+                            ),
+                        ),
+                    )
                     rules_typeset |= Typeset({key_type})
                     rules_typeset |= Typeset(set_super_types)
 
@@ -131,11 +234,17 @@ class Atom(Specification):
         if output is not None and output == FormulaOutput.ListCNF:
             return rules_str, rules_typeset
 
-        return Atom(formula=(Logic.and_(rules_str, brackets=True), rules_typeset), kind=AtomKind.MUTEX_RULE)
+        return Atom(
+            formula=(Logic.and_(rules_str, brackets=True), rules_typeset),
+            kind=AtomKind.MUTEX_RULE,
+        )
 
     @staticmethod
-    def extract_mutex_rules(typeset: Typeset, output=None) -> Union[Atom, Tuple[List[str], Typeset], None]:
-        """Extract Mutex rules from the Formula"""
+    def extract_mutex_rules(
+        typeset: Typeset,
+        output=None,
+    ) -> Atom | tuple[list[str], Typeset] | None:
+        """Extract Mutex rules from the Formula."""
 
         rules_str = []
         rules_typeset = Typeset()
@@ -149,7 +258,9 @@ class Atom(Specification):
                     for elem in neg_group:
                         and_elements.append(Logic.not_(elem.name))
                     or_elements.append(Logic.and_(and_elements, brackets=True))
-                rules_str.append(Logic.g_(Logic.or_(or_elements, brackets=False)))
+                rules_str.append(
+                    Logic.g_(Logic.or_(or_elements, brackets=False)),
+                )
                 rules_typeset |= Typeset(mutex_group)
 
         if len(rules_str) == 0:
@@ -158,11 +269,17 @@ class Atom(Specification):
         if output is not None and output == FormulaOutput.ListCNF:
             return rules_str, rules_typeset
 
-        return Atom(formula=(Logic.and_(rules_str, brackets=True), rules_typeset), kind=AtomKind.MUTEX_RULE)
+        return Atom(
+            formula=(Logic.and_(rules_str, brackets=True), rules_typeset),
+            kind=AtomKind.MUTEX_RULE,
+        )
 
     @staticmethod
-    def extract_adjacency_rules(typeset: Typeset, output=None) -> Union[Atom, Tuple[List[str], Typeset], None]:
-        """Extract Adjacency rules from the Formula"""
+    def extract_adjacency_rules(
+        typeset: Typeset,
+        output=None,
+    ) -> Atom | tuple[list[str], Typeset] | None:
+        """Extract Adjacency rules from the Formula."""
 
         rules_str = []
         rules_typeset = Typeset()
@@ -171,7 +288,17 @@ class Atom(Specification):
             if isinstance(key_type, Boolean):
                 """G(a -> X(b | c | d))"""
                 rules_str.append(
-                    Logic.g_(Logic.implies_(key_type.name, Logic.x_(Logic.or_([e.name for e in set_adjacent_types])))))
+                    Logic.g_(
+                        Logic.implies_(
+                            key_type.name,
+                            Logic.x_(
+                                Logic.or_(
+                                    [e.name for e in set_adjacent_types],
+                                ),
+                            ),
+                        ),
+                    ),
+                )
                 rules_typeset |= Typeset({key_type})
                 rules_typeset |= Typeset(set_adjacent_types)
 
@@ -181,11 +308,17 @@ class Atom(Specification):
         if output is not None and output == FormulaOutput.ListCNF:
             return rules_str, rules_typeset
 
-        return Atom(formula=(Logic.and_(rules_str, brackets=True), rules_typeset), kind=AtomKind.ADJACENCY_RULE)
+        return Atom(
+            formula=(Logic.and_(rules_str, brackets=True), rules_typeset),
+            kind=AtomKind.ADJACENCY_RULE,
+        )
 
     @staticmethod
-    def extract_liveness_rules(typeset: Typeset, output=None) -> Union[Atom, Tuple[List[str], Typeset], None]:
-        """Extract Liveness rules from the Formula"""
+    def extract_liveness_rules(
+        typeset: Typeset,
+        output=None,
+    ) -> Atom | tuple[list[str], Typeset] | None:
+        """Extract Liveness rules from the Formula."""
 
         rules_str = []
         rules_typeset = Typeset()
@@ -205,11 +338,17 @@ class Atom(Specification):
         if output is not None and output == FormulaOutput.ListCNF:
             return rules_str, rules_typeset
 
-        return Atom(formula=(Logic.and_(rules_str, brackets=True), rules_typeset), kind=AtomKind.LIVENESS_RULE)
+        return Atom(
+            formula=(Logic.and_(rules_str, brackets=True), rules_typeset),
+            kind=AtomKind.LIVENESS_RULE,
+        )
 
     @staticmethod
-    def context_active_rules(typeset: Typeset, output=None) -> Union[Atom, Tuple[List[str], Typeset], None]:
-        """Extract Liveness rules from the Formula"""
+    def context_active_rules(
+        typeset: Typeset,
+        output=None,
+    ) -> Atom | tuple[list[str], Typeset] | None:
+        """Extract Liveness rules from the Formula."""
 
         rules_str = []
         rules_typeset = Typeset()
@@ -232,75 +371,7 @@ class Atom(Specification):
         if output is not None and output == FormulaOutput.ListCNF:
             return rules_str, rules_typeset
 
-        return Atom(formula=(Logic.and_(rules_str, brackets=True), rules_typeset), kind=AtomKind.LIVENESS_RULE)
-
-    def __hash__(self):
-        return hash(self.__base_formula[0])
-
-    def __and__(self, other: Union[Atom, Formula]) -> Formula:
-        """self & other
-        Returns a new Specification with the conjunction with other"""
-        if not (isinstance(other, Atom) or isinstance(other, Formula)):
-            raise AttributeError
-
-        if isinstance(other, Atom):
-            other = Formula(atom=other)
-
-        return Formula(atom=self) & other
-
-    def __or__(self, other: Union[Atom, Formula]) -> Formula:
-        """self | other
-        Returns a new Specification with the disjunction with other"""
-        if not (isinstance(other, Atom) or isinstance(other, Formula)):
-            raise AttributeError
-
-        if isinstance(other, Atom):
-            other = Formula(atom=other)
-
-        return Formula(atom=self) | other
-
-    def __invert__(self) -> Atom:
-        """Returns a new Specification with the negation of self"""
-        new_formula = deepcopy(self)
-        new_formula.__negation = not new_formula.__negation
-        return new_formula
-
-    def get_dontcare(self) -> Atom:
-        """Returns a new Specification which is a don't care of self"""
-        new_formula = deepcopy(self)
-        new_formula.__dontcare = True
-        return new_formula
-
-    def __rshift__(self, other: Union[Atom, Formula]) -> Formula:
-        """>>
-        Returns a new Specification that is the result of self -> other (implies)"""
-        if not (isinstance(other, Atom) or isinstance(other, Formula)):
-            raise AttributeError
-
-        if isinstance(other, Atom):
-            other = Formula(atom=other)
-
-        return Formula(atom=self) >> other
-
-    def __lshift__(self, other: Union[Atom, Formula]) -> Formula:
-        """<<
-        Returns a new Specification that is the result of other -> self (implies)"""
-        if not (isinstance(other, Atom) or isinstance(other, Formula)):
-            raise AttributeError
-
-        if isinstance(other, Atom):
-            other = Formula(atom=other)
-
-        return Formula(atom=self) << other
-
-    def __iand__(self, other: Union[Atom, Formula]) -> Formula:
-        """self &= other
-        Modifies self with the conjunction with other"""
-
-        return self & other
-
-    def __ior__(self, other: Union[Atom, Formula]) -> Formula:
-        """self |= other
-        Modifies self with the disjunction with other"""
-
-        return self | other
+        return Atom(
+            formula=(Logic.and_(rules_str, brackets=True), rules_typeset),
+            kind=AtomKind.LIVENESS_RULE,
+        )

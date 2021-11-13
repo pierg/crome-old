@@ -1,58 +1,60 @@
 from __future__ import annotations
 
 import itertools
-from copy import deepcopy, copy
-from enum import Enum, auto
-from typing import Set, Tuple, TYPE_CHECKING, List, Union
+from copy import deepcopy
+from typing import TYPE_CHECKING
 
 from core.specification import Specification
 from core.specification.enums import *
-from core.specification.exceptions import NotSatisfiableException, AtomNotSatisfiableException
-from tools.logic import LogicTuple, Logic
-from tools.nuxmv import Nuxmv
-from core.type import Boolean
+from core.specification.exceptions import NotSatisfiableException
 from core.typeset import Typeset
+from tools.logic import Logic, LogicTuple
+from tools.nuxmv import Nuxmv
 
 if TYPE_CHECKING:
     from core.specification.atom import Atom, AtomKind
 
 
 class Formula(Specification):
-    def __init__(self,
-                 atom: Union[Atom, str] = None,
-                 kind: FormulaKind = None):
+    def __init__(
+        self,
+        atom: Atom | str = None,
+        kind: FormulaKind = None,
+    ):
 
         if kind is None:
             self.__kind = FormulaKind.UNDEFINED
         self.__kind = kind
 
-        if self.__kind == FormulaKind.REFINEMENT_RULES or \
-                self.__kind == FormulaKind.ADJACENCY_RULES or \
-                self.__kind == FormulaKind.MUTEX_RULES:
+        if (
+            self.__kind == FormulaKind.REFINEMENT_RULES
+            or self.__kind == FormulaKind.ADJACENCY_RULES
+            or self.__kind == FormulaKind.MUTEX_RULES
+        ):
             self.__spec_kind = SpecKind.RULE
         else:
             self.__spec_kind = SpecKind.UNDEFINED
 
         if isinstance(atom, str) and atom == "TRUE":
             from core.specification.atom import Atom
+
             new_atom = Atom("TRUE")
-            self.__cnf: List[Set[Atom]] = [{new_atom}]
-            self.__dnf: List[Set[Atom]] = [{new_atom}]
+            self.__cnf: list[set[Atom]] = [{new_atom}]
+            self.__dnf: list[set[Atom]] = [{new_atom}]
 
         elif isinstance(atom, str) and atom == "FALSE":
             from core.specification.atom import Atom
+
             new_atom = Atom("FALSE")
-            self.__cnf: List[Set[Atom]] = [{new_atom}]
-            self.__dnf: List[Set[Atom]] = [{new_atom}]
+            self.__cnf: list[set[Atom]] = [{new_atom}]
+            self.__dnf: list[set[Atom]] = [{new_atom}]
 
         elif atom is not None:
-            self.__cnf: List[Set[Atom]] = [{atom}]
-            self.__dnf: List[Set[Atom]] = [{atom}]
+            self.__cnf: list[set[Atom]] = [{atom}]
+            self.__dnf: list[set[Atom]] = [{atom}]
 
         else:
             raise Exception("Wrong parameters LTL_forced construction")
-
-    from ._printing import pretty_print
 
     @property
     def kind(self) -> FormulaKind:
@@ -71,15 +73,15 @@ class Formula(Specification):
         self.__spec_kind = value
 
     @property
-    def cnf(self) -> List[Set[Atom]]:
+    def cnf(self) -> list[set[Atom]]:
         return self.__cnf
 
     @property
-    def dnf(self) -> List[Set[Atom]]:
+    def dnf(self) -> list[set[Atom]]:
         return self.__dnf
 
-    def _remove_atoms(self, atoms_to_remove: Set[Atom]):
-        """Remove Atoms from Formula"""
+    def _remove_atoms(self, atoms_to_remove: set[Atom]):
+        """Remove Atoms from Formula."""
 
         if len(atoms_to_remove) == 1 and list(atoms_to_remove)[0].is_true():
             return
@@ -91,7 +93,7 @@ class Formula(Specification):
         """Remove from CNF"""
         clause_cnf_to_remove = set()
         for clause in self.__cnf:
-            """Remove clause if contains atoms to be removed"""
+            """Remove clause if contains atoms to be removed."""
             if clause & atoms_to_remove:
                 clause_cnf_to_remove |= clause
 
@@ -102,15 +104,14 @@ class Formula(Specification):
 
         if len(self.atoms) == 0:
             new_atom = Atom("TRUE")
-            self.__cnf: List[Set[Atom]] = [{new_atom}]
-            self.__dnf: List[Set[Atom]] = [{new_atom}]
+            self.__cnf: list[set[Atom]] = [{new_atom}]
+            self.__dnf: list[set[Atom]] = [{new_atom}]
 
     def relax_by(self, formula: Formula):
-        """
-        Given the assumption as set of conjunctive clauses connected by the disjunction operator (DNF),
-        we can simplify any conjunct a_i in a clause x if exists a guarantee (a_j -> g_j) such that:
-        1) a_j is part of x
-        2) g_j -> a_i is a valid formula
+        """Given the assumption as set of conjunctive clauses connected by the
+        disjunction operator (DNF), we can simplify any conjunct a_i in a
+        clause x if exists a guarantee (a_j -> g_j) such that: 1) a_j is part
+        of x 2) g_j -> a_i is a valid formula.
 
         DNF = (a & b) | (c & d)
         CNF = (a | c) & (a | d) & (b | c) & (b | d)
@@ -118,7 +119,6 @@ class Formula(Specification):
         simplify a =>
         DNF = (b) | (c & d)
         CNF = (b | c) & (b | d)
-
         """
         for guarantee in formula.cnf:
             if len(guarantee) == 1:
@@ -145,7 +145,7 @@ class Formula(Specification):
             self._remove_atoms(atoms_to_remove)
 
     @property
-    def atoms(self) -> Set[Atom]:
+    def atoms(self) -> set[Atom]:
         new_set = set()
         for group in self.cnf:
             new_set |= group
@@ -155,10 +155,10 @@ class Formula(Specification):
         return any([e.contains_rule(rule) for e in self.atoms])
 
     def saturate(self, value: Specification):
-        """
-        Saturate each atom of the formula, CNF and DNF
-        x->((a | b) & (c | d)) === ((x->a) | (x->b)) & ((x->c) | (x->d))
-        x->((a & b) | (c & d)) === ((x->a) & (x->b)) | ((x->c) & (x->d))
+        """Saturate each atom of the formula, CNF and DNF x->((a | b) & (c |
+        d)) === ((x->a) | (x->b)) & ((x->c) | (x->d)) x->((a & b) | (c & d))
+
+        === ((x->a) & (x->b)) | ((x->c) & (x->d))
         """
         # if not value.is_true():
         for clause in self.cnf:
@@ -166,25 +166,43 @@ class Formula(Specification):
                 atom.saturate(value)
         """Atoms are shared between CNF and DNF"""
 
-    def formula(self, formulatype: FormulaOutput = FormulaOutput.CNF) -> Union[
-        Tuple[str, Typeset], Tuple[List[str], Typeset]]:
-        """Generate the formula"""
+    def formula(
+        self,
+        formulatype: FormulaOutput = FormulaOutput.CNF,
+    ) -> (tuple[str, Typeset] | tuple[list[str], Typeset]):
+        """Generate the formula."""
 
         if formulatype == FormulaOutput.CNF:
             return LogicTuple.and_(
-                [LogicTuple.or_([atom.formula() for atom in clause], brakets=True) for clause in self.cnf],
-                brackets=False)
+                [
+                    LogicTuple.or_(
+                        [atom.formula() for atom in clause],
+                        brakets=True,
+                    )
+                    for clause in self.cnf
+                ],
+                brackets=False,
+            )
 
         if formulatype == FormulaOutput.ListCNF:
-            return [Logic.or_([atom.string for atom in clause]) for clause in self.cnf], self.typeset
+            return [
+                Logic.or_([atom.string for atom in clause]) for clause in self.cnf
+            ], self.typeset
 
         if formulatype == FormulaOutput.DNF:
             return LogicTuple.or_(
-                [LogicTuple.and_([atom.formula() for atom in clause], brackets=True) for clause in self.dnf],
-                brakets=False)
+                [
+                    LogicTuple.and_(
+                        [atom.formula() for atom in clause],
+                        brackets=True,
+                    )
+                    for clause in self.dnf
+                ],
+                brakets=False,
+            )
 
     @staticmethod
-    def satcheck(formulas: Set[Formula]) -> bool:
+    def satcheck(formulas: set[Formula]) -> bool:
         print("\t\tSATCHECK")
         for f in formulas:
             if f.is_false():
@@ -199,6 +217,7 @@ class Formula(Specification):
         formula_check = Logic.and_(f_string)
 
         from core.specification.atom import Atom
+
         rules = Atom.extract_mutex_rules(f_typeset)
         if rules is not None:
             Logic.and_([formula_check, rules.string])
@@ -206,22 +225,22 @@ class Formula(Specification):
 
         return Nuxmv.check_satisfiability((formula_check, f_typeset))
 
-    def __and__(self, other: Union[Formula, Atom]) -> Formula:
-        """self & other
-        Returns a new Specification with the conjunction with other"""
+    def __and__(self, other: Formula | Atom) -> Formula:
+        """self & other Returns a new Specification with the conjunction with
+        other."""
         new_ltl = deepcopy(self)
         new_ltl &= other
         return new_ltl
 
-    def __or__(self, other: Union[Formula, Atom]) -> Formula:
-        """self | other
-        Returns a new Specification with the disjunction with other"""
+    def __or__(self, other: Formula | Atom) -> Formula:
+        """self | other Returns a new Specification with the disjunction with
+        other."""
         new_ltl = deepcopy(self)
         new_ltl |= other
         return new_ltl
 
     def __invert__(self) -> Formula:
-        """Returns a new Specification with the negation of self"""
+        """Returns a new Specification with the negation of self."""
 
         new_ltl = deepcopy(self)
 
@@ -234,44 +253,44 @@ class Formula(Specification):
 
         return new_ltl
 
-    def __rshift__(self, other: Union[Formula, Atom]) -> Formula:
-        """>>
-        Returns a new Specification that is the result of self -> other (implies)
-        NOT self OR other"""
+    def __rshift__(self, other: Formula | Atom) -> Formula:
+        """>> Returns a new Specification that is the result of self -> other
+        (implies) NOT self OR other."""
         from core.specification.atom import Atom
+
         if isinstance(other, Atom):
             other = Formula(other)
 
         if self.is_true():
             return other
 
-        new_ltl = ~ self
+        new_ltl = ~self
 
         return new_ltl | other
 
-    def __lshift__(self, other: Union[Formula, Atom]) -> Formula:
-        """<<
-        Returns a new Specification that is the result of other -> self (implies)
-        NOT other OR self"""
+    def __lshift__(self, other: Formula | Atom) -> Formula:
+        """<< Returns a new Specification that is the result of other -> self
+        (implies) NOT other OR self."""
         from core.specification.atom import Atom
+
         if isinstance(other, Atom):
             other = Formula(other)
 
-        new_ltl = ~ other
+        new_ltl = ~other
 
         return new_ltl | self
 
-    def __iand__(self, other: Union[Formula, Atom]) -> Formula:
-        """self &= other
-        Modifies self with the conjunction with other"""
+    def __iand__(self, other: Formula | Atom) -> Formula:
+        """self &= other Modifies self with the conjunction with other."""
         from core.specification.atom import Atom
+
         if isinstance(other, Atom):
             other = Formula(other)
 
         if other.is_false():
             new_atom = Atom("FALSE")
-            self.__cnf: List[Set[Atom]] = [{new_atom}]
-            self.__dnf: List[Set[Atom]] = [{new_atom}]
+            self.__cnf: list[set[Atom]] = [{new_atom}]
+            self.__dnf: list[set[Atom]] = [{new_atom}]
             return self
 
         if other.is_true():
@@ -284,8 +303,8 @@ class Formula(Specification):
 
         if self.is_true():
             new_other = deepcopy(other)
-            self.__cnf: List[Set[Atom]] = new_other.cnf
-            self.__dnf: List[Set[Atom]] = new_other.dnf
+            self.__cnf: list[set[Atom]] = new_other.cnf
+            self.__dnf: list[set[Atom]] = new_other.dnf
             return self
 
         new_other = deepcopy(other)
@@ -303,7 +322,9 @@ class Formula(Specification):
             check_formula = LogicTuple.and_([f.formula() for f in new_set])
 
             """Adding Rules"""
-            check_formula = LogicTuple.and_([check_formula, mutex_rules.formula()])
+            check_formula = LogicTuple.and_(
+                [check_formula, mutex_rules.formula()],
+            )
 
             if Nuxmv.check_satisfiability(check_formula):
                 temp_dnf.append(new_set)
@@ -313,22 +334,26 @@ class Formula(Specification):
         else:
             self.__dnf = temp_dnf
 
-
         """Append to list if not already there"""
         for o_i, other_elem in enumerate(new_other.cnf):
-            other_s, other_t = LogicTuple.or_([atom.formula() for atom in other_elem])
+            other_s, other_t = LogicTuple.or_(
+                [atom.formula() for atom in other_elem],
+            )
             other_atom = Atom(formula=(other_s, other_t), check=False)
             """check if another clause is already a refinement of the existing one"""
 
             for s_i, elem in enumerate(self.__cnf):
-                self_s, self_t = LogicTuple.or_([atom.formula() for atom in elem])
+                self_s, self_t = LogicTuple.or_(
+                    [atom.formula() for atom in elem],
+                )
                 self_atom = Atom(formula=(self_s, self_t), check=False)
 
                 if self_atom <= other_atom:
-                    """If an existing clause is already a refinement then skip it"""
+                    """If an existing clause is already a refinement then skip
+                    it."""
                     break
                 if other_atom <= self_atom:
-                    """If the other is a refinement, then substitute it"""
+                    """If the other is a refinement, then substitute it."""
                     self.__cnf[s_i] = other_elem
                     break
 
@@ -337,10 +362,10 @@ class Formula(Specification):
 
         return self
 
-    def __ior__(self, other: Union[Formula, Atom]) -> Formula:
-        """self |= other
-        Modifies self with the disjunction with other"""
+    def __ior__(self, other: Formula | Atom) -> Formula:
+        """self |= other Modifies self with the disjunction with other."""
         from core.specification.atom import Atom
+
         if isinstance(other, Atom):
             other = Formula(other)
 
@@ -349,8 +374,8 @@ class Formula(Specification):
 
         if other.is_true():
             new_atom = Atom("TRUE")
-            self.__cnf: List[Set[Atom]] = [{new_atom}]
-            self.__dnf: List[Set[Atom]] = [{new_atom}]
+            self.__cnf: list[set[Atom]] = [{new_atom}]
+            self.__dnf: list[set[Atom]] = [{new_atom}]
             return self
 
         if other.is_false():
@@ -371,10 +396,10 @@ class Formula(Specification):
                 pass
 
         if len(temp_cnf) == 0:
-            """Result is TRUE"""
+            """Result is TRUE."""
             new_atom = Atom("TRUE")
-            self.__cnf: List[Set[Atom]] = [{new_atom}]
-            self.__dnf: List[Set[Atom]] = [{new_atom}]
+            self.__cnf: list[set[Atom]] = [{new_atom}]
+            self.__dnf: list[set[Atom]] = [{new_atom}]
             return self
         else:
             self.__cnf = temp_cnf
@@ -387,19 +412,24 @@ class Formula(Specification):
         appended_elements = []
         """Append to list if not already there"""
         for o_i, other_elem in enumerate(new_other.dnf):
-            other_s, other_t = LogicTuple.and_([atom.formula() for atom in other_elem])
+            other_s, other_t = LogicTuple.and_(
+                [atom.formula() for atom in other_elem],
+            )
             other_atom = Atom(formula=(other_s, other_t), check=False)
             """check if another clause is already a refinement of the existing one"""
 
             for s_i, elem in enumerate(self.__dnf):
-                self_s, self_t = LogicTuple.and_([atom.formula() for atom in elem])
+                self_s, self_t = LogicTuple.and_(
+                    [atom.formula() for atom in elem],
+                )
                 self_atom = Atom(formula=(self_s, self_t), check=False)
 
                 if other_atom <= self_atom:
-                    """If an existing clause is already a refinement then skip it"""
+                    """If an existing clause is already a refinement then skip
+                    it."""
                     break
                 if self_atom <= other_atom:
-                    """If the other is a refinement, then substitute it"""
+                    """If the other is a refinement, then substitute it."""
                     self.__dnf[s_i] = other_elem
                     break
 

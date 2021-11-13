@@ -1,22 +1,16 @@
 import json
 import os
-from os import walk
 from pathlib import Path
-from typing import Set
 
 from core.cgg import Node
 from core.contract import Contract
-from core.specification.atom.pattern.robotics.coremovement.coverage import *
-from core.specification.atom.pattern.robotics.coremovement.surveillance import *
-from core.specification.atom.pattern.robotics.trigger.triggers import *
 from core.specification.formula import Formula
-from tools.persistence import Persistence
 from core.typeset import Typeset
 from core.world import World
+from tools.persistence import Persistence
 
 
 class Modelling:
-
     @staticmethod
     def create_environment(project_folder):
 
@@ -26,21 +20,34 @@ class Modelling:
         w = World(project_name=json_obj["project_id"])
         for action in json_obj["actions"]:
             if "mutex_group" in action:
-                w.new_boolean_action(action["name"], mutex=action["mutex_group"][0])
+                w.new_boolean_action(
+                    action["name"],
+                    mutex=action["mutex_group"][0],
+                )
             else:
                 w.new_boolean_action(action["name"])
         for sensor in json_obj["sensors"]:
             if "mutex_group" in sensor:
-                w.new_boolean_sensor(sensor["name"], mutex=sensor["mutex_group"][0])
+                w.new_boolean_sensor(
+                    sensor["name"],
+                    mutex=sensor["mutex_group"][0],
+                )
             else:
                 w.new_boolean_sensor(sensor["name"])
         for context in json_obj["context"]:
             if "mutex_group" in context:
-                w.new_boolean_context(context["name"], mutex=context["mutex_group"][0])
+                w.new_boolean_context(
+                    context["name"],
+                    mutex=context["mutex_group"][0],
+                )
             else:
                 w.new_boolean_context(context["name"])
         for location in json_obj["grid"]["locations"]:
-            w.new_boolean_location(location["id"], mutex="locations", adjacency=location["adjacency"])
+            w.new_boolean_location(
+                location["id"],
+                mutex="locations",
+                adjacency=location["adjacency"],
+            )
 
         # TODO FIX FOR PIER
         #  mutex_group has to be an array, that's why there is a [0] on each mutex
@@ -50,19 +57,22 @@ class Modelling:
 
     @staticmethod
     def add_goal_updated(project_folder):
-
-        """Load existing list of goals objects and world"""
+        """Load existing list of goals objects and world."""
         set_of_goals = Persistence.load_goals(project_folder)
         w = Persistence.load_world(project_folder)
 
         """Create a new goal"""
 
         """Assumptions (if inserted by the designer"""
-        a1 = Formula(Atom(formula=("G(F(r1 & r2))", Typeset({w["r1"], w["r1"]}))))
+        a1 = Formula(
+            Atom(formula=("G(F(r1 & r2))", Typeset({w["r1"], w["r1"]}))),
+        )
         a2 = Patrolling([w["r1"], w["r2"]])
 
         """Guarantees"""
-        g1 = Formula(Atom(formula=("G(F(r3 & r4))", Typeset({w["r3"], w["r4"]}))))
+        g1 = Formula(
+            Atom(formula=("G(F(r3 & r4))", Typeset({w["r3"], w["r4"]}))),
+        )
         g2 = StrictOrderedPatrolling([w["r1"], w["r2"]])
         # g3 = InstantaneousReaction() // need to import every pattern method ?
 
@@ -71,16 +81,18 @@ class Modelling:
 
         contract = Contract(
             assumptions=a1 & a2,
-            guarantees=g1 & g2
+            guarantees=g1 & g2,
         )
 
         """Instanciate the goal"""
 
-        new_goal = Node(name="Day patrolling",
-                        description="description",
-                        specification=contract,
-                        context=context,
-                        world=w)
+        new_goal = Node(
+            name="Day patrolling",
+            description="description",
+            specification=contract,
+            context=context,
+            world=w,
+        )
 
         set_of_goals.add(new_goal)
 
@@ -108,23 +120,43 @@ class Modelling:
                                 for location in args[0]["value"]:
                                     list_of_locations.append(w[location])
                                 contract_lists[i].append(
-                                    globals()[contract_element["pattern"]["name"]](list_of_locations))
+                                    globals()[contract_element["pattern"]["name"]](
+                                        list_of_locations,
+                                    ),
+                                )
                             else:
                                 contract_lists[i].append(
-                                    globals()[contract_element["pattern"]["name"]]([w[args[0]["value"]]]))
+                                    globals()[contract_element["pattern"]["name"]](
+                                        [w[args[0]["value"]]],
+                                    ),
+                                )
                         elif len(args) == 2:
                             contract_lists[i].append(
-                                globals()[contract_element["pattern"]["name"]](w[args[0]["value"]], w[args[1]["value"]]))
+                                globals()[contract_element["pattern"]["name"]](
+                                    w[args[0]["value"]],
+                                    w[args[1]["value"]],
+                                ),
+                            )
                         else:
-                            raise Exception("Unknown Pattern, the pattern included only have 1 or 2 arguments")
+                            raise Exception(
+                                "Unknown Pattern, the pattern included only have 1 or 2 arguments",
+                            )
                     elif "ltl_value" in contract_element:
                         if "world_values" in contract_element:
                             values = set()
                             for array in contract_element["world_values"]:
                                 for value in array:
                                     values.add(w[value])
-                            contract_lists[i].append(Formula(Atom(formula=(contract_element["ltl_value"],
-                                                                           Typeset(values)))))
+                            contract_lists[i].append(
+                                Formula(
+                                    Atom(
+                                        formula=(
+                                            contract_element["ltl_value"],
+                                            Typeset(values),
+                                        ),
+                                    ),
+                                ),
+                            )
                             # TODO FIX FOR PIER
                             #  In case the designer enters a LTL (not a Pattern), I have the error saying that
                             #  Atom must have an attribute 'name' but I don't see how to add it here
@@ -145,19 +177,23 @@ class Modelling:
                     if j == 0:
                         lists_with_and_operators[i] = contract_lists[i][0]
                     else:
-                        lists_with_and_operators[i] = lists_with_and_operators[i] & contract_lists[i][j]
+                        lists_with_and_operators[i] = (
+                            lists_with_and_operators[i] & contract_lists[i][j]
+                        )
 
             contract = Contract(
                 assumptions=lists_with_and_operators[0],
-                guarantees=lists_with_and_operators[1]
+                guarantees=lists_with_and_operators[1],
             )
 
-            new_goal = Node(name=json_obj["name"],
-                            description=json_obj["description"],
-                            id=goal_id,
-                            specification=contract,
-                            context=context,
-                            world=w)
+            new_goal = Node(
+                name=json_obj["name"],
+                description=json_obj["description"],
+                id=goal_id,
+                specification=contract,
+                context=context,
+                world=w,
+            )
 
             set_of_goals.add(new_goal)
 
