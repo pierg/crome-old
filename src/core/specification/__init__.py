@@ -18,48 +18,48 @@ class Specification(ABC):
     from ._utils import translate_to_buchi  # noqa
 
     @abstractmethod
-    def formula(self: "Specification") -> tuple[str, Typeset]:
+    def formula(self: Specification) -> tuple[str, Typeset]:
         pass
 
     @property
     @abstractmethod
-    def spec_kind(self: "Specification") -> "SpecKind":
+    def spec_kind(self: Specification) -> SpecKind:
         pass
 
     @abstractmethod
-    def __and__(self: "Specification", other: "Specification") -> "Specification":
+    def __and__(self: Specification, other: Specification) -> Specification:
         """self & other Returns a new Specification with the conjunction with
         other."""
 
     @abstractmethod
-    def __or__(self: "Specification", other: "Specification") -> "Specification":
+    def __or__(self: Specification, other: Specification) -> Specification:
         """self | other Returns a new Specification with the disjunction with
         other."""
 
     @abstractmethod
-    def __invert__(self: "Specification") -> "Specification":
+    def __invert__(self: Specification) -> Specification:
         """Returns a new Specification with the negation of self."""
 
     @abstractmethod
-    def __rshift__(self: "Specification", other: "Specification") -> "Specification":
+    def __rshift__(self: Specification, other: Specification) -> Specification:
         """>> Returns a new Specification that is the result of self -> other
         (implies)"""
 
     @abstractmethod
-    def __lshift__(self: "Specification", other: "Specification") -> "Specification":
+    def __lshift__(self: Specification, other: Specification) -> Specification:
         """<< Returns a new Specification that is the result of other -> self
         (implies)"""
 
     @abstractmethod
-    def __iand__(self: "Specification", other: "Specification") -> "Specification":
+    def __iand__(self: Specification, other: Specification) -> Specification:
         """self &= other Modifies self with the conjunction with other."""
 
     @abstractmethod
-    def __ior__(self: "Specification", other: "Specification") -> "Specification":
+    def __ior__(self: Specification, other: Specification) -> Specification:
         """self |= other Modifies self with the disjunction with other."""
 
     @abstractmethod
-    def contains_rule(self: "Specification", other: "AtomKind" = None) -> bool:
+    def contains_rule(self: Specification, other: AtomKind = None) -> bool:
         pass
 
     def __lt__(self, other: Specification):

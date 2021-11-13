@@ -1,5 +1,6 @@
 MODULE main
 VAR
 	mv: boolean;
+	ps: boolean;
 
-LTLSPEC !(((mv) -> (mv)))
+LTLSPEC !(((ps) -> (mv)))
