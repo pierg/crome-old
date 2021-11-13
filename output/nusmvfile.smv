@@ -3,4 +3,4 @@ VAR
 	mv: boolean;
 	ps: boolean;
 
-LTLSPEC !(((ps) -> (mv)))
+LTLSPEC !(mv & ps)
