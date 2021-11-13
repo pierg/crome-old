@@ -148,5 +148,7 @@ if __name__ == "__main__":
 
     print(w["ps"].string)
 
+    print(w["ps"].formula())
+
     new_prop = w["ps"] & w["mv"]
     print(new_prop)
