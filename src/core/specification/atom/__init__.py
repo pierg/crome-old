@@ -3,8 +3,10 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import TYPE_CHECKING
 
+from beartype import beartype
+
 from core.specification import Specification
-from core.specification.enums import *
+from core.specification.enums import AtomKind, FormulaOutput, FormulaType, SpecKind
 from core.specification.exceptions import AtomNotSatisfiableException
 from core.type import Boolean, TypeKinds
 from core.typeset import Typeset
@@ -14,6 +16,7 @@ if TYPE_CHECKING:
     from core.specification.formula import Formula
 
 
+@beartype
 class Atom(Specification):
     def __init__(
         self,
@@ -38,13 +41,13 @@ class Atom(Specification):
         else:
             self.__spec_kind = SpecKind.UNDEFINED
 
-        """Indicates if the formula is negated"""
+        # Indicates if the formula is negated
         self.__negation: bool = False
 
-        """Indicates if the formula is a dontcare (weather is true or false)"""
+        # Indicates if the formula is a dontcare (weather is true or false)"""
         self.__dontcare: bool = dontcare
 
-        """Used for linking guarantees to assumptions"""
+        # Used for linking guarantees to assumptions"""
         self.__saturation = None
 
         if formula is None:
@@ -75,8 +78,8 @@ class Atom(Specification):
                 expression, typeset = self.__base_formula
             else:
                 expression, typeset = LogicTuple.implies_(
-                    self.__saturation.formula(),
-                    self.__base_formula,
+                    prop_1=self.__saturation.formula(),
+                    prop_2=self.__base_formula,
                     brackets=True,
                 )
         if self.negated:
@@ -136,8 +139,6 @@ class Atom(Specification):
         new_formula = deepcopy(self)
         new_formula.__dontcare = True
         return new_formula
-
-    """"BOOLEAN OPERATIONS"""
 
     def __hash__(self):
         return hash(self.__base_formula[0])
@@ -286,7 +287,7 @@ class Atom(Specification):
 
         for key_type, set_adjacent_types in typeset.adjacent_types.items():
             if isinstance(key_type, Boolean):
-                """G(a -> X(b | c | d))"""
+                # G(a -> X(b | c | d))
                 rules_str.append(
                     Logic.g_(
                         Logic.implies_(
@@ -325,7 +326,6 @@ class Atom(Specification):
 
         sensors, outs = typeset.extract_inputs_outputs()
 
-        active_context_types = []
         for t in sensors:
             if isinstance(t, Boolean):
                 if t.kind == TypeKinds.SENSOR:

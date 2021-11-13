@@ -1,0 +1,300 @@
+States          	 S0, S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16, S17, S18, S19, S20, S21, S22, S23, S24, S25, S26, S27, S28
+Inital State    	 S0
+Input  Alphabet 	 hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1
+Output Alphabet 	 object_recognized
+
+true_ins                              s    s'    true_outs
+------------------------------------  ---  ----  -----------------
+hold r1                               S0   S1    object_recognized
+hold l2                               S0   S2    object_recognized
+hold l1                               S0   S3    object_recognized
+hold l5                               S0   S4    object_recognized
+hold k2                               S0   S5    object_recognized
+hold k1                               S0   S6    object_recognized
+hold b2                               S0   S7    object_recognized
+hold l6                               S0   S8    object_recognized
+hold l3                               S0   S9    object_recognized
+hold h1                               S0   S10   object_recognized
+hold h2                               S0   S11   object_recognized
+hold k3                               S0   S12   object_recognized
+hold l4                               S0   S13   object_recognized
+hold drop k3                          S0   S14   object_recognized
+r1                                    S0   S15   object_recognized
+l2                                    S0   S16   object_recognized
+l1                                    S0   S17   object_recognized
+l5                                    S0   S18   object_recognized
+k2                                    S0   S19   object_recognized
+k1                                    S0   S20   object_recognized
+b2                                    S0   S21   object_recognized
+l6                                    S0   S22   object_recognized
+l3                                    S0   S23   object_recognized
+h1                                    S0   S24   object_recognized
+h2                                    S0   S25   object_recognized
+k3                                    S0   S26   object_recognized
+l4                                    S0   S27   object_recognized
+                                      S0   S28   object_recognized
+l2 r1                                 S0   S28   object_recognized
+l1 r1                                 S0   S28   object_recognized
+l1 l2 -                               S0   S28   object_recognized
+l5 r1                                 S0   S28   object_recognized
+l5 l2 -                               S0   S28   object_recognized
+l5 l1 - -                             S0   S28   object_recognized
+k2 r1                                 S0   S28   object_recognized
+k2 l2 -                               S0   S28   object_recognized
+k2 l1 - -                             S0   S28   object_recognized
+k2 l5 - - -                           S0   S28   object_recognized
+k1 r1                                 S0   S28   object_recognized
+k1 l2 -                               S0   S28   object_recognized
+k1 l1 - -                             S0   S28   object_recognized
+k1 l5 - - -                           S0   S28   object_recognized
+k1 k2 - - - -                         S0   S28   object_recognized
+b2 r1                                 S0   S28   object_recognized
+b2 l2 -                               S0   S28   object_recognized
+b2 l1 - -                             S0   S28   object_recognized
+b2 l5 - - -                           S0   S28   object_recognized
+b2 k2 - - - -                         S0   S28   object_recognized
+b2 k1 - - - - -                       S0   S28   object_recognized
+l6 r1                                 S0   S28   object_recognized
+l6 l2 -                               S0   S28   object_recognized
+l6 l1 - -                             S0   S28   object_recognized
+l6 l5 - - -                           S0   S28   object_recognized
+l6 k2 - - - -                         S0   S28   object_recognized
+l6 k1 - - - - -                       S0   S28   object_recognized
+l6 b2 - - - - - -                     S0   S28   object_recognized
+l3 r1                                 S0   S28   object_recognized
+l3 l2 -                               S0   S28   object_recognized
+l3 l1 - -                             S0   S28   object_recognized
+l3 l5 - - -                           S0   S28   object_recognized
+l3 k2 - - - -                         S0   S28   object_recognized
+l3 k1 - - - - -                       S0   S28   object_recognized
+l3 b2 - - - - - -                     S0   S28   object_recognized
+l3 l6 - - - - - - -                   S0   S28   object_recognized
+h1 r1                                 S0   S28   object_recognized
+h1 l2 -                               S0   S28   object_recognized
+h1 l1 - -                             S0   S28   object_recognized
+h1 l5 - - -                           S0   S28   object_recognized
+h1 k2 - - - -                         S0   S28   object_recognized
+h1 k1 - - - - -                       S0   S28   object_recognized
+h1 b2 - - - - - -                     S0   S28   object_recognized
+h1 l6 - - - - - - -                   S0   S28   object_recognized
+h1 l3 - - - - - - - -                 S0   S28   object_recognized
+h2 r1                                 S0   S28   object_recognized
+h2 l2 -                               S0   S28   object_recognized
+h2 l1 - -                             S0   S28   object_recognized
+h2 l5 - - -                           S0   S28   object_recognized
+h2 k2 - - - -                         S0   S28   object_recognized
+h2 k1 - - - - -                       S0   S28   object_recognized
+h2 b2 - - - - - -                     S0   S28   object_recognized
+h2 l6 - - - - - - -                   S0   S28   object_recognized
+h2 l3 - - - - - - - -                 S0   S28   object_recognized
+h2 h1 - - - - - - - - -               S0   S28   object_recognized
+k3 r1                                 S0   S28   object_recognized
+k3 l2 -                               S0   S28   object_recognized
+k3 l1 - -                             S0   S28   object_recognized
+k3 l5 - - -                           S0   S28   object_recognized
+k3 k2 - - - -                         S0   S28   object_recognized
+k3 k1 - - - - -                       S0   S28   object_recognized
+k3 b2 - - - - - -                     S0   S28   object_recognized
+k3 l6 - - - - - - -                   S0   S28   object_recognized
+k3 l3 - - - - - - - -                 S0   S28   object_recognized
+k3 h1 - - - - - - - - -               S0   S28   object_recognized
+k3 h2 - - - - - - - - - -             S0   S28   object_recognized
+l4 r1                                 S0   S28   object_recognized
+l4 l2 -                               S0   S28   object_recognized
+l4 l1 - -                             S0   S28   object_recognized
+l4 l5 - - -                           S0   S28   object_recognized
+l4 k2 - - - -                         S0   S28   object_recognized
+l4 k1 - - - - -                       S0   S28   object_recognized
+l4 b2 - - - - - -                     S0   S28   object_recognized
+l4 l6 - - - - - - -                   S0   S28   object_recognized
+l4 l3 - - - - - - - -                 S0   S28   object_recognized
+l4 h1 - - - - - - - - -               S0   S28   object_recognized
+l4 h2 - - - - - - - - - -             S0   S28   object_recognized
+l4 k3 - - - - - - - - - - -           S0   S28   object_recognized
+drop - - - - - - - - - - - - -        S0   S28   object_recognized
+hold                                  S0   S28   object_recognized
+hold l2 r1                            S0   S28   object_recognized
+hold l1 r1                            S0   S28   object_recognized
+hold l1 l2 -                          S0   S28   object_recognized
+hold l5 r1                            S0   S28   object_recognized
+hold l5 l2 -                          S0   S28   object_recognized
+hold l5 l1 - -                        S0   S28   object_recognized
+hold k2 r1                            S0   S28   object_recognized
+hold k2 l2 -                          S0   S28   object_recognized
+hold k2 l1 - -                        S0   S28   object_recognized
+hold k2 l5 - - -                      S0   S28   object_recognized
+hold k1 r1                            S0   S28   object_recognized
+hold k1 l2 -                          S0   S28   object_recognized
+hold k1 l1 - -                        S0   S28   object_recognized
+hold k1 l5 - - -                      S0   S28   object_recognized
+hold k1 k2 - - - -                    S0   S28   object_recognized
+hold b2 r1                            S0   S28   object_recognized
+hold b2 l2 -                          S0   S28   object_recognized
+hold b2 l1 - -                        S0   S28   object_recognized
+hold b2 l5 - - -                      S0   S28   object_recognized
+hold b2 k2 - - - -                    S0   S28   object_recognized
+hold b2 k1 - - - - -                  S0   S28   object_recognized
+hold l6 r1                            S0   S28   object_recognized
+hold l6 l2 -                          S0   S28   object_recognized
+hold l6 l1 - -                        S0   S28   object_recognized
+hold l6 l5 - - -                      S0   S28   object_recognized
+hold l6 k2 - - - -                    S0   S28   object_recognized
+hold l6 k1 - - - - -                  S0   S28   object_recognized
+hold l6 b2 - - - - - -                S0   S28   object_recognized
+hold l3 r1                            S0   S28   object_recognized
+hold l3 l2 -                          S0   S28   object_recognized
+hold l3 l1 - -                        S0   S28   object_recognized
+hold l3 l5 - - -                      S0   S28   object_recognized
+hold l3 k2 - - - -                    S0   S28   object_recognized
+hold l3 k1 - - - - -                  S0   S28   object_recognized
+hold l3 b2 - - - - - -                S0   S28   object_recognized
+hold l3 l6 - - - - - - -              S0   S28   object_recognized
+hold h1 r1                            S0   S28   object_recognized
+hold h1 l2 -                          S0   S28   object_recognized
+hold h1 l1 - -                        S0   S28   object_recognized
+hold h1 l5 - - -                      S0   S28   object_recognized
+hold h1 k2 - - - -                    S0   S28   object_recognized
+hold h1 k1 - - - - -                  S0   S28   object_recognized
+hold h1 b2 - - - - - -                S0   S28   object_recognized
+hold h1 l6 - - - - - - -              S0   S28   object_recognized
+hold h1 l3 - - - - - - - -            S0   S28   object_recognized
+hold h2 r1                            S0   S28   object_recognized
+hold h2 l2 -                          S0   S28   object_recognized
+hold h2 l1 - -                        S0   S28   object_recognized
+hold h2 l5 - - -                      S0   S28   object_recognized
+hold h2 k2 - - - -                    S0   S28   object_recognized
+hold h2 k1 - - - - -                  S0   S28   object_recognized
+hold h2 b2 - - - - - -                S0   S28   object_recognized
+hold h2 l6 - - - - - - -              S0   S28   object_recognized
+hold h2 l3 - - - - - - - -            S0   S28   object_recognized
+hold h2 h1 - - - - - - - - -          S0   S28   object_recognized
+hold k3 r1                            S0   S28   object_recognized
+hold k3 l2 -                          S0   S28   object_recognized
+hold k3 l1 - -                        S0   S28   object_recognized
+hold k3 l5 - - -                      S0   S28   object_recognized
+hold k3 k2 - - - -                    S0   S28   object_recognized
+hold k3 k1 - - - - -                  S0   S28   object_recognized
+hold k3 b2 - - - - - -                S0   S28   object_recognized
+hold k3 l6 - - - - - - -              S0   S28   object_recognized
+hold k3 l3 - - - - - - - -            S0   S28   object_recognized
+hold k3 h1 - - - - - - - - -          S0   S28   object_recognized
+hold k3 h2 - - - - - - - - - -        S0   S28   object_recognized
+hold l4 r1                            S0   S28   object_recognized
+hold l4 l2 -                          S0   S28   object_recognized
+hold l4 l1 - -                        S0   S28   object_recognized
+hold l4 l5 - - -                      S0   S28   object_recognized
+hold l4 k2 - - - -                    S0   S28   object_recognized
+hold l4 k1 - - - - -                  S0   S28   object_recognized
+hold l4 b2 - - - - - -                S0   S28   object_recognized
+hold l4 l6 - - - - - - -              S0   S28   object_recognized
+hold l4 l3 - - - - - - - -            S0   S28   object_recognized
+hold l4 h1 - - - - - - - - -          S0   S28   object_recognized
+hold l4 h2 - - - - - - - - - -        S0   S28   object_recognized
+hold l4 k3 - - - - - - - - - - -      S0   S28   object_recognized
+hold drop - - - - - - - - - - -       S0   S28   object_recognized
+hold drop k3 r1                       S0   S28   object_recognized
+hold drop k3 l2 -                     S0   S28   object_recognized
+hold drop k3 l1 - -                   S0   S28   object_recognized
+hold drop k3 l5 - - -                 S0   S28   object_recognized
+hold drop k3 k2 - - - -               S0   S28   object_recognized
+hold drop k3 k1 - - - - -             S0   S28   object_recognized
+hold drop k3 b2 - - - - - -           S0   S28   object_recognized
+hold drop k3 l6 - - - - - - -         S0   S28   object_recognized
+hold drop k3 l3 - - - - - - - -       S0   S28   object_recognized
+hold drop k3 h1 - - - - - - - - -     S0   S28   object_recognized
+hold drop k3 h2 - - - - - - - - - -   S0   S28   object_recognized
+hold drop l4 - - - - - - - - - - - -  S0   S28   object_recognized
+hold r1                               S1   S1
+hold l3                               S1   S9
+hold l2                               S2   S2
+hold l1                               S2   S3
+hold l5                               S2   S4
+hold b2                               S2   S7
+hold l3                               S2   S9
+hold h1                               S2   S10
+hold l2                               S3   S2
+hold l1                               S3   S3
+hold l4                               S3   S13
+hold l2                               S4   S2
+hold l5                               S4   S4
+hold l6                               S4   S8
+hold l4                               S4   S13
+hold k2                               S5   S5
+hold k1                               S5   S6
+hold k3                               S5   S12
+hold drop k3                          S5   S14
+hold k2                               S6   S5
+hold k1                               S6   S6
+hold l3                               S6   S9
+hold k3                               S6   S12
+hold drop k3                          S6   S14
+hold l2                               S7   S2
+hold b2                               S7   S7
+hold l5                               S8   S4
+hold l6                               S8   S8
+hold l3                               S8   S9
+hold r1                               S9   S1
+hold l2                               S9   S2
+hold k1                               S9   S6
+hold l6                               S9   S8
+hold l3                               S9   S9
+hold h2                               S9   S11
+hold l2                               S10  S2
+hold h1                               S10  S10
+hold h2                               S10  S11
+hold l3                               S11  S9
+hold h1                               S11  S10
+hold h2                               S11  S11
+hold k2                               S12  S5
+hold k1                               S12  S6
+hold k3                               S12  S12
+hold drop k3                          S12  S14
+hold l1                               S13  S3
+hold l5                               S13  S4
+hold l4                               S13  S13
+k2                                    S14  S19   object_recognized
+k1                                    S14  S20   object_recognized
+k3                                    S14  S26   object_recognized
+- - - -                               S14  S28   object_recognized
+k2 r1                                 S14  S28   object_recognized
+k2 l2 -                               S14  S28   object_recognized
+k2 l1 - -                             S14  S28   object_recognized
+k2 l5 - - -                           S14  S28   object_recognized
+k1 r1                                 S14  S28   object_recognized
+k1 l2 -                               S14  S28   object_recognized
+k1 l1 - -                             S14  S28   object_recognized
+k1 l5 - - -                           S14  S28   object_recognized
+k1 k2 - - - -                         S14  S28   object_recognized
+b2 - - - - - -                        S14  S28   object_recognized
+l6 - - - - - - -                      S14  S28   object_recognized
+l3 - - - - - - - -                    S14  S28   object_recognized
+h1 - - - - - - - - -                  S14  S28   object_recognized
+h2 - - - - - - - - - -                S14  S28   object_recognized
+k3 r1                                 S14  S28   object_recognized
+k3 l2 -                               S14  S28   object_recognized
+k3 l1 - -                             S14  S28   object_recognized
+k3 l5 - - -                           S14  S28   object_recognized
+k3 k2 - - - -                         S14  S28   object_recognized
+k3 k1 - - - - -                       S14  S28   object_recognized
+k3 b2 - - - - - -                     S14  S28   object_recognized
+k3 l6 - - - - - - -                   S14  S28   object_recognized
+k3 l3 - - - - - - - -                 S14  S28   object_recognized
+k3 h1 - - - - - - - - -               S14  S28   object_recognized
+k3 h2 - - - - - - - - - -             S14  S28   object_recognized
+l4 - - - - - - - - - - - -            S14  S28   object_recognized
+drop - - - - - - - - - - - - -        S14  S28   object_recognized
+hold - - - - - - - - - - - - - -      S14  S28   object_recognized
+- - - - - - - - - - - - - - -         S15  S28
+- - - - - - - - - - - - - - -         S16  S28
+- - - - - - - - - - - - - - -         S17  S28
+- - - - - - - - - - - - - - -         S18  S28
+- - - - - - - - - - - - - - -         S19  S28
+- - - - - - - - - - - - - - -         S20  S28
+- - - - - - - - - - - - - - -         S21  S28
+- - - - - - - - - - - - - - -         S22  S28
+- - - - - - - - - - - - - - -         S23  S28
+- - - - - - - - - - - - - - -         S24  S28
+- - - - - - - - - - - - - - -         S25  S28
+- - - - - - - - - - - - - - -         S26  S28
+- - - - - - - - - - - - - - -         S27  S28
+- - - - - - - - - - - - - - -         S28  S28

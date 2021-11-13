@@ -1,0 +1,19 @@
+States          	 S0, S1, S2, S3, S4, S5, S6, S7, S8, S9, S10
+Inital State    	 S0
+Input  Alphabet 	 object_recognized
+Output Alphabet 	 pickup, hold, drop, l4, k3, h2, h1, l3, l6, b2, k1, k2, l5, l1, l2, r1
+
+true_ins           s    s'    true_outs
+-----------------  ---  ----  --------------
+-                  S0   S1    pickup hold l4
+-                  S1   S2    hold l5
+-                  S2   S3    hold l6
+-                  S3   S4    hold l3
+-                  S4   S5    hold l6
+-                  S5   S6    hold l5
+-                  S6   S7    hold l4
+-                  S7   S8    hold l1
+                   S8   S8    hold l1
+object_recognized  S8   S9    hold l2
+-                  S9   S10   hold l5
+-                  S10  S1    pickup hold l4
