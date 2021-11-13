@@ -3,8 +3,6 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import TYPE_CHECKING
 
-from beartype import beartype
-
 from core.specification import Specification
 from core.specification.enums import AtomKind, FormulaOutput, FormulaType, SpecKind
 from core.specification.exceptions import AtomNotSatisfiableException
@@ -16,7 +14,6 @@ if TYPE_CHECKING:
     from core.specification.formula import Formula
 
 
-@beartype
 class Atom(Specification):
     def __init__(
         self,
@@ -244,7 +241,7 @@ class Atom(Specification):
     def extract_mutex_rules(
         typeset: Typeset,
         output=None,
-    ) -> Atom | tuple[list[str], Typeset] | None:
+    ) -> Atom | tuple[list[str], Typeset]:
         """Extract Mutex rules from the Formula."""
 
         rules_str = []
@@ -265,7 +262,7 @@ class Atom(Specification):
                 rules_typeset |= Typeset(mutex_group)
 
         if len(rules_str) == 0:
-            return None
+            return Atom("TRUE")
 
         if output is not None and output == FormulaOutput.ListCNF:
             return rules_str, rules_typeset
