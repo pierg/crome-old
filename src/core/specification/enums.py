@@ -42,4 +42,3 @@ class FormulaKind(Enum):
     MUTEX_RULES = auto()
     ADJACENCY_RULES = auto()
     UNDEFINED = auto()
-
