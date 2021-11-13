@@ -11,14 +11,14 @@ repos:
       - id: pycln
         args: [--config=pyproject.toml]
 
-  - repo: https://github.com/nbQA-dev/nbQA
-    rev: 1.0.0
-    hooks:
-      - id: nbqa
-        args: [pycln]
-        name: nbqa-pycln
-        alias: nbqa-pycln
-        additional_dependencies: [pycln]
+  #  - repo: https://github.com/nbQA-dev/nbQA
+  #    rev: 1.0.0
+  #    hooks:
+  #      - id: nbqa
+  #        args: [pycln]
+  #        name: nbqa-pycln
+  #        alias: nbqa-pycln
+  #        additional_dependencies: [pycln]
 
   - repo: https://github.com/myint/autoflake
     rev: v1.4

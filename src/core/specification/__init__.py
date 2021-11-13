@@ -1,18 +1,13 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
-from typing import Set
+from abc import ABC
 
-from core.specification.enums import *
-from core.specification.exceptions import NotSatisfiableException
-from core.typeset import Typeset
 from tools.logic import LogicTuple
 from tools.nuxmv import Nuxmv
-from tools.spot import Spot
 
 
 class Specification(ABC):
-    from ._abstract import (
+    from ._abstract import (  # noqa
         __and__,
         __iand__,
         __invert__,
@@ -24,10 +19,10 @@ class Specification(ABC):
         formula,
         spec_kind,
     )
-    from ._checks import is_false, is_satisfiable, is_true, is_valid
-    from ._properties import string, typeset
-    from ._str import __hash__, __str__
-    from ._utils import translate_to_buchi
+    from ._checks import is_false, is_satisfiable, is_true, is_valid  # noqa
+    from ._properties import string, typeset  # noqa
+    from ._str import __hash__, __str__  # noqa
+    from ._utils import translate_to_buchi  # noqa
 
     def __lt__(self, other: Specification):
         """self < other.
