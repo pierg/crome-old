@@ -1,9 +1,21 @@
 repos:
-  - repo: https://github.com/hadialqattan/pycln
-    rev: v1.1.0 # Possible releases: https://github.com/hadialqattan/pycln/releases
+  #  - repo: https://github.com/hadialqattan/pycln
+  #    rev: v1.1.0 # Possible releases: https://github.com/hadialqattan/pycln/releases
+  #    hooks:
+  #      - id: pycln
+  #        args: [--config=pyproject.toml]
+
+  - repo: https://github.com/myint/autoflake
+    rev: v1.4
     hooks:
-      - id: pycln
-        args: [--config=pyproject.toml]
+      - id: autoflake
+        args:
+          - --expand-star-imports
+          - --ignore-init-module-imports
+          - --in-place
+          - --remove-all-unused-imports
+          - --remove-duplicate-keys
+          - --remove-unused-variables
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v3.2.0

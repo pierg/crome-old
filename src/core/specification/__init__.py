@@ -1,12 +1,34 @@
 from __future__ import annotations
 
-from abc import ABC
+from abc import ABC, abstractmethod
+from typing import Set
 
+from core.specification.enums import *
+from core.specification.exceptions import NotSatisfiableException
+from core.typeset import Typeset
 from tools.logic import LogicTuple
 from tools.nuxmv import Nuxmv
+from tools.spot import Spot
 
 
 class Specification(ABC):
+    from ._abstract import (
+        __and__,
+        __iand__,
+        __invert__,
+        __ior__,
+        __lshift__,
+        __or__,
+        __rshift__,
+        contains_rule,
+        formula,
+        spec_kind,
+    )
+    from ._checks import is_false, is_satisfiable, is_true, is_valid
+    from ._properties import string, typeset
+    from ._str import __hash__, __str__
+    from ._utils import translate_to_buchi
+
     def __lt__(self, other: Specification):
         """self < other.
 

@@ -1,4 +1,4 @@
-from core.specification import NotSatisfiableException
+from core.specification.exceptions import NotSatisfiableException
 from core.type.subtypes.action import BooleanAction
 from core.type.subtypes.context import ContextBooleanTime
 from core.type.subtypes.location import ReachLocation
@@ -139,7 +139,7 @@ if __name__ == "__main__":
     w = CustomWorld()
     try:
         print(w["r1"] & w["r2"])
-    except NotSatisfiableException as e:
+    except NotSatisfiableException:
         print("r1 and r2 are two mutually exclusive locations!")
 
     rules = w.rules
