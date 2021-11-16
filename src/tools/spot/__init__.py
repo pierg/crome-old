@@ -43,12 +43,45 @@ class Spot:
 if __name__ == "__main__":
 
     # f = spot.formula("((G(F(r1 & F(r2))) & (!(r2) U r1) & (!(r2) U r1) & G(((r2) -> (X((!(r2) U r1))))) & G(((r1) -> (X((!(r1) U r2)))))) | !(GF(sensor))) & (F(a) | GF(b))")
-    f_string = "p -> ((a & b | c ) & (a | d) | (c & a) & (c | d) | a & b) & (c | d) & (c | d) & (c | d) & (c | d) & (c | d)"
+    f_string = "p -> (G(a & b | F c ) & !(a | x U d) | (c & a) & !(F c | d) | a & b) & (c | d) & (c | d) & (c | d) & (c | d) & (c | d) | a U b & F g | G x"
+
     f = spot.formula(f_string)
+
+    print("\n\n\\_____________*******______________")
+    f1 = f
+    print(f1)
+
+    # kindstar() prints the name of the operator
+    # size() return the number of operands of the operators
+    print(f"{f1.kindstr()}, {f1.size()} children")
+    # [] accesses each operand
+    print("left: {f[0]}, right: {f[1]}".format(f=f1))
+    # you can also iterate over all operands using a for loop
+    for child in f1:
+        print("  *", child)
+
+    print("\n\n\\_____________*******______________")
     f2 = spot.negative_normal_form(f)
-    f3 = spot.simplify(f)
-    print(f_string)
-    print(f)
     print(f2)
 
+    # kindstar() prints the name of the operator
+    # size() return the number of operands of the operators
+    print(f"{f2.kindstr()}, {f2.size()} children")
+    # [] accesses each operand
+    print("left: {f[0]}, right: {f[1]}".format(f=f2))
+    # you can also iterate over all operands using a for loop
+    for child in f2:
+        print("  *", child)
+
+    print("\n\n\\_____________*******______________")
+    f3 = spot.simplify(f)
     print(f3)
+
+    # kindstar() prints the name of the operator
+    # size() return the number of operands of the operators
+    print(f"{f3.kindstr()}, {f3.size()} children")
+    # [] accesses each operand
+    print("left: {f[0]}, right: {f[1]}".format(f=f3))
+    # you can also iterate over all operands using a for loop
+    for child in f3:
+        print("  *", child)
