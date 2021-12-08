@@ -32,7 +32,7 @@ class Register(BooleanAction):
 
 
 class Picture(BooleanAction):
-    def __init__(self, name: str = "pi"):
+    def __init__(self, name: str = "pc"):
         super().__init__(name)
 
 

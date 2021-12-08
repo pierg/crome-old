@@ -9,7 +9,14 @@ RUN npm run build
 
 WORKDIR /home/crome
 
+
 RUN pip3 install -r requirements.txt
+
+# Include Spot Python library manually
+RUN cp -R /home/ltltools/dependencies/ubuntu/spot/PACKAGE /home/crome/venv/lib/*/site-packages
+
+
+
 ENV PYTHONPATH "${PYTHONPATH}:/home/crome/src:/home/crome/examples:/home/crome/casestudies"
 
 EXPOSE 5000

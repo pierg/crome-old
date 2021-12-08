@@ -1,6 +1,6 @@
 MODULE main
 VAR
-	pi: boolean;
+	pc: boolean;
 	gr: boolean;
 
-LTLSPEC !(pi & gr)
+LTLSPEC !(((gr) -> (pc)))

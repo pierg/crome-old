@@ -33,13 +33,13 @@ if __name__ == "__main__":
 
     print()
 
-    # try:
-    #     x = w["r1"] & w["r2"]
-    # except NotSatisfiableException:
-    #     print("r1 and r2 are two mutually exclusive locations!")
+    try:
+        x = w["r1"] & w["r2"]
+    except NotSatisfiableException:
+        print("r1 and r2 are two mutually exclusive locations!")
 
     try:
-        x = w["pi"] & w["gr"]
+        x = w["pc"] & w["gr"]
         print(x)
     except NotSatisfiableException:
         print("something went wrong")
