@@ -12,13 +12,22 @@ if TYPE_CHECKING:
 
 
 class Specification(ABC):
-    from ._checks import is_false, is_satisfiable, is_true, is_valid  # noqa
+    from ._copy import __deepcopy__  # noqa
     from ._properties import string, typeset  # noqa
     from ._str import __hash__, __str__  # noqa
     from ._utils import translate_to_buchi  # noqa
 
     @abstractmethod
     def formula(self: Specification) -> tuple[str, Typeset]:
+        pass
+
+    @property
+    @abstractmethod
+    def spot(self: Specification):
+        pass
+
+    @abstractmethod
+    def spotfy(self: Specification):
         pass
 
     @property
@@ -61,6 +70,28 @@ class Specification(ABC):
     @abstractmethod
     def contains_rule(self: Specification, other: AtomKind = None) -> bool:
         pass
+
+    def is_satisfiable(self: Specification) -> bool:
+
+        sat_check_formula = self.formula()
+
+        """If does not contain Mutex Rules already, extract them and check the satisfiability"""
+        from core.specification.atom import Atom
+
+        mutex_rules = Atom.extract_mutex_rules(self.typeset)
+        if mutex_rules is not None:
+            sat_check_formula = LogicTuple.and_([self.formula(), mutex_rules.formula()])
+
+        return Nuxmv.check_satisfiability(sat_check_formula)
+
+    def is_valid(self: Specification) -> bool:
+        return Nuxmv.check_validity(self.formula())
+
+    def is_true(self: Specification) -> bool:
+        return self.string == "TRUE"
+
+    def is_false(self: Specification) -> bool:
+        return self.string == "FALSE"
 
     def __lt__(self, other: Specification):
         """self < other.

@@ -1,6 +1,6 @@
 MODULE main
 VAR
-	r1: boolean;
-	r2: boolean;
+	pi: boolean;
+	gr: boolean;
 
-LTLSPEC !(G(F(r1 & F(r2))) & (!(r2) U r1) & G(((r2) -> (X((!(r2) U r1))))) & G(((r1) -> (X((!(r1) U r2))))))
+LTLSPEC !(pi & gr)

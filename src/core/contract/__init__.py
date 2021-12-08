@@ -3,7 +3,6 @@ from __future__ import annotations
 from copy import deepcopy
 
 from core.contract.exceptions import (
-    FormulaOutput,
     IncompatibleContracts,
     InconsistentContracts,
     Set,
@@ -11,6 +10,7 @@ from core.contract.exceptions import (
 )
 from core.controller.synthesisinfo import SynthesisInfo
 from core.specification.atom import Atom
+from core.specification.enums import FormulaOutput
 from core.specification.exceptions import NotSatisfiableException
 from core.specification.formula import Formula, Specification
 from core.typeset import Typeset

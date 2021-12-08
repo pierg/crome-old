@@ -1,0 +1,69 @@
+**ASSUMPTIONS**
+
+G(F(day))
+G(F(night))
+
+G((day & !night) | (night & !day))
+
+
+
+**GUARANTEES**
+
+# Strict Ordered Patrolling Location r3, r4 During Context Night <<<<< TODO
+# G(F(r3 & F(r4))) & (!(r4) U r3) & G(((r4) -> (X((!(r4) U r3))))) & G(((r3) -> (X((!(r3) U r4)))))
+
+# G(F(r3 & F(r4)))
+G(F((night & active & r3) & F(night & active & r4)))
+
+# (!(r4) U r3)
+(!(night & active) | !r4) U ((night & active) & r3)
+
+# G(((r4) -> (X((!(r4) U r3)))))
+G(!(night & active) | (r4 -> X(!(night & active) U ((!(night & active) | !r4) U ((night & active) & r3)))))
+
+# G(((r3) -> (X((!(r3) U r4)))))
+G(!(night & active) | (r3 -> X(!(night & active) U ((!(night & active) | !r3) U ((night & active) & r4)))))
+
+
+
+# Strict Ordered Patrolling Location r1, r2 During Context Day <<<<< TODO
+# G(F(r1 & F(r2))) & (!(r2) U r1) & G(((r2) -> (X((!(r2) U r1))))) & G(((r1) -> (X((!(r1) U r2)))))
+
+# G(F(r1 & F(r2)))
+G(F((day & active & r1) & F(day & active & r2)))
+
+# (!(r2) U r1)
+(!(day & active) | !r2) U ((day & active) & r1)
+
+# G(((r2) -> (X((!(r2) U r1)))))
+G(!(day & active) | (r2 -> X(!(day & active) U ((!(day & active) | !r2) U ((day & active) & r1)))))
+
+# G(((r1) -> (X((!(r1) U r2)))))
+G(!(day & active) | (r1 -> X(!(day & active) U ((!(day & active) | !r1) U ((day & active) & r2)))))
+
+
+G(r5 -> X !r5)
+
+# Active is false only when transitioning
+G(r5 <-> ! active)
+
+
+
+# Mutex and adjacency Rules
+G((r4 & ! (r3) & ! (r1) & ! (r2) & ! (r5)) | (r1 & ! (r4) & ! (r5) & ! (r2) & ! (r3)) | (r5 & ! (r4) & ! (r1) & ! (r2) & ! (r3)) | (r2 & ! (r4) & ! (r5) & ! (r1) & ! (r3)) | (r3 & ! (r4) & ! (r5) & ! (r2) & ! (r1)))
+G(((r4) -> (X((r4 | r3 | r5)))))
+G(((r5) -> (X((r4 | r5 | r2 | r1 | r3)))))
+G(((r2) -> (X((r1 | r2 | r5)))))
+G(((r1) -> (X((r1 | r2 | r5)))))
+G(((r3) -> (X((r4 | r3 | r5)))))
+
+
+**INPUTS**
+
+day, night
+
+**OUTPUTS**
+
+r4, r5, r2, r1, r3, active
+
+**END**

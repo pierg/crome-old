@@ -9,6 +9,7 @@ from core.specification.exceptions import AtomNotSatisfiableException
 from core.type import Boolean, TypeKinds
 from core.typeset import Typeset
 from tools.logic import Logic, LogicTuple
+from tools.spot import Spot
 
 if TYPE_CHECKING:
     from core.specification.formula import Formula
@@ -67,6 +68,15 @@ class Atom(Specification):
                     raise AtomNotSatisfiableException(
                         formula=self.__base_formula,
                     )
+
+        self.__spot = Spot.spotfy_formula(self.string)
+
+    @property
+    def spot(self):
+        return self.__spot
+
+    def spotfy(self):
+        self.__spot = Spot.spotfy_formula(self.string)
 
     def formula(self, type: FormulaType = FormulaType.SATURATED) -> (str, Typeset):
         expression, typeset = self.__base_formula

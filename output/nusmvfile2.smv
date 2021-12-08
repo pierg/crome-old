@@ -1,0 +1,6 @@
+MODULE main
+VAR
+	r2: boolean;
+	r1: boolean;
+
+LTLSPEC !(r2 & r1 & G((r1 & !(r2)) | (r2 & !(r1))))

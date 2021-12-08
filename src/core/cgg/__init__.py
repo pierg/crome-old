@@ -3,30 +3,32 @@ from __future__ import annotations
 import itertools
 import json
 import os
-from enum import Enum, auto
 import random
+from enum import Enum, auto
 from pathlib import Path
-from typing import Dict, Set, Union, Tuple, List
+from typing import TYPE_CHECKING, Dict, List, Set, Tuple, Union
+
 from tabulate import tabulate
 
+from core.cgg.exceptions import CGGFailOperations, CGGOperationFail, TransSynthesisFail
 from core.contract import Contract
 from core.controller import Controller
 from core.controller.exceptions import ControllerException
 from core.goal import Goal
-from core.cgg.exceptions import CGGOperationFail, CGGFailOperations, TransSynthesisFail
 from core.goal.exceptions import GoalException
-from core.specification import NotSatisfiableException, AtomKind
+from core.specification import Specification
 from core.specification.atom import Atom
-from tools.logic import Logic
-from tools.storage import Store
-from tools.strings import StringMng
+from core.specification.exceptions import NotSatisfiableException
 from core.type import Types
 from core.type.subtypes.location import ReachLocation
 from core.typeset import Typeset
-from typing import TYPE_CHECKING
+from tools.logic import Logic
+from tools.storage import Store
+from tools.strings import StringMng
 
 if TYPE_CHECKING:
     from core.world import World
+
 from tools.strix import Strix
 
 
@@ -46,21 +48,36 @@ class GraphTraversal(Enum):
 
 
 class Node(Goal):
-
-    def __init__(self,
-                 name: str = None,
-                 description: str = None,
-                 id: str = None,
-                 specification: Union[Specification, Contract] = None,
-                 context: Specification = None,
-                 world: World = None,
-                 goal: Goal = None):
-        """Graph properties"""
+    def __init__(
+        self,
+        name: str = None,
+        description: str = None,
+        id: str = None,
+        specification: Union[Specification, Contract] = None,
+        context: Specification = None,
+        world: World = None,
+        goal: Goal = None,
+    ):
+        """Graph properties."""
 
         if goal is None:
             super().__init__(name, description, id, specification, context, world)
-        elif goal is not None and name is None and description is None and specification is None and context is None and world is None:
-            super().__init__(goal.name, goal.description, goal.id, goal.specification, goal.context, goal.world)
+        elif (
+            goal is not None
+            and name is None
+            and description is None
+            and specification is None
+            and context is None
+            and world is None
+        ):
+            super().__init__(
+                goal.name,
+                goal.description,
+                goal.id,
+                goal.specification,
+                goal.context,
+                goal.world,
+            )
         else:
             raise AttributeError
 
@@ -75,11 +92,14 @@ class Node(Goal):
         self.__t_trans: int = 0
         self.__t_controllers: Dict[Tuple[ReachLocation, ReachLocation], Controller] = {}
 
-    from ._printing import __str__
-
-    def set_session_name(self, value: str, traversal: GraphTraversal = GraphTraversal.DFS, explored: Set[Node] = None,
-                         root=None):
-        """Set session name to all nodes of the CGG"""
+    def set_session_name(
+        self,
+        value: str,
+        traversal: GraphTraversal = GraphTraversal.DFS,
+        explored: Set[Node] = None,
+        root=None,
+    ):
+        """Set session name to all nodes of the CGG."""
 
         if root is None:
             root = self
@@ -88,7 +108,7 @@ class Node(Goal):
             explored = set()
 
         if traversal == GraphTraversal.DFS:
-            """Dept-First Search"""
+            """Dept-First Search."""
             """Label current node as explored"""
             explored.add(self)
             for node in self.children_nodes():
@@ -106,7 +126,7 @@ class Node(Goal):
 
     @property
     def t_controllers(self) -> Dict[Tuple[ReachLocation, ReachLocation], Controller]:
-        """Returns all transition controllers"""
+        """Returns all transition controllers."""
         return self.__t_controllers
 
     @property
@@ -129,7 +149,7 @@ class Node(Goal):
         if not os.path.exists(Store.output_folder):
             os.makedirs(Store.output_folder)
 
-        return open(output_file, 'wb')
+        return open(output_file, "wb")
 
     def add_parents(self, link: Link, nodes: Set[Node]):
         if link in self.__parents.keys():
@@ -140,10 +160,12 @@ class Node(Goal):
     def add_children(self, link: Link, nodes: Set[Node]):
         if link == Link.COMPOSITION or link == Link.CONJUNCTION:
             if link in self.__children.keys():
-                raise Exception("A composition/conjunction children link already exists!")
+                raise Exception(
+                    "A composition/conjunction children link already exists!"
+                )
             self.__children[link] = nodes
         else:
-            """Link.REFINEMENT"""
+            """Link.REFINEMENT."""
             if link in self.__children.keys():
                 self.__children[link] |= nodes
             else:
@@ -165,9 +187,13 @@ class Node(Goal):
                 ret |= values
         return ret
 
-    def translate_all_to_buchi(self, traversal: GraphTraversal = GraphTraversal.DFS, explored: Set[Node] = None,
-                               root=None):
-        """Realize all nodes of the CGG"""
+    def translate_all_to_buchi(
+        self,
+        traversal: GraphTraversal = GraphTraversal.DFS,
+        explored: Set[Node] = None,
+        root=None,
+    ):
+        """Realize all nodes of the CGG."""
 
         if root is None:
             root = self
@@ -176,7 +202,7 @@ class Node(Goal):
             explored = set()
 
         if traversal == GraphTraversal.DFS:
-            """Dept-First Search"""
+            """Dept-First Search."""
             """Label current node as explored"""
             explored.add(self)
             for node in self.children_nodes():
@@ -215,10 +241,12 @@ class Node(Goal):
         while current_t < n_steps:
             context_switch = False
             if active_context_count >= t_min_context and len(scenarios) > 1:
-                """Calculating context-switch probability"""
+                """Calculating context-switch probability."""
                 if cs_prob < 0.9:
                     cs_prob = cs_prob + 0.05 * (active_context_count - t_min_context)
-                context_switch = random.choices([True, False], [cs_prob, 1 - cs_prob])[0]
+                context_switch = random.choices([True, False], [cs_prob, 1 - cs_prob])[
+                    0
+                ]
             if context_switch:
                 new_scenario = random.sample(scenarios, 1)[0]
                 while new_scenario is active_scenario:
@@ -241,12 +269,19 @@ class Node(Goal):
                 for destination in adjacent_locations:
                     if n_states is None:
                         if (start, destination) in self.__t_controllers:
-                            n_states = len(self.__t_controllers[(start, destination)].states)
+                            n_states = len(
+                                self.__t_controllers[(start, destination)].states
+                            )
                             optimal_destination = destination
                     else:
                         if (start, destination) in self.__t_controllers:
-                            if len(self.__t_controllers[(start, destination)].states) < n_states:
-                                n_states = len(self.__t_controllers[(start, destination)].states)
+                            if (
+                                len(self.__t_controllers[(start, destination)].states)
+                                < n_states
+                            ):
+                                n_states = len(
+                                    self.__t_controllers[(start, destination)].states
+                                )
                                 optimal_destination = destination
                 t_ctrl = self.__t_controllers[(start, optimal_destination)]
                 ctrl_str = t_ctrl.name
@@ -255,9 +290,13 @@ class Node(Goal):
                 inputs, outputs = t_ctrl.react()
                 active_location = None
                 for x in outputs:
+                    from core.specification import AtomKind
+
                     if x.kind == AtomKind.LOCATION and not x.negated:
                         active_location = x
-                while list(active_location.typeset.values())[0] is not optimal_destination:
+                while (
+                    list(active_location.typeset.values())[0] is not optimal_destination
+                ):
                     inputs, outputs = t_ctrl.react()
                     active_context_count += 1
                     active_location = None
@@ -269,7 +308,7 @@ class Node(Goal):
                     for x in outputs:
                         if not x.negated:
                             outputs_str.append(str(x))
-                    outputs_str = ', '.join(outputs_str)
+                    outputs_str = ", ".join(outputs_str)
                     # print(f"{i}\t{context_str}\t\t{outputs_str}")
                     history.append([current_t, context_str, ctrl_str, "", outputs_str])
                     current_t += 1
@@ -294,17 +333,27 @@ class Node(Goal):
             for x in outputs:
                 if not x.negated:
                     outputs_str.append(str(x))
-            inputs_str = ', '.join(inputs_str)
-            outputs_str = ', '.join(outputs_str)
+            inputs_str = ", ".join(inputs_str)
+            outputs_str = ", ".join(outputs_str)
             # print(f"{i}\t{context_str}\t{inputs_str}\t{outputs_str}")
-            print("\t".join([str(current_t), str(context_str), str(ctrl_str), str(inputs_str), str(outputs_str)]))
+            print(
+                "\t".join(
+                    [
+                        str(current_t),
+                        str(context_str),
+                        str(ctrl_str),
+                        str(inputs_str),
+                        str(outputs_str),
+                    ]
+                )
+            )
             history.append([current_t, context_str, ctrl_str, inputs_str, outputs_str])
             current_t += 1
 
         return tabulate(history, headers=headers)
 
     def realize_all(self, t_trans: int):
-        """Realize Sepcification and Transition Controllers"""
+        """Realize Sepcification and Transition Controllers."""
         self.realize_specification_controllers()
         self.realize_transition_controllers(t_trans)
 
@@ -329,27 +378,41 @@ class Node(Goal):
             #  TODO
             # for loc_source, loc_target in itertools.product(locs_a, locs_b):
             #
-            scenario_a_entry_points = scenario_a.controller.all_entry_locations(self.world.typeset)
-            scenario_b_entry_points = scenario_b.controller.all_entry_locations(self.world.typeset)
+            scenario_a_entry_points = scenario_a.controller.all_entry_locations(
+                self.world.typeset
+            )
+            scenario_b_entry_points = scenario_b.controller.all_entry_locations(
+                self.world.typeset
+            )
             #
             # scenario_a_entry_points = scenario_a.controller.locations
             # scenario_b_entry_points = scenario_b.controller.locations
 
             print(", ".join([x.name for x in scenario_a_entry_points]))
             print(", ".join([x.name for x in scenario_b_entry_points]))
-            for start, finish in itertools.product(scenario_a_entry_points, scenario_b_entry_points):
+            for start, finish in itertools.product(
+                scenario_a_entry_points, scenario_b_entry_points
+            ):
                 if start == finish:
                     continue
-                self.__t_controllers[(start, finish)] = self.create_transition_controller(start, finish, t_trans_max)
-                self.__t_controllers[(finish, start)] = self.create_transition_controller(finish, start, t_trans_max)
+                self.__t_controllers[
+                    (start, finish)
+                ] = self.create_transition_controller(start, finish, t_trans_max)
+                self.__t_controllers[
+                    (finish, start)
+                ] = self.create_transition_controller(finish, start, t_trans_max)
 
         print(f"{len(self.__t_controllers)} transition controller_specs generated:")
         for start, finish in self.__t_controllers.keys():
             print(f"{start.name} -> {finish.name}")
 
-    def realize_specification_controllers(self, traversal: GraphTraversal = GraphTraversal.DFS,
-                                          explored: Set[Node] = None, root=None):
-        """Realize all nodes of the CGG"""
+    def realize_specification_controllers(
+        self,
+        traversal: GraphTraversal = GraphTraversal.DFS,
+        explored: Set[Node] = None,
+        root=None,
+    ):
+        """Realize all nodes of the CGG."""
 
         if root is None:
             root = self
@@ -358,7 +421,7 @@ class Node(Goal):
             explored = set()
 
         if traversal == GraphTraversal.DFS:
-            """Dept-First Search"""
+            """Dept-First Search."""
             """Label current node as explored"""
             explored.add(self)
             for node in self.children_nodes():
@@ -372,7 +435,7 @@ class Node(Goal):
 
     def get_all_nodes(self) -> Set[Node]:
 
-        """Depth-first search"""
+        """Depth-first search."""
         result = set()
         result.add(self)
         for child in self.children_nodes():
@@ -393,20 +456,37 @@ class Node(Goal):
                 copy["children"] = []
                 for goal in goals:
                     child = goal.rec_exporting_to_json(goals_folder, self.id)
-                    Node.exporting_in_files(self.id, goals_folder, "children", child["id"], self.name, link.name)
+                    Node.exporting_in_files(
+                        self.id,
+                        goals_folder,
+                        "children",
+                        child["id"],
+                        self.name,
+                        link.name,
+                    )
                     copy["children"].append(child)
             return copy
         if parent_goal_id is not None:
-            Node.exporting_in_files(self.id, goals_folder, "parents", parent_goal_id, self.name)
+            Node.exporting_in_files(
+                self.id, goals_folder, "parents", parent_goal_id, self.name
+            )
         return {"goal": self.name, "id": self.id}
 
     @staticmethod
-    def exporting_in_files(node_id: str, goals_folder: str, mode: str, new_element: str, goal_name: str,
-                           link: str = None):
+    def exporting_in_files(
+        node_id: str,
+        goals_folder: str,
+        mode: str,
+        new_element: str,
+        goal_name: str,
+        link: str = None,
+    ):
         filename = str(node_id).split("-")
-        goal_folder = Path(os.path.join(goals_folder, f"{filename[len(filename) - 1].zfill(4)}.json"))
+        goal_folder = Path(
+            os.path.join(goals_folder, f"{filename[len(filename) - 1].zfill(4)}.json")
+        )
         if os.path.exists(goal_folder):
-            with open(goal_folder, "r") as json_file:
+            with open(goal_folder) as json_file:
                 json_goal = json.load(json_file)
         else:
             json_goal = {"group": "new", "name": goal_name, "id": node_id}
@@ -423,7 +503,9 @@ class Node(Goal):
             json_formatted = json.dumps(json_goal, indent=4, sort_keys=True)
             json_file.write(json_formatted)
 
-    def create_transition_controller(self, start: Types, finish: Types, t_trans: int) -> Controller:
+    def create_transition_controller(
+        self, start: Types, finish: Types, t_trans: int
+    ) -> Controller:
 
         t_controller_name = f"TRANS_{start.name}-{finish.name}"
 
@@ -439,11 +521,18 @@ class Node(Goal):
             trans_spec = Atom(formula=(trans_spec_str, typeset))
             trans_contract = Contract(guarantees=trans_spec)
             try:
-                controller_info = trans_contract.get_controller_info(world_ts=self.world.typeset)
+                controller_info = trans_contract.get_controller_info(
+                    world_ts=self.world.typeset
+                )
                 a, g, i, o = controller_info.get_strix_inputs()
-                controller_synthesis_input = StringMng.get_controller_synthesis_str(controller_info)
-                Store.save_to_file(controller_synthesis_input,
-                                   f"t_controller_{start.name}_{finish.name}_specs.txt", folder_name)
+                controller_synthesis_input = StringMng.get_controller_synthesis_str(
+                    controller_info
+                )
+                Store.save_to_file(
+                    controller_synthesis_input,
+                    f"t_controller_{start.name}_{finish.name}_specs.txt",
+                    folder_name,
+                )
                 realized, kiss_mealy, time = Strix.generate_controller(a, g, i, o)
                 if realized:
                     realizable = True
@@ -452,26 +541,38 @@ class Node(Goal):
                 raise TransSynthesisFail(self, e)
         if not realizable:
             raise Exception(
-                f"Controller [{start.name}, {finish.name}] cannot be synthetized in {t_trans} steps")
+                f"Controller [{start.name}, {finish.name}] cannot be synthetized in {t_trans} steps"
+            )
         else:
-            Store.save_to_file(kiss_mealy, f"{start.name}_{finish.name}_mealy",
-                               folder_name)
+            Store.save_to_file(
+                kiss_mealy, f"{start.name}_{finish.name}_mealy", folder_name
+            )
             # Store.generate_eps_from_dot(dot_mealy, f"{start.name}_{finish.name}_dot",
             #                             folder_name)
 
-            t_controller = Controller(mealy_machine=kiss_mealy, world=self.world, name=t_controller_name,
-                                      synth_time=time)
-            Store.save_to_file(str(t_controller), f"{start.name}_{finish.name}_table", folder_name)
+            t_controller = Controller(
+                mealy_machine=kiss_mealy,
+                world=self.world,
+                name=t_controller_name,
+                synth_time=time,
+            )
+            Store.save_to_file(
+                str(t_controller), f"{start.name}_{finish.name}_table", folder_name
+            )
 
             return t_controller
 
     @staticmethod
-    def composition(nodes: Set[Node], name: str = None, description: str = None) -> Node:
+    def composition(
+        nodes: Set[Node], name: str = None, description: str = None
+    ) -> Node:
 
         try:
             new_goal = Goal.composition(nodes, name, description)
         except GoalException as e:
-            raise CGGOperationFail(nodes=nodes, operation=CGGFailOperations.algebra_op, goal_ex=e)
+            raise CGGOperationFail(
+                nodes=nodes, operation=CGGFailOperations.algebra_op, goal_ex=e
+            )
 
         new_node = Node(goal=new_goal)
 
@@ -480,12 +581,16 @@ class Node(Goal):
         return new_node
 
     @staticmethod
-    def conjunction(nodes: Set[Node], name: str = None, description: str = None) -> Node:
+    def conjunction(
+        nodes: Set[Node], name: str = None, description: str = None
+    ) -> Node:
 
         try:
             new_goal = Goal.conjunction(nodes, name, description)
         except GoalException as e:
-            raise CGGOperationFail(nodes=nodes, operation=CGGFailOperations.algebra_op, goal_ex=e)
+            raise CGGOperationFail(
+                nodes=nodes, operation=CGGFailOperations.algebra_op, goal_ex=e
+            )
 
         new_node = Node(goal=new_goal)
 
@@ -499,7 +604,9 @@ class Node(Goal):
         try:
             new_goal = Goal.merging(nodes, name, description)
         except GoalException as e:
-            raise CGGOperationFail(nodes=nodes, operation=CGGFailOperations.algebra_op, goal_ex=e)
+            raise CGGOperationFail(
+                nodes=nodes, operation=CGGFailOperations.algebra_op, goal_ex=e
+            )
 
         new_node = Node(goal=new_goal)
 
@@ -514,7 +621,11 @@ class Node(Goal):
         try:
             new_goal = Goal.quotient(dividend, divisor)
         except GoalException as e:
-            raise CGGOperationFail(nodes={dividend, divisor}, operation=CGGFailOperations.algebra_op, goal_ex=e)
+            raise CGGOperationFail(
+                nodes={dividend, divisor},
+                operation=CGGFailOperations.algebra_op,
+                goal_ex=e,
+            )
 
         new_node = Node(goal=new_goal)
 
@@ -530,7 +641,11 @@ class Node(Goal):
         try:
             new_goal = Goal.separation(dividend, divisor)
         except GoalException as e:
-            raise CGGOperationFail(nodes={dividend, divisor}, operation=CGGFailOperations.algebra_op, goal_ex=e)
+            raise CGGOperationFail(
+                nodes={dividend, divisor},
+                operation=CGGFailOperations.algebra_op,
+                goal_ex=e,
+            )
 
         new_node = Node(goal=new_goal)
 
@@ -540,12 +655,16 @@ class Node(Goal):
         return new_node
 
     @staticmethod
-    def disjunction(nodes: Set[Node], name: str = None, description: str = None) -> Node:
+    def disjunction(
+        nodes: Set[Node], name: str = None, description: str = None
+    ) -> Node:
 
         try:
             new_goal = Goal.disjunction(nodes, name, description)
         except GoalException as e:
-            raise CGGOperationFail(nodes=nodes, operation=CGGFailOperations.algebra_op, goal_ex=e)
+            raise CGGOperationFail(
+                nodes=nodes, operation=CGGFailOperations.algebra_op, goal_ex=e
+            )
 
         new_node = Node(goal=new_goal)
 
@@ -565,7 +684,7 @@ class Node(Goal):
         """Extract all combinations of context which are consistent"""
         saturated_combinations = []
         for i in range(0, len(contexts)):
-            """Extract all combinations of i context and saturate it"""
+            """Extract all combinations of i context and saturate it."""
             combinations = itertools.combinations(contexts, i + 1)
             for combination in combinations:
                 saturated_combination = combination[0]
@@ -585,7 +704,11 @@ class Node(Goal):
         saturated_combinations_grouped = list(saturated_combinations)
         for c_a in saturated_combinations:
             for c_b in saturated_combinations:
-                if c_a is not c_b and c_a <= c_b and c_b in saturated_combinations_grouped:
+                if (
+                    c_a is not c_b
+                    and c_a <= c_b
+                    and c_b in saturated_combinations_grouped
+                ):
                     saturated_combinations_grouped.remove(c_b)
 
         print("\n".join(x.string for x in saturated_combinations))

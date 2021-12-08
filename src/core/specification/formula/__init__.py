@@ -5,11 +5,12 @@ from copy import deepcopy
 from typing import TYPE_CHECKING
 
 from core.specification import Specification
-from core.specification.enums import *
+from core.specification.enums import FormulaKind, FormulaOutput, SpecKind
 from core.specification.exceptions import NotSatisfiableException
 from core.typeset import Typeset
 from tools.logic import Logic, LogicTuple
 from tools.nuxmv import Nuxmv
+from tools.spot import Spot
 
 if TYPE_CHECKING:
     from core.specification.atom import Atom, AtomKind
@@ -56,9 +57,18 @@ class Formula(Specification):
         else:
             raise Exception("Wrong parameters LTL_forced construction")
 
+        self.__spot = Spot.spotfy_formula(self.string)
+
     @property
     def kind(self) -> FormulaKind:
         return self.__kind
+
+    @property
+    def spot(self):
+        return self.__spot
+
+    def spotfy(self):
+        self.__spot = Spot.spotfy_formula(self.string)
 
     @kind.setter
     def kind(self, value: FormulaKind):
@@ -296,7 +306,7 @@ class Formula(Specification):
         if other.is_true():
             return self
 
-        if other.is_true():
+        if self.is_true():
             self.__cnf = other.cnf
             self.__dnf = other.dnf
             return self
@@ -334,31 +344,36 @@ class Formula(Specification):
         else:
             self.__dnf = temp_dnf
 
+        redundant_index = set()
         """Append to list if not already there"""
-        for o_i, other_elem in enumerate(new_other.cnf):
-            other_s, other_t = LogicTuple.or_(
-                [atom.formula() for atom in other_elem],
+        for s_i, self_clause in enumerate(new_self.cnf):
+            self_s, self_t = LogicTuple.or_(
+                [atom.formula() for atom in self_clause],
             )
-            other_atom = Atom(formula=(other_s, other_t), check=False)
+            self_atom = Atom(formula=(self_s, self_t), check=False)
             """check if another clause is already a refinement of the existing one"""
 
-            for s_i, elem in enumerate(self.__cnf):
-                self_s, self_t = LogicTuple.or_(
-                    [atom.formula() for atom in elem],
+            for o_i, other_clause in enumerate(other.cnf):
+                if o_i in redundant_index:
+                    continue
+                other_s, other_t = LogicTuple.or_(
+                    [atom.formula() for atom in other_clause],
                 )
-                self_atom = Atom(formula=(self_s, self_t), check=False)
+                other_atom = Atom(formula=(other_s, other_t), check=False)
 
                 if self_atom <= other_atom:
                     """If an existing clause is already a refinement then skip
                     it."""
+                    redundant_index.add(o_i)
                     break
                 if other_atom <= self_atom:
                     """If the other is a refinement, then substitute it."""
-                    self.__cnf[s_i] = other_elem
+                    self.__cnf[s_i] = other_clause
+                    redundant_index.add(o_i)
                     break
 
                 """Otherwise append it"""
-                self.__cnf.append(other_elem)
+                self.__cnf.append(other_clause)
 
         return self
 
@@ -438,3 +453,6 @@ class Formula(Specification):
                 appended_elements.append(other_elem)
 
         return self
+
+    def spotfy(self):
+        """Update the 'spot' representation of the formula."""

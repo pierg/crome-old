@@ -1,0 +1,52 @@
+  t  inputs         outputs
+---  -------------  -------------------
+  0  night          r5, register, greet
+  1  person, night  r5, greet, active
+  2  night          r5, active
+  3  person, night  r5, greet, active
+  4  person, night  r5
+  5  person, night  r5
+  6  person, night  r5
+  7  person, night  r5
+  8  night          r5, register, greet
+  9  person, night  r5, greet, active
+ 10  night          r5, register, greet
+ 11  person, night  r5, greet, active
+ 12  night          r5, greet
+ 13  person, night  r5
+ 14  person, night  r5, register, greet
+ 15  person, night  r5, greet, active
+ 16  night          r5, greet
+ 17  night          r5, register, greet
+ 18  person, night  r5, register, greet
+ 19  person, night  r5, greet, active
+ 20  person, night  r5, greet, active
+ 21  night          r5, active
+ 22  night          r5, greet
+ 23  person, night  r5, greet, active
+ 24  person, night  r5, register, greet
+ 25  night          r5, active
+ 26  night          r5, greet
+ 27  person, night  r5, register, greet
+ 28  night          r5, register, greet
+ 29  person, night  r5
+ 30  night          r5, active
+ 31  person, night  r5, register, greet
+ 32  night          r5, active
+ 33  person, night  r5
+ 34  person, night  r5, register, greet
+ 35  person, night  r5, register, greet
+ 36  person, night  r5
+ 37  person, night  r5, register, greet
+ 38  night          r5, register, greet
+ 39  night          r5, register, greet
+ 40  person, night  r5
+ 41  person, night  r5, register, greet
+ 42  night          r5, register, greet
+ 43  night          r5, greet
+ 44  night          r5, active
+ 45  person, night  r5, greet, active
+ 46  night          r5, register, greet
+ 47  night          r5, register, greet
+ 48  person, night  r5, greet, active
+ 49  person, night  r5
