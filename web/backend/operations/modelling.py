@@ -74,7 +74,7 @@ class Modelling:
             Atom(formula=("G(F(r3 & r4))", Typeset({w["r3"], w["r4"]}))),
         )
         g2 = StrictOrderedPatrolling([w["r1"], w["r2"]])
-        # g3 = InstantaneousReaction() // need to import every pattern method ?
+        # g3 = InstantaneousReaction() // need to import every patterns method ?
 
         """Context"""
         context = w["day"]
@@ -112,34 +112,34 @@ class Modelling:
             contract_lists = [[], []]
             for i in range(len(contract_lists)):
                 for contract_element in json_obj["contract"][contract_names[i]]:
-                    if "pattern" in contract_element:
-                        args = contract_element["pattern"]["arguments"]
+                    if "patterns" in contract_element:
+                        args = contract_element["patterns"]["arguments"]
                         if len(args) == 1:
                             if type(args[0]["value"]) == list:
                                 list_of_locations = []
                                 for location in args[0]["value"]:
                                     list_of_locations.append(w[location])
                                 contract_lists[i].append(
-                                    globals()[contract_element["pattern"]["name"]](
+                                    globals()[contract_element["patterns"]["name"]](
                                         list_of_locations,
                                     ),
                                 )
                             else:
                                 contract_lists[i].append(
-                                    globals()[contract_element["pattern"]["name"]](
+                                    globals()[contract_element["patterns"]["name"]](
                                         [w[args[0]["value"]]],
                                     ),
                                 )
                         elif len(args) == 2:
                             contract_lists[i].append(
-                                globals()[contract_element["pattern"]["name"]](
+                                globals()[contract_element["patterns"]["name"]](
                                     w[args[0]["value"]],
                                     w[args[1]["value"]],
                                 ),
                             )
                         else:
                             raise Exception(
-                                "Unknown Pattern, the pattern included only have 1 or 2 arguments",
+                                "Unknown Pattern, the patterns included only have 1 or 2 arguments",
                             )
                     elif "ltl_value" in contract_element:
                         if "world_values" in contract_element:

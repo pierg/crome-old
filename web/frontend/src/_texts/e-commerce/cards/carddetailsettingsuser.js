@@ -280,14 +280,13 @@ const textProps = {
               },
             },
             {
-              text: "Lock your device with a PIN, pattern, or password",
+              text: "Lock your device with a PIN, patterns, or password",
               checkbox: {
                 defaultChecked: true,
               },
             },
             {
-              text:
-                "Manage what apps have access to app-usage data on your device",
+              text: "Manage what apps have access to app-usage data on your device",
               checkbox: {},
             },
           ],

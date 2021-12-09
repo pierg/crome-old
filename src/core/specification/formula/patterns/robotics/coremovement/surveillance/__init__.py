@@ -19,7 +19,7 @@ class Patrolling(CoreMovement):
 
 
 class OrderedPatrolling(CoreMovement):
-    """This pattern requires a robot to keep visiting a set of locations, in
+    """This patterns requires a robot to keep visiting a set of locations, in
     some specified order, similarly to sequenced patrolling.
 
     However, given an order, e.g., 1 and 2 between two locations, it is
@@ -70,7 +70,7 @@ class OrderedPatrolling(CoreMovement):
 
 
 class StrictOrderedPatrolling(CoreMovement):
-    """Ordered patrolling pattern does not avoid a predecessor location to be
+    """Ordered patrolling patterns does not avoid a predecessor location to be
     visited multiple times before its successor.
 
     Strict Ordered Patrolling ensures that, after a predecessor is

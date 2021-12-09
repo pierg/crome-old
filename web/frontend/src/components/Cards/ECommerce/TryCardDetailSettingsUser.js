@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import CardDetailSettingsUser from "./CardDetailSettingsUser";
 
 // @notus-pro/react
@@ -231,11 +231,12 @@ const props = {
             },
             { text: "Check which devices accessed your account", checkbox: {} },
             {
-              text: "Find My Device, make sure your device can be found if it gets lost",
+              text:
+                "Find My Device, make sure your device can be found if it gets lost",
               checkbox: { defaultChecked: true },
             },
             {
-              text: "Lock your device with a PIN, pattern, or password",
+              text: "Lock your device with a PIN, patterns, or password",
               checkbox: { defaultChecked: true },
             },
             {
@@ -318,12 +319,12 @@ const props = {
       ],
     },
   ],
-}
+};
 
 export default function TryCardDetailSettingsUser() {
   return (
     <>
       <CardDetailSettingsUser {...props} />
     </>
-  )
+  );
 }

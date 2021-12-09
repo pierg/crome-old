@@ -5,7 +5,7 @@ from running_example.modeling_environment import RunningExample
 
 from core.cgg import Node
 from core.cgg.exceptions import CGGException
-from core.specification.atom.pattern.robotics.coremovement.surveillance import (
+from core.specification.atom.patterns.robotics.coremovement.surveillance import (
     StrictOrderedPatrolling,
 )
 from tools.persistence import Persistence

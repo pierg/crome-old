@@ -16,7 +16,7 @@ from examples.types.create_types import (
 )
 
 
-class ExampleWorld(World):
+class CustomWorld(World):
     def __init__(self):
         super().__init__(
             actions={Picture(), Greet(), Register()},
@@ -27,9 +27,11 @@ class ExampleWorld(World):
 
 
 """Create the world, i.e. a dictionary {string -> atom}"""
-w = ExampleWorld()
+w = CustomWorld()
 
 if __name__ == "__main__":
+
+    print()
 
     try:
         x = w["r1"] & w["r2"]

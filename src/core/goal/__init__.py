@@ -1,40 +1,44 @@
 from __future__ import annotations
 
-from typing import Union, Set
+from typing import TYPE_CHECKING, Set, Union
 
-from graphviz import Source
-
-from core.contract import Contract, IncompatibleContracts, InconsistentContracts, UnfeasibleContracts
-from core.controller import Controller
+from core.contract import (
+    Contract,
+    IncompatibleContracts,
+    InconsistentContracts,
+    UnfeasibleContracts,
+)
 from core.controller import Controller
 from core.controller.exceptions import ControllerException
-from core.goal.exceptions import GoalException, GoalFailOperations, GoalFailMotivations, GoalAlgebraOperationFail, \
-    GoalSynthesisFail
+from core.goal.exceptions import (
+    GoalAlgebraOperationFail,
+    GoalException,
+    GoalFailOperations,
+    GoalSynthesisFail,
+)
 from core.specification import Specification
-from core.specification.atom.pattern.basic import GF
 from core.specification.formula import FormulaOutput
+from core.type import Boolean
 from tools.storage import Store
 from tools.strings import StringMng
 from tools.strix import Strix
-from core.type import Boolean
-
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from core.world import World
 
 
 class Goal:
+    def __init__(
+        self,
+        name: str = None,
+        description: str = None,
+        id: str = None,
+        specification: Union[Specification, Contract] = None,
+        context: Union[Specification, Boolean] = None,
+        world: World = None,
+    ):
 
-    def __init__(self,
-                 name: str = None,
-                 description: str = None,
-                 id: str = None,
-                 specification: Union[Specification, Contract] = None,
-                 context: Union[Specification, Boolean] = None,
-                 world: World = None):
-
-        """Read only properties"""
+        """Read only properties."""
         self.__realizable = None
         self.__controller = None
 
@@ -147,15 +151,14 @@ class Goal:
 
         if self.session_name is None:
             folder_name = self.goal_folder_name
-            folder_name = f"{self.session_name}/{self.goal_folder_name}"
         else:
-            pass
+            folder_name = f"{self.session_name}/{self.goal_folder_name}"
 
         self.specification.assumptions.translate_to_buchi("assumptions", folder_name)
         self.specification.guarantees.translate_to_buchi("guarantees", folder_name)
 
     def realize_to_controller(self):
-        """Realize the goal into a Controller object"""
+        """Realize the goal into a Controller object."""
 
         if self.controller is not None:
             return
@@ -168,15 +171,25 @@ class Goal:
         try:
             controller_info = self.specification.get_controller_info()
             a, g, i, o = controller_info.get_strix_inputs()
-            controller_synthesis_input = StringMng.get_controller_synthesis_str(controller_info)
-            Store.save_to_file(controller_synthesis_input, "controller.txt", folder_name)
+            controller_synthesis_input = StringMng.get_controller_synthesis_str(
+                controller_info
+            )
+            Store.save_to_file(
+                controller_synthesis_input, "controller.txt", folder_name
+            )
             realized, kiss_mealy, time = Strix.generate_controller(a, g, i, o)
 
             if not realized:
-                controller_info = self.specification.get_controller_info(world_ts=self.__world.typeset)
+                controller_info = self.specification.get_controller_info(
+                    world_ts=self.__world.typeset
+                )
                 a, g, i, o = controller_info.get_strix_inputs()
-                controller_synthesis_input = StringMng.get_controller_synthesis_str(controller_info)
-                Store.save_to_file(controller_synthesis_input, "controller.txt", folder_name)
+                controller_synthesis_input = StringMng.get_controller_synthesis_str(
+                    controller_info
+                )
+                Store.save_to_file(
+                    controller_synthesis_input, "controller.txt", folder_name
+                )
                 realized, kiss_mealy, time = Strix.generate_controller(a, g, i, o)
 
             self.__realizable = realized
@@ -188,12 +201,15 @@ class Goal:
                 Store.save_to_file(kiss_mealy, "controller_inverted_kiss", folder_name)
                 # Store.generate_eps_from_dot(dot_mealy, "controller_inverted", folder_name)
 
-            self.__controller = Controller(mealy_machine=kiss_mealy, world=self.world, name=self.name, synth_time=time)
+            self.__controller = Controller(
+                mealy_machine=kiss_mealy,
+                world=self.world,
+                name=self.name,
+                synth_time=time,
+            )
             print(f"NAME:\t{self.__name} ({self.__id})")
             print(self.__controller)
             Store.save_to_file(str(self.__controller), "controller_table", folder_name)
-
-
 
         except ControllerException as e:
             raise GoalSynthesisFail(self, e)
@@ -205,18 +221,28 @@ class Goal:
             ret += "\t" * level + f"|\tCONTEXT:\t {str(goal.context)}\n"
         if not goal.specification.assumptions.is_true():
             ret += "\t" * level + "|\t  ASSUMPTIONS:\n"
-            ret += "\t" * level + f"|\t  {goal.specification.assumptions.pretty_print(FormulaOutput.DNF)} \n"
+            ret += (
+                "\t" * level
+                + f"|\t  {goal.specification.assumptions.pretty_print(FormulaOutput.DNF)} \n"
+            )
         ret += "\t" * level + "|\t  GUARANTEES:\n"
-        ret += "\t" * level + f"|\t  {goal.specification.guarantees.pretty_print(FormulaOutput.CNF)} \n"
+        ret += (
+            "\t" * level
+            + f"|\t  {goal.specification.guarantees.pretty_print(FormulaOutput.CNF)} \n"
+        )
         if goal.realizable is not None:
             if goal.realizable:
-                ret += "\t" * level + f"|\t  REALIZABLE:\tYES\t{goal.synth_time} seconds\n"
+                ret += (
+                    "\t" * level + f"|\t  REALIZABLE:\tYES\t{goal.synth_time} seconds\n"
+                )
             else:
                 ret += "\t" * level + f"|\t  REALIZABLE:\tNO\n"
         return ret
 
     @staticmethod
-    def composition(goals: Set[Goal], name: str = None, description: str = None) -> Goal:
+    def composition(
+        goals: Set[Goal], name: str = None, description: str = None
+    ) -> Goal:
         if name is None:
             names = []
             for goal in goals:
@@ -236,32 +262,44 @@ class Goal:
                     new_goal_world = g.world
                 else:
                     if not new_goal_world.equals(g.world):
-                        raise GoalException("conjoining goals that have different 'variables'")
+                        raise GoalException(
+                            "conjoining goals that have different 'variables'"
+                        )
 
         try:
             new_contract = Contract.composition(set_of_contracts)
 
         except IncompatibleContracts as e:
 
-            raise GoalAlgebraOperationFail(goals=goals, operation=GoalFailOperations.composition, contr_ex=e)
+            raise GoalAlgebraOperationFail(
+                goals=goals, operation=GoalFailOperations.composition, contr_ex=e
+            )
 
         except InconsistentContracts as e:
 
-            raise GoalAlgebraOperationFail(goals=goals, operation=GoalFailOperations.composition, contr_ex=e)
+            raise GoalAlgebraOperationFail(
+                goals=goals, operation=GoalFailOperations.composition, contr_ex=e
+            )
 
         except UnfeasibleContracts as e:
 
-            raise GoalAlgebraOperationFail(goals=goals, operation=GoalFailOperations.composition, contr_ex=e)
+            raise GoalAlgebraOperationFail(
+                goals=goals, operation=GoalFailOperations.composition, contr_ex=e
+            )
 
-        new_goal = Goal(name=name,
-                        description=description,
-                        specification=new_contract,
-                        world=new_goal_world)
+        new_goal = Goal(
+            name=name,
+            description=description,
+            specification=new_contract,
+            world=new_goal_world,
+        )
 
         return new_goal
 
     @staticmethod
-    def conjunction(goals: Set[Goal], name: str = None, description: str = None) -> Goal:
+    def conjunction(
+        goals: Set[Goal], name: str = None, description: str = None
+    ) -> Goal:
         if name is None:
             names = []
             for goal in goals:
@@ -282,19 +320,25 @@ class Goal:
                     new_goal_world = g.world
                 else:
                     if not new_goal_world.equals(g.world):
-                        raise GoalException("conjoining goals that have different 'variables'")
+                        raise GoalException(
+                            "conjoining goals that have different 'variables'"
+                        )
 
         try:
             new_contract = Contract.conjunction(set_of_contracts)
 
         except InconsistentContracts as e:
 
-            raise GoalAlgebraOperationFail(goals=goals, operation=GoalFailOperations.conjunction, contr_ex=e)
+            raise GoalAlgebraOperationFail(
+                goals=goals, operation=GoalFailOperations.conjunction, contr_ex=e
+            )
 
-        new_goal = Goal(name=name,
-                        description=description,
-                        specification=new_contract,
-                        world=new_goal_world)
+        new_goal = Goal(
+            name=name,
+            description=description,
+            specification=new_contract,
+            world=new_goal_world,
+        )
 
         return new_goal
 
@@ -320,24 +364,32 @@ class Goal:
                     new_goal_world = g.world
                 else:
                     if not new_goal_world.equals(g.world):
-                        raise GoalException("merging goals that have different 'variables'")
+                        raise GoalException(
+                            "merging goals that have different 'variables'"
+                        )
 
         try:
             new_contract = Contract.merging(set_of_contracts)
 
         except InconsistentContracts as e:
 
-            raise GoalAlgebraOperationFail(goals=goals, operation=GoalFailOperations.merging, contr_ex=e)
+            raise GoalAlgebraOperationFail(
+                goals=goals, operation=GoalFailOperations.merging, contr_ex=e
+            )
 
-        new_goal = Goal(name=name,
-                        description=description,
-                        specification=new_contract,
-                        world=new_goal_world)
+        new_goal = Goal(
+            name=name,
+            description=description,
+            specification=new_contract,
+            world=new_goal_world,
+        )
 
         return new_goal
 
     @staticmethod
-    def disjunction(goals: Set[Goal], name: str = None, description: str = None) -> Goal:
+    def disjunction(
+        goals: Set[Goal], name: str = None, description: str = None
+    ) -> Goal:
         if name is None:
             names = []
             for goal in goals:
@@ -358,19 +410,25 @@ class Goal:
                     new_goal_world = g.world
                 else:
                     if not new_goal_world.equals(g.world):
-                        raise GoalException("disjoining goals that have different 'variables'")
+                        raise GoalException(
+                            "disjoining goals that have different 'variables'"
+                        )
 
         try:
             new_contract = Contract.disjunction(set_of_contracts)
 
         except InconsistentContracts as e:
 
-            raise GoalAlgebraOperationFail(goals=goals, operation=GoalFailOperations.conjunction, contr_ex=e)
+            raise GoalAlgebraOperationFail(
+                goals=goals, operation=GoalFailOperations.conjunction, contr_ex=e
+            )
 
-        new_goal = Goal(name=name,
-                        description=description,
-                        specification=new_contract,
-                        world=new_goal_world)
+        new_goal = Goal(
+            name=name,
+            description=description,
+            specification=new_contract,
+            world=new_goal_world,
+        )
 
         return new_goal
 
@@ -389,19 +447,29 @@ class Goal:
                     new_goal_world = g.world
                 else:
                     if not new_goal_world.equals(g.world):
-                        raise GoalException("quotient on goals that have different 'variables'")
+                        raise GoalException(
+                            "quotient on goals that have different 'variables'"
+                        )
 
         try:
-            new_contract = Contract.quotient(dividend.specification, divisor.specification)
+            new_contract = Contract.quotient(
+                dividend.specification, divisor.specification
+            )
 
         except InconsistentContracts as e:
 
-            raise GoalAlgebraOperationFail(goals={dividend, divisor}, operation=GoalFailOperations.quotient, contr_ex=e)
+            raise GoalAlgebraOperationFail(
+                goals={dividend, divisor},
+                operation=GoalFailOperations.quotient,
+                contr_ex=e,
+            )
 
-        new_goal = Goal(name=name,
-                        description=f"Quotient between {dividend.name} and {divisor.name}",
-                        specification=new_contract,
-                        world=new_goal_world)
+        new_goal = Goal(
+            name=name,
+            description=f"Quotient between {dividend.name} and {divisor.name}",
+            specification=new_contract,
+            world=new_goal_world,
+        )
 
         return new_goal
 
@@ -420,25 +488,36 @@ class Goal:
                     new_goal_world = g.world
                 else:
                     if not new_goal_world.equals(g.world):
-                        raise GoalException("separation on goals that have different 'variables'")
+                        raise GoalException(
+                            "separation on goals that have different 'variables'"
+                        )
 
         try:
-            new_contract = Contract.separation(dividend.specification, divisor.specification)
+            new_contract = Contract.separation(
+                dividend.specification, divisor.specification
+            )
 
         except InconsistentContracts as e:
 
-            raise GoalAlgebraOperationFail(goals={dividend, divisor}, operation=GoalFailOperations.separation,
-                                           contr_ex=e)
+            raise GoalAlgebraOperationFail(
+                goals={dividend, divisor},
+                operation=GoalFailOperations.separation,
+                contr_ex=e,
+            )
 
-        new_goal = Goal(name=name,
-                        description=f"Separation between {dividend.name} and {divisor.name}",
-                        specification=new_contract,
-                        world=new_goal_world)
+        new_goal = Goal(
+            name=name,
+            description=f"Separation between {dividend.name} and {divisor.name}",
+            specification=new_contract,
+            world=new_goal_world,
+        )
 
         return new_goal
 
     @staticmethod
-    def disjunction(goals: Set[Goal], name: str = None, description: str = None) -> Goal:
+    def disjunction(
+        goals: Set[Goal], name: str = None, description: str = None
+    ) -> Goal:
         if name is None:
             names = []
             for goal in goals:
@@ -459,18 +538,24 @@ class Goal:
                     new_goal_world = g.world
                 else:
                     if not new_goal_world.equals(g.world):
-                        raise GoalException("disjoining goals that have different 'variables'")
+                        raise GoalException(
+                            "disjoining goals that have different 'variables'"
+                        )
 
         try:
             new_contract = Contract.disjunction(set_of_contracts)
 
         except InconsistentContracts as e:
 
-            raise GoalAlgebraOperationFail(goals=goals, operation=GoalFailOperations.conjunction, contr_ex=e)
+            raise GoalAlgebraOperationFail(
+                goals=goals, operation=GoalFailOperations.conjunction, contr_ex=e
+            )
 
-        new_goal = Goal(name=name,
-                        description=description,
-                        specification=new_contract,
-                        world=new_goal_world)
+        new_goal = Goal(
+            name=name,
+            description=description,
+            specification=new_contract,
+            world=new_goal_world,
+        )
 
         return new_goal
