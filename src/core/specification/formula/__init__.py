@@ -10,7 +10,6 @@ from core.specification.exceptions import NotSatisfiableException
 from core.typeset import Typeset
 from tools.logic import Logic, LogicTuple
 from tools.nuxmv import Nuxmv
-from tools.spot import Spot
 
 if TYPE_CHECKING:
     from core.specification.atom import Atom, AtomKind
@@ -57,18 +56,9 @@ class Formula(Specification):
         else:
             raise Exception("Wrong parameters LTL_forced construction")
 
-        self.__spot = Spot.spotfy_formula(self.string)
-
     @property
     def kind(self) -> FormulaKind:
         return self.__kind
-
-    @property
-    def spot(self):
-        return self.__spot
-
-    def spotfy(self):
-        self.__spot = Spot.spotfy_formula(self.string)
 
     @kind.setter
     def kind(self, value: FormulaKind):
@@ -294,6 +284,7 @@ class Formula(Specification):
         """self &= other Modifies self with the conjunction with other."""
         from core.specification.atom import Atom
 
+        """Base cases"""
         if isinstance(other, Atom):
             other = Formula(other)
 
@@ -306,7 +297,7 @@ class Formula(Specification):
         if other.is_true():
             return self
 
-        if self.is_true():
+        if self.is_false():
             self.__cnf = other.cnf
             self.__dnf = other.dnf
             return self
@@ -321,7 +312,7 @@ class Formula(Specification):
         new_self = deepcopy(self)
 
         """Mutex Rules necessary for Satisfiability Check"""
-        mutex_rules = Atom.extract_mutex_rules(self.typeset | other.typeset)
+        rules = Atom.extract_mutex_rules(self.typeset | other.typeset)
 
         """Cartesian product between the two dnf"""
         temp_dnf = []
@@ -331,16 +322,13 @@ class Formula(Specification):
 
             check_formula = LogicTuple.and_([f.formula() for f in new_set])
 
-            """Adding Rules"""
-            check_formula = LogicTuple.and_(
-                [check_formula, mutex_rules.formula()],
-            )
+            atom = Atom(formula=check_formula, check=False)
 
-            if Nuxmv.check_satisfiability(check_formula):
+            if atom.is_satisfiable():
                 temp_dnf.append(new_set)
 
         if len(temp_dnf) == 0:
-            raise NotSatisfiableException(self, other, mutex_rules)
+            raise NotSatisfiableException(self, other, rules)
         else:
             self.__dnf = temp_dnf
 
@@ -378,13 +366,14 @@ class Formula(Specification):
         return self
 
     def __ior__(self, other: Formula | Atom) -> Formula:
-        """self |= other Modifies self with the disjunction with other."""
+        """self }= other Modifies self with the disjunction with other."""
         from core.specification.atom import Atom
 
+        """Base cases"""
         if isinstance(other, Atom):
             other = Formula(other)
 
-        if self.is_true():
+        if other.is_false():
             return self
 
         if other.is_true():
@@ -393,10 +382,17 @@ class Formula(Specification):
             self.__dnf: list[set[Atom]] = [{new_atom}]
             return self
 
-        if other.is_false():
+        if self.is_true():
+            return self
+
+        if self.is_false():
+            new_other = deepcopy(other)
+            self.__cnf: list[set[Atom]] = new_other.cnf
+            self.__dnf: list[set[Atom]] = new_other.dnf
             return self
 
         new_other = deepcopy(other)
+        new_self = deepcopy(self)
 
         """Cartesian product between the two cnf"""
         temp_cnf = []
@@ -405,13 +401,13 @@ class Formula(Specification):
             new_set = a | b
 
             check_formula = LogicTuple.or_([f.formula() for f in new_set])
-            if not Nuxmv.check_validity(check_formula):
+
+            atom = Atom(formula=check_formula, check=False)
+
+            if not atom.is_valid():
                 temp_cnf.append(new_set)
-            else:
-                pass
 
         if len(temp_cnf) == 0:
-            """Result is TRUE."""
             new_atom = Atom("TRUE")
             self.__cnf: list[set[Atom]] = [{new_atom}]
             self.__dnf: list[set[Atom]] = [{new_atom}]
@@ -419,40 +415,35 @@ class Formula(Specification):
         else:
             self.__cnf = temp_cnf
 
-        # """Append to list if not already there"""
-        # for other_elem in new_other.dnf:
-        #     if other_elem not in self.dnf:
-        #         self.__dnf.append(other_elem)
-
-        appended_elements = []
+        redundant_index = set()
         """Append to list if not already there"""
-        for o_i, other_elem in enumerate(new_other.dnf):
-            other_s, other_t = LogicTuple.and_(
-                [atom.formula() for atom in other_elem],
+        for s_i, self_clause in enumerate(new_self.dnf):
+            self_s, self_t = LogicTuple.and_(
+                [atom.formula() for atom in self_clause],
             )
-            other_atom = Atom(formula=(other_s, other_t), check=False)
+            self_atom = Atom(formula=(self_s, self_t), check=False)
             """check if another clause is already a refinement of the existing one"""
 
-            for s_i, elem in enumerate(self.__dnf):
-                self_s, self_t = LogicTuple.and_(
-                    [atom.formula() for atom in elem],
+            for o_i, other_clause in enumerate(other.dnf):
+                if o_i in redundant_index:
+                    continue
+                other_s, other_t = LogicTuple.and_(
+                    [atom.formula() for atom in other_clause],
                 )
-                self_atom = Atom(formula=(self_s, self_t), check=False)
+                other_atom = Atom(formula=(other_s, other_t), check=False)
 
                 if other_atom <= self_atom:
-                    """If an existing clause is already a refinement then skip
-                    it."""
+                    """If an other clause is a refinement then skip it."""
+                    redundant_index.add(o_i)
                     break
                 if self_atom <= other_atom:
-                    """If the other is a refinement, then substitute it."""
-                    self.__dnf[s_i] = other_elem
+                    """If existing clause is a refinement, then substitute
+                    it."""
+                    self.__dnf[s_i] = other_clause
+                    redundant_index.add(o_i)
                     break
 
                 """Otherwise append it"""
-                self.__dnf.append(other_elem)
-                appended_elements.append(other_elem)
+                self.__dnf.append(other_clause)
 
         return self
-
-    def spotfy(self):
-        """Update the 'spot' representation of the formula."""
