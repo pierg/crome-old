@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import hashlib
+from copy import deepcopy
 from typing import Set
 
 import spot
@@ -9,6 +11,7 @@ from core.specification import Specification
 from core.specification.atom import Atom, AtomKind
 from core.specification.enums import SpecKind
 from core.typeset import Typeset
+from tools.pyeda import Pyeda
 
 
 class Sformula(Specification):
@@ -23,7 +26,16 @@ class Sformula(Specification):
                 Sformula.extract_ap(self.__spot_formula)
             )
 
-        self.__ltl_tree, self.__atoms_tree = self.__create_trees()
+        (
+            self.__ltl_tree,
+            self.__atoms_tree,
+            self.__atoms_dictionary,
+        ) = self.__create_trees()
+        print(self.__atoms_dictionary)
+        self.__boolean_formula = self.__gen_boolean_formula()
+        print(self.__boolean_formula.cnf)
+        print(self.__boolean_formula.dnf)
+        print("ciao")
 
     @property
     def formula(self):
@@ -48,11 +60,22 @@ class Sformula(Specification):
     def __create_trees(self):
         tree = Tree()
         atoms_tree = Tree()
+        atom_dictionary = dict()
         self.__gen_ltl_tree(self.__spot_formula, tree=tree)
         self.__gen_atom_tree(
-            self.__spot_formula, typeset=self.__typeset, tree=atoms_tree
+            self.__spot_formula,
+            typeset=self.__typeset,
+            tree=atoms_tree,
+            atom_dictionary=atom_dictionary,
         )
-        return tree, atoms_tree
+        return tree, atoms_tree, atom_dictionary
+
+    def __gen_boolean_formula(self) -> Pyeda:
+        boolean_formula = deepcopy(self.__spot_formula.to_str())
+        for key, value in self.__atoms_dictionary.items():
+            boolean_formula = boolean_formula.replace(value["formula"].to_str(), key)
+
+        return Pyeda(boolean_formula)
 
     def swap_equalities(self):
         new_formula = self.apply_equalities(self.__spot_formula)
@@ -105,7 +128,9 @@ class Sformula(Specification):
                 )
 
     @staticmethod
-    def __gen_atom_tree(formula, tree: Tree, typeset: Typeset, parent=None):
+    def __gen_atom_tree(
+        formula, tree: Tree, typeset: Typeset, atom_dictionary, parent=None
+    ):
         if (
             formula.kindstr() == "G"
             or formula.kindstr() == "F"
@@ -118,11 +143,15 @@ class Sformula(Specification):
             )
             f_typeset = Typeset(set_of_types)
             atom = Atom(formula=(str(formula), f_typeset), check=False)
+            f_string = formula.to_str()
+            hash = f"a{hashlib.sha1(f_string.encode('utf-8')).hexdigest()}"[0:5]
+            data = {"formula": formula, "operator": formula.kindstr(), "atom": atom}
             tree.create_node(
-                tag=f"ATOM\t-->\t({formula})",
+                tag=f"ATOM\t-->\t({formula}\t[{hash}])",
                 parent=parent,
-                data={"formula": formula, "operator": formula.kindstr(), "atom": atom},
+                data=data,
             )
+            atom_dictionary[hash] = data
         else:
             node = tree.create_node(
                 tag=f"{formula.kindstr()}\t--\t({formula})",
@@ -139,6 +168,7 @@ class Sformula(Specification):
                         formula=subformula,
                         tree=tree,
                         typeset=typeset,
+                        atom_dictionary=atom_dictionary,
                         parent=node.identifier,
                     )
 
@@ -199,7 +229,7 @@ class Sformula(Specification):
 
 
 if __name__ == "__main__":
-    phi = "G(a & b | G(k & l)) & F(c | !d) & (X(e & f) | !X(g | h)) & (l U p)"
+    phi = "! z & G(a & b | G(k & l)) & F(c | !d) & (X(e & f) | !X(g | h)) & (l U p)"
     sformula = Sformula(phi)
     print(sformula.tree)
     print(sformula.atoms)
