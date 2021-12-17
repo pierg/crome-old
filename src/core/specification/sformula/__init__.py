@@ -7,6 +7,7 @@ from typing import Set
 import spot
 from treelib import Tree
 
+from core.patterns import Pattern
 from core.specification import Specification
 from core.specification.atom import Atom, AtomKind
 from core.specification.enums import SpecKind
@@ -15,9 +16,13 @@ from tools.pyeda import Pyeda
 
 
 class Sformula(Specification):
-    def __init__(self, formula: str, typeset: Typeset = None):
+    def __init__(self, formula: str | Pattern, typeset: Typeset = None):
+        if isinstance(formula, Pattern):
+            self.__pattern = formula
+        else:
+            self.__pattern = None
 
-        spot_formula = spot.formula(formula)
+        spot_formula = spot.formula(str(formula))
         spot_formula = spot.simplify(spot_formula)
         spot_formula = Sformula.apply_equalities(spot_formula)
         self.__spot_formula = spot_formula
@@ -35,7 +40,6 @@ class Sformula(Specification):
         self.__boolean_formula = self.__gen_boolean_formula()
         print(self.__boolean_formula.cnf)
         print(self.__boolean_formula.dnf)
-        print("ciao")
 
     @property
     def formula(self):
