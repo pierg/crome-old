@@ -13,8 +13,14 @@ class Surveillance(CoreMovement):
 
     patterns: Dict[Kinds, str] = {
         Kinds.PATROLLING: "Keep visiting a set of locations, but not in a particular order.",
-        Kinds.ORDERED_PATROLLING: "This patterns requires a robot to keep visiting a set of locations, in some specified order, similarly to sequenced patrolling. However, given an order, e.g., 1 and 2 between two locations, it is not admitted to the robot to visit 2 before 1.",
-        Kinds.STRICT_ORDERED_PATROLLING: "Ordered patrolling patterns does not avoid a predecessor location to be visited multiple times before its successor. Strict Ordered Patrolling ensures that, after a predecessor is visited, it is not visited again before its successor.",
+        Kinds.ORDERED_PATROLLING: "This patterns requires a robot to keep visiting a set of locations, in some "
+        "specified order, similarly to sequenced patrolling. However, given an order, e.g., "
+        "1 and 2 between two locations, it is not admitted to the robot to visit 2 before "
+        "1.",
+        Kinds.STRICT_ORDERED_PATROLLING: "Ordered patrolling patterns does not avoid a predecessor location to be "
+        "visited multiple times before its successor. Strict Ordered Patrolling "
+        "ensures that, after a predecessor is visited, it is not visited again "
+        "before its successor.",
     }
 
     def __init__(self, formula: str, kind: Kinds):

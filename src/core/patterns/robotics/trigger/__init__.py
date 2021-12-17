@@ -14,12 +14,17 @@ class Trigger(Robotic):
         WAIT = auto()
 
     patterns: Dict[Kinds, str] = {
-        Kinds.INSTANTANEOUS_REACTION: "Applies when the occurrence of a stimulus instantaneously triggers a counteraction.",
-        Kinds.BOUNDED_REACTION: "Applies when a counteraction must be performed every time and only when a specific location is entered.",
-        Kinds.BOUND_DELAY: "Applies when a counteraction must be performed every time and only when a specific location is entered.",
-        Kinds.PROMPT_REACTION: "Applies when the occurrence of a stimulus triggers a counteraction promptly, i.e. in the next time instant.",
+        Kinds.INSTANTANEOUS_REACTION: "Applies when the occurrence of a stimulus instantaneously triggers a "
+        "counteraction.",
+        Kinds.BOUNDED_REACTION: "Applies when a counteraction must be performed every time and only when a specific "
+        "location is entered.",
+        Kinds.BOUND_DELAY: "Applies when a counteraction must be performed every time and only when a specific "
+        "location is entered.",
+        Kinds.PROMPT_REACTION: "Applies when the occurrence of a stimulus triggers a counteraction promptly, i.e. in "
+        "the next time instant.",
         Kinds.DELAYED_REACTION: "Applies when the occurrence of a stimulus triggers a counteraction some time later.",
-        Kinds.WAIT: "Applies when a counteraction must be performed every time and only when a specific location is entered.",
+        Kinds.WAIT: "Applies when a counteraction must be performed every time and only when a specific location is "
+        "entered.",
     }
 
     def __init__(self, formula: str, kind: Kinds):
