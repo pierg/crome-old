@@ -2,19 +2,20 @@ from __future__ import annotations
 
 from copy import copy, deepcopy
 from itertools import combinations
-from typing import Set, Dict, Union, TypeVar, List, Tuple
+from typing import Dict, Set, Tuple, TypeVar, Union
 
-from core.type import Types, TypeKinds, BASE_CLASS_TYPES
+from core.type import BASE_CLASS_TYPES, Boolean, TypeKinds, Types
 
-AllTypes = TypeVar('AllTypes', bound=Types)
+AllTypes = TypeVar("AllTypes", bound=Types)
 
 
 class Typeset(dict):
-    """Set of identifier -> AllTypes"""
+    """Set of identifier -> AllTypes."""
 
     def __init__(self, types: Set[AllTypes] = None):
 
-        """Indicates the supertypes relationships for each type in the typeset"""
+        """Indicates the supertypes relationships for each type in the
+        typeset."""
         self.__super_types: Dict[AllTypes, Set[AllTypes]] = {}
 
         """Indicates the mutex relationships for the type in the typeset"""
@@ -26,7 +27,7 @@ class Typeset(dict):
         if types is not None:
             self.add_elements(types)
         else:
-            super(Typeset, self).__init__()
+            super().__init__()
 
     def __deepcopy__(self: Typeset, memo):
         cls = self.__class__
@@ -51,7 +52,7 @@ class Typeset(dict):
         return ret[:-1]
 
     def __or__(self, element: Union[Typeset, AllTypes]) -> Typeset:
-        """ Returns self | element """
+        """Returns self | element."""
         if isinstance(element, Types):
             element = Typeset({element})
         """Shallow copy"""
@@ -71,11 +72,10 @@ class Typeset(dict):
         return new_dict
 
     def __and__(self, element: Typeset) -> Typeset:
-        """ Returns self &= element """
-        pass
+        """Returns self &= element."""
 
     def __ior__(self, element: Union[Typeset, AllTypes]):
-        """ Updates self with self |= element """
+        """Updates self with self |= element."""
         if isinstance(element, Types):
             element = Typeset({element})
         for key, value in element.items():
@@ -86,21 +86,23 @@ class Typeset(dict):
                 #           f"There is already en element with key '{key}' and value of type '{type(self[key]).__name__}'")
                 #     raise Exception("Type Mismatch")
                 if type(value).__name__ != type(self[key]).__name__:
-                    print(f"Trying to add an element with key '{key}' and value of type '{type(value).__name__}'")
-                    print(f"ERROR:\n"
-                          f"There is already en element with key '{key}' and value of type '{type(self[key]).__name__}'")
+                    print(
+                        f"Trying to add an element with key '{key}' and value of type '{type(value).__name__}'"
+                    )
+                    print(
+                        f"ERROR:\n"
+                        f"There is already en element with key '{key}' and value of type '{type(self[key]).__name__}'"
+                    )
                     raise Exception("Type Mismatch")
             if key not in self:
                 self.add_elements({value})
         return self
 
     def __iand__(self, element: Typeset):
-        """ Updates self with self &= element """
-        pass
+        """Updates self with self &= element."""
 
     def __isub__(self, element):
-        """ Updates self with self -= element """
-        pass
+        """Updates self with self -= element."""
 
     @staticmethod
     def get_instance_ts(specification_ts: Typeset, world_ts: Typeset) -> Typeset:
@@ -116,7 +118,8 @@ class Typeset(dict):
         return new_ts
 
     def extract_inputs_outputs(self) -> Tuple[Set[Types], Set[Types]]:
-        """Returns a set of variables in the typeset that are not controllable and controllable"""
+        """Returns a set of variables in the typeset that are not controllable
+        and controllable."""
         i = set()
         o = set()
         if len(self.values()) > 0:
@@ -128,7 +131,8 @@ class Typeset(dict):
         return i, o
 
     def extract_inputs_outputs_excluding_context(self) -> Tuple[Set[Types], Set[Types]]:
-        """Returns a set of variables (excluding contexts) in the typeset that are not controllable and controllable"""
+        """Returns a set of variables (excluding contexts) in the typeset that
+        are not controllable and controllable."""
         i = set()
         o = set()
         if len(self.values()) > 0:
@@ -142,7 +146,8 @@ class Typeset(dict):
         return i, o
 
     def extract_actions(self) -> Set[Types]:
-        """Returns a set of variables in the typeset that are controllable actions"""
+        """Returns a set of variables in the typeset that are controllable
+        actions."""
         ret = set()
         if len(self.values()) > 0:
             for t in self.values():
@@ -151,7 +156,8 @@ class Typeset(dict):
         return ret
 
     def extract_location(self) -> Set[Types]:
-        """Returns a set of variables in the typeset that are controllable location"""
+        """Returns a set of variables in the typeset that are controllable
+        location."""
         ret = set()
         if len(self.values()) > 0:
             for t in self.values():
@@ -160,7 +166,8 @@ class Typeset(dict):
         return ret
 
     def extract_sensors(self) -> Set[Types]:
-        """Returns a set of variables in the typeset that are not controllable sensors"""
+        """Returns a set of variables in the typeset that are not controllable
+        sensors."""
         ret = set()
         if len(self.values()) > 0:
             for t in self.values():
@@ -169,7 +176,8 @@ class Typeset(dict):
         return ret
 
     def extract_sensor_actions(self) -> Set[Types]:
-        """Returns a set of variables in the typeset that are sensors of action completion"""
+        """Returns a set of variables in the typeset that are sensors of action
+        completion."""
         ret = set()
         if len(self.values()) > 0:
             for t in self.values():
@@ -178,7 +186,8 @@ class Typeset(dict):
         return ret
 
     def extract_sensor_locations(self) -> Set[Types]:
-        """Returns a set of variables in the typeset that are sensors indicating current robot location"""
+        """Returns a set of variables in the typeset that are sensors
+        indicating current robot location."""
         ret = set()
         if len(self.values()) > 0:
             for t in self.values():
@@ -189,31 +198,31 @@ class Typeset(dict):
     def add_elements(self, types: Set[AllTypes]):
         if types is not None:
             for elem in types:
-                super(Typeset, self).__setitem__(elem.name, elem)
+                super().__setitem__(elem.name, elem)
 
         self.update_subtypes()
         self.update_mutextypes()
         self.update_adjacenttypes()
 
     def update_subtypes(self):
-        pass
-        #TODO FOR PIER: FIXME
-
-        # if len(self.values()) > 1:
-        #     for (a, b) in combinations(self.values(), 2):
-        #         if a.__class__.__name__ in BASE_CLASS_TYPES or b.__class__.__name__ in BASE_CLASS_TYPES:
-        #             continue
-        #         """If they are not base variables"""
-        #         if isinstance(a, type(b)):
-        #             if a in self.__super_types:
-        #                 self.__super_types[a].add(b)
-        #             else:
-        #                 self.__super_types[a] = {b}
-        #         if isinstance(b, type(a)):
-        #             if b in self.__super_types:
-        #                 self.__super_types[b].add(a)
-        #             else:
-        #                 self.__super_types[b] = {a}
+        if len(self.values()) > 1:
+            for (a, b) in combinations(self.values(), 2):
+                if (
+                    a.__class__.__name__ in BASE_CLASS_TYPES
+                    or b.__class__.__name__ in BASE_CLASS_TYPES
+                ):
+                    continue
+                """If they are not base variables"""
+                if isinstance(a, type(b)):
+                    if a in self.__super_types:
+                        self.__super_types[a].add(b)
+                    else:
+                        self.__super_types[a] = {b}
+                if isinstance(b, type(a)):
+                    if b in self.__super_types:
+                        self.__super_types[b].add(a)
+                    else:
+                        self.__super_types[b] = {a}
 
     def update_mutextypes(self):
         if len(self.values()) > 1:
@@ -234,7 +243,8 @@ class Typeset(dict):
             self.__adjacent_types = dict()
             for variable in self.values():
                 if hasattr(variable, "adjacency_set"):
-                    """Adding 'self' as adjacent as well i.e. the robot can stay still"""
+                    """Adding 'self' as adjacent as well i.e. the robot can
+                    stay still."""
                     self.__adjacent_types[variable] = {variable}
                     for adjacent_class in variable.adjacency_set:
                         for variable_candidate in self.values():
@@ -255,3 +265,10 @@ class Typeset(dict):
     @property
     def adjacent_types(self) -> Dict[AllTypes, Set[AllTypes]]:
         return self.__adjacent_types
+
+    @staticmethod
+    def generate_typeset(types: Set[str]):
+        s_types = set()
+        for t in types:
+            s_types.add(Boolean(t))
+        return Typeset(s_types)

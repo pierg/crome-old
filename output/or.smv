@@ -1,0 +1,12 @@
+MODULE main
+VAR
+	a: boolean;
+	b: boolean;
+
+   -- Using Implication
+LTLSPEC !((G(a -> b) & G(b -> a)) -> (a | !b))
+LTLSPEC (G(a -> b) & G(b -> a)) -> ((a | !b))
+
+   -- Using Conjunction
+LTLSPEC !((G(a -> b) & G(b -> a)) & (a | !b))
+LTLSPEC (G(a -> b) & G(b -> a)) & ((a | !b))

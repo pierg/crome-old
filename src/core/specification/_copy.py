@@ -14,5 +14,4 @@ def __deepcopy__(self: Specification, memo):
     for k, v in self.__dict__.items():
         if "__spot" not in k:
             setattr(result, k, deepcopy(v, memo))
-    result.spotfy()
     return result

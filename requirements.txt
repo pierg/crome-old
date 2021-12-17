@@ -8,3 +8,4 @@ flask_cors
 flask_socketio
 python-socketio
 pre-commit
+bloom-filter

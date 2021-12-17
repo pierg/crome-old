@@ -1,9 +1,33 @@
 from core.specification.exceptions import NotSatisfiableException
+from core.type import Boolean
 from core.type.subtypes.action import BooleanAction
 from core.type.subtypes.context import ContextBooleanTime
 from core.type.subtypes.location import ReachLocation
 from core.type.subtypes.sensor import BooleanSensor
 from core.world import World
+
+"""Generic Boolena Types"""
+
+
+class A(Boolean):
+    def __init__(self, name: str = "a"):
+        super().__init__(name)
+
+
+class B(Boolean):
+    def __init__(self, name: str = "b"):
+        super().__init__(name)
+
+
+class C(Boolean):
+    def __init__(self, name: str = "c"):
+        super().__init__(name)
+
+
+class D(Boolean):
+    def __init__(self, name: str = "d"):
+        super().__init__(name)
+
 
 """SENSORS"""
 
@@ -39,7 +63,25 @@ class Picture(BooleanAction):
 """LOCATIONS"""
 
 
-class R1(ReachLocation):
+class Rt(ReachLocation):
+    def __init__(self, name: str = "rt"):
+        super().__init__(name)
+
+    @property
+    def mutex_group(self):
+        return "abstracted_locations"
+
+
+class Rb(ReachLocation):
+    def __init__(self, name: str = "rb"):
+        super().__init__(name)
+
+    @property
+    def mutex_group(self):
+        return "abstracted_locations"
+
+
+class R1(Rt):
     def __init__(self, name: str = "r1"):
         super().__init__(name)
 
@@ -52,7 +94,7 @@ class R1(ReachLocation):
         return {"R2", "R5"}
 
 
-class R2(ReachLocation):
+class R2(Rt):
     def __init__(self, name: str = "r2"):
         super().__init__(name)
 
@@ -65,7 +107,7 @@ class R2(ReachLocation):
         return {"R1", "R5"}
 
 
-class R3(ReachLocation):
+class R3(Rb):
     def __init__(self, name: str = "r3"):
         super().__init__(name)
 
@@ -78,7 +120,7 @@ class R3(ReachLocation):
         return {"R4", "R5"}
 
 
-class R4(ReachLocation):
+class R4(Rb):
     def __init__(self, name: str = "r4"):
         super().__init__(name)
 
@@ -125,6 +167,14 @@ class Night(ContextBooleanTime):
         return "time"
 
 
+"""We can set the generic types to be actions, i.e. controllable outputs"""
+
+
+class GenericWorld(World):
+    def __init__(self):
+        super().__init__(actions={A(), B(), C(), D()})
+
+
 class CustomWorld(World):
     def __init__(self):
         super().__init__(
@@ -150,3 +200,7 @@ if __name__ == "__main__":
         x = r1 & r2
     except NotSatisfiableException:
         print(f"{r1.string}, and {r2.string} are mutually exclusive!")
+
+    x = r1 | r2
+
+    print(x)

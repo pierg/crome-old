@@ -2,20 +2,29 @@ import hashlib
 import random
 import re
 import string
-from typing import Tuple, List
+from typing import TYPE_CHECKING, List, Tuple
 
-from core.controller.synthesisinfo import SynthesisInfo
 from tools.logic import Logic
+
+if TYPE_CHECKING:
+    from core.controller.synthesisinfo import SynthesisInfo
+
+
+match_LTL_no_spaces = r"(?<=[G|U|F|X])(?=[^\s])|(?=[U])+"
 
 
 class StringMng:
-    ASSUMPTIONS_HEADER = '**ASSUMPTIONS**'
-    GUARANTEES_HEADER = '**GUARANTEES**'
-    INS_HEADER = '**INPUTS**'
-    OUTS_HEADER = '**OUTPUTS**'
-    END_HEADER = '**END**'
-    HEADER_SYMBOL = '**'
+    ASSUMPTIONS_HEADER = "**ASSUMPTIONS**"
+    GUARANTEES_HEADER = "**GUARANTEES**"
+    INS_HEADER = "**INPUTS**"
+    OUTS_HEADER = "**OUTPUTS**"
+    END_HEADER = "**END**"
+    HEADER_SYMBOL = "**"
     DATA_INDENT = 0
+
+    @staticmethod
+    def add_spaces_spot_ltl(formula: str):
+        return re.sub(match_LTL_no_spaces, " ", formula)
 
     @staticmethod
     def get_name_and_id(value: str = None) -> Tuple[str, str]:
@@ -24,7 +33,9 @@ class StringMng:
             name: str = ""
 
             """5 character ID generated from a random string"""
-            random_string = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+            random_string = "".join(
+                random.choices(string.ascii_uppercase + string.digits, k=10)
+            )
             id = hashlib.sha1(random_string.encode("UTF-8")).hexdigest()[:5]
         else:
             name: str = value
@@ -36,31 +47,36 @@ class StringMng:
 
     @staticmethod
     def strix_syntax_fix(text: str):
-        """Adds a space next to the '!' and converts TRUE to true"""
+        """Adds a space next to the '!' and converts TRUE to true."""
         try:
-            res = re.sub(r'!(?!\s)', '! ', text)
+            res = re.sub(r"!(?!\s)", "! ", text)
             res = res.replace("TRUE", "true")
         except Exception as e:
             raise e
         return res
 
     @staticmethod
-    def get_controller_synthesis_str(controller_info: SynthesisInfo) -> str:
-
+    def get_controller_synthesis_str(controller_info: "SynthesisInfo") -> str:
         ret = ""
 
         if len(controller_info.assumptions) > 0:
             ret += f"{StringMng.ASSUMPTIONS_HEADER}\n\n"
             for p in controller_info.assumptions:
-                ret += "\t" * StringMng.DATA_INDENT + StringMng.strix_syntax_fix(p) + "\n"
+                ret += (
+                    "\t" * StringMng.DATA_INDENT + StringMng.strix_syntax_fix(p) + "\n"
+                )
 
         if len(controller_info.a_liveness) > 0:
             for p in controller_info.a_liveness:
-                ret += "\t" * StringMng.DATA_INDENT + StringMng.strix_syntax_fix(p) + "\n"
+                ret += (
+                    "\t" * StringMng.DATA_INDENT + StringMng.strix_syntax_fix(p) + "\n"
+                )
 
         if len(controller_info.a_mutex) > 0:
             for p in controller_info.a_mutex:
-                ret += "\t" * StringMng.DATA_INDENT + StringMng.strix_syntax_fix(p) + "\n"
+                ret += (
+                    "\t" * StringMng.DATA_INDENT + StringMng.strix_syntax_fix(p) + "\n"
+                )
 
         ret += f"\n\n{StringMng.GUARANTEES_HEADER}\n\n"
         for p in controller_info.guarantees:
@@ -68,11 +84,15 @@ class StringMng:
 
         if len(controller_info.g_mutex) > 0:
             for p in controller_info.g_mutex:
-                ret += "\t" * StringMng.DATA_INDENT + StringMng.strix_syntax_fix(p) + "\n"
+                ret += (
+                    "\t" * StringMng.DATA_INDENT + StringMng.strix_syntax_fix(p) + "\n"
+                )
 
         if len(controller_info.g_adjacency) > 0:
             for p in controller_info.g_adjacency:
-                ret += "\t" * StringMng.DATA_INDENT + StringMng.strix_syntax_fix(p) + "\n"
+                ret += (
+                    "\t" * StringMng.DATA_INDENT + StringMng.strix_syntax_fix(p) + "\n"
+                )
 
         ret += f"\n\n{StringMng.INS_HEADER}\n\n"
         ret += "\t" * StringMng.DATA_INDENT + ", ".join(controller_info.inputs)
@@ -109,7 +129,9 @@ class StringMng:
         return initialstateline.split()[1]
 
     @staticmethod
-    def parse_controller_specification_from_file(file_path: str) -> Tuple[str, str, str, str]:
+    def parse_controller_specification_from_file(
+        file_path: str,
+    ) -> Tuple[str, str, str, str]:
         """Returns: assumptions, guarantees, inputs, outputs"""
 
         assumptions = []
@@ -119,7 +141,7 @@ class StringMng:
 
         file_header = ""
 
-        with open(file_path, 'r') as ifile:
+        with open(file_path) as ifile:
             for line in ifile:
                 line, header = StringMng._check_header(line)
 
@@ -158,7 +180,12 @@ class StringMng:
                         if file_header == StringMng.OUTS_HEADER:
                             if len(assumptions) == 0:
                                 assumptions.append("true")
-                            return Logic.and_(assumptions), Logic.and_(guarantees), ",".join(inputs), ",".join(outputs)
+                            return (
+                                Logic.and_(assumptions),
+                                Logic.and_(guarantees),
+                                ",".join(inputs),
+                                ",".join(outputs),
+                            )
                         else:
                             Exception("File format not supported")
                     else:
@@ -180,27 +207,29 @@ class StringMng:
 
     @staticmethod
     def _count_line(line):
-        """Returns a comment-free, tab-replaced line with no whitespace and the number of tabs"""
-        COMMENT_CHAR = '#'
+        """Returns a comment-free, tab-replaced line with no whitespace and the
+        number of tabs."""
+        COMMENT_CHAR = "#"
         TAB_WIDTH = 2
         line = line.split(COMMENT_CHAR, 1)[0]  # remove comments
         tab_count = 0
         space_count = 0
         for char in line:
-            if char == ' ':
+            if char == " ":
                 space_count += 1
-            elif char == '\t':
+            elif char == "\t":
                 tab_count += 1
             else:
                 break
         tab_count += int(space_count / 4)
-        line = line.replace('\t', ' ' * TAB_WIDTH)  # replace tabs with spaces
+        line = line.replace("\t", " " * TAB_WIDTH)  # replace tabs with spaces
         return line.strip(), tab_count
 
     @staticmethod
     def _check_header(line: str) -> Tuple[str, bool]:
-        """Returns a comment-free, tab-replaced line with no whitespace and the number of tabs"""
-        COMMENT_CHAR = '#'
+        """Returns a comment-free, tab-replaced line with no whitespace and the
+        number of tabs."""
+        COMMENT_CHAR = "#"
         line = line.split(COMMENT_CHAR, 1)[0]
         if line.startswith(StringMng.HEADER_SYMBOL):
             return line.strip(), True

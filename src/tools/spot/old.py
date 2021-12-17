@@ -2,51 +2,11 @@ import platform
 import subprocess
 
 import spot
-from treelib import Tree
 
 from tools.storage import Store
 
 
 class Spot:
-    def __init__(self, formula: str):
-
-        spot_formula = spot.formula(formula)
-        self.__formula = spot.simplify(spot_formula)
-        self.__tree = self.create_tree()
-
-    @property
-    def formula(self):
-        return self.__formula
-
-    @property
-    def tree(self):
-        return self.__tree
-
-    def print_tree(self):
-        Spot.tree_explorer(self.__formula)
-
-    def create_tree(self):
-        tree = Tree()
-        self.tree_creation(self.__formula, tree)
-        return tree
-
-    @staticmethod
-    def tree_creation(formula, tree: Tree, parent=None):
-        node = tree.create_node(
-            tag=f"{formula.kindstr()}\t--\t({formula})",
-            parent=parent,
-            data={
-                "formula": formula,
-                "operator": formula.kindstr(),
-                "n_children": formula.size(),
-            },
-        )
-        if formula.size() > 0:
-            for subformula in formula:
-                Spot.tree_creation(
-                    formula=subformula, tree=tree, parent=node.identifier
-                )
-
     @staticmethod
     def generate_buchi(specification: str, name: str, path: str = None):
         try:
@@ -129,16 +89,10 @@ class Spot:
         return spot_formula
 
 
-def test():
-    phi_string = "G(pc & gr) U G(pc -> re)"
-    phi_spot = Spot(phi_string)
-    print(phi_spot.formula)
-    print(phi_spot.tree)
+if __name__ == "__main__":
 
-
-def test2():
     # f = spot.formula("((G(F(r1 & F(r2))) & (!(r2) U r1) & (!(r2) U r1) & G(((r2) -> (X((!(r2) U r1))))) & G(((r1) -> (X((!(r1) U r2)))))) | !(GF(sensor))) & (F(a) | GF(b))")
-    pass
+    f_string_o = "p -> !(G(a & b | F c ) & !(a | x U d) | (c & a) & !(F c | d) | a & b) & (c | d) & (c | d) & (c | d) & (c | d) & (c | d) | a U b & F g | G x"
 
     f_string = "(b | a) & (b | X(a U b & (G(a U b)))) & (X (G(a U b)) | a) & (X (G(a U b)) | X(a U b & (G(a U b))))"
 
@@ -197,9 +151,3 @@ def test2():
     print(f4)
     f4 = spot.negative_normal_form(f4)
     print(f4)
-
-
-if __name__ == "__main__":
-    # test()
-    g = spot.formula("aUb")
-    print(g.to_str())

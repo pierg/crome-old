@@ -1,0 +1,24 @@
+MODULE main
+-- we want to prove if a generic formula a refines a generic formula b
+-- while taking in consideration mutex and refinement rules
+
+VAR
+	a: boolean;
+	b: boolean;
+
+
+   -- CASE 0: NO REF_RULE   a and b unconstrained
+LTLSPEC a -> b
+
+   -- CASE 1: NO REF_RULE   a and b MUTEX
+LTLSPEC G(a -> !b)a -> b
+
+   -- CASE 2: REF_RULE      a < b
+LTLSPEC (G(a -> b) & G(b -> a)) -> ((a | !b))
+
+   -- CASE 3: REF_RULE      b < a
+LTLSPEC !((G(a -> b) & G(b -> a)) & (a | !b))
+LTLSPEC (G(a -> b) & G(b -> a)) & ((a | !b))
+
+
+   -- CASE 4: REF_RULE      a == b

@@ -1,6 +1,5 @@
 MODULE main
 VAR
-	pc: boolean;
-	gr: boolean;
+	h: boolean;
 
-LTLSPEC !(((gr) -> (pc)))
+LTLSPEC !(X !h)

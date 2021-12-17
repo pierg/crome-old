@@ -60,6 +60,17 @@ class GF(Pattern):
         super().__init__(formula=(formula_str, typeset))
 
 
+class FG(Pattern):
+    """Eventually Globally."""
+
+    def __init__(self, element: Union[Specification, Boolean]):
+        input_str, typeset = Pattern.process_unary_input(element)
+
+        formula_str = f"F(G({input_str}))"
+
+        super().__init__(formula=(formula_str, typeset))
+
+
 class U(Pattern):
     """Until Pattern."""
 

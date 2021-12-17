@@ -23,15 +23,6 @@ class Specification(ABC):
 
     @property
     @abstractmethod
-    def spot(self: Specification):
-        pass
-
-    @abstractmethod
-    def spotfy(self: Specification):
-        pass
-
-    @property
-    @abstractmethod
     def spec_kind(self: Specification) -> SpecKind:
         pass
 
@@ -73,19 +64,33 @@ class Specification(ABC):
 
     def is_satisfiable(self: Specification) -> bool:
 
-        sat_check_formula = self.formula()
+        formula = self.formula()
 
-        """If does not contain Mutex Rules already, extract them and check the satisfiability"""
+        """Consider Mutually Exclusion Rules"""
         from core.specification.atom import Atom
 
-        mutex_rules = Atom.extract_mutex_rules(self.typeset)
-        if mutex_rules is not None:
-            sat_check_formula = LogicTuple.and_([self.formula(), mutex_rules.formula()])
+        mtx_rules = Atom.extract_mutex_rules(self.typeset)
+        if mtx_rules is not None:
+            formula = LogicTuple.and_([formula, mtx_rules.formula()])
 
-        return Nuxmv.check_satisfiability(sat_check_formula)
+        """Consider Adjacency Rules"""
+        adj_rules = Atom.extract_adjacency_rules(self.typeset)
+        if adj_rules is not None:
+            formula = LogicTuple.and_([formula, adj_rules.formula()])
+
+        return Nuxmv.check_satisfiability(formula)
 
     def is_valid(self: Specification) -> bool:
-        return Nuxmv.check_validity(self.formula())
+        formula = self.formula()
+
+        """Consider Refinement Rules"""
+        from core.specification.atom import Atom
+
+        ref_rules = Atom.extract_refinement_rules(self.typeset)
+        if ref_rules is not None:
+            formula = LogicTuple.implies_(ref_rules.formula(), formula)
+
+        return Nuxmv.check_validity(formula)
 
     def is_true(self: Specification) -> bool:
         return self.string == "TRUE"
@@ -112,17 +117,18 @@ class Specification(ABC):
         """((r & s1) -> s2) === r -> (s1 -> s2)"""
         from core.specification.atom import Atom
 
-        refinement_rules = Atom.extract_refinement_rules(self.typeset | other.typeset)
-        if refinement_rules is not None:
-            # ref_check_formula = (self & refinement_rules) >> other
-            ref_check_formula = LogicTuple.implies_(
-                LogicTuple.and_([self.formula(), refinement_rules.formula()]),
+        assert self.is_satisfiable() and other.is_satisfiable()
+
+        rules = Atom.extract_refinement_rules(self.typeset | other.typeset)
+
+        if rules is not None:
+            formula = LogicTuple.implies_(
+                LogicTuple.and_([self.formula(), rules.formula()]),
                 other.formula(),
             )
         else:
-            # ref_check_formula = self >> other
-            ref_check_formula = LogicTuple.implies_(self.formula(), other.formula())
-        return Nuxmv.check_validity(ref_check_formula)
+            formula = LogicTuple.implies_(self.formula(), other.formula())
+        return Nuxmv.check_validity(formula)
 
     def __gt__(self, other: Specification):
         """self > other.
@@ -139,21 +145,21 @@ class Specification(ABC):
         if self.is_true():
             return True
 
+        assert self.is_satisfiable() and other.is_satisfiable()
+
         """Check if other -> self is valid, considering the refinement rules r"""
         """((r & s1) -> s2) === r -> (s1 -> s2)"""
         from core.specification.atom import Atom
 
-        refinement_rules = Atom.extract_refinement_rules(self.typeset | other.typeset)
-        if refinement_rules is not None:
-            # ref_check_formula = (other & refinement_rules) << self
-            ref_check_formula = LogicTuple.implies_(
+        rules = Atom.extract_refinement_rules(self.typeset | other.typeset)
+        if rules is not None:
+            formula = LogicTuple.implies_(
                 other.formula(),
-                LogicTuple.and_([self.formula(), refinement_rules.formula()]),
+                LogicTuple.and_([self.formula(), rules.formula()]),
             )
         else:
-            # ref_check_formula = other << self
-            ref_check_formula = LogicTuple.implies_(other.formula(), self.formula())
-        return Nuxmv.check_validity(ref_check_formula)
+            formula = LogicTuple.implies_(other.formula(), self.formula())
+        return Nuxmv.check_validity(formula)
 
     def __eq__(self, other: Specification):
         """Check if self -> other and other -> self."""
