@@ -10,9 +10,6 @@ from core.specification.atom import Atom, AtomKind
 from core.specification.enums import SpecKind
 from core.typeset import Typeset
 
-# if TYPE_CHECKING:
-#     from core.specification.atom import Atom, AtomKind
-
 
 class Sformula(Specification):
     def __init__(self, formula: str, typeset: Typeset = None):
@@ -60,11 +57,6 @@ class Sformula(Specification):
     def swap_equalities(self):
         new_formula = self.apply_equalities(self.__spot_formula)
         self.__spot_formula = new_formula
-
-    @staticmethod
-    def sugar_free(spot_formula):
-        n = spot_formula.traverse(Sformula.__count_sugar)
-        return n == 0
 
     @staticmethod
     def apply_equalities(spot_formula):
