@@ -12,7 +12,7 @@ from tools.logic import Logic, LogicTuple
 from tools.nuxmv import Nuxmv
 
 if TYPE_CHECKING:
-    from core.specification.atom import Atom, AtomKind
+    from core.specification.legacy.atom import Atom, AtomKind
 
 
 class Formula(Specification):
@@ -36,14 +36,14 @@ class Formula(Specification):
             self.__spec_kind = SpecKind.UNDEFINED
 
         if isinstance(atom, str) and atom == "TRUE":
-            from core.specification.atom import Atom
+            from core.specification.legacy.atom import Atom
 
             new_atom = Atom("TRUE")
             self.__cnf: list[set[Atom]] = [{new_atom}]
             self.__dnf: list[set[Atom]] = [{new_atom}]
 
         elif isinstance(atom, str) and atom == "FALSE":
-            from core.specification.atom import Atom
+            from core.specification.legacy.atom import Atom
 
             new_atom = Atom("FALSE")
             self.__cnf: list[set[Atom]] = [{new_atom}]
@@ -216,7 +216,7 @@ class Formula(Specification):
 
         formula_check = Logic.and_(f_string)
 
-        from core.specification.atom import Atom
+        from core.specification.legacy.atom import Atom
 
         rules = Atom.extract_mutex_rules(f_typeset)
         if rules is not None:
@@ -256,7 +256,7 @@ class Formula(Specification):
     def __rshift__(self, other: Formula | Atom) -> Formula:
         """>> Returns a new Specification that is the result of self -> other
         (implies) NOT self OR other."""
-        from core.specification.atom import Atom
+        from core.specification.legacy.atom import Atom
 
         if isinstance(other, Atom):
             other = Formula(other)
@@ -271,7 +271,7 @@ class Formula(Specification):
     def __lshift__(self, other: Formula | Atom) -> Formula:
         """<< Returns a new Specification that is the result of other -> self
         (implies) NOT other OR self."""
-        from core.specification.atom import Atom
+        from core.specification.legacy.atom import Atom
 
         if isinstance(other, Atom):
             other = Formula(other)
@@ -282,7 +282,7 @@ class Formula(Specification):
 
     def __iand__(self, other: Formula | Atom) -> Formula:
         """self &= other Modifies self with the conjunction with other."""
-        from core.specification.atom import Atom
+        from core.specification.legacy.atom import Atom
 
         """Base cases"""
         if isinstance(other, Atom):
@@ -367,7 +367,7 @@ class Formula(Specification):
 
     def __ior__(self, other: Formula | Atom) -> Formula:
         """self }= other Modifies self with the disjunction with other."""
-        from core.specification.atom import Atom
+        from core.specification.legacy.atom import Atom
 
         """Base cases"""
         if isinstance(other, Atom):

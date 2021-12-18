@@ -1,7 +1,6 @@
 from typing import List, Union
 
-from core.specification.formula.atom import Atom, Trigger
-from core.specification.formula.atom.pattern.robotics.coremovement import CoreMovement
+from core.specification.legacy.formula import Atom, CoreMovement, Trigger
 from core.type import Boolean
 from tools.logic import Logic
 

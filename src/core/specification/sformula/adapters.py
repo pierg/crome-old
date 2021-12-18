@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import Dict, Set, TypeVar
 
-from core.specification.atom import Atom, AtomKind
-from core.specification.formula import Formula, FormulaKind
+from core.specification.legacy.atom import Atom, AtomKind
+from core.specification.legacy.formula import Formula, FormulaKind
 from core.type import Boolean, Types
 from core.typeset import Typeset
 from tools.logic import Logic

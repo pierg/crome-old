@@ -6,31 +6,31 @@ from enum import Enum, auto
 """Template Pattern"""
 
 
-class TypeKinds(Enum):
-    SENSOR = auto()
-    SENSOR_ACTION = auto()
-    SENSOR_LOCATION = auto()
-    LOCATION = auto()
-    ACTIVE = auto()
-    ACTION = auto()
-    CONTEXT = auto()
-
-
-BASE_CLASS_TYPES = ["Boolean",
-                    "BoundedInteger",
-                    "BooleanAction",
-                    "IntegerAction",
-                    "Active",
-                    "ContextTime",
-                    "ContextBooleanTime",
-                    "ContextLocation",
-                    "ContextIdentity",
-                    "ReachLocation",
-                    "IntegerSensor",
-                    "BooleanSensor"]
+BASE_CLASS_TYPES = [
+    "Boolean",
+    "BoundedInteger",
+    "BooleanAction",
+    "IntegerAction",
+    "Active",
+    "ContextTime",
+    "ContextBooleanTime",
+    "ContextLocation",
+    "ContextIdentity",
+    "ReachLocation",
+    "IntegerSensor",
+    "BooleanSensor",
+]
 
 
 class Types(ABC):
+    class Kind(Enum):
+        SENSOR = auto()
+        SENSOR_ACTION = auto()
+        SENSOR_LOCATION = auto()
+        LOCATION = auto()
+        ACTIVE = auto()
+        ACTION = auto()
+        CONTEXT = auto()
 
     def __init__(self, name: str):
         self.__name: str = name
@@ -47,7 +47,11 @@ class Types(ABC):
 
     @property
     def controllable(self) -> bool:
-        if self.kind == TypeKinds.SENSOR or self.kind == TypeKinds.CONTEXT or self.kind == TypeKinds.ACTIVE:
+        if (
+            self.kind == TypeKinds.SENSOR
+            or self.kind == TypeKinds.CONTEXT
+            or self.kind == TypeKinds.ACTIVE
+        ):
             return False
         return True
 
@@ -66,13 +70,13 @@ class Types(ABC):
 
 
 class Boolean(Types):
-
     def __init__(self, name: str):
         super().__init__(name)
 
     def to_atom(self):
-        from core.specification.atom import Atom
+        from core.specification.legacy.atom import Atom
         from core.typeset import Typeset
+
         return Atom(formula=(self.name, Typeset({self})), check=False)
 
     @property
@@ -81,7 +85,6 @@ class Boolean(Types):
 
 
 class BoundedInteger(Types):
-
     def __init__(self, name: str, min_value: int, max_value: int):
         self.__min = min_value
         self.__max = max_value

@@ -1,8 +1,7 @@
 from typing import Tuple, Union
 
 from core.specification import Specification
-from core.specification.formula.atom import Atom
-from core.specification.formula.atom.pattern.robotics import RoboticPattern
+from core.specification.legacy.formula import Atom, RoboticPattern
 from core.type import Boolean
 from core.typeset import Typeset
 

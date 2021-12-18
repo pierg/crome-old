@@ -1,22 +1,33 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from typing import Set, Tuple, List
+from typing import List
 
-from core.contract.exceptions import *
+from core.contract.exceptions import (
+    IncompatibleContracts,
+    InconsistentContracts,
+    Set,
+    UnfeasibleContracts,
+    a_liveness,
+    assumptions,
+    g_adjacency,
+    guarantees,
+)
 from core.controller.synthesisinfo import SynthesisInfo
 from core.specification import FormulaOutput
-from core.specification.atom import Atom
 from core.specification.exceptions import NotSatisfiableException
-from core.specification.formula import Specification, Formula
+from core.specification.legacy.atom import Atom
+from core.specification.legacy.formula import Formula, Specification
 from core.typeset import Typeset
 
 
 class Contract:
-    def __init__(self,
-                 assumptions: Specification = None,
-                 guarantees: Specification = None,
-                 saturate: bool = True):
+    def __init__(
+        self,
+        assumptions: Specification = None,
+        guarantees: Specification = None,
+        saturate: bool = True,
+    ):
 
         self.__assumptions = None
         self.__guarantees = None
@@ -27,9 +38,6 @@ class Contract:
 
         self.composed_by = {self}
         self.conjoined_by = {self}
-
-    from ._copying import __deepcopy__
-    from ._printing import __str__
 
     @property
     def assumptions(self) -> Formula:
@@ -42,7 +50,7 @@ class Contract:
 
     @property
     def guarantees(self) -> Formula:
-        """Returning saturated guarantee"""
+        """Returning saturated guarantee."""
         return self.__guarantees
 
     @guarantees.setter
@@ -51,7 +59,7 @@ class Contract:
         self.__checkfeasibility()
 
     def __setassumptions(self, value: Specification):
-        """Setting Assumptions"""
+        """Setting Assumptions."""
         if value is None:
             self.__assumptions = Formula("TRUE")
         else:
@@ -79,7 +87,7 @@ class Contract:
             self.__guarantees.saturate(self.__assumptions)
 
     def __checkfeasibility(self):
-        """Check Feasibility"""
+        """Check Feasibility."""
         if self.assumptions is not None:
             try:
                 self.__assumptions & self.__guarantees
@@ -87,7 +95,7 @@ class Contract:
                 raise UnfeasibleContracts(self, e)
 
     def get_controller_info(self, world_ts: Typeset = None) -> SynthesisInfo:
-        """Extract All Info Needed to Build a Controller from the Contract"""
+        """Extract All Info Needed to Build a Controller from the Contract."""
 
         if world_ts is None:
             world_ts = Typeset()
@@ -123,7 +131,7 @@ class Contract:
         """Output typeset"""
         o_typeset = Typeset(all_typeset.extract_outputs())
 
-        actions_typeset = Typeset(all_typeset.ext())
+        Typeset(all_typeset.ext())
 
         """Mutex"""
         ret = Atom.extract_mutex_rules(i_typeset, output=FormulaOutput.ListCNF)
@@ -134,8 +142,6 @@ class Contract:
         if ret is not None:
             rules, typeset = ret
             g_mutex.extend(rules)
-
-
 
         """For the rules we extracts rules from the variables based on assumptions and inputs"""
         a_typeset = a_typeset | i_typeset
@@ -178,14 +184,16 @@ class Contract:
         inputs = [t.name for t in (a_typeset | g_typeset).extract_inputs()]
         outputs = [t.name for t in (a_typeset | g_typeset).extract_outputs()]
 
-        return SynthesisInfo(a_initial=assumptions,
-                             a_fairness=a_liveness,
-                             a_mutex=a_mutex,
-                             guarantees=guarantees,
-                             g_mutex=g_mutex,
-                             g_safety=g_adjacency,
-                             inputs=inputs,
-                             outputs=outputs)
+        return SynthesisInfo(
+            a_initial=assumptions,
+            a_fairness=a_liveness,
+            a_mutex=a_mutex,
+            guarantees=guarantees,
+            g_mutex=g_mutex,
+            g_safety=g_adjacency,
+            inputs=inputs,
+            outputs=outputs,
+        )
 
     @staticmethod
     def composition(contracts: Set[Contract]) -> Contract:
@@ -217,7 +225,9 @@ class Contract:
         new_assumptions.relax_by(new_guarantees)
 
         """New contracts without saturation cause it was already saturated"""
-        new_contract = Contract(assumptions=new_assumptions, guarantees=new_guarantees, saturate=False)
+        new_contract = Contract(
+            assumptions=new_assumptions, guarantees=new_guarantees, saturate=False
+        )
 
         new_contract.composed_by = contracts
 
@@ -247,7 +257,9 @@ class Contract:
         print("The conjunction is compatible and consistent")
 
         """New contracts without saturation cause it was already saturated"""
-        new_contract = Contract(assumptions=new_assumptions, guarantees=new_guarantees, saturate=False)
+        new_contract = Contract(
+            assumptions=new_assumptions, guarantees=new_guarantees, saturate=False
+        )
 
         new_contract.conjoined_by = contracts
 

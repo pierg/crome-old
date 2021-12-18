@@ -2,29 +2,28 @@ from __future__ import annotations
 
 import random
 from random import choices
+from typing import TYPE_CHECKING, Dict, List, Set, Tuple
 
 from tabulate import tabulate
-from typing import Tuple, List, Dict, Set
 
-from core.specification.atom import Atom, AtomKind
-from tools.strings import StringMng
+from core.specification.legacy.atom import Atom, AtomKind
 from core.type import Boolean, TypeKinds
 from core.type.subtypes.location import ReachLocation
 from core.typeset import Typeset
-
-from typing import TYPE_CHECKING
+from tools.strings import StringMng
 
 if TYPE_CHECKING:
     from core.world import World
 
 
 class Controller:
-
-    def __init__(self,
-                 mealy_machine: str,
-                 world: World = None,
-                 name: str = None,
-                 synth_time: float = None):
+    def __init__(
+        self,
+        mealy_machine: str,
+        world: World = None,
+        name: str = None,
+        synth_time: float = None,
+    ):
 
         if name is None:
             self.__name = ""
@@ -41,10 +40,12 @@ class Controller:
         self.__current_location = None
 
     def __str__(self):
-        output = f"States          \t {', '.join(self.states)}" + \
-                 f"\nInital State    \t {self.initial_state}" + \
-                 f"\nInput  Alphabet \t {', '.join([str(x) for x in self.input_alphabet])}" + \
-                 f"\nOutput Alphabet \t {', '.join([str(x) for x in self.output_alphabet])}\n\n"
+        output = (
+            f"States          \t {', '.join(self.states)}"
+            + f"\nInital State    \t {self.initial_state}"
+            + f"\nInput  Alphabet \t {', '.join([str(x) for x in self.input_alphabet])}"
+            + f"\nOutput Alphabet \t {', '.join([str(x) for x in self.output_alphabet])}\n\n"
+        )
 
         headers = ["true_ins", "s", "s'", "true_outs"]
         entries = []
@@ -56,7 +57,7 @@ class Controller:
                     inputs_str.append("-")
                 elif not x.negated:
                     inputs_str.append(str(x))
-            line.append(' '.join(inputs_str))
+            line.append(" ".join(inputs_str))
             line.append(state)
             line.append(next_state)
             outputs_str = []
@@ -65,8 +66,8 @@ class Controller:
                 for x in alternatives:
                     if not x.negated and not x.dontcare:
                         alternatives_str.append(str(x))
-                outputs_str.append(' '.join(alternatives_str))
-            line.append(' | '.join(outputs_str))
+                outputs_str.append(" ".join(alternatives_str))
+            line.append(" | ".join(outputs_str))
             entries.append(line)
 
         output += tabulate(entries, headers=headers)
@@ -93,13 +94,15 @@ class Controller:
     def mealy_machine(self) -> str:
         return self.__mealy_machine
 
-    def react(self, input_vector: Tuple[Atom] = None) -> Tuple[Tuple[Atom], Tuple[Atom]]:
-        """Take a reaction in the mealy machine"""
+    def react(
+        self, input_vector: Tuple[Atom] = None
+    ) -> Tuple[Tuple[Atom], Tuple[Atom]]:
+        """Take a reaction in the mealy machine."""
         edges = self.get_all_inputs_from_state(self.__current_state)
         """match input with any edge"""
         selected_edge = None
         if input_vector is None:
-            """Take a random transition"""
+            """Take a random transition."""
             selected_edge = random.choice(edges)
         else:
             for edge in edges:
@@ -111,7 +114,9 @@ class Controller:
                     selected_edge = edge
         if selected_edge is None:
             raise Exception("No input matched with the edge")
-        (next_state, outputs) = self.__transitions[(selected_edge, self.__current_state)]
+        (next_state, outputs) = self.__transitions[
+            (selected_edge, self.__current_state)
+        ]
         self.__current_state = next_state
         output_choice = random.sample(outputs, 1)[0]
         for o in output_choice:
@@ -122,13 +127,18 @@ class Controller:
     def simulate_inputs(self, active_probability: int = 0.2) -> Tuple[Atom]:
         inputs_assignment = []
         for input, values in self.__inputs_ap.items():
-            """random choice between input true [0] or false [1] with prob distribution """
-            inputs_assignment.append(choices([values[0], values[1]], [active_probability, 1 - active_probability]))
+            """random choice between input true [0] or false [1] with prob
+            distribution."""
+            inputs_assignment.append(
+                choices(
+                    [values[0], values[1]], [active_probability, 1 - active_probability]
+                )
+            )
 
         return tuple(*inputs_assignment)
 
     def simulate(self, steps: int = 50):
-        """Simulate a run of 50 steps"""
+        """Simulate a run of 50 steps."""
 
         headers = ["t", "inputs", "outputs"]
         history: List[List[str]] = []
@@ -143,14 +153,14 @@ class Controller:
             for x in outputs:
                 if not x.negated:
                     outputs_str.append(str(x))
-            inputs_str = ', '.join(inputs_str)
-            outputs_str = ', '.join(outputs_str)
+            inputs_str = ", ".join(inputs_str)
+            outputs_str = ", ".join(outputs_str)
             history.append([i, inputs_str, outputs_str])
 
         return tabulate(history, headers=headers)
 
     def simulate_day_night(self, steps: int = 50):
-        """Simulate a run of 50 steps"""
+        """Simulate a run of 50 steps."""
 
         headers = ["t", "inputs", "outputs"]
         history: List[List[str]] = []
@@ -158,7 +168,7 @@ class Controller:
         d_time = True
 
         for i in range(steps):
-            """Take a reaction in the mealy machine"""
+            """Take a reaction in the mealy machine."""
             edges = self.get_all_inputs_from_state(self.__current_state)
             n_edges = []
             d_edges = []
@@ -186,14 +196,14 @@ class Controller:
             for x in outputs:
                 if not x.negated:
                     outputs_str.append(str(x))
-            inputs_str = ', '.join(inputs_str)
-            outputs_str = ', '.join(outputs_str)
+            inputs_str = ", ".join(inputs_str)
+            outputs_str = ", ".join(outputs_str)
             history.append([i, inputs_str, outputs_str])
 
         return tabulate(history, headers=headers)
 
     def reset(self):
-        """Reset mealy machine"""
+        """Reset mealy machine."""
         self.__current_state = self.__initial_state
 
     def get_all_outputs_from_state(self, state: str) -> List[Tuple[Tuple[Atom]]]:
@@ -248,10 +258,12 @@ class Controller:
             self.__outputs_ap[output_type] = (atom, ~atom, atom.get_dontcare())
 
         """Transition is from (inputs, state) to (state, output), i.e. I x S -> S x O"""
-        self.__transitions: Dict[Tuple[Tuple[Atom], str], Tuple[str, Tuple[Tuple[Atom]]]] = {}
+        self.__transitions: Dict[
+            Tuple[Tuple[Atom], str], Tuple[str, Tuple[Tuple[Atom]]]
+        ] = {}
         for line in value.splitlines()[7:]:
             transition = line.split()
-            if (len(self.__input_alphabet) == 0):
+            if len(self.__input_alphabet) == 0:
                 input_str = ""
                 cur_state_str = transition[0]
                 next_state_str = transition[1]
@@ -284,14 +296,23 @@ class Controller:
                 list_outputs: List[Atom] = []
                 for i, output in enumerate(output_str):
                     if output == "1":
-                        list_outputs.append(self.__outputs_ap[self.__output_alphabet[i]][0])
+                        list_outputs.append(
+                            self.__outputs_ap[self.__output_alphabet[i]][0]
+                        )
                     elif output == "0":
-                        list_outputs.append(self.__outputs_ap[self.__output_alphabet[i]][1])
+                        list_outputs.append(
+                            self.__outputs_ap[self.__output_alphabet[i]][1]
+                        )
                     else:
-                        list_outputs.append(self.__outputs_ap[self.__output_alphabet[i]][2])
+                        list_outputs.append(
+                            self.__outputs_ap[self.__output_alphabet[i]][2]
+                        )
                 output_alternatives.append(tuple(list_outputs))
 
-            self.__transitions[(tuple(list_inputs), cur_state_str)] = (next_state_str, tuple(output_alternatives))
+            self.__transitions[(tuple(list_inputs), cur_state_str)] = (
+                next_state_str,
+                tuple(output_alternatives),
+            )
 
     @property
     def states(self) -> List[str]:
@@ -305,7 +326,9 @@ class Controller:
     def locations(self) -> List[ReachLocation]:
         locations = []
         for element in self.__output_alphabet:
-            if element.kind == TypeKinds.LOCATION and isinstance(element, ReachLocation):
+            if element.kind == TypeKinds.LOCATION and isinstance(
+                element, ReachLocation
+            ):
                 locations.append(element)
         return locations
 
@@ -314,10 +337,12 @@ class Controller:
         return self.__output_alphabet
 
     def all_entry_locations(self, typeset: Typeset) -> Set[ReachLocation]:
-        """List of all locations from where it is possible to reach any of the locations of the controller"""
+        """List of all locations from where it is possible to reach any of the
+        locations of the controller."""
         reachable_locations = set()
         for location in self.locations:
-            """Extracting the locations from where 'first_location_to_visit' is reachable"""
+            """Extracting the locations from where 'first_location_to_visit' is
+            reachable."""
             for class_name in location.adjacency_set:
                 for t in typeset.values():
                     if type(t).__name__ == class_name:
@@ -325,7 +350,9 @@ class Controller:
         return reachable_locations
 
     @property
-    def transitions(self) -> Dict[Tuple[Tuple[Atom], str], Tuple[str, Tuple[Tuple[Atom]]]]:
+    def transitions(
+        self,
+    ) -> Dict[Tuple[Tuple[Atom], str], Tuple[str, Tuple[Tuple[Atom]]]]:
         return self.__transitions
 
     @property
@@ -342,7 +369,8 @@ class Controller:
 
     @property
     def next_location_to_visit(self) -> ReachLocation:
-        """Next location that the robot will need to visit, if it depends on the input, then current location"""
+        """Next location that the robot will need to visit, if it depends on
+        the input, then current location."""
         next_location_to_visit = None
 
         for inputs in self.get_all_inputs_from_state(self.__current_state):
@@ -353,17 +381,18 @@ class Controller:
                         loc = list(o.typeset.values())[0]
                         if next_location_to_visit is not None:
                             if loc is not next_location_to_visit:
-                                """Checking if current location is valid"""
+                                """Checking if current location is valid."""
                                 if self.__current_location is not None:
                                     return self.__current_location
                                 else:
-                                    raise Exception("Mealy machine has never been active and \n"
-                                                    "First location depends on future inputs or it can be different!")
+                                    raise Exception(
+                                        "Mealy machine has never been active and \n"
+                                        "First location depends on future inputs or it can be different!"
+                                    )
                         else:
                             next_location_to_visit = loc
 
         return next_location_to_visit
-
 
         """Extracting the locations from where 'first_location_to_visit' is reachable"""
         reachable_locations = []

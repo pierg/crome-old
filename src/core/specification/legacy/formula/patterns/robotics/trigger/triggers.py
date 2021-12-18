@@ -1,7 +1,7 @@
 from typing import Union
 
 from core.specification import Specification
-from core.specification.formula.atom import Trigger
+from core.specification.legacy.formula import Trigger
 from core.type import Boolean
 from tools.logic import Logic
 

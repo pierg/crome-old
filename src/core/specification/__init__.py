@@ -1,30 +1,30 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from enum import Enum, auto
 from typing import TYPE_CHECKING
 
 from tools.logic import LogicTuple
 from tools.nuxmv import Nuxmv
 
 if TYPE_CHECKING:
-    from core.specification.enums import AtomKind, SpecKind
-    from core.typeset import Typeset
+    pass
 
 
 class Specification(ABC):
+    class Kind(Enum):
+        UNDEFINED = auto()
+
+        class Rule(Enum):
+            REFINEMENT = auto()
+            MUTEX = auto()
+            ADJACENCY = auto()
+            LIVENESS = auto()
+
     from ._copy import __deepcopy__  # noqa
     from ._properties import string, typeset  # noqa
     from ._str import __hash__, __str__  # noqa
     from ._utils import translate_to_buchi  # noqa
-
-    @abstractmethod
-    def formula(self: Specification) -> tuple[str, Typeset]:
-        pass
-
-    @property
-    @abstractmethod
-    def spec_kind(self: Specification) -> SpecKind:
-        pass
 
     @abstractmethod
     def __and__(self: Specification, other: Specification) -> Specification:
@@ -58,16 +58,12 @@ class Specification(ABC):
     def __ior__(self: Specification, other: Specification) -> Specification:
         """self |= other Modifies self with the disjunction with other."""
 
-    @abstractmethod
-    def contains_rule(self: Specification, other: AtomKind = None) -> bool:
-        pass
-
     def is_satisfiable(self: Specification) -> bool:
 
         formula = self.formula()
 
         """Consider Mutually Exclusion Rules"""
-        from core.specification.atom import Atom
+        from core.specification.legacy.atom import Atom
 
         mtx_rules = Atom.extract_mutex_rules(self.typeset)
         if mtx_rules is not None:
@@ -84,7 +80,7 @@ class Specification(ABC):
         formula = self.formula()
 
         """Consider Refinement Rules"""
-        from core.specification.atom import Atom
+        from core.specification.legacy.atom import Atom
 
         ref_rules = Atom.extract_refinement_rules(self.typeset)
         if ref_rules is not None:
@@ -115,7 +111,7 @@ class Specification(ABC):
 
         """Check if self -> other is valid, considering the refinement rules r"""
         """((r & s1) -> s2) === r -> (s1 -> s2)"""
-        from core.specification.atom import Atom
+        from core.specification.legacy.atom import Atom
 
         assert self.is_satisfiable() and other.is_satisfiable()
 
@@ -149,7 +145,7 @@ class Specification(ABC):
 
         """Check if other -> self is valid, considering the refinement rules r"""
         """((r & s1) -> s2) === r -> (s1 -> s2)"""
-        from core.specification.atom import Atom
+        from core.specification.legacy.atom import Atom
 
         rules = Atom.extract_refinement_rules(self.typeset | other.typeset)
         if rules is not None:

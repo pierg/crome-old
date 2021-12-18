@@ -4,7 +4,7 @@ from copy import copy, deepcopy
 from itertools import combinations
 from typing import Dict, Set, Tuple, TypeVar, Union
 
-from core.type import BASE_CLASS_TYPES, Boolean, TypeKinds, Types
+from core.type import BASE_CLASS_TYPES, Boolean, Types
 
 AllTypes = TypeVar("AllTypes", bound=Types)
 

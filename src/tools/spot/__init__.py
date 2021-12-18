@@ -1,205 +1,67 @@
-import platform
-import subprocess
+from typing import Set
 
 import spot
-from treelib import Tree
-
-from tools.storage import Store
 
 
 class Spot:
-    def __init__(self, formula: str):
+    @staticmethod
+    def transform_tree(spot_formula):
+        """Applies equalities to spot tree."""
 
-        spot_formula = spot.formula(formula)
-        self.__formula = spot.simplify(spot_formula)
-        self.__tree = self.create_tree()
+        if spot_formula._is(spot.op_F):
+            if spot_formula[0]._is(spot.op_Or):
+                new_f = spot.formula.Or([spot.formula.F(sf) for sf in spot_formula[0]])
+                return Spot.transform_tree(new_f)
 
-    @property
-    def formula(self):
-        return self.__formula
+        if spot_formula._is(spot.op_G):
+            if spot_formula[0]._is(spot.op_And):
+                new_f = spot.formula.And([spot.formula.G(sf) for sf in spot_formula[0]])
+                return Spot.transform_tree(new_f)
 
-    @property
-    def tree(self):
-        return self.__tree
+        if spot_formula._is(spot.op_X):
+            if spot_formula[0]._is(spot.op_And):
+                new_f = spot.formula.And([spot.formula.X(sf) for sf in spot_formula[0]])
+                return Spot.transform_tree(new_f)
 
-    def print_tree(self):
-        Spot.tree_explorer(self.__formula)
+            if spot_formula[0]._is(spot.op_Or):
+                new_f = spot.formula.Or([spot.formula.X(sf) for sf in spot_formula[0]])
+                return Spot.transform_tree(new_f)
 
-    def create_tree(self):
-        tree = Tree()
-        self.tree_creation(self.__formula, tree)
-        return tree
+        if Spot.count_sugar(spot_formula) == 0:
+            return spot_formula
+
+        # Apply it recursively on any other operator's children
+        return spot_formula.map(Spot.transform_tree)
 
     @staticmethod
-    def tree_creation(formula, tree: Tree, parent=None):
-        node = tree.create_node(
-            tag=f"{formula.kindstr()}\t--\t({formula})",
-            parent=parent,
-            data={
-                "formula": formula,
-                "operator": formula.kindstr(),
-                "n_children": formula.size(),
-            },
-        )
-        if formula.size() > 0:
-            for subformula in formula:
-                Spot.tree_creation(
-                    formula=subformula, tree=tree, parent=node.identifier
-                )
+    def count_sugar(spot_formula, n_sugar=0) -> int:
+        if (
+            spot_formula._is(spot.op_G)
+            or spot_formula._is(spot.op_F)
+            or spot_formula._is(spot.op_X)
+        ):
+            for subformula in spot_formula:
+                return Spot.count_sugar(spot_formula=subformula, n_sugar=n_sugar + 1)
+
+        if spot_formula.size() > 0:
+            for subformula in spot_formula:
+                return Spot.count_sugar(spot_formula=subformula, n_sugar=n_sugar + 1)
+        else:
+            return n_sugar
 
     @staticmethod
-    def generate_buchi(specification: str, name: str, path: str = None):
-        try:
-
-            print(f"Generating Buchi for...\n{specification}")
-
-            if platform.system() != "Linux":
-                command = (
-                    f"docker run pmallozzi/ltltools ltl2tgba -B {specification} -d"
-                )
-                result = subprocess.check_output(
-                    [command], shell=True, encoding="UTF-8", stderr=subprocess.DEVNULL
-                ).splitlines()
-            else:
-                result = subprocess.check_output(
-                    ["ltl2tgba", "-B", specification, "-d"],
-                    encoding="UTF-8",
-                    stderr=subprocess.DEVNULL,
-                ).splitlines()
-
-            result = [x for x in result if not ("[Büchi]" in x)]
-            result = "".join(result)
-
-            Store.save_to_file(specification, f"{name}_specs.txt", path)
-            Store.save_to_file(result, f"{name}_dot.txt", path)
-            Store.generate_eps_from_dot(result, name, path)
-
-            print(f"Buchi generated")
-
-        except Exception as e:
-            raise e
-
-    @staticmethod
-    def tree_explorer(formula, level=0):
-        print("\t" * level + f"{formula}")
-        print("\t" * level + f"{formula.kindstr()}, {formula.size()} children\n")
-        if formula.size() > 0:
-            for subformula in formula:
-                Spot.tree_explorer(subformula, level + 1)
-
-        # if formula._is(spot.op_F):
-        #     return spot.formula.G(Spot.tree_explorer(formula[0]))
-        # if formula._is(spot.op_G):
-        #     return spot.formula.F(Spot.tree_explorer(formula[0]))
-        # # No need to transform subformulas without F or G
-        # if formula.is_sugar_free_ltl():
-        #     return formula;
-        # # Apply xchg_fg recursively on any other operator's children
-        # return formula.map(Spot.tree_explorer)
-
-    @staticmethod
-    def simplify(spot_formula):
-        formula = spot_formula
-        print(f"original\n{formula}")
-
-        formula = spot.simplify(formula)
-        print(f"iteration one\n{formula}")
-
-        print(f"{formula.kindstr()}, {formula.size()} children")
-
-        print("\n\n\n******\n")
-        formula.traverse(lambda x: print(x))
-
-        print("stop")
-
-        print("\n\n\n******\n")
-        Spot.tree_explorer(formula)
-
-        print("stop")
-
-        # [] accesses each operand
-        # print("left: {f[0]}, right: {f[1]}".format(f=formula))
-        # # you can also iterate over all operands using a for loop
-        # for child in formula:
-        #     print("  *", child)
-        #     if len(child) > 0:
-        #         for c in child:
-        #             print("  \t*", c)
-
-        return spot_formula
-
-
-def test():
-    phi_string = "G(pc & gr) U G(pc -> re)"
-    phi_spot = Spot(phi_string)
-    print(phi_spot.formula)
-    print(phi_spot.tree)
-
-
-def test2():
-    # f = spot.formula("((G(F(r1 & F(r2))) & (!(r2) U r1) & (!(r2) U r1) & G(((r2) -> (X((!(r2) U r1))))) & G(((r1) -> (X((!(r1) U r2)))))) | !(GF(sensor))) & (F(a) | GF(b))")
-    pass
-
-    f_string = "(b | a) & (b | X(a U b & (G(a U b)))) & (X (G(a U b)) | a) & (X (G(a U b)) | X(a U b & (G(a U b))))"
-
-    f = spot.formula(f_string)
-
-    print("\n\n\\_____________*******______________")
-    f1 = f
-    print(f1)
-
-    # kindstar() prints the name of the operator
-    # size() return the number of operands of the operators
-    print(f"{f1.kindstr()}, {f1.size()} children")
-    # [] accesses each operand
-    print("left: {f[0]}, right: {f[1]}".format(f=f1))
-    # you can also iterate over all operands using a for loop
-    for child in f1:
-        print("  *", child)
-
-    print("\n\n\\_____________*******______________")
-    f2 = spot.negative_normal_form(f)
-    print(f2)
-
-    # kindstar() prints the name of the operator
-    # size() return the number of operands of the operators
-    print(f"{f2.kindstr()}, {f2.size()} children")
-    # [] accesses each operand
-    print("left: {f[0]}, right: {f[1]}".format(f=f2))
-    # you can also iterate over all operands using a for loop
-    for child in f2:
-        print("  *", child)
-
-    print("\n\n\\_____________*******______________")
-    f3 = spot.simplify(f)
-    print(f3)
-
-    # kindstar() prints the name of the operator
-    # size() return the number of operands of the operators
-    print(f"{f3.kindstr()}, {f3.size()} children")
-    # [] accesses each operand
-    print("left: {f[0]}, right: {f[1]}".format(f=f3))
-    # you can also iterate over all operands using a for loop
-    for child in f3:
-        print("  *", child)
-        for c in child:
-            print("  \t*", c)
-
-    print("\n\n\n\n_____________*******______________")
-    f4 = spot.formula("!G(bUc & dUe)")
-
-    """DNF"""
-    # phi2 = "bUc & G(bUc & dUe)"
-    # phi3 = "dUe & G(bUc & dUe)"
-    # phi4 = "bUc & dUe & G(bUc & dUe)"
-    # f4dnf = spot.formula(f"(c & e & X({f4dnf}) | (b & e & X({phi2}) | (c & d & X({phit3}) & (b & d & X({phi4})")
-    #
-    print(f4)
-    f4 = spot.negative_normal_form(f4)
-    print(f4)
+    def extract_ap(spot_formula, ap=None) -> Set[str]:
+        if ap is None:
+            ap = set()
+        if spot_formula._is(spot.op_ap):
+            ap.add(str(spot_formula))
+        else:
+            for subformula in spot_formula:
+                ap | Spot.extract_ap(spot_formula=subformula, ap=ap)
+        return ap
 
 
 if __name__ == "__main__":
-    # test()
-    g = spot.formula("aUb")
-    print(g.to_str())
+    sf = spot.formula(
+        "And(And(~z, adde6), And(adaed, And(Or(a90d3, af97d), Or(And(a9e5e, a11bc), And(a9e3e, ac643)))))"
+    )

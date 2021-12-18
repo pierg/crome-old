@@ -1,5 +1,5 @@
-from core.specification.atom.patterns.basic import GF, F, G, U, X
-from core.specification.formula import Formula
+from core.specification.legacy.atom import GF, F, G, U, X
+from core.specification.legacy.formula import Formula
 from examples.types.create_types import GenericWorld
 from examples.types.create_world import ExampleWorld
 

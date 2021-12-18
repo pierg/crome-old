@@ -4,12 +4,9 @@ from core.type import Boolean, TypeKinds
 
 
 class ReachLocation(Boolean):
-
-    def __init__(self,
-                 name: str,
-                 mutex: str = None,
-                 adjacency: Set[str] = None):
-        """adjacent_to is a set of strings where each string is the name of the class self is adjacent to"""
+    def __init__(self, name: str, mutex: str = None, adjacency: Set[str] = None):
+        """adjacent_to is a set of strings where each string is the name of the
+        class self is adjacent to."""
         super().__init__(name)
 
         if mutex is None:
@@ -23,9 +20,12 @@ class ReachLocation(Boolean):
             self.adjacency = adjacency
 
     def to_atom(self):
-        from core.specification.atom import Atom, AtomKind
+        from core.specification.legacy.atom import Atom, AtomKind
         from core.typeset import Typeset
-        return Atom(formula=(self.name, Typeset({self})), check=False, kind=AtomKind.LOCATION)
+
+        return Atom(
+            formula=(self.name, Typeset({self})), check=False, kind=AtomKind.LOCATION
+        )
 
     @property
     def kind(self):

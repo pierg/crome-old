@@ -1,26 +1,90 @@
 from __future__ import annotations
 
 from copy import deepcopy
+from enum import Enum, auto
+from typing import TYPE_CHECKING
 
 from core.specification import Specification
-from core.type import TypeKinds
+from core.specification.enums import FormulaOutput, FormulaType, SpecKind
+from core.specification.exceptions import AtomNotSatisfiableException
+from core.type import Boolean, TypeKinds
 from core.typeset import Typeset
+from tools.logic import Logic, LogicTuple
+
+if TYPE_CHECKING:
+    from core.specification.legacy.formula import Formula
 
 
 class Atom(Specification):
+    class AtomKind(Enum):
+        SENSOR = auto()
+        LOCATION = auto()
+        ACTION = auto()
+        ACTIVE = auto()
+        TIME = auto()
+        CONTEXT = auto()
+        IDENTITY = auto()
+        PATTERN = auto()
+        ROBOTICPATTERN = auto()
+        REFINEMENT_RULE = auto()
+        ADJACENCY_RULE = auto()
+        LIVENESS_RULE = auto()
+        MUTEX_RULE = auto()
+        UNDEFINED = auto()
+
     def __init__(
         self,
-        formula: tuple[str, Typeset] = None,
-        kind: Specification.Kind = None,
+        formula: str | tuple[str, Typeset] = None,
+        kind: Atom.AtomKind = None,
+        check: bool = True,
+        dontcare: bool = False,
+        typeset: Typeset = None,
     ):
-        """Atomic Specification."""
+        """Atomic Specification (can be an AP, but also an LTL_forced formula
+        that cannot be broken down, e.g. a Pattern)"""
 
         if kind is None:
-            self.__kind = Specification.Kind.UNDEFINED
-        else:
-            self.__kind = kind
+            self.__kind = AtomKind.UNDEFINED
+        self.__kind = kind
 
-        self.__formula: tuple[str, Typeset] = formula
+        if (
+            self.__kind == AtomKind.REFINEMENT_RULE
+            or self.__kind == AtomKind.ADJACENCY_RULE
+            or self.__kind == AtomKind.MUTEX_RULE
+        ):
+            self.__spec_kind = SpecKind.RULE
+        else:
+            self.__spec_kind = SpecKind.UNDEFINED
+
+        # Indicates if the formula is negated
+        self.__negation: bool = False
+
+        # Indicates if the formula is a dontcare (weather is true or false)"""
+        self.__dontcare: bool = dontcare
+
+        # Used for linking guarantees to assumptions"""
+        self.__saturation = None
+
+        if formula is None:
+            raise AttributeError
+        if isinstance(formula, str):
+            if formula == "TRUE":
+                self.__base_formula: tuple[str, Typeset] = ("TRUE", Typeset())
+            elif formula == "FALSE":
+                self.__base_formula: tuple[str, Typeset] = ("FALSE", Typeset())
+        else:
+            self.__base_formula: tuple[str, Typeset] = formula
+
+            if (
+                check
+                and kind != AtomKind.ADJACENCY_RULE
+                and kind != AtomKind.MUTEX_RULE
+                and kind != AtomKind.REFINEMENT_RULE
+            ):
+                if not self.is_satisfiable():
+                    raise AtomNotSatisfiableException(
+                        formula=self.__base_formula,
+                    )
 
     def formula(self, type: FormulaType = FormulaType.SATURATED) -> (str, Typeset):
         expression, typeset = self.__base_formula

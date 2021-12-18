@@ -1,27 +1,23 @@
 import uuid
+from typing import Set
 
 from core.specification import Specification
-from core.specification.atom import Atom
-from core.type.subtypes.action import BooleanAction
-from core.type.subtypes.active import Active
-from typing import Set, Dict, Tuple
 from core.type import Types
+from core.type.subtypes.action import BooleanAction
 from core.type.subtypes.context import ContextBoolean
+from core.type.subtypes.location import ReachLocation
 from core.type.subtypes.sensor import BooleanSensor
 from core.typeset import Typeset
 
-from typing import TYPE_CHECKING
-
-from core.type.subtypes.location import ReachLocation
-
 
 class Rule:
-    def __init__(self,
-                 rule: Specification,
-                 trigger: Specification = None,
-                 description: str = None,
-                 system: bool = True
-                 ):
+    def __init__(
+        self,
+        rule: Specification,
+        trigger: Specification = None,
+        description: str = None,
+        system: bool = True,
+    ):
         self.__rule = rule
         self.__trigger = trigger
         self.__description = description
@@ -45,14 +41,16 @@ class Rule:
 
 
 class World(dict):
-    """"Instanciate atomic propositions (and their negation) for each Type"""
+    """"Instanciate atomic propositions (and their negation) for each Type."""
 
-    def __init__(self,
-                 project_name: str = None,
-                 actions: Set[Types] = None,
-                 locations: Set[Types] = None,
-                 sensors: Set[Types] = None,
-                 contexts: Set[Types] = None):
+    def __init__(
+        self,
+        project_name: str = None,
+        actions: Set[Types] = None,
+        locations: Set[Types] = None,
+        sensors: Set[Types] = None,
+        contexts: Set[Types] = None,
+    ):
         super().__init__()
 
         if project_name is None:
@@ -77,15 +75,15 @@ class World(dict):
             self.__typeset |= Typeset(contexts)
 
         for name, elem in self.__typeset.items():
-            super(World, self).__setitem__(name, elem.to_atom())
-            super(World, self).__setitem__(f"!{name}", ~elem.to_atom())
+            super().__setitem__(name, elem.to_atom())
+            super().__setitem__(f"!{name}", ~elem.to_atom())
 
         self.__rules: Set[Rule] = set()
 
     def add_type(self, name, elem: Types):
         self.__typeset |= elem
-        super(World, self).__setitem__(name, elem.to_atom())
-        super(World, self).__setitem__(f"!{name}", ~elem.to_atom())
+        super().__setitem__(name, elem.to_atom())
+        super().__setitem__(f"!{name}", ~elem.to_atom())
 
     def new_boolean_action(self, name, mutex: str = None):
         elem = BooleanAction(name, mutex)
@@ -130,4 +128,3 @@ class World(dict):
 
     def equals(self, world) -> bool:
         return self.typeset == world.typeset
-

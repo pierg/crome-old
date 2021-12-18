@@ -9,10 +9,10 @@ from core.contract.exceptions import (
     UnfeasibleContracts,
 )
 from core.controller.synthesisinfo import SynthesisInfo
-from core.specification.atom import Atom
 from core.specification.enums import FormulaOutput
 from core.specification.exceptions import NotSatisfiableException
-from core.specification.formula import Formula, Specification
+from core.specification.legacy.atom import Atom
+from core.specification.legacy.formula import Formula, Specification
 from core.typeset import Typeset
 
 
