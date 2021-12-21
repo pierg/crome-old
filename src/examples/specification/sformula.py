@@ -17,17 +17,19 @@ def example_1():
 
 
 def example_boolean_ops():
-    # f1 = Sformula("a | b")
-    # f2 = Sformula("c & b")
-    # phi = f1 & f2
-    # print(phi.represent())
-    #
-    # phi = f1 | f2
-    # print(phi.represent())
+    f1 = Sformula("a | b")
+    f2 = Sformula("c & b")
+    phi = f1 & f2
+    print(phi.represent())
 
-    c = Sformula("c")
-    g = ~c
-    print(g.represent())
+    phi = f1 | f2
+    print(phi.represent())
+
+    phi = ~f2
+    print(phi.represent())
+
+    phi = ~f2 | ~f1
+    print(phi.represent())
 
     # phi = f1 >> f2
     # print(phi.represent())

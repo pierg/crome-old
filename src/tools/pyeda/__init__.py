@@ -55,15 +55,20 @@ class Pyeda:
 
         dnf_list = []
         dnf = expr(self.__expression.to_dnf())
-        if isinstance(dnf, AndOp):
+        if isinstance(dnf, OrOp):
             for clause in dnf.xs:
+                atoms = set()
                 if isinstance(clause, AndOp):
-                    atoms = set()
                     for atom in clause.xs:
                         atoms.add(str(atom))
-                    dnf_list.append(atoms)
                 else:
-                    dnf_list.append(str(clause))
+                    atoms.add(str(clause))
+                dnf_list.append(atoms)
+        elif isinstance(dnf, AndOp):
+            atoms = set()
+            for atom in dnf.xs:
+                atoms.add(str(atom))
+            dnf_list.append(atoms)
         else:
             dnf_list.append({str(dnf)})
         return dnf_list
@@ -82,6 +87,11 @@ class Pyeda:
                 else:
                     atoms.add(str(clause))
                 cnf_list.append(atoms)
+        elif isinstance(cnf, OrOp):
+            atoms = set()
+            for atom in cnf.xs:
+                atoms.add(str(atom))
+            cnf_list.append(atoms)
         else:
             cnf_list.append({str(cnf)})
         return cnf_list
