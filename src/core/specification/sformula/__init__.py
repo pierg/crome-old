@@ -285,9 +285,13 @@ class Sformula(Specification):
             else:
                 hash_ = f"a{hashlib.sha1(f_string.encode('utf-8')).hexdigest()}"[0:5]
 
-            sformula = Sformula(
-                formula=spot_f, kind=self.__kind, typeset=f_typeset, atom_hash=hash_
-            )
+            if self.__spot_formula == spot_f:
+                self.__atom_hash = hash_
+                sformula = self
+            else:
+                sformula = Sformula(
+                    formula=spot_f, kind=self.__kind, typeset=f_typeset, atom_hash=hash_
+                )
 
             self.__create_atom_tree_node(
                 tree=tree,

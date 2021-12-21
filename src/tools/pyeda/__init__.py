@@ -54,30 +54,36 @@ class Pyeda:
     def dnf(self) -> List[set[str]]:
 
         dnf_list = []
-        for clause in expr(self.__expression.to_dnf()).xs:
-            if isinstance(clause, AndOp):
-                atoms = set()
-                for atom in clause.xs:
-                    atoms.add(str(atom))
-                dnf_list.append(atoms)
-            else:
-                dnf_list.append(str(clause))
-
+        dnf = expr(self.__expression.to_dnf())
+        if isinstance(dnf, AndOp):
+            for clause in dnf.xs:
+                if isinstance(clause, AndOp):
+                    atoms = set()
+                    for atom in clause.xs:
+                        atoms.add(str(atom))
+                    dnf_list.append(atoms)
+                else:
+                    dnf_list.append(str(clause))
+        else:
+            dnf_list.append({str(dnf)})
         return dnf_list
 
     @property
     def cnf(self) -> List[set[str]]:
 
         cnf_list = []
-        print(self.__expression.to_cnf())
-        for clause in expr(self.__expression.to_cnf()).xs:
-            atoms = set()
-            if isinstance(clause, OrOp):
-                for atom in clause.xs:
-                    atoms.add(str(atom))
-            else:
-                atoms.add(str(clause))
-            cnf_list.append(atoms)
+        cnf = expr(self.__expression.to_cnf())
+        if isinstance(cnf, AndOp):
+            for clause in cnf.xs:
+                atoms = set()
+                if isinstance(clause, OrOp):
+                    for atom in clause.xs:
+                        atoms.add(str(atom))
+                else:
+                    atoms.add(str(clause))
+                cnf_list.append(atoms)
+        else:
+            cnf_list.append({str(cnf)})
         return cnf_list
 
     def to_spot(self) -> str:
@@ -206,6 +212,10 @@ if __name__ == "__main__":
     # print(g)
     # print(g.to_spot())
 
-    f = Pyeda("(!f | !b) & !(s | g)")
-    cnf = f.cnf
-    print(cnf)
+    # f = Pyeda("(!f | !b) & !(s | g)")
+    # cnf = f.cnf
+    # print(cnf)
+
+    f = Pyeda("c")
+    b = Pyeda("b")
+    c = b | ~f
