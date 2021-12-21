@@ -22,7 +22,6 @@ class Specification(ABC):
             LIVENESS = auto()
 
     from ._copy import __deepcopy__  # noqa
-    from ._properties import string, typeset  # noqa
     from ._str import __hash__, __str__  # noqa
     from ._utils import translate_to_buchi  # noqa
 
