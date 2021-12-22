@@ -74,7 +74,7 @@ class Boolean(Types):
         super().__init__(name)
 
     def to_atom(self):
-        from core.specification.legacy.atom import Atom
+        from core.specification.__legacy.atom import Atom
         from core.typeset import Typeset
 
         return Atom(formula=(self.name, Typeset({self})), check=False)

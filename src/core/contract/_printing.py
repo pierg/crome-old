@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from core.specification.legacy.formula import Formula, FormulaOutput
+from core.specification.__legacy.formula import Formula, FormulaOutput
 
 if TYPE_CHECKING:
     from core.contract import Contract

@@ -1,5 +1,5 @@
+from core.specification.__legacy.atom import GF
 from core.specification.exceptions import NotSatisfiableException
-from core.specification.legacy.atom import GF
 from examples.types.create_world import ExampleWorld
 
 """Import Our World, where:

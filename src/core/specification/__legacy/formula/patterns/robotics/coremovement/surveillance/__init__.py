@@ -1,6 +1,6 @@
 from typing import List, Union
 
-from core.specification.legacy.formula import Atom, CoreMovement
+from core.specification.__legacy.formula import Atom, CoreMovement
 from core.type import Boolean
 from tools.logic import Logic
 

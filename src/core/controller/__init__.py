@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Dict, List, Set, Tuple
 
 from tabulate import tabulate
 
-from core.specification.legacy.atom import Atom, AtomKind
+from core.specification.__legacy.atom import Atom, AtomKind
 from core.type import Boolean, TypeKinds
 from core.type.subtypes.location import ReachLocation
 from core.typeset import Typeset

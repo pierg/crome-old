@@ -12,7 +12,7 @@ from core.typeset import Typeset
 from tools.logic import Logic, LogicTuple
 
 if TYPE_CHECKING:
-    from core.specification.legacy.formula import Formula
+    from core.specification.__legacy.formula import Formula
 
 
 class Atom(Specification):
@@ -161,7 +161,7 @@ class Atom(Specification):
     def __and__(self, other: Atom | Formula) -> Formula:
         """self & other Returns a new Specification with the conjunction with
         other."""
-        from core.specification.legacy.formula import Formula
+        from core.specification.__legacy.formula import Formula
 
         if isinstance(other, Atom):
             other = Formula(atom=other)
@@ -171,7 +171,7 @@ class Atom(Specification):
     def __or__(self, other: Atom | Formula) -> Formula:
         """self | other Returns a new Specification with the disjunction with
         other."""
-        from core.specification.legacy.formula import Formula
+        from core.specification.__legacy.formula import Formula
 
         if isinstance(other, Atom):
             other = Formula(atom=other)
@@ -187,7 +187,7 @@ class Atom(Specification):
     def __rshift__(self, other: Atom | Formula) -> Formula:
         """>> Returns a new Specification that is the result of self -> other
         (implies)"""
-        from core.specification.legacy.formula import Formula
+        from core.specification.__legacy.formula import Formula
 
         if not (isinstance(other, Atom) or isinstance(other, Formula)):
             raise AttributeError
@@ -199,7 +199,7 @@ class Atom(Specification):
     def __lshift__(self, other: Atom | Formula) -> Formula:
         """<< Returns a new Specification that is the result of other -> self
         (implies)"""
-        from core.specification.legacy.formula import Formula
+        from core.specification.__legacy.formula import Formula
 
         if not (isinstance(other, Atom) or isinstance(other, Formula)):
             raise AttributeError

@@ -17,7 +17,7 @@ from core.goal.exceptions import (
     GoalSynthesisFail,
 )
 from core.specification import Specification
-from core.specification.legacy.formula import FormulaOutput
+from core.specification.__legacy.formula import FormulaOutput
 from core.type import Boolean
 from tools.storage import Store
 from tools.strings import StringMng

@@ -15,9 +15,9 @@ from core.contract.exceptions import (
 )
 from core.controller.synthesisinfo import SynthesisInfo
 from core.specification import FormulaOutput
+from core.specification.__legacy.atom import Atom
+from core.specification.__legacy.formula import Formula, Specification
 from core.specification.exceptions import NotSatisfiableException
-from core.specification.legacy.atom import Atom
-from core.specification.legacy.formula import Formula, Specification
 from core.typeset import Typeset
 
 

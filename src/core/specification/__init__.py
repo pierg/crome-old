@@ -62,7 +62,7 @@ class Specification(ABC):
         formula = self.formula()
 
         """Consider Mutually Exclusion Rules"""
-        from core.specification.legacy.atom import Atom
+        from core.specification.__legacy.atom import Atom
 
         mtx_rules = Atom.extract_mutex_rules(self.typeset)
         if mtx_rules is not None:
@@ -79,7 +79,7 @@ class Specification(ABC):
         formula = self.formula()
 
         """Consider Refinement Rules"""
-        from core.specification.legacy.atom import Atom
+        from core.specification.__legacy.atom import Atom
 
         ref_rules = Atom.extract_refinement_rules(self.typeset)
         if ref_rules is not None:
@@ -110,7 +110,7 @@ class Specification(ABC):
 
         """Check if self -> other is valid, considering the refinement rules r"""
         """((r & s1) -> s2) === r -> (s1 -> s2)"""
-        from core.specification.legacy.atom import Atom
+        from core.specification.__legacy.atom import Atom
 
         assert self.is_satisfiable() and other.is_satisfiable()
 
@@ -144,7 +144,7 @@ class Specification(ABC):
 
         """Check if other -> self is valid, considering the refinement rules r"""
         """((r & s1) -> s2) === r -> (s1 -> s2)"""
-        from core.specification.legacy.atom import Atom
+        from core.specification.__legacy.atom import Atom
 
         rules = Atom.extract_refinement_rules(self.typeset | other.typeset)
         if rules is not None:

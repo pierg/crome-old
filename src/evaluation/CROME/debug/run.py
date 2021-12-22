@@ -5,7 +5,7 @@ from running_example.modeling_environment import RunningExample
 
 from core.cgg import Node
 from core.cgg.exceptions import CGGException
-from core.specification.legacy.atom import StrictOrderedPatrolling
+from core.specification.__legacy.atom import StrictOrderedPatrolling
 from tools.persistence import Persistence
 
 folder_name = "crome_evaluation"

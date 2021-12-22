@@ -1,4 +1,4 @@
-from core.specification.legacy.atom import F, G, X
+from core.specification.__legacy.atom import F, G, X
 from examples.types.create_types import GenericWorld
 
 q = GenericWorld()

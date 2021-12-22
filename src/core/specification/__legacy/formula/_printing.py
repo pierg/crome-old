@@ -1,4 +1,4 @@
-from core.specification.legacy.formula import FormulaOutput
+from core.specification.__legacy.formula import FormulaOutput
 
 
 def pretty_print(self, formulatype: FormulaOutput = FormulaOutput.CNF):

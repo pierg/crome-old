@@ -4,10 +4,10 @@ import time
 from casestudies.contextual_gridworld_simple.custom_world import CustomWorld
 from core.cgg import Node
 from core.cgg.exceptions import CGGException
-from core.specification.legacy.formula.patterns.robotics.coremovement.surveillance import (
+from core.specification.__legacy.formula.patterns.robotics.coremovement.surveillance import (
     StrictOrderedPatrolling,
 )
-from core.specification.legacy.formula.patterns.robotics.trigger.triggers import (
+from core.specification.__legacy.formula.patterns.robotics.trigger.triggers import (
     BoundDelay,
     BoundReaction,
 )

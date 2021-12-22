@@ -4,7 +4,7 @@ from pathlib import Path
 
 from core.cgg import Node
 from core.contract import Contract
-from core.specification.legacy.formula import Formula
+from core.specification.__legacy.formula import Formula
 from core.typeset import Typeset
 from core.world import World
 from tools.persistence import Persistence

@@ -1,6 +1,6 @@
 from typing import Union
 
-from core.specification.legacy.formula import Atom, Trigger
+from core.specification.__legacy.formula import Atom, Trigger
 from core.type import Boolean
 from tools.logic import Logic
 

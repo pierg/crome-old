@@ -10,13 +10,13 @@ from treelib import Tree
 
 from core.patterns import Pattern
 from core.specification import Specification
+from core.specification.bformula import Bool
 from core.typeset import Typeset
 from tools.logic import Logic
-from tools.pyeda import Pyeda
 from tools.spot import Spot
 
 
-class Sformula(Specification):
+class LTL(Specification):
     class Output(Enum):
         SPOT_str = auto()
         CNF_str = auto()
@@ -30,8 +30,8 @@ class Sformula(Specification):
     def __init__(
         self,
         formula: str | Pattern = None,
-        boolean_formula: Pyeda = None,
-        atoms_dictionry: dict[str, Sformula] = None,
+        boolean_formula: Bool = None,
+        atoms_dictionary: dict[str, LTL] = None,
         typeset: Typeset = None,
         kind: Specification.Kind = None,
         atom_hash: str = None,
@@ -51,7 +51,11 @@ class Sformula(Specification):
         if kind is None:
             self.__kind = Specification.Kind.UNDEFINED
 
-        """Building the LTL formula and tree"""
+        self.__init__ltl_formula(formula, typeset)
+        self.__init__atoms_formula(boolean_formula, atoms_dictionary)
+
+    def __init__ltl_formula(self, formula, typeset):
+        """Building the LTL formula and tree."""
         spot_formula = spot.formula(str(formula))
         spot_formula = spot.simplify(spot_formula)
         spot_formula = Spot.transform_tree(spot_formula)
@@ -62,7 +66,7 @@ class Sformula(Specification):
                 Spot.extract_ap(self.__spot_formula)
             )
         else:
-            s_typeset = Spot.extract_ap(formula)
+            s_typeset = Spot.extract_ap(self.__spot_formula)
             set_of_types = set(
                 filter((lambda x: x.name in s_typeset), typeset.values())
             )
@@ -72,18 +76,19 @@ class Sformula(Specification):
         self.__ltl_tree = Tree()
         self.__gen_ltl_tree(tree=self.__ltl_tree)
 
-        """Building the ATOMS formula and tree"""
-        if boolean_formula is None and atoms_dictionry is None:
+    def __init__atoms_formula(self, boolean_formula, atoms_dictionary):
+        """Building the ATOMS formula and tree."""
+        if boolean_formula is None and atoms_dictionary is None:
             # Generate Atom Tree
             self.__atoms_dictionary = dict()
             self.__atoms_tree = Tree()
             self.__gen_atom_tree(tree=self.__atoms_tree)
-            self.__boolean_formula = Pyeda(self.__translate_ltl_to_bool())
+            self.__boolean_formula = Bool(self.__translate_ltl_to_bool())
 
         else:
             """Create a 'boolean' spot formula."""
             self.__boolean_formula = boolean_formula
-            self.__atoms_dictionary = atoms_dictionry
+            self.__atoms_dictionary = atoms_dictionary
 
             """Trick to generate atoms tree"""
             bool_spot = spot.formula(boolean_formula.to_spot())
@@ -91,21 +96,28 @@ class Sformula(Specification):
             self.__atoms_tree = Tree()
             self.__gen_atom_tree(tree=self.__atoms_tree, spot_f=bool_spot)
 
-    def represent(self, output_type: Sformula.Output = Output.SUMMARY) -> str:
-        if output_type == Sformula.Output.SPOT_str:
+    def represent(self, output_type: LTL.Output = Output.SUMMARY) -> str:
+        if output_type == LTL.Output.SPOT_str:
             return str(self.__spot_formula)
-        elif output_type == Sformula.Output.SUMMARY:
+        elif output_type == LTL.Output.SUMMARY:
+            cnf = "\n".join([Logic.or_([e.string for e in elem]) for elem in self.cnf])
+            dnf = "\n".join([Logic.and_([e.string for e in elem]) for elem in self.dnf])
             ret = (
+                f"\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n"
                 f"LTL SIMPLIFIED\n"
                 f"{self.to_ltl}\n\n"
                 f"BOOLEAN REPRESENTATION\n"
                 f"{self.to_bool}\n\n"
                 f"LTL EXTENDED (from booleans)\n"
                 f"{self.__translate_bool_to_ltl()}\n\n"
+                # f"LTL CNF (from booleans)\n"
+                # f"{self.__normal_form_to_str(Sformula.Output.CNF_str)}\n\n"
+                # f"LTL DNF (from booleans)\n"
+                # f"{self.__normal_form_to_str(Sformula.Output.DNF_str)}\n"
                 f"LTL CNF (from booleans)\n"
-                f"{self.__convert_bool_to_ltl(Sformula.Output.CNF_str)}\n\n"
+                f"{cnf}\n\n"
                 f"LTL DNF (from booleans)\n"
-                f"{self.__convert_bool_to_ltl(Sformula.Output.DNF_str)}\n"
+                f"{dnf}\n"
                 f"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n"
             )
             return ret
@@ -136,11 +148,11 @@ class Sformula(Specification):
         return self.__typeset
 
     @property
-    def atoms_dictionry(self) -> dict:
+    def atoms_dictionary(self) -> dict:
         return self.__atoms_dictionary
 
     @property
-    def cnf(self) -> List[Set[Sformula]]:
+    def cnf(self) -> List[Set[LTL]]:
         ret = []
         for clause in self.__boolean_formula.cnf:
             clause_set = set()
@@ -153,7 +165,7 @@ class Sformula(Specification):
         return ret
 
     @property
-    def dnf(self) -> List[Set[Sformula]]:
+    def dnf(self) -> List[Set[LTL]]:
         ret = []
         for clause in self.__boolean_formula.dnf:
             clause_set = set()
@@ -166,18 +178,24 @@ class Sformula(Specification):
         return ret
 
     @property
-    def string(self: Sformula) -> str:
+    def string(self: LTL) -> str:
         return self.to_ltl
 
-    def __convert_bool_to_ltl(self, kind: Output = Output.CNF_str):
-        if kind == Sformula.Output.CNF_str:
+    def __normal_form_to_str(self, kind: Output = Output.CNF_str):
+        if kind == LTL.Output.CNF_str:
             return Logic.and_(
-                [Logic.or_([atom.to_ltl for atom in clause]) for clause in self.cnf],
+                [
+                    Logic.or_([atom.to_ltl for atom in clause], brackets=True)
+                    for clause in self.cnf
+                ],
                 brackets=False,
             )
-        elif kind == Sformula.Output.DNF_str:
+        elif kind == LTL.Output.DNF_str:
             return Logic.or_(
-                [Logic.and_([atom.to_ltl for atom in clause]) for clause in self.dnf],
+                [
+                    Logic.and_([atom.to_ltl for atom in clause], brackets=True)
+                    for clause in self.dnf
+                ],
                 brackets=False,
             )
         else:
@@ -190,7 +208,7 @@ class Sformula(Specification):
             boolean_formula_str = deepcopy(self.__spot_formula.to_str())
         for key, value in self.__atoms_dictionary.items():
             boolean_formula_str = boolean_formula_str.replace(
-                value.represent(Sformula.Output.SPOT_str), key
+                value.represent(LTL.Output.SPOT_str), key
             )
         return boolean_formula_str
 
@@ -201,14 +219,14 @@ class Sformula(Specification):
             ltl_formula_str = deepcopy(self.__boolean_formula.to_spot())
         for key, value in self.__atoms_dictionary.items():
             ltl_formula_str = ltl_formula_str.replace(
-                key, value.represent(Sformula.Output.SPOT_str)
+                key, value.represent(LTL.Output.SPOT_str)
             )
         return ltl_formula_str
 
     def tree(self, tree_type: TreeType = TreeType.LTL) -> Tree:
-        if tree_type == Sformula.TreeType.LTL:
+        if tree_type == LTL.TreeType.LTL:
             return self.__ltl_tree
-        elif tree_type == Sformula.TreeType.BOOLEAN:
+        elif tree_type == LTL.TreeType.BOOLEAN:
             return self.__atoms_tree
         else:
             raise AttributeError
@@ -228,7 +246,7 @@ class Sformula(Specification):
 
         if spot_f.size() > 0:
             for subformula in spot_f:
-                Sformula.__gen_ltl_tree(
+                LTL.__gen_ltl_tree(
                     self, spot_f=subformula, tree=tree, parent=node.identifier
                 )
 
@@ -237,7 +255,7 @@ class Sformula(Specification):
             "formula": str(spot_f),
             "operator": spot_f.kindstr(),
             "n_children": spot_f.size(),
-            "sformula": sformula,
+            "lformula": sformula,
         }
         node = tree.create_node(
             tag=tag,
@@ -261,7 +279,7 @@ class Sformula(Specification):
                 spot_f=spot_f,
                 parent=parent,
                 sformula=self,
-                tag=str(spot_f),
+                tag=self.hash,
                 hash=self.hash,
             )
             return
@@ -289,7 +307,7 @@ class Sformula(Specification):
                 self.__atom_hash = hash_
                 sformula = self
             else:
-                sformula = Sformula(
+                sformula = LTL(
                     formula=spot_f, kind=self.__kind, typeset=f_typeset, atom_hash=hash_
                 )
 
@@ -298,7 +316,7 @@ class Sformula(Specification):
                 spot_f=spot_f,
                 parent=parent,
                 sformula=sformula,
-                tag=str(spot_f),
+                tag=hash_,
                 hash=hash_,
             )
 
@@ -315,59 +333,83 @@ class Sformula(Specification):
 
         if spot_f.size() > 0:
             for subformula in spot_f:
-                Sformula.__gen_atom_tree(
+                LTL.__gen_atom_tree(
                     self,
                     spot_f=subformula,
                     tree=tree,
                     parent=node.identifier,
                 )
 
-    def __and__(self: Sformula, other: Sformula) -> Sformula:
+    def __and__(self: LTL, other: LTL) -> LTL:
         """self & other Returns a new Sformula with the conjunction with
         other."""
-        return Sformula(
+        return LTL(
             formula=f"({self.to_ltl}) & ({other.to_ltl})",
             boolean_formula=self.__boolean_formula & other.__boolean_formula,
         )
 
-    def __or__(self: Sformula, other: Sformula) -> Sformula:
+    def __or__(self: LTL, other: LTL) -> LTL:
         """self | other Returns a new Sformula with the disjunction with
         other."""
-        return Sformula(
+        return LTL(
             formula=f"({self.to_ltl}) | ({other.to_ltl})",
             boolean_formula=self.__boolean_formula | other.__boolean_formula,
         )
 
-    def __invert__(self: Sformula) -> Sformula:
+    def __invert__(self: LTL) -> LTL:
         """Returns a new Sformula with the negation of self."""
-        return Sformula(
-            formula=f"!({self.to_ltl})", boolean_formula=~self.__boolean_formula
-        )
+        return LTL(formula=f"!({self.to_ltl})", boolean_formula=~self.__boolean_formula)
 
-    def __rshift__(self: Sformula, other: Sformula) -> Sformula:
+    def __rshift__(self: LTL, other: LTL) -> LTL:
         """>> Returns a new Sformula that is the result of self -> other
         (implies)"""
+        return LTL(
+            formula=f"({self.to_ltl}) -> ({other.to_ltl})",
+            boolean_formula=self.__boolean_formula >> other.__boolean_formula,
+        )
 
-    def __lshift__(self: Sformula, other: Sformula) -> Sformula:
+    def __lshift__(self: LTL, other: LTL) -> LTL:
         """<< Returns a new Sformula that is the result of other -> self
         (implies)"""
+        return LTL(
+            formula=f"({other.to_ltl}) -> ({self.to_ltl})",
+            boolean_formula=other.__boolean_formula >> self.__boolean_formula,
+        )
 
-    def __iand__(self: Sformula, other: Sformula) -> Sformula:
+    def __iand__(self: LTL, other: LTL) -> LTL:
         """self &= other Modifies self with the conjunction with other."""
+        self.__init__ltl_formula(
+            formula=f"({self.to_ltl}) & ({other.to_ltl})",
+            typeset=self.typeset | other.typeset,
+        )
+        self.__init__atoms_formula(
+            boolean_formula=self.__boolean_formula & other.__boolean_formula,
+            atoms_dictionary={**self.__atoms_dictionary, **other.__atoms_dictionary},
+        )
+        return self
 
-    def __ior__(self: Sformula, other: Sformula) -> Sformula:
+    def __ior__(self: LTL, other: LTL) -> LTL:
         """self |= other Modifies self with the disjunction with other."""
+        self.__init__ltl_formula(
+            formula=f"({self.to_ltl}) | ({other.to_ltl})",
+            typeset=self.typeset | other.typeset,
+        )
+        self.__init__atoms_formula(
+            boolean_formula=self.__boolean_formula | other.__boolean_formula,
+            atoms_dictionary={**self.__atoms_dictionary, **other.__atoms_dictionary},
+        )
+        return self
 
 
 if __name__ == "__main__":
     phi = "! z & G(a & b | G(k & l)) & F(c | !d) & (X(e & f) | !X(g | h)) & (l U p)"
-    sformula = Sformula(phi)
-    print(sformula.tree(Sformula.TreeType.LTL))
-    print(sformula.tree(Sformula.TreeType.BOOLEAN))
+    sformula = LTL(phi)
+    print(sformula.tree(LTL.TreeType.LTL))
+    print(sformula.tree(LTL.TreeType.BOOLEAN))
 
-    # print(sformula.tree)
-    # print(sformula.atoms)
-    # print(sformula.boolean.represent(Pyeda.Output.PYEDA.to_cnf()))
+    # print(lformula.tree)
+    # print(lformula.atoms)
+    # print(lformula.boolean.represent(Pyeda.Output.PYEDA.to_cnf()))
 
-    # aps = Sformula.extract_ap(sformula.spot)
+    # aps = Sformula.extract_ap(lformula.spot)
     # print(aps)

@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from core.specification.legacy.formula import AtomKind, Pattern
+from core.specification.__legacy.formula import AtomKind, Pattern
 from core.typeset import Typeset
 
 

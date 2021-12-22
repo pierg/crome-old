@@ -10,11 +10,12 @@ from pyeda.boolalg.minimization import espresso_exprs
 from tools.logic import Logic
 
 
-class Atom:
-    pass
+class BooleansNotSATException(Exception):
+    def __init__(self, formula: Bool):
+        self.formula = formula
 
 
-class Pyeda:
+class Bool:
     class Output(Enum):
         SPOT_str = auto()
         PYEDA = auto()
@@ -30,6 +31,9 @@ class Pyeda:
         else:
             raise AttributeError
 
+        if expression.satisfy_one() is None:
+            raise BooleansNotSATException(self)
+
         """Espresso Minimization
         Notice that the espresso_exprs function returns a tuple.
         The reason is that this function can minimize multiple input functions simultaneously."""
@@ -40,15 +44,15 @@ class Pyeda:
         return self.__expression
 
     def represent(self, output: Output = Output.SPOT_str):
-        if output == Pyeda.Output.SPOT_str:
+        if output == Bool.Output.SPOT_str:
             return self.to_spot()
-        elif output == Pyeda.Output.PYEDA:
+        elif output == Bool.Output.PYEDA:
             return self.__expression
-        elif output == Pyeda.Output.PYEDA_str:
+        elif output == Bool.Output.PYEDA_str:
             return str(self.__expression)
 
     def __str__(self):
-        return self.represent(Pyeda.Output.PYEDA_str)
+        return self.represent(Bool.Output.PYEDA_str)
 
     @property
     def dnf(self) -> List[set[str]]:
@@ -117,7 +121,7 @@ class Pyeda:
 
         # print(operation_graph)
 
-        spot_str = Pyeda.build_graph(operation_graph)
+        spot_str = Bool.build_graph(operation_graph)
         spot_str = spot_str.replace("~", "!")
         return spot_str
 
@@ -156,11 +160,11 @@ class Pyeda:
         # print(Pyeda.operation_graph_to_str(operation_graph))
         key = None
         for k in operation_graph.keys():
-            if Pyeda.are_all_atoms(operation_graph[k]):
+            if Bool.are_all_atoms(operation_graph[k]):
                 key = k
 
         if len(operation_graph.keys()) == 1:
-            return Pyeda.combine_atoms(
+            return Bool.combine_atoms(
                 atoms=operation_graph[key], operation=key.attr["label"]
             )
 
@@ -168,7 +172,7 @@ class Pyeda:
             # print(
             #     f"SELECTED\n{key.attr['label']} -> {[elem.attr['label'] for elem in operation_graph[key]]}"
             # )
-            new_label = Pyeda.combine_atoms(
+            new_label = Bool.combine_atoms(
                 atoms=operation_graph[key], operation=key.attr["label"]
             )
             key.attr["label"] = new_label
@@ -176,36 +180,36 @@ class Pyeda:
 
             del operation_graph[key]
 
-        return Pyeda.build_graph(operation_graph)
+        return Bool.build_graph(operation_graph)
 
-    def __and__(self: Pyeda, other: Pyeda) -> Pyeda:
+    def __and__(self: Bool, other: Bool) -> Bool:
         """self & other Returns a new Pyeda with the conjunction with other."""
-        return Pyeda(self.expression & other.expression)
+        return Bool(self.expression & other.expression)
 
-    def __or__(self: Pyeda, other: Pyeda) -> Pyeda:
+    def __or__(self: Bool, other: Bool) -> Bool:
         """self | other Returns a new Pyeda with the disjunction with other."""
-        return Pyeda(self.expression | other.expression)
+        return Bool(self.expression | other.expression)
 
-    def __invert__(self: Pyeda) -> Pyeda:
+    def __invert__(self: Bool) -> Bool:
         """Returns a new Pyeda with the negation of self."""
-        return Pyeda(~self.__expression)
+        return Bool(~self.__expression)
 
-    def __rshift__(self: Pyeda, other: Pyeda) -> Pyeda:
+    def __rshift__(self: Bool, other: Bool) -> Bool:
         """>> Returns a new Pyeda that is the result of self -> other
         (implies)"""
-        return Pyeda(self.expression >> other.expression)
+        return Bool(self.expression >> other.expression)
 
-    def __lshift__(self: Pyeda, other: Pyeda) -> Pyeda:
+    def __lshift__(self: Bool, other: Bool) -> Bool:
         """<< Returns a new Pyeda that is the result of other -> self
         (implies)"""
-        return Pyeda(other.expression >> self.expression)
+        return Bool(other.expression >> self.expression)
 
-    def __iand__(self: Pyeda, other: Pyeda) -> Pyeda:
+    def __iand__(self: Bool, other: Bool) -> Bool:
         """self &= other Modifies self with the conjunction with other."""
         self.__expression = self.__expression & other.expression
         return self
 
-    def __ior__(self: Pyeda, other: Pyeda) -> Pyeda:
+    def __ior__(self: Bool, other: Bool) -> Bool:
         """self |= other Modifies self with the disjunction with other."""
         self.__expression = expr(self.__expression | other.expression)
         return self
@@ -226,6 +230,6 @@ if __name__ == "__main__":
     # cnf = f.cnf
     # print(cnf)
 
-    f = Pyeda("c")
-    b = Pyeda("b")
+    f = Bool("c")
+    b = Bool("b")
     c = b | ~f

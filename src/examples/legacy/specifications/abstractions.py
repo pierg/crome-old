@@ -1,5 +1,5 @@
-from core.specification.legacy.atom import F, G, U, X
-from core.specification.legacy.formula import Formula
+from core.specification.__legacy.atom import F, G, U, X
+from core.specification.__legacy.formula import Formula
 from examples.types.create_types import GenericWorld
 
 q = GenericWorld()

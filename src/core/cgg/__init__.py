@@ -17,8 +17,8 @@ from core.controller.exceptions import ControllerException
 from core.goal import Goal
 from core.goal.exceptions import GoalException
 from core.specification import Specification
+from core.specification.__legacy.atom import Atom
 from core.specification.exceptions import NotSatisfiableException
-from core.specification.legacy.atom import Atom
 from core.type import Types
 from core.type.subtypes.location import ReachLocation
 from core.typeset import Typeset

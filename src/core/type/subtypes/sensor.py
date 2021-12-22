@@ -15,7 +15,7 @@ class BooleanSensor(Boolean):
         super().__init__(name)
 
     def to_atom(self):
-        from core.specification.legacy.atom import Atom, AtomKind
+        from core.specification.__legacy.atom import Atom, AtomKind
         from core.typeset import Typeset
 
         return Atom(
