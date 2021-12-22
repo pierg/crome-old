@@ -44,9 +44,11 @@ def example_boolean_ops():
 
 
 def inconsistencies():
-    f1 = LTL("G(a)")
-    f2 = LTL("!G(a)")
-    phi = f1 & f2
+    # f1 = LTL("G(a)")
+    # f2 = LTL("!G(a)")
+    # phi_2 = "(! z & G(a & b | G(k & l)) & F(c | !d) & (X(e & f) | !X(g | h)) & (l U p)) & z"
+    # phi_2_ltl = LTL(phi_2)
+    phi = LTL("a | !a")
     print(phi.tree(LTL.TreeType.LTL))
     print(phi.tree(LTL.TreeType.BOOLEAN))
     print(phi.represent(LTL.Output.SUMMARY))

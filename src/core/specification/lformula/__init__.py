@@ -16,6 +16,11 @@ from tools.logic import Logic
 from tools.spot import Spot
 
 
+class LTLNotSATException(Exception):
+    def __init__(self, formula: LTL):
+        self.formula = formula
+
+
 class LTL(Specification):
     class Output(Enum):
         SPOT_str = auto()
@@ -59,6 +64,11 @@ class LTL(Specification):
         spot_formula = spot.formula(str(formula))
         spot_formula = spot.simplify(spot_formula)
         spot_formula = Spot.transform_tree(spot_formula)
+
+        """Check if satisfiable"""
+        if str(spot_formula) == "0":
+            raise LTLNotSATException(self)
+
         self.__spot_formula = spot_formula
 
         if typeset is None:
@@ -297,8 +307,9 @@ class LTL(Specification):
             or spot_f.kindstr() == "X"
             or spot_f.kindstr() == "U"
             or spot_f.kindstr() == "ap"
+            or spot_f.kindstr() == "tt"
         ):
-            if spot_f.kindstr() == "ap":
+            if spot_f.kindstr() == "ap" or spot_f.kindstr() == "tt":
                 hash_ = f_string
             else:
                 hash_ = f"a{hashlib.sha1(f_string.encode('utf-8')).hexdigest()}"[0:5]

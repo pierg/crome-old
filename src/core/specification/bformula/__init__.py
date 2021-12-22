@@ -37,7 +37,10 @@ class Bool:
         """Espresso Minimization
         Notice that the espresso_exprs function returns a tuple.
         The reason is that this function can minimize multiple input functions simultaneously."""
-        self.__expression = espresso_exprs(expression.to_dnf())[0]
+        if expression.is_one():
+            self.__expression = expression
+        else:
+            self.__expression = espresso_exprs(expression.to_dnf())[0]
 
     @property
     def expression(self):
