@@ -7,12 +7,14 @@ import pygraphviz as pgv
 from pyeda.boolalg.expr import AndOp, Expression, OrOp, expr
 from pyeda.boolalg.minimization import espresso_exprs
 
+from core.specification import SpecNotSATException
 from tools.logic import Logic
 
 
-class BooleansNotSATException(Exception):
+class BooleansNotSATException(SpecNotSATException):
     def __init__(self, formula: Bool):
         self.formula = formula
+        super.__init__(formula)
 
 
 class Bool:

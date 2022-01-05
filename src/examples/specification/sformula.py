@@ -1,5 +1,6 @@
 import spot
 
+from core.specification import SpecNotSATException
 from core.specification.lformula import LTL
 
 
@@ -48,10 +49,17 @@ def inconsistencies():
     # f2 = LTL("!G(a)")
     # phi_2 = "(! z & G(a & b | G(k & l)) & F(c | !d) & (X(e & f) | !X(g | h)) & (l U p)) & z"
     # phi_2_ltl = LTL(phi_2)
-    phi = LTL("a | !a")
-    print(phi.tree(LTL.TreeType.LTL))
-    print(phi.tree(LTL.TreeType.BOOLEAN))
-    print(phi.represent(LTL.Output.SUMMARY))
+    try:
+        # phi = LTL("a & !a")
+        # phi = LTL("a | !a")
+        phi = LTL(
+            "(! z & G(a & b | G(k & l)) & F(c | !d) & (X(e & f) | !X(g | h)) & (l U p))"
+        )
+        print(phi.tree(LTL.TreeType.LTL))
+        print(phi.tree(LTL.TreeType.BOOLEAN))
+        print(phi.represent(LTL.Output.SUMMARY))
+    except SpecNotSATException as e:
+        print(f"{e.formula.original_formula} is not satisfiable")
 
 
 if __name__ == "__main__":

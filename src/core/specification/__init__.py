@@ -2,13 +2,14 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from enum import Enum, auto
-from typing import TYPE_CHECKING
 
 from tools.logic import LogicTuple
 from tools.nuxmv import Nuxmv
 
-if TYPE_CHECKING:
-    pass
+
+class SpecNotSATException(Exception):
+    def __init__(self, formula: Specification):
+        self.formula = formula
 
 
 class Specification(ABC):
@@ -24,6 +25,11 @@ class Specification(ABC):
     from ._copy import __deepcopy__  # noqa
     from ._str import __hash__, __str__  # noqa
     from ._utils import translate_to_buchi  # noqa
+
+    @property
+    @abstractmethod
+    def original_formula(self) -> str:
+        pass
 
     @abstractmethod
     def __and__(self: Specification, other: Specification) -> Specification:

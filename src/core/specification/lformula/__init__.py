@@ -9,16 +9,17 @@ import spot
 from treelib import Tree
 
 from core.patterns import Pattern
-from core.specification import Specification
+from core.specification import Specification, SpecNotSATException
 from core.specification.bformula import Bool
 from core.typeset import Typeset
 from tools.logic import Logic
 from tools.spot import Spot
 
 
-class LTLNotSATException(Exception):
+class LTLNotSATException(SpecNotSATException):
     def __init__(self, formula: LTL):
         self.formula = formula
+        super().__init__(formula)
 
 
 class LTL(Specification):
@@ -61,7 +62,8 @@ class LTL(Specification):
 
     def __init__ltl_formula(self, formula, typeset):
         """Building the LTL formula and tree."""
-        spot_formula = spot.formula(str(formula))
+        self.__original_formula = str(formula)
+        spot_formula = spot.formula(self.__original_formula)
         spot_formula = spot.simplify(spot_formula)
         spot_formula = Spot.transform_tree(spot_formula)
 
@@ -145,6 +147,10 @@ class LTL(Specification):
     @property
     def to_bool(self) -> str:
         return str(self.__boolean_formula.to_spot())
+
+    @property
+    def original_formula(self) -> str:
+        return self.__original_formula
 
     @property
     def hash(self):
