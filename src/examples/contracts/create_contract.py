@@ -11,16 +11,22 @@ w = ExampleWorld()
 
 
 def test1():
-    # c = Contract(assumptions=LTL("night", w.typeset),
-    #              guarantees=LTL("F day", w.typeset))
-    #
-    # print(c)
-    #
-    # try:
-    #     c = Contract(assumptions=LTL("night", w.typeset),
-    #                  guarantees=LTL("!night", w.typeset))
-    # except SpecNotSATException:
-    #     print("Spec non satisfiable")
+    c = Contract(
+        assumptions=LTL("night", w.typeset), guarantees=LTL("F day", w.typeset)
+    )
+
+    print(c)
+
+    print("\n\n")
+
+    try:
+        c = Contract(
+            assumptions=LTL("night", w.typeset), guarantees=LTL("!night", w.typeset)
+        )
+    except SpecNotSATException:
+        print("Spec non satisfiable")
+
+    print("\n\n")
 
     try:
         c = Contract(

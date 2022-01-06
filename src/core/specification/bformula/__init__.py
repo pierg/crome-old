@@ -14,7 +14,7 @@ from tools.logic import Logic
 class BooleansNotSATException(Exception):
     def __init__(self, formula: str):
         self.formula = formula
-        print(f"{formula}\nNOT SAT")
+        print(f"{formula}\nNOT SAT (Boolean)")
 
 
 class Bool:

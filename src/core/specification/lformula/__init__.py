@@ -21,7 +21,7 @@ class LTLNotSATException(SpecNotSATException):
 
     def __init__(self, formula: str):
         self.formula = formula
-        print(f"{formula}\nNOT SAT")
+        print(f"{formula}\nNOT SAT (LTL)")
         super().__init__(formula)
 
 
