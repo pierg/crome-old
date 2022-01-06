@@ -1,7 +1,7 @@
 import os
 import time
 
-from casestudies.contextual_gridworld_simple.custom_world import CustomWorld
+from casestudies.contextual_gridworld_simple.custom_world import GridworldBasicWorld
 from core.cgg import Node
 from core.cgg.exceptions import CGGException
 from core.specification.__legacy.formula.patterns.robotics.coremovement.surveillance import (
@@ -25,7 +25,7 @@ path = os.path.abspath(os.path.dirname(__file__))
 result_folder = f"{path}/results/CROME"
 
 """We import the world"""
-w = CustomWorld()
+w = GridworldBasicWorld()
 
 """Strict Ordered Patrolling Location r1, r2"""
 ordered_patrol_day = StrictOrderedPatrolling([w["r1"], w["r2"]])

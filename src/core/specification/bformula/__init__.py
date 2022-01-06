@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from copy import deepcopy
 from enum import Enum, auto
 from typing import List
 
@@ -7,14 +8,13 @@ import pygraphviz as pgv
 from pyeda.boolalg.expr import AndOp, Expression, OrOp, expr
 from pyeda.boolalg.minimization import espresso_exprs
 
-from core.specification import SpecNotSATException
 from tools.logic import Logic
 
 
-class BooleansNotSATException(SpecNotSATException):
-    def __init__(self, formula: Bool):
+class BooleansNotSATException(Exception):
+    def __init__(self, formula: str):
         self.formula = formula
-        super.__init__(formula)
+        print(f"{formula}\nNOT SAT")
 
 
 class Bool:
@@ -34,7 +34,7 @@ class Bool:
             raise AttributeError
 
         if expression.satisfy_one() is None:
-            raise BooleansNotSATException(self)
+            raise BooleansNotSATException(str(expression))
 
         """Espresso Minimization
         Notice that the espresso_exprs function returns a tuple.
@@ -43,6 +43,20 @@ class Bool:
             self.__expression = expression
         else:
             self.__expression = espresso_exprs(expression.to_dnf())[0]
+
+    def __deepcopy__(self: Bool, memo):
+        cls = self.__class__
+        result = cls.__new__(cls)
+        memo[id(self)] = result
+        try:
+            for k, v in self.__dict__.items():
+                if "_Bool__expression" in k:
+                    setattr(result, k, expr(self.expression))
+                else:
+                    setattr(result, k, deepcopy(v, memo))
+        except Exception:
+            print(k)
+        return result
 
     @property
     def expression(self):

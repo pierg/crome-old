@@ -9,18 +9,17 @@ from core.contract.exceptions import (
     UnfeasibleContracts,
 )
 from core.controller.synthesisinfo import SynthesisInfo
-from core.specification.__legacy.atom import Atom
-from core.specification.__legacy.formula import Formula, Specification
-from core.specification.enums import FormulaOutput
+from core.specification import Specification
 from core.specification.exceptions import NotSatisfiableException
+from core.specification.lformula import LTL
 from core.typeset import Typeset
 
 
 class Contract:
     def __init__(
         self,
-        assumptions: Specification = None,
-        guarantees: Specification = None,
+        assumptions: LTL = None,
+        guarantees: LTL = None,
         saturate: bool = True,
     ):
 
@@ -37,7 +36,7 @@ class Contract:
         self.disjoined_by = {self}
 
     @property
-    def assumptions(self) -> Formula:
+    def assumptions(self) -> Specification:
         return self.__assumptions
 
     @assumptions.setter
@@ -46,7 +45,7 @@ class Contract:
         self.__checkfeasibility()
 
     @property
-    def guarantees(self) -> Formula:
+    def guarantees(self) -> Specification:
         """Returning saturated guarantee."""
         return self.__guarantees
 
@@ -62,27 +61,21 @@ class Contract:
     def __setassumptions(self, value: Specification):
         """Setting Assumptions."""
         if value is None:
-            self.__assumptions = Formula("TRUE")
+            self.__assumptions = LTL("TRUE")
         else:
             if not isinstance(value, Specification):
                 raise AttributeError
             """Every contracts assigns a **copy** of A and G"""
-            if isinstance(value, Atom):
-                self.__assumptions = Formula(deepcopy(value))
-            elif isinstance(value, Formula):
-                self.__assumptions = deepcopy(value)
+            self.__assumptions = deepcopy(value)
 
     def __setguarantees(self, value: Specification, saturate=True):
         if value is None:
-            self.__guarantees = Formula()
+            self.__guarantees = LTL()
         else:
             if not isinstance(value, Specification):
                 raise AttributeError
             """Every contracts assigns a **copy** of A and G"""
-            if isinstance(value, Atom):
-                self.__guarantees = Formula(deepcopy(value))
-            elif isinstance(value, Formula):
-                self.__guarantees = deepcopy(value)
+            self.__guarantees = deepcopy(value)
         """Saturate the guarantees"""
         if saturate:
             self.__guarantees.saturate(self.__assumptions)
@@ -91,9 +84,16 @@ class Contract:
         """Check Feasibility."""
         if self.assumptions is not None or not self.assumptions.is_true():
             try:
-                Formula.satcheck({self.__assumptions, self.__guarantees})
+                self.__assumptions & self.__guarantees
             except NotSatisfiableException as e:
                 raise UnfeasibleContracts(self, e)
+
+    def __str__(self):
+        ret = "\n--ASSUMPTIONS--\n"
+        ret += str(self.assumptions)
+        ret += "\n--GUARANTEES--\n"
+        ret += str(self.guarantees)
+        return ret
 
     """Refinement"""
 
@@ -134,11 +134,11 @@ class Contract:
         a_typeset = Typeset()
         g_typeset = Typeset()
 
-        list, typeset = self.assumptions.formula(FormulaOutput.ListCNF)
+        list, typeset = self.assumptions.formula(SpecificationOutput.ListCNF)
         assumptions.extend(list)
         a_typeset |= typeset
 
-        list, typeset = self.guarantees.formula(FormulaOutput.ListCNF)
+        list, typeset = self.guarantees.formula(SpecificationOutput.ListCNF)
         guarantees.extend(list)
         g_typeset |= typeset
 
@@ -154,30 +154,32 @@ class Contract:
         o_typeset = Typeset(o_set)
 
         """Mutex Rules"""
-        ret = Atom.extract_mutex_rules(i_typeset, output=FormulaOutput.ListCNF)
+        ret = Atom.extract_mutex_rules(i_typeset, output=SpecificationOutput.ListCNF)
         if ret is not None:
             rules, typeset = ret
             a_mutex.extend(rules)
 
-        ret = Atom.extract_mutex_rules(o_typeset, output=FormulaOutput.ListCNF)
+        ret = Atom.extract_mutex_rules(o_typeset, output=SpecificationOutput.ListCNF)
         if ret is not None:
             rules, typeset = ret
             g_mutex.extend(rules)
 
         """Adjacecy Rules"""
-        ret = Atom.extract_adjacency_rules(o_typeset, output=FormulaOutput.ListCNF)
+        ret = Atom.extract_adjacency_rules(
+            o_typeset, output=SpecificationOutput.ListCNF
+        )
         if ret is not None:
             rules, typeset = ret
             g_adjacency.extend(rules)
 
         """Adding Liveness To Sensors (input)"""
-        ret = Atom.extract_liveness_rules(i_typeset, output=FormulaOutput.ListCNF)
+        ret = Atom.extract_liveness_rules(i_typeset, output=SpecificationOutput.ListCNF)
         if ret is not None:
             rules, typeset = ret
             a_liveness.extend(rules)
 
         """Adding context and active signal rules"""
-        ret = Atom.context_active_rules(i_typeset, output=FormulaOutput.ListCNF)
+        ret = Atom.context_active_rules(i_typeset, output=SpecificationOutput.ListCNF)
         if ret is not None:
             rules, typeset = ret
             assumptions.extend(rules)

@@ -6,8 +6,7 @@ from typing import TYPE_CHECKING
 
 from core.specification import Specification
 from core.specification.enums import FormulaOutput, FormulaType, SpecKind
-from core.specification.exceptions import AtomNotSatisfiableException
-from core.type import Boolean, TypeKinds
+from core.type import Boolean
 from core.typeset import Typeset
 from tools.logic import Logic, LogicTuple
 

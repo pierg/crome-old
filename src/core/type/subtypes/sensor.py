@@ -1,4 +1,4 @@
-from core.type import Boolean, BoundedInteger, TypeKinds
+from core.type import Boolean, BoundedInteger, Types
 
 
 class IntegerSensor(BoundedInteger):
@@ -7,21 +7,18 @@ class IntegerSensor(BoundedInteger):
 
     @property
     def kind(self):
-        return TypeKinds.SENSOR
+        return Types.Kind.SENSOR
 
 
 class BooleanSensor(Boolean):
     def __init__(self, name: str, mutex: str = None):
         super().__init__(name)
 
-    def to_atom(self):
-        from core.specification.__legacy.atom import Atom, AtomKind
-        from core.typeset import Typeset
+    def to_atom(self, kind=None):
+        from core.specification import Specification
 
-        return Atom(
-            formula=(self.name, Typeset({self})), check=False, kind=AtomKind.SENSOR
-        )
+        return super().to_atom(kind=Specification.Kind.ATOM_SENSOR)
 
     @property
     def kind(self):
-        return TypeKinds.SENSOR
+        return Types.Kind.SENSOR

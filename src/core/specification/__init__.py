@@ -8,13 +8,18 @@ from tools.nuxmv import Nuxmv
 
 
 class SpecNotSATException(Exception):
-    def __init__(self, formula: Specification):
+    def __init__(self, formula: str):
         self.formula = formula
 
 
 class Specification(ABC):
     class Kind(Enum):
         UNDEFINED = auto()
+        ACTIVE_SIGNAL = auto()
+        CONTEXT = auto()
+        ATOM_ACTION = auto()
+        ATOM_SENSOR = auto()
+        ATOM_LOCATION = auto()
 
         class Rule(Enum):
             REFINEMENT = auto()
@@ -22,7 +27,6 @@ class Specification(ABC):
             ADJACENCY = auto()
             LIVENESS = auto()
 
-    from ._copy import __deepcopy__  # noqa
     from ._str import __hash__, __str__  # noqa
     from ._utils import translate_to_buchi  # noqa
 

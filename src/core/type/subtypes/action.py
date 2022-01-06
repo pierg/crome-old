@@ -1,4 +1,4 @@
-from core.type import Boolean, BoundedInteger, TypeKinds
+from core.type import Boolean, BoundedInteger, Types
 
 
 class IntegerAction(BoundedInteger):
@@ -7,7 +7,7 @@ class IntegerAction(BoundedInteger):
 
     @property
     def kind(self):
-        return TypeKinds.ACTION
+        return Types.Kind.ACTION
 
 
 class BooleanAction(Boolean):
@@ -19,15 +19,12 @@ class BooleanAction(Boolean):
 
     @property
     def kind(self):
-        return TypeKinds.ACTION
+        return Types.Kind.ACTION
 
-    def to_atom(self):
-        from core.specification.__legacy.atom import Atom, AtomKind
-        from core.typeset import Typeset
+    def to_atom(self, kind=None):
+        from core.specification import Specification
 
-        return Atom(
-            formula=(self.name, Typeset({self})), check=False, kind=AtomKind.ACTION
-        )
+        return super().to_atom(kind=Specification.Kind.ATOM_ACTION)
 
     @property
     def mutex_group(self):

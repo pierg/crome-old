@@ -10,6 +10,7 @@ class Trigger(Robotic):
         INSTANTANEOUS_REACTION = auto()
         BOUNDED_REACTION = auto()
         BOUND_DELAY = auto()
+        PROMPT_REACTION = auto()
         DELAYED_REACTION = auto()
         WAIT = auto()
 

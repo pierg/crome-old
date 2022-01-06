@@ -1,6 +1,6 @@
 from typing import Set
 
-from core.type import Boolean, TypeKinds
+from core.type import Boolean, Types
 
 
 class ReachLocation(Boolean):
@@ -19,17 +19,14 @@ class ReachLocation(Boolean):
         else:
             self.adjacency = adjacency
 
-    def to_atom(self):
-        from core.specification.__legacy.atom import Atom, AtomKind
-        from core.typeset import Typeset
+    def to_atom(self, kind=None):
+        from core.specification import Specification
 
-        return Atom(
-            formula=(self.name, Typeset({self})), check=False, kind=AtomKind.LOCATION
-        )
+        return super().to_atom(kind=Specification.Kind.ATOM_LOCATION)
 
     @property
     def kind(self):
-        return TypeKinds.LOCATION
+        return Types.Kind.LOCATION
 
     @property
     def adjacency_set(self) -> Set[str]:

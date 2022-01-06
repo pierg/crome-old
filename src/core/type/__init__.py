@@ -5,7 +5,6 @@ from enum import Enum, auto
 
 """Template Pattern"""
 
-
 BASE_CLASS_TYPES = [
     "Boolean",
     "BoundedInteger",
@@ -42,15 +41,15 @@ class Types(ABC):
     def name(self) -> str:
         return self.__name
 
-    def kind(self) -> TypeKinds:
+    def kind(self) -> Types.Kind:
         pass
 
     @property
     def controllable(self) -> bool:
         if (
-            self.kind == TypeKinds.SENSOR
-            or self.kind == TypeKinds.CONTEXT
-            or self.kind == TypeKinds.ACTIVE
+            self.kind == Types.Kind.SENSOR
+            or self.kind == Types.Kind.CONTEXT
+            or self.kind == Types.Kind.ACTIVE
         ):
             return False
         return True
@@ -73,11 +72,10 @@ class Boolean(Types):
     def __init__(self, name: str):
         super().__init__(name)
 
-    def to_atom(self):
-        from core.specification.__legacy.atom import Atom
-        from core.typeset import Typeset
+    def to_atom(self, kind=None):
+        from core.specification.lformula import LTL
 
-        return Atom(formula=(self.name, Typeset({self})), check=False)
+        return LTL(self.name, kind=kind)
 
     @property
     def mutex_group(self) -> str:

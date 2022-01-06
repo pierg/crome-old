@@ -10,15 +10,18 @@ from treelib import Tree
 
 from core.patterns import Pattern
 from core.specification import Specification, SpecNotSATException
-from core.specification.bformula import Bool
+from core.specification.bformula import Bool, BooleansNotSATException
 from core.typeset import Typeset
 from tools.logic import Logic
 from tools.spot import Spot
 
 
 class LTLNotSATException(SpecNotSATException):
-    def __init__(self, formula: LTL):
+    """TODO: code better, rather than str"""
+
+    def __init__(self, formula: str):
         self.formula = formula
+        print(f"{formula}\nNOT SAT")
         super().__init__(formula)
 
 
@@ -36,9 +39,9 @@ class LTL(Specification):
     def __init__(
         self,
         formula: str | Pattern = None,
+        typeset: Typeset = None,
         boolean_formula: Bool = None,
         atoms_dictionary: dict[str, LTL] = None,
-        typeset: Typeset = None,
         kind: Specification.Kind = None,
         atom_hash: str = None,
     ):
@@ -51,7 +54,6 @@ class LTL(Specification):
         self.__atoms_tree = None
         self.__atoms_dictionary = None
         self.__atom_hash = atom_hash
-        self.__ltl_tree = None
         self.__boolean_formula = None
 
         if kind is None:
@@ -69,7 +71,7 @@ class LTL(Specification):
 
         """Check if satisfiable"""
         if str(spot_formula) == "0":
-            raise LTLNotSATException(self)
+            raise LTLNotSATException(self.__original_formula)
 
         self.__spot_formula = spot_formula
 
@@ -108,6 +110,22 @@ class LTL(Specification):
             self.__atoms_tree = Tree()
             self.__gen_atom_tree(tree=self.__atoms_tree, spot_f=bool_spot)
 
+    def reinitialize(self):
+        pass
+
+    def __deepcopy__(self: LTL, memo):
+        cls = self.__class__
+        result = cls.__new__(cls)
+        memo[id(self)] = result
+        try:
+            for k, v in self.__dict__.items():
+                if "_LTL__ltl_tree" not in k and "_LTL__spot_formula" not in k:
+                    setattr(result, k, deepcopy(v, memo))
+        except Exception:
+            print(k)
+        result.__init__ltl_formula(formula=self.to_ltl, typeset=self.typeset)
+        return result
+
     def represent(self, output_type: LTL.Output = Output.SUMMARY) -> str:
         if output_type == LTL.Output.SPOT_str:
             return str(self.__spot_formula)
@@ -140,8 +158,8 @@ class LTL(Specification):
 
     @property
     def to_ltl(self) -> str:
-        if self.__spot_formula.kindstr() == "U":
-            return f"({str(self.__spot_formula)})"
+        # if self.__spot_formula.kindstr() == "U":
+        #     return f"({str(self.__spot_formula)})"
         return str(self.__spot_formula)
 
     @property
@@ -196,6 +214,20 @@ class LTL(Specification):
     @property
     def string(self: LTL) -> str:
         return self.to_ltl
+
+    def saturate(self, saturation: LTL):
+        """Reinitiate LTL formula TODO:code better."""
+        new_ltl_formula = f"({saturation.to_ltl}) -> {self.to_ltl}"
+        new_typeset = self.typeset | saturation.typeset
+
+        self.__init__ltl_formula(new_ltl_formula, new_typeset)
+
+        new_boolean_formula = saturation.__boolean_formula >> self.__boolean_formula
+        new_boolean_dictionary = {
+            **saturation.__atoms_dictionary,
+            **self.__atoms_dictionary,
+        }
+        self.__init__atoms_formula(new_boolean_formula, new_boolean_dictionary)
 
     def __normal_form_to_str(self, kind: Output = Output.CNF_str):
         if kind == LTL.Output.CNF_str:
@@ -360,9 +392,14 @@ class LTL(Specification):
     def __and__(self: LTL, other: LTL) -> LTL:
         """self & other Returns a new Sformula with the conjunction with
         other."""
+        """compose the boolean first"""
+        try:
+            boolean_formula = self.__boolean_formula & other.__boolean_formula
+        except BooleansNotSATException:
+            raise LTLNotSATException(f"({self.to_ltl}) & ({other.to_ltl})")
         return LTL(
             formula=f"({self.to_ltl}) & ({other.to_ltl})",
-            boolean_formula=self.__boolean_formula & other.__boolean_formula,
+            boolean_formula=boolean_formula,
         )
 
     def __or__(self: LTL, other: LTL) -> LTL:
@@ -419,8 +456,11 @@ class LTL(Specification):
 
 
 if __name__ == "__main__":
-    phi = "! z & G(a & b | G(k & l)) & F(c | !d) & (X(e & f) | !X(g | h)) & (l U p)"
+
+    phi = "TRUE"
+    # phi = "! z & G(a & b | G(k & l)) & F(c | !d) & (X(e & f) | !X(g | h)) & (l U p)"
     sformula = LTL(phi)
+    print(sformula)
     print(sformula.tree(LTL.TreeType.LTL))
     print(sformula.tree(LTL.TreeType.BOOLEAN))
 

@@ -76,6 +76,7 @@ class World(dict):
 
         for name, elem in self.__typeset.items():
             super().__setitem__(name, elem.to_atom())
+            elem.to_atom()
             super().__setitem__(f"!{name}", ~elem.to_atom())
 
         self.__rules: Set[Rule] = set()

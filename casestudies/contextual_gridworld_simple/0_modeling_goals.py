@@ -1,6 +1,6 @@
 import os
 
-from custom_world import CustomWorld
+from custom_world import GridworldBasicWorld
 
 from core.cgg import Node
 from core.cgg.exceptions import CGGException
@@ -18,7 +18,7 @@ output_folder_path = (
 )
 
 """We import the world"""
-w = CustomWorld()
+w = GridworldBasicWorld()
 
 try:
 

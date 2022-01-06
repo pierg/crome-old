@@ -1,4 +1,4 @@
-from core.type import Boolean, BoundedInteger, TypeKinds
+from core.type import Boolean, BoundedInteger, Types
 
 
 class ContextInteger(BoundedInteger):
@@ -12,7 +12,7 @@ class ContextInteger(BoundedInteger):
 
     @property
     def kind(self):
-        return TypeKinds.CONTEXT
+        return Types.Kind.CONTEXT
 
 
 class ContextBoolean(Boolean):
@@ -23,19 +23,16 @@ class ContextBoolean(Boolean):
 
     @property
     def kind(self):
-        return TypeKinds.CONTEXT
+        return Types.Kind.CONTEXT
 
     @property
     def mutex_group(self):
         return self.mutex
 
-    def to_atom(self):
-        from core.specification.__legacy.atom import Atom, AtomKind
-        from core.typeset import Typeset
+    def to_atom(self, kind=None):
+        from core.specification import Specification
 
-        return Atom(
-            formula=(self.name, Typeset({self})), check=False, kind=AtomKind.CONTEXT
-        )
+        return super().to_atom(kind=Specification.Kind.CONTEXT)
 
 
 class ContextIntegerTime(ContextInteger):

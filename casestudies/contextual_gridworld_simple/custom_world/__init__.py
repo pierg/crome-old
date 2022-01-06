@@ -3,7 +3,7 @@ from core.world import World
 from .variables import R1, R2, R3, R4, R5, Day, Greet, Night, Person, Register
 
 
-class CustomWorld(World):
+class GridworldBasicWorld(World):
     def __init__(self):
         super().__init__(
             actions={Greet(), Register()},
