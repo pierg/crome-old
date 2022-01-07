@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 // components
 import Button from "../../../components/Elements/Button.js";
@@ -52,9 +52,7 @@ export default function CardProductsCheckout({ images, discount, details }) {
                   <h6 className="text-blueGray-700 leading-normal mt-0 mb-2">
                     {propDetails.text}
                   </h6>
-                  <h6 className="leading-normal mt-0 mb-2">
-                    {propDetails.info}
-                  </h6>
+                  <h6 className="leading-normal mt-0 mb-2">{propDetails.info}</h6>
                 </div>
               ))}
             </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 // components
 import Heading2Badge from "../../../../components/Headings/Heading2Badge.js";
@@ -15,11 +15,7 @@ export default function Hero2({ heading2badge, image, infoArea }) {
           <Heading2Badge {...heading2badge} />
           <div className="items-center flex flex-wrap">
             <div className="w-full md:w-4/12 ml-auto mr-auto px-4">
-              <img
-                alt="..."
-                className="max-w-full rounded-lg shadow-lg"
-                src={image}
-              />
+              <img alt="..." className="max-w-full rounded-lg shadow-lg" src={image} />
             </div>
             <div className="w-full md:w-5/12 ml-auto mr-auto px-4">
               <div className="md:pr-12">

@@ -1,16 +1,10 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 import { Chart, registerables } from "chart.js";
 
 Chart.register(...registerables);
 
-export default function CardChartJS({
-  title,
-  subtitle,
-  color,
-  chart,
-  children,
-}) {
+export default function CardChartJS({ title, subtitle, color, chart, children }) {
   const chartRef = React.useRef(null);
   React.useEffect(() => {
     let ctx = chartRef.current.getContext("2d");
@@ -74,15 +68,12 @@ export default function CardChartJS({
             <div className="relative w-full max-w-full flex-grow flex-1">
               <h6
                 className={
-                  "uppercase mb-1 text-xs font-semibold " +
-                  subtitleColors[color]
+                  "uppercase mb-1 text-xs font-semibold " + subtitleColors[color]
                 }
               >
                 {subtitle}
               </h6>
-              <h2 className={"text-xl font-semibold " + titleColors[color]}>
-                {title}
-              </h2>
+              <h2 className={"text-xl font-semibold " + titleColors[color]}>{title}</h2>
             </div>
           </div>
         </div>

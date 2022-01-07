@@ -134,7 +134,7 @@ venv.bak/
 .dmypy.json
 dmypy.json
 
-# Pyre type checker
+# Pyre crometypes checker
 .pyre/
 
 # Ignore dynaconf secret files

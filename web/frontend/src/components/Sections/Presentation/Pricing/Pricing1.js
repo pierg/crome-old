@@ -1,6 +1,6 @@
 /*eslint-disable*/
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 // components
 import CardPricing from "../../../../components/Cards/Presentation/CardPricing.js";

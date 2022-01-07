@@ -1,16 +1,10 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 // components
 import Input from "../../../components/Elements/Input.js";
 import Button from "../../../components/Elements/Button.js";
 
-export default function CardResetPassword({
-  image,
-  title,
-  subtitle,
-  input,
-  button,
-}) {
+export default function CardResetPassword({ image, title, subtitle, input, button }) {
   return (
     <>
       <div className="bg-white relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg">

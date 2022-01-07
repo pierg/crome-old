@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 // components
 import Heading2 from "../../../../components/Headings/Heading2.js";
@@ -31,9 +31,7 @@ export default function Product1({
               <MediaPlayerImageLeftRightButtons {...mediaplayer} />
             </div>
             <div className="mr-auto px-4 relative w-full lg:w-6/12 w-full md:w-full">
-              <h2 className="text-3xl font-bold leading-tight mt-0 mb-0">
-                {name}
-              </h2>
+              <h2 className="text-3xl font-bold leading-tight mt-0 mb-0">{name}</h2>
               <div className="pt-2">
                 <Ratings {...ratings} />
               </div>
@@ -44,18 +42,14 @@ export default function Product1({
                   if (prop.input) {
                     return (
                       <div key={key} className="px-4 relative w-full lg:w-6/12">
-                        <label className="inline-block mb-2">
-                          {prop.label}
-                        </label>
+                        <label className="inline-block mb-2">{prop.label}</label>
                         <Input {...prop.input} />
                       </div>
                     );
                   } else if (prop.select) {
                     return (
                       <div key={key} className="px-4 relative w-full lg:w-6/12">
-                        <label className="inline-block mb-2">
-                          {prop.label}
-                        </label>
+                        <label className="inline-block mb-2">{prop.label}</label>
                         <Select {...prop.select} />
                       </div>
                     );

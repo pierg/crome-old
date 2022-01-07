@@ -4,6 +4,7 @@ import itertools
 import json
 import os
 import random
+from copy import deepcopy
 from enum import Enum, auto
 from pathlib import Path
 from typing import TYPE_CHECKING, Dict, List, Set, Tuple, Union
@@ -14,12 +15,11 @@ from core.cgg.exceptions import CGGFailOperations, CGGOperationFail, TransSynthe
 from core.contract import Contract
 from core.controller import Controller
 from core.controller.exceptions import ControllerException
+from core.crometypes import Types
+from core.crometypes.subtypes.location import ReachLocation
 from core.goal import Goal
 from core.goal.exceptions import GoalException
 from core.specification import Specification, SpecNotSATException
-from core.specification.exceptions import NotSatisfiableException
-from core.type import Types
-from core.type.subtypes.location import ReachLocation
 from core.typeset import Typeset
 from tools.logic import Logic
 from tools.storage import Store
@@ -55,12 +55,15 @@ class Node(Goal):
         specification: Union[Specification, Contract] = None,
         context: Specification = None,
         world: World = None,
+        viewpoint: str = None,
         goal: Goal = None,
     ):
         """Graph properties."""
 
         if goal is None:
-            super().__init__(name, description, id, specification, context, world)
+            super().__init__(
+                name, description, id, specification, context, world, viewpoint
+            )
         elif (
             goal is not None
             and name is None
@@ -68,6 +71,7 @@ class Node(Goal):
             and specification is None
             and context is None
             and world is None
+            and viewpoint is None
         ):
             super().__init__(
                 goal.name,
@@ -76,6 +80,7 @@ class Node(Goal):
                 goal.specification,
                 goal.context,
                 goal.world,
+                goal.viewpoint,
             )
         else:
             raise AttributeError
@@ -458,6 +463,15 @@ class Node(Goal):
             result |= child.get_all_nodes()
         return result
 
+    def get_leaves(self) -> Set[Node]:
+        """Depth-first search."""
+        result = set()
+        if len(self.children) == 0:
+            result.add(self)
+        for child in self.children_nodes():
+            result |= child.get_all_nodes()
+        return result
+
     def save(self):
         Store.save_to_file(str(self), "cgg.txt", self.session_name)
 
@@ -689,7 +703,7 @@ class Node(Goal):
         return new_node
 
     @staticmethod
-    def build_cgg(nodes: Set[Node], kind: Link = Link.CONJUNCTION) -> Node:
+    def build_cgg(nodes: Set[Node]) -> Node:
 
         contexts = set()
 
@@ -699,20 +713,31 @@ class Node(Goal):
 
         """Extract all combinations of context which are consistent"""
         saturated_combinations = []
+        print([c for c in contexts])
+        combinations = itertools.combinations(contexts, (0 + 1) % (len(contexts)))
+        for combination in combinations:
+            print(f"Combination\t{str([str(e) for e in combination])}")
         for i in range(0, len(contexts)):
             """Extract all combinations of i context and saturate it."""
-            combinations = itertools.combinations(contexts, i + 1)
+            combinations = itertools.combinations(contexts, (i + 1) % (len(contexts)))
             for combination in combinations:
-                saturated_combination = combination[0]
-                try:
-                    for element in combination[1:]:
-                        saturated_combination &= element
-                    for context in contexts:
-                        if context not in combination:
-                            saturated_combination &= ~context
-                except NotSatisfiableException:
+                if len(combination) == 0:
                     continue
-                saturated_combinations.append(saturated_combination)
+                print(f"Selected\t{str([str(e) for e in combination])}")
+                saturated_combination = deepcopy(combination[0])
+                for element in combination[1:]:
+                    saturated_combination &= element
+                print(f"Conjoined\t{saturated_combination}")
+                for context in contexts:
+                    print(f"Context\t{context}")
+                    if context not in combination:
+                        saturated_combination &= ~context
+                        print(f"Saturated\t{saturated_combination}")
+                if not saturated_combination.is_satisfiable:
+                    continue
+                else:
+                    saturated_combinations.append(saturated_combination)
+                    print(f"Added\t{saturated_combination}")
 
         print("\n".join(x.string for x in saturated_combinations))
 
@@ -731,22 +756,25 @@ class Node(Goal):
 
         """Map to goals"""
         mapped_goals = set()
-        context_goal_map: Dict[Specification, Set[Node]] = {}
+        context_goal_map: Dict[Specification, Dict[str, Set[Node]]] = {}
         for goal in nodes:
-            if goal.context is not None:
-                for combination in saturated_combinations_grouped:
+            for combination in saturated_combinations_grouped:
+                add_goal = False
+                if goal.context is not None:
+                    print(f"{str(combination)} <= {str(goal.context)}")
                     if combination <= goal.context:
-                        if combination in context_goal_map:
-                            context_goal_map[combination].add(goal)
-                        else:
-                            context_goal_map[combination] = {goal}
-                        mapped_goals.add(goal)
-            else:
-                for combination in saturated_combinations_grouped:
+                        add_goal = True
+                else:
+                    add_goal = True
+                if add_goal:
                     if combination in context_goal_map:
-                        context_goal_map[combination].add(goal)
+                        if goal.viewpoint in context_goal_map[combination]:
+                            context_goal_map[combination][goal.viewpoint].add(goal)
+                        else:
+                            context_goal_map[combination][goal.viewpoint] = {goal}
                     else:
-                        context_goal_map[combination] = {goal}
+                        context_goal_map[combination] = dict()
+                        context_goal_map[combination][goal.viewpoint] = {goal}
                     mapped_goals.add(goal)
 
         if mapped_goals != nodes:
@@ -754,20 +782,18 @@ class Node(Goal):
         print("All goals have been mapped to mutually exclusive context")
 
         """Building the cgg..."""
-        composed_goals = set()
+        merged_goals = set()
         for mutex_context, cluster in context_goal_map.items():
-            new_node = Node.composition(cluster)
+            composed_goals = set()
+            for viewpoint, goals in cluster.items():
+                new_node = Node.composition(cluster[viewpoint])
+                new_node.context = mutex_context
+                composed_goals.add(new_node)
+            new_node = Node.merging(composed_goals)
             new_node.context = mutex_context
-            composed_goals.add(new_node)
+            merged_goals.add(new_node)
 
-        if kind == Link.CONJUNCTION:
-            cgg = Node.conjunction(composed_goals)
-        elif kind == Link.DISJUNCTION:
-            cgg = Node.disjunction(composed_goals)
-        else:
-            cgg = Node.conjunction(composed_goals)
-
-        """Renaming the CGG Mission and Scenarios nodes"""
+        cgg = Node.conjunction(merged_goals)
 
         """Assigning names for each node as 'scenarios'"""
         for i, node in enumerate(cgg.get_scenarios()):

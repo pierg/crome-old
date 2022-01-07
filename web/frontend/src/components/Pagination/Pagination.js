@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 import { Link } from "react-router-dom";
 
 export default function Pagination({ color, links, size }) {
@@ -53,29 +53,22 @@ export default function Pagination({ color, links, size }) {
       "bg-purple-500 border-purple-500 text-white hover:border-purple-700 hover:text-white hover:bg-purple-700",
     "pink-active":
       "bg-pink-500 border-pink-500 text-white hover:border-pink-700 hover:text-white hover:bg-pink-700",
-    "light-disabled":
-      "border-white text-blueGray-300 bg-white pointer-events-none",
+    "light-disabled": "border-white text-blueGray-300 bg-white pointer-events-none",
     "dark-disabled":
       "border-blueGray-400 text-white bg-blueGray-400 pointer-events-none",
     "blueGray-disabled":
       "border-blueGray-200 text-white bg-blueGray-200 pointer-events-none",
     "red-disabled": "border-red-200 text-white bg-red-200 pointer-events-none",
-    "orange-disabled":
-      "border-orange-200 text-white bg-orange-200 pointer-events-none",
-    "amber-disabled":
-      "border-amber-200 text-white bg-amber-200 pointer-events-none",
+    "orange-disabled": "border-orange-200 text-white bg-orange-200 pointer-events-none",
+    "amber-disabled": "border-amber-200 text-white bg-amber-200 pointer-events-none",
     "emerald-disabled":
       "border-emerald-200 text-white bg-emerald-200 pointer-events-none",
-    "teal-disabled":
-      "border-teal-200 text-white bg-teal-200 pointer-events-none",
+    "teal-disabled": "border-teal-200 text-white bg-teal-200 pointer-events-none",
     "lightBlue-disabled":
       "border-lightBlue-200 text-white bg-lightBlue-200 pointer-events-none",
-    "indigo-disabled":
-      "border-indigo-200 text-white bg-indigo-200 pointer-events-none",
-    "purple-disabled":
-      "border-purple-200 text-white bg-purple-200 pointer-events-none",
-    "pink-disabled":
-      "border-pink-200 text-white bg-pink-200 pointer-events-none",
+    "indigo-disabled": "border-indigo-200 text-white bg-indigo-200 pointer-events-none",
+    "purple-disabled": "border-purple-200 text-white bg-purple-200 pointer-events-none",
+    "pink-disabled": "border-pink-200 text-white bg-pink-200 pointer-events-none",
   };
   const sizes = {
     sm: "w-8 h-8",
@@ -101,11 +94,7 @@ export default function Pagination({ color, links, size }) {
                     " " +
                     colors[
                       color +
-                        (prop.disabled
-                          ? "-disabled"
-                          : prop.active
-                          ? "-active"
-                          : "")
+                        (prop.disabled ? "-disabled" : prop.active ? "-active" : "")
                     ]
                   }
                 />
@@ -120,11 +109,7 @@ export default function Pagination({ color, links, size }) {
                     " " +
                     colors[
                       color +
-                        (prop.disabled
-                          ? "-disabled"
-                          : prop.active
-                          ? "-active"
-                          : "")
+                        (prop.disabled ? "-disabled" : prop.active ? "-active" : "")
                     ]
                   }
                 />

@@ -1,12 +1,12 @@
 import uuid
 from typing import Set
 
+from core.crometypes import Types
+from core.crometypes.subtypes.action import BooleanAction
+from core.crometypes.subtypes.context import ContextBoolean
+from core.crometypes.subtypes.location import ReachLocation
+from core.crometypes.subtypes.sensor import BooleanSensor
 from core.specification import Specification
-from core.type import Types
-from core.type.subtypes.action import BooleanAction
-from core.type.subtypes.context import ContextBoolean
-from core.type.subtypes.location import ReachLocation
-from core.type.subtypes.sensor import BooleanSensor
 from core.typeset import Typeset
 
 

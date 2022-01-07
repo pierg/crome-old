@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 // components
 import Button from "../../../components/Elements/Button.js";
@@ -88,9 +88,7 @@ const selectsShape = PropTypes.shape({
   select: PropTypes.object,
 });
 
-const inputsTypes = PropTypes.arrayOf(
-  PropTypes.oneOfType([inputsShape, selectsShape])
-);
+const inputsTypes = PropTypes.arrayOf(PropTypes.oneOfType([inputsShape, selectsShape]));
 
 CardSettingsLarge.defaultProps = {
   button: {},

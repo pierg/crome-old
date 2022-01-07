@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 export default function Alert({ color, children }) {
   const alertColors = {
@@ -18,11 +18,7 @@ export default function Alert({ color, children }) {
   };
   return (
     <>
-      <div
-        className={
-          "px-6 py-4 border-0 rounded relative mb-4 " + alertColors[color]
-        }
-      >
+      <div className={"px-6 py-4 border-0 rounded relative mb-4 " + alertColors[color]}>
         {children}
       </div>
     </>

@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 // components
 import Button from "../../../components/Elements/Button.js";
@@ -23,12 +23,8 @@ export default function HeaderLeftTitleRightImage({
               className="px-4 relative w-full lg:w-5/12 w-full md:w-7/12"
               ct-utillities="mr-auto;text-left;d-flex;justify-content-center;flex-column"
             >
-              <h1 className="text-5xl font-bold leading-tight mt-0 mb-2">
-                {title}
-              </h1>
-              <p className="text-xl leading-relaxed opacity-75">
-                {description}
-              </p>
+              <h1 className="text-5xl font-bold leading-tight mt-0 mb-2">{title}</h1>
+              <p className="text-xl leading-relaxed opacity-75">{description}</p>
               <div className="mt-8">
                 <Button {...button} />
               </div>

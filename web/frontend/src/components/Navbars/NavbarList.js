@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 import classnames from "classnames";
 
 export default function Navbar({ children, breakpoint, className, ...rest }) {

@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 import classnames from "classnames";
 
 // components
@@ -70,17 +70,13 @@ export default function MediaPlayerTestimonial({ items, defaultOpened }) {
           <div className="flex justify-center my-12">
             <Button
               color="white"
-              onClick={(e) =>
-                toggleNew(e, open - 1 < 0 ? items.length - 1 : open - 1)
-              }
+              onClick={(e) => toggleNew(e, open - 1 < 0 ? items.length - 1 : open - 1)}
             >
               <i className="fas fa-chevron-left"></i>
             </Button>
             <Button
               color="white"
-              onClick={(e) =>
-                toggleNew(e, open + 1 > items.length - 1 ? 0 : open + 1)
-              }
+              onClick={(e) => toggleNew(e, open + 1 > items.length - 1 ? 0 : open + 1)}
             >
               <i className="fas fa-chevron-right"></i>
             </Button>

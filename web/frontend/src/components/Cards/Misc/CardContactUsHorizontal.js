@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 // components
 import Button from "../../../components/Elements/Button.js";
@@ -95,9 +95,7 @@ export default function CardContactUsHorizontal({ title, left, right, color }) {
         <div className="flex flex-wrap">
           <div className="p-6 relative w-full lg:w-8/12 md:w-7/12">
             <div className="pb-4 border-b border-blueGray-300">
-              <h4 className="text-xl font-bold leading-tight mt-0">
-                {left.title}
-              </h4>
+              <h4 className="text-xl font-bold leading-tight mt-0">{left.title}</h4>
               <p className="mt-1 text-blueGray-500">{left.subtitle}</p>
             </div>
             <div className="pt-6 flex-auto">
@@ -191,8 +189,8 @@ const inputsTypes = PropTypes.shape({
   // It is represetnted by the props you
   // can pass to our Input component element
   // NOTE: if you wish to generate a textarea, you will need to pass
-  // // // inside this object >> type: "textarea"
-  // // // full example >> input: { type: "textarea" }
+  // // // inside this object >> crometypes: "textarea"
+  // // // full example >> input: { crometypes: "textarea" }
   input: PropTypes.object,
 });
 

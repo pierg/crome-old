@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 import { Link } from "react-router-dom";
 
 // components
@@ -50,18 +50,14 @@ export default function CardProfileFullPage({
                     <span className="text-xl font-bold block tracking-wide text-blueGray-700">
                       {prop.title}
                     </span>
-                    <span className="text-sm text-blueGray-500">
-                      {prop.subtitle}
-                    </span>
+                    <span className="text-sm text-blueGray-500">{prop.subtitle}</span>
                   </div>
                 ))}
               </div>
             </div>
           </div>
           <div className="text-center mt-12">
-            <h3 className="text-4xl font-bold leading-tight mb-2 mb-0">
-              {name}
-            </h3>
+            <h3 className="text-4xl font-bold leading-tight mb-2 mb-0">{name}</h3>
             {location ? (
               <div className="text-sm leading-normal mt-0 mb-2 text-blueGray-500 font-bold uppercase">
                 <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-500"></i>
@@ -71,9 +67,7 @@ export default function CardProfileFullPage({
             <div className="mb-2 text-blueGray-700 mt-10">
               {achievements.map((prop, key) => (
                 <p key={key} className="mb-2 text-blueGray-700">
-                  <i
-                    className={prop.icon + " mr-2 text-lg text-blueGray-500"}
-                  ></i>
+                  <i className={prop.icon + " mr-2 text-lg text-blueGray-500"}></i>
                   {prop.text}
                 </p>
               ))}

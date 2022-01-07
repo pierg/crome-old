@@ -1,16 +1,11 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 // components
 import Button from "../../../components/Elements/Button.js";
 import Skew from "../../../components/Skews/Skew.js";
 
-export default function HeaderImageTitleButtons({
-  image,
-  title,
-  socials,
-  skew,
-}) {
+export default function HeaderImageTitleButtons({ image, title, socials, skew }) {
   return (
     <>
       <div
@@ -60,13 +55,7 @@ HeaderImageTitleButtons.propTypes = {
   // this will generate an anchor with target blank to the given link
   socials: PropTypes.arrayOf(
     PropTypes.shape({
-      icon: PropTypes.oneOf([
-        "facebook",
-        "twitter",
-        "instagram",
-        "dribbble",
-        "github",
-      ]),
+      icon: PropTypes.oneOf(["facebook", "twitter", "instagram", "dribbble", "github"]),
       link: PropTypes.string,
     })
   ),

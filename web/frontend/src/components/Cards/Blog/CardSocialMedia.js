@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 import { Link } from "react-router-dom";
 
 export default function CardSocialMedia({
@@ -41,8 +41,7 @@ export default function CardSocialMedia({
       "text-white bg-blueGray-800 border-blueGray-800 active:bg-blueGray-900 active:border-blueGray-900",
     blueGray:
       "text-white bg-blueGray-500 border-blueGray-500 active:bg-blueGray-600 active:border-blueGray-600",
-    red:
-      "text-white bg-red-500 border-red-500 active:bg-red-600 active:border-red-600",
+    red: "text-white bg-red-500 border-red-500 active:bg-red-600 active:border-red-600",
     orange:
       "text-white bg-orange-500 border-orange-500 active:bg-orange-600 active:border-orange-600",
     amber:
@@ -114,9 +113,7 @@ export default function CardSocialMedia({
   let children = (
     <>
       <i className={"my-4 text-2xl " + icon}></i>
-      <h2 className="text-5xl leading-normal font-bold lowercase mt-2">
-        {title}
-      </h2>
+      <h2 className="text-5xl leading-normal font-bold lowercase mt-2">{title}</h2>
       <p>
         <small className="uppercase">{subtitle}</small>
       </p>

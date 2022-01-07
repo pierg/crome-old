@@ -1,9 +1,9 @@
+from core.crometypes import Boolean
+from core.crometypes.subtypes.action import BooleanAction
+from core.crometypes.subtypes.context import ContextBooleanTime
+from core.crometypes.subtypes.location import ReachLocation
+from core.crometypes.subtypes.sensor import BooleanSensor
 from core.specification.exceptions import NotSatisfiableException
-from core.type import Boolean
-from core.type.subtypes.action import BooleanAction
-from core.type.subtypes.context import ContextBooleanTime
-from core.type.subtypes.location import ReachLocation
-from core.type.subtypes.sensor import BooleanSensor
 from core.world import World
 
 """Generic Boolena Types"""
@@ -167,7 +167,7 @@ class Night(ContextBooleanTime):
         return "time"
 
 
-"""We can set the generic types to be actions, i.e. controllable outputs"""
+"""We can set the generic crometypes to be actions, i.e. controllable outputs"""
 
 
 class GenericWorld(World):
@@ -186,11 +186,11 @@ class CustomWorld(World):
 
 
 if __name__ == "__main__":
-    """We can create instances of types."""
+    """We can create instances of crometypes."""
     person = Person()
     picture = Picture()
 
-    """From the type we can produce an atomic proposition"""
+    """From the crometypes we can produce an atomic proposition"""
     picture_ap = picture.to_atom()
 
     """Types can be mutually exclusive"""

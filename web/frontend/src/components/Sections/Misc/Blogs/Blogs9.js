@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 import { Link } from "react-router-dom";
 
 // components
@@ -38,9 +38,7 @@ export default function Blogs9({
                   />
                   <div className="flex-1">
                     <div className="justify-between items-center">
-                      <h6 className="text-lg font-bold leading-tight">
-                        {user.name}
-                      </h6>
+                      <h6 className="text-lg font-bold leading-tight">{user.name}</h6>
                       <p className="text-blueGray-500 text-sm">{user.date}</p>
                     </div>
                   </div>
@@ -51,11 +49,7 @@ export default function Blogs9({
                   ))}
                 </div>
               </div>
-              <img
-                alt="..."
-                src={image}
-                className="w-full rounded-lg shadow-lg"
-              />
+              <img alt="..." src={image} className="w-full rounded-lg shadow-lg" />
               {newDescription.map((prop, key) => (
                 <p key={key} className="text-blueGray-500 pt-6 leading-relaxed">
                   {prop}

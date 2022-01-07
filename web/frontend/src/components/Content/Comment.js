@@ -1,14 +1,8 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 import { Link } from "react-router-dom";
 
-export default function Comment({
-  image,
-  username,
-  description,
-  likes,
-  shares,
-}) {
+export default function Comment({ image, username, description, likes, shares }) {
   let likesComponent = (
     <>
       <i className="fas fa-thumbs-up"></i>
@@ -24,11 +18,7 @@ export default function Comment({
   return (
     <>
       <div className="mt-2 flex items-start group border-b border-blueGray-200">
-        <img
-          alt="..."
-          src={image}
-          className="relative rounded-full w-10 h-10 mt-3"
-        />
+        <img alt="..." src={image} className="relative rounded-full w-10 h-10 mt-3" />
         <div className="flex-1 relative">
           <div className="p-5">
             <h5 className="text-lg font-bold mt-0 mb-2">{username}</h5>

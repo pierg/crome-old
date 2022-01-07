@@ -1,4 +1,4 @@
-from core.type.subtypes.sensor import BooleanSensor
+from core.crometypes.subtypes.sensor import BooleanSensor
 
 
 class Person(BooleanSensor):

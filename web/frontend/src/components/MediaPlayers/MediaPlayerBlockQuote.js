@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 import classnames from "classnames";
 
 // components
@@ -64,9 +64,7 @@ export default function MediaPlayerBlockQuote({ items, defaultOpened }) {
                   <div className="mb-6 bg-white rounded-full w-16 h-16 flex items-center justify-center">
                     <i className={"text-lg " + prop.icon}></i>
                   </div>
-                  <p className="my-6 text-white leading-relaxed">
-                    {prop.description}
-                  </p>
+                  <p className="my-6 text-white leading-relaxed">{prop.description}</p>
                   <div className="flex items-center">
                     <img
                       alt="..."
@@ -99,9 +97,7 @@ export default function MediaPlayerBlockQuote({ items, defaultOpened }) {
             <a
               href="#pablo"
               className="text-white text-center opacity-50 hover:opacity-100 transition-opacity duration-150 ease-linear w-12 text-xl"
-              onClick={(e) =>
-                toggleNew(e, open - 1 < 0 ? items.length - 1 : open - 1)
-              }
+              onClick={(e) => toggleNew(e, open - 1 < 0 ? items.length - 1 : open - 1)}
             >
               <i className="text-lightBlue-500 fas fa-chevron-left"></i>
               <span className="sr-only">Previous</span>
@@ -109,9 +105,7 @@ export default function MediaPlayerBlockQuote({ items, defaultOpened }) {
             <a
               href="#pablo"
               className="text-white text-center opacity-50 hover:opacity-100 transition-opacity duration-150 ease-linear w-12 text-xl"
-              onClick={(e) =>
-                toggleNew(e, open + 1 > items.length - 1 ? 0 : open + 1)
-              }
+              onClick={(e) => toggleNew(e, open + 1 > items.length - 1 ? 0 : open + 1)}
             >
               <i className="text-lightBlue-500 fas fa-chevron-right"></i>
               <span className="sr-only">Next</span>

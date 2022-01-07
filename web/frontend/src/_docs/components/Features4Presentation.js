@@ -1,16 +1,11 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 // components
 import Heading3Badge from "../../components/Headings/Heading3Badge.js";
 import CardInfoIconLeft from "../../components/Cards/Misc/CardInfoIconLeft.js";
 
-export default function Features4({
-  heading3badge,
-  imageKit,
-  imageDashboard,
-  cards,
-}) {
+export default function Features4({ heading3badge, imageKit, imageDashboard, cards }) {
   return (
     <>
       <div className="relative py-20">
@@ -26,16 +21,8 @@ export default function Features4({
             </div>
 
             <div className="md:mx-auto px-4 relative w-full lg:w-6/12 w-10/12">
-              <img
-                alt="..."
-                src={imageKit}
-                className="lg:ml-12 w-full h-auto"
-              />
-              <img
-                alt="..."
-                src={imageDashboard}
-                className="lg:ml-12 w-full h-auto"
-              />
+              <img alt="..." src={imageKit} className="lg:ml-12 w-full h-auto" />
+              <img alt="..." src={imageDashboard} className="lg:ml-12 w-full h-auto" />
             </div>
           </div>
         </div>

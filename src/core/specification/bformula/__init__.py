@@ -36,13 +36,12 @@ class Bool:
         else:
             raise AttributeError
 
-        if str(expression) != "1":
+        if not (str(expression) == "1" or str(expression) == "0"):
             expression = expression.to_dnf()
-            if str(expression) != "1":
+            if not (str(expression) == "1" or str(expression) == "0"):
                 expression = espresso_exprs(expression)[0]
 
-        if expression != "1" and expression.satisfy_one() is None:
-            raise BooleansNotSATException(str(expression))
+        self.__expression = expression
 
         """Espresso Minimization
         Notice that the espresso_exprs function returns a tuple.
@@ -52,7 +51,7 @@ class Bool:
         # else:
         #     self.__expression = espresso_exprs(expression.to_dnf())[0]
         # TODO: Espression Minimazion, doesn't not work if not DNF, e.g. (a -> a)
-        self.__expression = expression
+        # self.__expression = expression
 
     def __deepcopy__(self: Bool, memo):
         cls = self.__class__
@@ -82,6 +81,14 @@ class Bool:
 
     def __str__(self):
         return self.represent(Bool.Output.PYEDA_str)
+
+    @property
+    def is_satisfiable(self):
+        return self.__expression.satisfy_one()
+
+    @property
+    def is_valid(self):
+        return self.__expression.satisfy_all()
 
     @property
     def dnf(self) -> List[set[str]]:

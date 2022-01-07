@@ -4,7 +4,7 @@ from copy import copy, deepcopy
 from itertools import combinations
 from typing import Dict, Set, Tuple, TypeVar, Union
 
-from core.type import BASE_CLASS_TYPES, Boolean, Types
+from core.crometypes import BASE_CLASS_TYPES, Boolean, Types
 
 AllTypes = TypeVar("AllTypes", bound=Types)
 
@@ -14,14 +14,14 @@ class Typeset(dict):
 
     def __init__(self, types: Set[AllTypes] = None):
 
-        """Indicates the supertypes relationships for each type in the
+        """Indicates the supertypes relationships for each crometypes in the
         typeset."""
         self.__super_types: Dict[AllTypes, Set[AllTypes]] = {}
 
-        """Indicates the mutex relationships for the type in the typeset"""
+        """Indicates the mutex relationships for the crometypes in the typeset"""
         self.__mutex_types: Set[Set[AllTypes]] = set()
 
-        """Indicates the adjacency relationships for the type in the typeset"""
+        """Indicates the adjacency relationships for the crometypes in the typeset"""
         self.__adjacent_types: Dict[AllTypes, Set[AllTypes]] = dict()
 
         if types is not None:
@@ -81,17 +81,17 @@ class Typeset(dict):
         for key, value in element.items():
             if key in self:
                 # if value is not self[key]:
-                #     print(f"Trying to add an element with key '{key}' and value of type '{type(value).__name__}'")
+                #     print(f"Trying to add an element with key '{key}' and value of crometypes '{crometypes(value).__name__}'")
                 #     print(f"ERROR:\n"
-                #           f"There is already en element with key '{key}' and value of type '{type(self[key]).__name__}'")
+                #           f"There is already en element with key '{key}' and value of crometypes '{crometypes(self[key]).__name__}'")
                 #     raise Exception("Type Mismatch")
                 if type(value).__name__ != type(self[key]).__name__:
                     print(
-                        f"Trying to add an element with key '{key}' and value of type '{type(value).__name__}'"
+                        f"Trying to add an element with key '{key}' and value of crometypes '{type(value).__name__}'"
                     )
                     print(
                         f"ERROR:\n"
-                        f"There is already en element with key '{key}' and value of type '{type(self[key]).__name__}'"
+                        f"There is already en element with key '{key}' and value of crometypes '{type(self[key]).__name__}'"
                     )
                     raise Exception("Type Mismatch")
             if key not in self:
@@ -272,3 +272,11 @@ class Typeset(dict):
         for t in types:
             s_types.add(Boolean(t))
         return Typeset(s_types)
+
+    def extract_viewpoint(self):
+        for v in self.values():
+            if v.kind == Types.Kind.LOCATION:
+                return "location"
+            elif v.kind == Types.Kind.ACTION:
+                return "action"
+        return "other"

@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 // components
 import Heading3Badge from "../../../../components/Headings/Heading3Badge.js";

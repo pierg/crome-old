@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 // components
 import DropdownButton from "../../../components/Dropdowns/DropdownButton.js";
@@ -88,9 +88,7 @@ export default function CardFullTable({ title, head, body, color, children }) {
         <div className="px-6 py-4 border-0">
           <div className="flex flex-wrap items-center">
             <div className="relative w-full max-w-full flex-grow flex-1">
-              <h3 className={"font-bold text-lg " + titleColors[color]}>
-                {title}
-              </h3>
+              <h3 className={"font-bold text-lg " + titleColors[color]}>{title}</h3>
             </div>
           </div>
         </div>
@@ -133,9 +131,7 @@ export default function CardFullTable({ title, head, body, color, children }) {
                         >
                           <div className="flex items-center">
                             <span
-                              className={
-                                "ml-3 font-bold " + +imageTextColors[color]
-                              }
+                              className={"ml-3 font-bold " + +imageTextColors[color]}
                             >
                               {colProp.bold}
                             </span>
@@ -193,8 +189,7 @@ export default function CardFullTable({ title, head, body, color, children }) {
                           <div className="flex items-center">
                             <i
                               className={
-                                "fas fa-circle mr-2 " +
-                                iconColors[colProp.color]
+                                "fas fa-circle mr-2 " + iconColors[colProp.color]
                               }
                             ></i>
                             {colProp.text}
@@ -214,9 +209,7 @@ export default function CardFullTable({ title, head, body, color, children }) {
                               alt="..."
                             ></img>{" "}
                             <span
-                              className={
-                                "ml-3 font-bold " + +imageTextColors[color]
-                              }
+                              className={"ml-3 font-bold " + +imageTextColors[color]}
                             >
                               {colProp.text}
                             </span>

@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 // components
 import Skew from "../../../components/Skews/Skew.js";
 

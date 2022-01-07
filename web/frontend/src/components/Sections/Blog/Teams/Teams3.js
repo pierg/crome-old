@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 // components
 import Heading3Badge from "../../../../components/Headings/Heading3Badge.js";
@@ -12,10 +12,7 @@ export default function Teams3({ heading3badge, cards }) {
         {heading3badge && <Heading3Badge {...heading3badge} />}
         <div className="flex flex-wrap -mx-4">
           {cards.map((prop, key) => (
-            <div
-              key={key}
-              className="px-4 relative w-full lg:w-4/12 w-full md:w-6/12"
-            >
+            <div key={key} className="px-4 relative w-full lg:w-4/12 w-full md:w-6/12">
               <CardProfileFull {...prop} />
             </div>
           ))}

@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 // components
 
@@ -17,8 +17,8 @@ export default function Pricing4({ heading2, buttons, cards }) {
                 Ready to grab this beauty?
               </h2>
               <p class="mt-2 mb-4 text-xl leading-relaxed text-blueGray-400">
-                Based on the license you get, you will have direct access to our
-                team of developers who built the product.
+                Based on the license you get, you will have direct access to our team of
+                developers who built the product.
               </p>
             </div>
           </div>
@@ -30,9 +30,7 @@ export default function Pricing4({ heading2, buttons, cards }) {
                 </div>
                 <div class="lg:px-12 px-4 py-5 flex-auto">
                   <div class="text-5xl leading-tight font-bold">$149</div>
-                  <span class="text-sm text-blueGray-500">
-                    For personal projects
-                  </span>
+                  <span class="text-sm text-blueGray-500">For personal projects</span>
                   <ul class="my-8 list-none">
                     <li class="py-2">
                       <div class="flex items-center">
@@ -91,12 +89,8 @@ export default function Pricing4({ heading2, buttons, cards }) {
                   <h4 class="font-bold my-2 text-white">Company</h4>
                 </div>
                 <div class="lg:px-12 px-4 py-5 flex-auto">
-                  <div class="text-6xl leading-tight font-bold text-white">
-                    $249
-                  </div>
-                  <span class="text-sm text-blueGray-500">
-                    For commercial projects
-                  </span>
+                  <div class="text-6xl leading-tight font-bold text-white">$249</div>
+                  <span class="text-sm text-blueGray-500">For commercial projects</span>
                   <ul class="my-8 list-none">
                     <li class="py-2">
                       <div class="flex items-center">
@@ -156,9 +150,7 @@ export default function Pricing4({ heading2, buttons, cards }) {
                 </div>
                 <div class="lg:px-12 px-4 py-5 flex-auto">
                   <div class="text-5xl leading-tight font-bold">$499</div>
-                  <span class="text-sm text-blueGray-500">
-                    For internal apps
-                  </span>
+                  <span class="text-sm text-blueGray-500">For internal apps</span>
                   <ul class="my-8 list-none">
                     <li class="py-2">
                       <div class="flex items-center">
@@ -190,9 +182,7 @@ export default function Pricing4({ heading2, buttons, cards }) {
                         <span class="text-blueGray-500 inline-flex text-center rounded-full mr-3 items-center justify-center w-8 h-8 bg-blueGray-100">
                           <i class="fas text-sm fa-laptop-code"></i>
                         </span>
-                        <h6 class="text-base">
-                          More than 10 Developers Access
-                        </h6>
+                        <h6 class="text-base">More than 10 Developers Access</h6>
                       </div>
                     </li>
                     <li class="py-2">
@@ -217,8 +207,7 @@ export default function Pricing4({ heading2, buttons, cards }) {
           <div className="flex flex-wrap -mx-4">
             <div className="w-full lg:w-6/12 mx-auto">
               <p class="text-center mt-5 text-blueGray-600">
-                <i class="fa fa-lock"></i> Secured Payment by <b> 2Checkout </b>{" "}
-                with:
+                <i class="fa fa-lock"></i> Secured Payment by <b> 2Checkout </b> with:
                 <br />
                 <i class="fab fa-cc-paypal text-3xl mr-1 mt-1"></i>
                 <i class="fab fa-cc-visa text-3xl mr-1 mt-1"></i>
@@ -227,9 +216,8 @@ export default function Pricing4({ heading2, buttons, cards }) {
               </p>
 
               <p class="text-center text-blueGray-600 mt-4 mx-auto">
-                <b>Info:</b> If you are a Registered Company inside the European
-                Union you will be able to add your VAT ID after your Press "Buy
-                Now"
+                <b>Info:</b> If you are a Registered Company inside the European Union
+                you will be able to add your VAT ID after your Press "Buy Now"
               </p>
             </div>
           </div>

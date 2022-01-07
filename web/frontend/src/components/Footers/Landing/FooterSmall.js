@@ -1,7 +1,7 @@
 /*eslint-disable*/
 import React from "react";
 import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 // components
 

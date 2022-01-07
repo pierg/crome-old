@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 // components
 
 export default function CardBlogImage({ image, title, description, color }) {
@@ -35,11 +35,7 @@ export default function CardBlogImage({ image, title, description, color }) {
           bgColor[color]
         }
       >
-        <img
-          alt="..."
-          src={image}
-          className="w-full align-middle rounded-t-lg"
-        />
+        <img alt="..." src={image} className="w-full align-middle rounded-t-lg" />
         <blockquote className="relative p-8 mb-4">
           <svg
             preserveAspectRatio="none"

@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 // components
 import InfoAreaIconTitle from "../../../components/InfoAreas/Misc/InfoAreaIconTitle.js";

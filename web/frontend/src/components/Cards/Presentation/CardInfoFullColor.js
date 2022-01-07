@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 // components
 
 export default function CardInfoFullColor({
@@ -21,11 +21,9 @@ export default function CardInfoFullColor({
     blueGray: "bg-blueGray-500",
     "red-gradient": "bg-gradient-to-r from-red-400 to-red-500 bg-red-500",
     red: "bg-red-500",
-    "orange-gradient":
-      "bg-gradient-to-r from-orange-400 to-orange-500 bg-orange-500",
+    "orange-gradient": "bg-gradient-to-r from-orange-400 to-orange-500 bg-orange-500",
     orange: "bg-orange-500",
-    "amber-gradient":
-      "bg-gradient-to-r from-amber-400 to-amber-500 bg-amber-500",
+    "amber-gradient": "bg-gradient-to-r from-amber-400 to-amber-500 bg-amber-500",
     amber: "bg-amber-500",
     "emerald-gradient":
       "bg-gradient-to-r from-emerald-400 to-emerald-500 bg-emerald-500",
@@ -35,11 +33,9 @@ export default function CardInfoFullColor({
     "lightBlue-gradient":
       "bg-gradient-to-r from-lightBlue-400 to-lightBlue-500 bg-lightBlue-500",
     lightBlue: "bg-lightBlue-500",
-    "indigo-gradient":
-      "bg-gradient-to-r from-indigo-400 to-indigo-500 bg-indigo-500",
+    "indigo-gradient": "bg-gradient-to-r from-indigo-400 to-indigo-500 bg-indigo-500",
     indigo: "bg-indigo-500",
-    "purple-gradient":
-      "bg-gradient-to-r from-purple-400 to-purple-500 bg-purple-500",
+    "purple-gradient": "bg-gradient-to-r from-purple-400 to-purple-500 bg-purple-500",
     purple: "bg-purple-500",
     "pink-gradient": "bg-gradient-to-r from-pink-400 to-pink-500 bg-pink-500",
     pink: "bg-pink-500",
@@ -89,11 +85,7 @@ export default function CardInfoFullColor({
           >
             <i className={icon + " text-xl"}></i>
           </div>
-          <h4
-            className={
-              "text-2xl font-semibold leading-normal " + textColor[color]
-            }
-          >
+          <h4 className={"text-2xl font-semibold leading-normal " + textColor[color]}>
             {title}
           </h4>
           <p className={"mt-2 " + textColor[color]}>{description}</p>

@@ -4,9 +4,9 @@ from copy import deepcopy
 from enum import Enum, auto
 from typing import TYPE_CHECKING
 
+from core.crometypes import Boolean
 from core.specification import Specification
 from core.specification.enums import FormulaOutput, FormulaType, SpecKind
-from core.type import Boolean
 from core.typeset import Typeset
 from tools.logic import Logic, LogicTuple
 

@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 // components
 import Heading2Badge from "../../../../components/Headings/Heading2Badge.js";
@@ -13,10 +13,7 @@ export default function Features5({ heading2badge, cards }) {
           {heading2badge && <Heading2Badge {...heading2badge} />}
           <div className="items-center mt-12 flex flex-wrap -mx-4">
             {cards.map((prop, key) => (
-              <div
-                key={key}
-                className="text-left px-4 relative w-full lg:w-4/12"
-              >
+              <div key={key} className="text-left px-4 relative w-full lg:w-4/12">
                 <CardInfoWithButton {...prop} />
               </div>
             ))}

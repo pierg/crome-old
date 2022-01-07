@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 import { createPopper } from "@popperjs/core";
 
 export default function Frameworks({ image, text, link }) {
@@ -26,9 +26,7 @@ export default function Frameworks({ image, text, link }) {
             (link === "#pablo" && "opacity-50")
           }
           src={image}
-          onMouseEnter={() =>
-            openTooltip(angularBtnRef, tooltipRef, setTooltipShow)
-          }
+          onMouseEnter={() => openTooltip(angularBtnRef, tooltipRef, setTooltipShow)}
           onMouseLeave={() => closeTooltip(setTooltipShow)}
           ref={angularBtnRef}
         />

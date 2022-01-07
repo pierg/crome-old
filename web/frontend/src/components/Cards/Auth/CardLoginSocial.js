@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 import { Link } from "react-router-dom";
 // components
 import Button from "../../../components/Elements/Button.js";
@@ -142,8 +142,8 @@ CardLoginSocial.propTypes = {
       // It is represetnted by the props you
       // can pass to our Input component element
       // NOTE: if you wish to generate a textarea, you will need to pass
-      // // // inside this object >> type: "textarea"
-      // // // full example >> input: { type: "textarea" }
+      // // // inside this object >> crometypes: "textarea"
+      // // // full example >> input: { crometypes: "textarea" }
       input: PropTypes.object,
     })
   ),

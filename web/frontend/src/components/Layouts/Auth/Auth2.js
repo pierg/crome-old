@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 // components
 import NavbarLinks from "../../../components/Navbars/NavbarLinks.js";
 import HeaderImageTitleSmallCenter from "../../../components/Headers/Auth/HeaderImageTitleSmallCenter.js";
@@ -22,8 +22,8 @@ export default function Auth2({ children, footer, navbar, header, prefooter }) {
               </h1>
               <p>
                 You can add one of the width utility classes to make it a little
-                smaller, and also, you can add one of the negative margin
-                utility classes to make it render where the skew starts
+                smaller, and also, you can add one of the negative margin utility
+                classes to make it render where the skew starts
               </p>
             </div>
           )}

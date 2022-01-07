@@ -1,12 +1,12 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
 
 export default function Sidebar({ brand, items, activeColor }) {
   const [sidebarShow, setSidebarShow] = React.useState("-translate-x-full");
 
-    const activeColors = {
+  const activeColors = {
     red: "text-red-500 hover:text-red-700",
     orange: "text-orange-500 hover:text-orange-700",
     amber: "text-amber-500 hover:text-amber-700",
@@ -47,11 +47,7 @@ export default function Sidebar({ brand, items, activeColor }) {
                 className="md:flex items-center flex-col text-center md:pb-2 text-blueGray-700 mr-0 inline-flex whitespace-nowrap text-sm uppercase font-bold p-4 px-0"
               >
                 {brand && brand.image && (
-                  <img
-                    src={brand.image}
-                    alt="..."
-                    className="max-w-full rounded"
-                  />
+                  <img src={brand.image} alt="..." className="max-w-full rounded" />
                 )}
                 {brand && brand.text && <span>{brand.text}</span>}
               </Link>
@@ -62,16 +58,12 @@ export default function Sidebar({ brand, items, activeColor }) {
                 className="md:flex items-center flex-col text-center md:pb-2 text-blueGray-700 mr-0 inline-flex whitespace-nowrap text-sm uppercase font-bold p-4 px-0"
               >
                 {brand && brand.image && (
-                  <img
-                    src={brand.image}
-                    alt="..."
-                    className="max-w-full rounded"
-                  />
+                  <img src={brand.image} alt="..." className="max-w-full rounded" />
                 )}
                 {brand && brand.text && <span>{brand.text}</span>}
               </a>
             )}
-              <div className="md:flex-col md:min-w-full flex flex-col list-none">
+            <div className="md:flex-col md:min-w-full flex flex-col list-none">
               {items.map((prop, key) => {
                 if (prop.divider) {
                   return <hr key={key} className="my-4 md:min-w-full" />;
@@ -89,14 +81,11 @@ export default function Sidebar({ brand, items, activeColor }) {
                     <Link
                       {...prop.link}
                       key={key}
-                      className={classnames(
-                        "text-xs uppercase py-3 font-bold block",
-                        {
-                          [activeColors[activeColor]]: prop.active,
-                          "text-blueGray-800 hover:text-blueGray-500":
-                            !prop.active || prop.active === undefined,
-                        }
-                      )}
+                      className={classnames("text-xs uppercase py-3 font-bold block", {
+                        [activeColors[activeColor]]: prop.active,
+                        "text-blueGray-800 hover:text-blueGray-500":
+                          !prop.active || prop.active === undefined,
+                      })}
                     >
                       <i
                         className={classnames(prop.icon, "mr-2 text-sm", {
@@ -113,14 +102,11 @@ export default function Sidebar({ brand, items, activeColor }) {
                     <a
                       {...prop.link}
                       key={key}
-                      className={classnames(
-                        "text-xs uppercase py-3 font-bold block",
-                        {
-                          [activeColors[activeColor]]: prop.active,
-                          "text-blueGray-800 hover:text-blueGray-500":
-                            !prop.active || prop.active === undefined,
-                        }
-                      )}
+                      className={classnames("text-xs uppercase py-3 font-bold block", {
+                        [activeColors[activeColor]]: prop.active,
+                        "text-blueGray-800 hover:text-blueGray-500":
+                          !prop.active || prop.active === undefined,
+                      })}
                     >
                       <i
                         className={classnames(prop.icon, "mr-2 text-sm", {

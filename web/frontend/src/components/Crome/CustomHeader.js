@@ -1,11 +1,10 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 // components
 import CustomCardMini from "../Custom/CustomCardMini";
 
 export default function CustomHeader({ cards, color, states }) {
-
   const bgColors = {
     light: "bg-blueGray-200",
     dark: "bg-blueGray-800",

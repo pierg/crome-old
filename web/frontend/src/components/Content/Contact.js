@@ -1,15 +1,8 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 import { Link } from "react-router-dom";
 
-export default function Contact({
-  image,
-  name,
-  color,
-  lastOnline,
-  lastMessage,
-  link,
-}) {
+export default function Contact({ image, name, color, lastOnline, lastMessage, link }) {
   const bgColors = {
     light: "bg-blueGray-200 text-blueGray-800",
     dark: "bg-blueGray-800 text-white",

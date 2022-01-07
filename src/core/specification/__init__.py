@@ -35,8 +35,11 @@ class Specification(ABC):
         self.__formula = formula
         self.__typeset = typeset
 
-    from ._str import __hash__, __str__  # noqa
-    from ._utils import translate_to_buchi  # noqa
+    def __hash__(self: Specification):
+        return hash(str(self))
+
+    def __str__(self: Specification):
+        return self.string
 
     @property
     @abstractmethod
@@ -46,6 +49,11 @@ class Specification(ABC):
     @property
     def formula(self) -> str:
         return self.__formula
+
+    @property
+    @abstractmethod
+    def string(self) -> str:
+        pass
 
     @property
     def typeset(self) -> Typeset:
@@ -86,19 +94,23 @@ class Specification(ABC):
     def saturate(self, saturation: Specification):
         pass
 
+    @property
     @abstractmethod
     def is_satisfiable(self: Specification) -> bool:
         pass
 
+    @property
     @abstractmethod
     def is_valid(self: Specification) -> bool:
         pass
 
+    @property
     def is_true(self: Specification) -> bool:
-        return self.string == "TRUE"
+        return self.is_valid
 
+    @property
     def is_false(self: Specification) -> bool:
-        return self.string == "FALSE"
+        return not self.is_satisfiable
 
     def __lt__(self, other: Specification):
         """self < other.
@@ -112,24 +124,26 @@ class Specification(ABC):
 
         True if self is a refinement of other
         """
-        if other.is_true():
-            return True
+        # if other.is_true:
+        #     return True
+        #
+        # """Check if self -> other is valid, considering the refinement rules r"""
+        # """((r & s1) -> s2) === r -> (s1 -> s2)"""
+        # if self.is_true:
+        #     return True
+        #
+        # try:
+        #     assert self.is_satisfiable and other.is_satisfiable
+        # except Exception:
+        #     print("eXx")
+        # """((r & s1) -> s2) === r -> (s1 -> s2)"""
+        #
+        # # print(self)
+        # # print(other)
+        # # print(f"({str(self)}) -> ({str(other)})")
+        # # print(self << other)
 
-        """Check if self -> other is valid, considering the refinement rules r"""
-        """((r & s1) -> s2) === r -> (s1 -> s2)"""
-        if self.is_true():
-            return True
-
-        assert self.is_satisfiable() and other.is_satisfiable()
-
-        """((r & s1) -> s2) === r -> (s1 -> s2)"""
-
-        # print(self)
-        # print(other)
-        # print(f"({str(self)}) -> ({str(other)})")
-        # print(self << other)
-
-        return (self << other).is_valid()
+        return (self << other).is_valid
 
     def __gt__(self, other: Specification):
         """self > other.
@@ -143,13 +157,13 @@ class Specification(ABC):
 
         True if self is an abstraction of other
         """
-        if self.is_true():
-            return True
-
-        assert self.is_satisfiable() and other.is_satisfiable()
+        # if self.is_true():
+        #     return True
+        #
+        # assert self.is_satisfiable and other.is_satisfiable
 
         """((r & s1) -> s2) === r -> (s1 -> s2)"""
-        return (self >> other).is_valid()
+        return (self >> other).is_valid
 
         #
         # """Check if other -> self is valid, considering the refinement rules r"""

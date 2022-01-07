@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 // components
 import Input from "../../components/Elements/Input.js";
@@ -27,7 +27,7 @@ WriteComment.propTypes = {
   // It is represetnted by the props you
   // can pass to our Input component element
   // NOTE: if you wish to generate a textarea, you will need to pass
-  // // // inside this object >> type: "textarea"
-  // // // full example >> input: { type: "textarea" }
+  // // // inside this object >> crometypes: "textarea"
+  // // // full example >> input: { crometypes: "textarea" }
   input: PropTypes.object,
 };

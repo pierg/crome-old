@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 export default function Map({ options, latitude, longitude }) {
   const mapRef = React.useRef(null);

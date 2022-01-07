@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 import { Link } from "react-router-dom";
 
 // components
@@ -87,10 +87,7 @@ export default function ActivityFeed({
 
                 <div className="flex-auto">
                   {newDescription.map((prop, key) => (
-                    <p
-                      className="mb-6 text-blueGray-500 leading-relaxed"
-                      key={key}
-                    >
+                    <p className="mb-6 text-blueGray-500 leading-relaxed" key={key}>
                       {prop}
                     </p>
                   ))}

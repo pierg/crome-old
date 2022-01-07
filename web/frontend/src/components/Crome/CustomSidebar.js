@@ -1,13 +1,20 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
 import LoginSession from "../Custom/LoginSession";
 
-export default function CustomSidebar({ brand, items, activeColor, currentRoute, id, setId}) {
+export default function CustomSidebar({
+  brand,
+  items,
+  activeColor,
+  currentRoute,
+  id,
+  setId,
+}) {
   const [sidebarShow, setSidebarShow] = React.useState("-translate-x-full");
 
-    const activeColors = {
+  const activeColors = {
     red: "text-red-500 hover:text-red-700",
     orange: "text-orange-500 hover:text-orange-700",
     amber: "text-amber-500 hover:text-amber-700",
@@ -36,7 +43,7 @@ export default function CustomSidebar({ brand, items, activeColor, currentRoute,
             }
           }}
         >
-          <i className="fas fa-ellipsis-v"/>
+          <i className="fas fa-ellipsis-v" />
         </button>
         {/* Collapse */}
         <div className="flex-col min-h-full px-0 flex flex-wrap items-center justify-between w-full mx-auto overflow-y-auto overflow-x-hidden">
@@ -48,11 +55,7 @@ export default function CustomSidebar({ brand, items, activeColor, currentRoute,
                 className="xxl:flex items-center flex-col text-center xxl:pb-2 text-blueGray-700 mr-0 inline-flex whitespace-nowrap text-sm uppercase font-bold p-4 px-0"
               >
                 {brand && brand.image && (
-                  <img
-                    src={brand.image}
-                    alt="..."
-                    className="max-w-full rounded"
-                  />
+                  <img src={brand.image} alt="..." className="max-w-full rounded" />
                 )}
                 {brand && brand.text && <span>{brand.text}</span>}
               </Link>
@@ -60,21 +63,18 @@ export default function CustomSidebar({ brand, items, activeColor, currentRoute,
             {brand && brand.link && brand.link.to === undefined && (
               <a
                 {...brand}
-                href={brand.link.href} className="xxl:flex items-center flex-col text-center xxl:pb-2 text-blueGray-700 mr-0 inline-flex whitespace-nowrap text-sm uppercase font-bold p-4 px-0"
+                href={brand.link.href}
+                className="xxl:flex items-center flex-col text-center xxl:pb-2 text-blueGray-700 mr-0 inline-flex whitespace-nowrap text-sm uppercase font-bold p-4 px-0"
               >
                 {brand && brand.image && (
-                  <img
-                    src={brand.image}
-                    alt="..."
-                    className="max-w-full rounded"
-                  />
+                  <img src={brand.image} alt="..." className="max-w-full rounded" />
                 )}
                 {brand && brand.text && <span>{brand.text}</span>}
               </a>
             )}
-              <div className="xxl:flex-col xxl:min-w-full flex flex-col list-none">
-                    <LoginSession id={id} onIdSubmit={setId}/>
-              </div>
+            <div className="xxl:flex-col xxl:min-w-full flex flex-col list-none">
+              <LoginSession id={id} onIdSubmit={setId} />
+            </div>
             <div className="xxl:flex-col xxl:min-w-full flex flex-col list-none">
               {items.map((prop, key) => {
                 if (prop.divider) {
@@ -93,48 +93,39 @@ export default function CustomSidebar({ brand, items, activeColor, currentRoute,
                     <Link
                       {...prop.link}
                       key={key}
-                      className={classnames(
-                        "text-xs uppercase py-3 font-bold block",
-                        {
-                          [activeColors[activeColor]]: prop.link.href === currentRoute,
-                          "text-blueGray-800 hover:text-blueGray-500":
-                            prop.link.href !== currentRoute,
-                        }
-                      )}
+                      className={classnames("text-xs uppercase py-3 font-bold block", {
+                        [activeColors[activeColor]]: prop.link.href === currentRoute,
+                        "text-blueGray-800 hover:text-blueGray-500":
+                          prop.link.href !== currentRoute,
+                      })}
                     >
-                        <i
-                            className={classnames(prop.icon, "mr-2 text-sm", {
-                                "opacity-75": prop.link.href === currentRoute,
-                                "text-blueGray-400":
-                                    prop.link.href !== currentRoute,
-                            })}
-                        />
-                        {prop.text}
+                      <i
+                        className={classnames(prop.icon, "mr-2 text-sm", {
+                          "opacity-75": prop.link.href === currentRoute,
+                          "text-blueGray-400": prop.link.href !== currentRoute,
+                        })}
+                      />
+                      {prop.text}
                     </Link>
                   );
                 } else {
                   return (
                     <a
                       {...prop.link}
-
                       key={key}
-                      className={classnames(
-                        "text-xs uppercase py-3 font-bold block",
-                        {
-                          [activeColors[activeColor]]: prop.link.href === currentRoute,
-                          "text-blueGray-800 hover:text-blueGray-500":
-                            prop.link.href !== currentRoute,
-                        }
-                      )}
+                      className={classnames("text-xs uppercase py-3 font-bold block", {
+                        [activeColors[activeColor]]: prop.link.href === currentRoute,
+                        "text-blueGray-800 hover:text-blueGray-500":
+                          prop.link.href !== currentRoute,
+                      })}
                     >
-                        <i
-                            className={classnames(prop.icon, "mr-2 text-sm", {
-                                "opacity-75": prop.link.href === currentRoute,
-                                "text-blueGray-400":
-                                    prop.link.href !== currentRoute,
-                            })}
-                        />
-                        {prop.text}
+                      <i
+                        className={classnames(prop.icon, "mr-2 text-sm", {
+                          "opacity-75": prop.link.href === currentRoute,
+                          "text-blueGray-400": prop.link.href !== currentRoute,
+                        })}
+                      />
+                      {prop.text}
                     </a>
                   );
                 }

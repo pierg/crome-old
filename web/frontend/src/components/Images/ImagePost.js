@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 export default function ImagePost({ src, size }) {
   let imgClasses = {
@@ -9,11 +9,7 @@ export default function ImagePost({ src, size }) {
   };
   return (
     <>
-      <img
-        src={src}
-        alt="..."
-        className={"rounded-lg shadow-lg " + imgClasses[size]}
-      />
+      <img src={src} alt="..." className={"rounded-lg shadow-lg " + imgClasses[size]} />
     </>
   );
 }

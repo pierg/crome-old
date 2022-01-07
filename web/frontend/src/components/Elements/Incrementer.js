@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 // components
 import Button from "../../components/Elements/Button.js";
@@ -20,16 +20,12 @@ export default function Incrementer({
   const decrement = () => {
     onChange(inputValue - changeValue < min ? min : inputValue - changeValue);
     onMinus(inputValue - changeValue < min ? min : inputValue - changeValue);
-    setInputValue(
-      inputValue - changeValue < min ? min : inputValue - changeValue
-    );
+    setInputValue(inputValue - changeValue < min ? min : inputValue - changeValue);
   };
   const increment = () => {
     onChange(inputValue + changeValue > max ? max : inputValue + changeValue);
     onPlus(inputValue + changeValue > max ? max : inputValue + changeValue);
-    setInputValue(
-      inputValue + changeValue > max ? max : inputValue + changeValue
-    );
+    setInputValue(inputValue + changeValue > max ? max : inputValue + changeValue);
   };
   return (
     <>

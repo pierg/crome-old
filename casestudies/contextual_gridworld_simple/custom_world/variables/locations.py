@@ -1,4 +1,4 @@
-from core.type.subtypes.location import ReachLocation
+from core.crometypes.subtypes.location import ReachLocation
 
 """"
     R1      R2

@@ -1,12 +1,10 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 export default function CardHeader({ border, children }) {
   const cardHeaderClasses = (border && " border-b border-blueGray-300") || "";
   return (
-    <div
-      className={"bg-transparent first:rounded-t px-5 py-3" + cardHeaderClasses}
-    >
+    <div className={"bg-transparent first:rounded-t px-5 py-3" + cardHeaderClasses}>
       {children}
     </div>
   );

@@ -8,10 +8,10 @@ from typing import List, Set
 import spot
 from treelib import Tree
 
+from core.crometypes import Boolean
 from core.patterns import Pattern
 from core.specification import Specification, SpecNotSATException
 from core.specification.bformula import Bool, BooleansNotSATException
-from core.type import Boolean
 from core.typeset import Typeset
 from tools.logic import Logic
 from tools.spot import Spot
@@ -72,10 +72,6 @@ class LTL(Specification):
         spot_formula = spot.simplify(spot_formula)
         spot_formula = Spot.transform_tree(spot_formula)
 
-        """Check if satisfiable"""
-        if str(spot_formula) == "0":
-            raise LTLNotSATException(self.__original_formula)
-
         self.__spot_formula = spot_formula
 
         if typeset is None:
@@ -123,8 +119,31 @@ class LTL(Specification):
                     setattr(result, k, deepcopy(v, memo))
         except Exception:
             print(k)
-        result.__init__ltl_formula(formula=self.to_ltl, typeset=self.typeset)
+        result.__init__ltl_formula(formula=self.string, typeset=self.typeset)
         return result
+
+    @property
+    def is_satisfiable(self: LTL) -> bool:
+        mtx_rules = LTL.extract_mutex_rules(self.typeset)
+
+        adj_rules = LTL.extract_adjacency_rules(self.typeset)
+        if adj_rules is not None:
+            new_f = self & mtx_rules & adj_rules
+        else:
+            new_f = self & mtx_rules
+
+        return str(new_f) != "0"
+
+    @property
+    def is_valid(self: LTL) -> bool:
+
+        ref_rules = LTL.extract_refinement_rules(self.typeset)
+        if ref_rules is not None:
+            new_f = ref_rules >> self
+        else:
+            new_f = self
+
+        return str(new_f) == "1"
 
     def represent(self, output_type: LTL.Output = Output.SUMMARY) -> str:
         if output_type == LTL.Output.SPOT_str:
@@ -135,7 +154,7 @@ class LTL(Specification):
             ret = (
                 f"\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n"
                 f"LTL SIMPLIFIED\n"
-                f"{self.to_ltl}\n\n"
+                f"{self.string}\n\n"
                 f"BOOLEAN REPRESENTATION\n"
                 f"{self.to_bool}\n\n"
                 f"LTL EXTENDED (from booleans)\n"
@@ -157,9 +176,7 @@ class LTL(Specification):
         return self.__atom_hash is not None
 
     @property
-    def to_ltl(self) -> str:
-        # if self.__spot_formula.kindstr() == "U":
-        #     return f"({str(self.__spot_formula)})"
+    def string(self) -> str:
         return str(self.__spot_formula)
 
     def is_true(self):
@@ -214,13 +231,9 @@ class LTL(Specification):
             ret.append(clause_set)
         return ret
 
-    @property
-    def string(self: LTL) -> str:
-        return self.to_ltl
-
     def saturate(self, saturation: LTL):
         """Reinitiate LTL formula TODO:code better."""
-        new_ltl_formula = f"({saturation.to_ltl}) -> {self.to_ltl}"
+        new_ltl_formula = f"({saturation.string}) -> {self.string}"
         new_typeset = self.typeset | saturation.typeset
 
         self.__init__ltl_formula(new_ltl_formula, new_typeset)
@@ -236,7 +249,7 @@ class LTL(Specification):
         if kind == LTL.Output.CNF_str:
             return Logic.and_(
                 [
-                    Logic.or_([atom.to_ltl for atom in clause], brackets=True)
+                    Logic.or_([atom.string for atom in clause], brackets=True)
                     for clause in self.cnf
                 ],
                 brackets=False,
@@ -244,7 +257,7 @@ class LTL(Specification):
         elif kind == LTL.Output.DNF_str:
             return Logic.or_(
                 [
-                    Logic.and_([atom.to_ltl for atom in clause], brackets=True)
+                    Logic.and_([atom.string for atom in clause], brackets=True)
                     for clause in self.dnf
                 ],
                 brackets=False,
@@ -410,9 +423,9 @@ class LTL(Specification):
         try:
             boolean_formula = self.__boolean_formula & other.__boolean_formula
         except BooleansNotSATException:
-            raise LTLNotSATException(f"({self.to_ltl}) & ({other.to_ltl})")
+            raise LTLNotSATException(f"({self.string}) & ({other.string})")
         return LTL(
-            formula=f"({self.to_ltl}) & ({other.to_ltl})",
+            formula=f"({self.string}) & ({other.string})",
             boolean_formula=boolean_formula,
             typeset=self.typeset | other.typeset,
         )
@@ -421,7 +434,7 @@ class LTL(Specification):
         """self | other Returns a new Sformula with the disjunction with
         other."""
         return LTL(
-            formula=f"({self.to_ltl}) | ({other.to_ltl})",
+            formula=f"({self.string}) | ({other.string})",
             boolean_formula=self.__boolean_formula | other.__boolean_formula,
             typeset=self.typeset | other.typeset,
         )
@@ -429,7 +442,7 @@ class LTL(Specification):
     def __invert__(self: LTL) -> LTL:
         """Returns a new Sformula with the negation of self."""
         return LTL(
-            formula=f"!({self.to_ltl})",
+            formula=f"!({self.string})",
             boolean_formula=~self.__boolean_formula,
             typeset=self.typeset,
         )
@@ -438,7 +451,7 @@ class LTL(Specification):
         """>> Returns a new Sformula that is the result of self -> other
         (implies)"""
         return LTL(
-            formula=f"({other.to_ltl}) -> ({self.to_ltl})",
+            formula=f"({other.string}) -> ({self.string})",
             boolean_formula=self.__boolean_formula >> other.__boolean_formula,
             typeset=self.typeset | other.typeset,
         )
@@ -447,7 +460,7 @@ class LTL(Specification):
         """<< Returns a new Sformula that is the result of other -> self
         (implies)"""
         return LTL(
-            formula=f"({self.to_ltl}) -> ({other.to_ltl})",
+            formula=f"({self.string}) -> ({other.string})",
             boolean_formula=other.__boolean_formula >> self.__boolean_formula,
             typeset=self.typeset | other.typeset,
         )
@@ -455,7 +468,7 @@ class LTL(Specification):
     def __iand__(self: LTL, other: LTL) -> LTL:
         """self &= other Modifies self with the conjunction with other."""
         self.__init__ltl_formula(
-            formula=f"({self.to_ltl}) & ({other.to_ltl})",
+            formula=f"({self.string}) & ({other.string})",
             typeset=self.typeset | other.typeset,
         )
         self.__init__atoms_formula(
@@ -467,7 +480,7 @@ class LTL(Specification):
     def __ior__(self: LTL, other: LTL) -> LTL:
         """self |= other Modifies self with the disjunction with other."""
         self.__init__ltl_formula(
-            formula=f"({self.to_ltl}) | ({other.to_ltl})",
+            formula=f"({self.string}) | ({other.string})",
             typeset=self.typeset | other.typeset,
         )
         self.__init__atoms_formula(
@@ -479,7 +492,7 @@ class LTL(Specification):
     class RulesOutputType(Enum):
         ListCNF = auto()
 
-    def is_satisfiable(self: LTL) -> bool:
+    def is_satisfiable_old(self: LTL) -> bool:
         mtx_rules = LTL.extract_mutex_rules(self.typeset)
 
         adj_rules = LTL.extract_adjacency_rules(self.typeset)
@@ -493,7 +506,7 @@ class LTL(Specification):
             return False
         return True
 
-    def is_valid(self: LTL) -> bool:
+    def is_valid_old(self: LTL) -> bool:
 
         ref_rules = LTL.extract_refinement_rules(self.typeset)
 

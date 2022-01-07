@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 // components
 
@@ -53,10 +53,7 @@ export default function InfoAreaIconTitleListColor({
       <h3 className="text-3xl font-semibold">{title}</h3>
       {newDescription.map((prop, key) => {
         return (
-          <p
-            className="mt-4 text-lg leading-relaxed text-blueGray-500"
-            key={key}
-          >
+          <p className="mt-4 text-lg leading-relaxed text-blueGray-500" key={key}>
             {prop}
           </p>
         );

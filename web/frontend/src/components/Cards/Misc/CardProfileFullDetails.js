@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 // components
 import Button from "../../../components/Elements/Button.js";
@@ -39,9 +39,7 @@ export default function CardProfileFullDetails({
               ))}
             </div>
             <div className="py-4">
-              <span className="font-bold block uppercase mb-2">
-                {team.title}
-              </span>
+              <span className="font-bold block uppercase mb-2">{team.title}</span>
               <div className="pl-4">
                 <ImagesOverlap {...team.imagesOverlap} />
               </div>

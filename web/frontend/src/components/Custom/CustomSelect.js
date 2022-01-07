@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 import { createPopper } from "@popperjs/core";
 
 // components
@@ -24,9 +24,7 @@ export default function CustomSelect({
   const [menuClasses, setMenuClasses] = React.useState("");
   const [menuShow, setMenuShow] = React.useState(false);
   const [animating, setAntimating] = React.useState(false);
-  const [transformOrigin, setTransformOrigin] = React.useState(
-    "origin-top-right"
-  );
+  const [transformOrigin, setTransformOrigin] = React.useState("origin-top-right");
   const btnDropdownRef = React.createRef();
   const popoverDropdownRef = React.createRef();
   const origins = {
@@ -115,7 +113,7 @@ export default function CustomSelect({
                     }
                     onClick={(e) => {
                       e.preventDefault();
-                      changeSelector(e, prop)
+                      changeSelector(e, prop);
                       if (closeOnSelect) {
                         startAnimation();
                       }

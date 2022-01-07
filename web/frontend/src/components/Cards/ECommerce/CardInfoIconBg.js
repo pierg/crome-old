@@ -1,15 +1,9 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 import { Link } from "react-router-dom";
 
-export default function CardInfoIconBg({
-  icon,
-  color,
-  title,
-  description,
-  link,
-}) {
+export default function CardInfoIconBg({ icon, color, title, description, link }) {
   const iconColor = {
     blueGray: "bg-blueGray-500 text-white",
     red: "bg-red-500 text-white",

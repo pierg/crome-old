@@ -6,8 +6,8 @@ from typing import TYPE_CHECKING, Dict, List, Set, Tuple
 
 from tabulate import tabulate
 
-from core.type import Boolean
-from core.type.subtypes.location import ReachLocation
+from core.crometypes import Boolean
+from core.crometypes.subtypes.location import ReachLocation
 from core.typeset import Typeset
 from tools.strings import StringMng
 

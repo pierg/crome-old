@@ -1,13 +1,12 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 export default function CustomCardMini({
   statTitle,
   statIconName,
   statIconColor,
-  state
+  state,
 }) {
-
   let color = state ? "text-blueGray-700" : "text-blueGray-300";
   let iconColor = state ? statIconColor : "bg-blueGray-200";
 
@@ -17,7 +16,9 @@ export default function CustomCardMini({
         <div className="flex-auto p-4">
           <div className="flex flex-wrap">
             <div className="relative w-full pr-4 flex justify-center items-center max-w-full flex-grow flex-1">
-              <span className={"font-bold text-xl uppercase "+(color)}>{statTitle}</span>
+              <span className={"font-bold text-xl uppercase " + color}>
+                {statTitle}
+              </span>
             </div>
             <div className="relative w-auto pl-4 flex-initial">
               <div
@@ -26,7 +27,7 @@ export default function CustomCardMini({
                   iconColor
                 }
               >
-                <i className={statIconName}/>
+                <i className={statIconName} />
               </div>
             </div>
           </div>

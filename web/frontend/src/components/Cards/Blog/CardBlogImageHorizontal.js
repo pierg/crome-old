@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 import { Link } from "react-router-dom";
 // components
 
@@ -32,11 +32,7 @@ export default function CardBlogImageHorizontal({
       <div className="mb-12 relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded-lg">
         <div className="items-center flex flex-wrap -mx-4">
           <div className="px-4 relative w-full lg:w-4/12">
-            <img
-              src={image}
-              className="w-full rounded-lg rounded-r-none"
-              alt="..."
-            />
+            <img src={image} className="w-full rounded-lg rounded-r-none" alt="..." />
           </div>
 
           <div className="px-4 relative w-full lg:w-8/12">

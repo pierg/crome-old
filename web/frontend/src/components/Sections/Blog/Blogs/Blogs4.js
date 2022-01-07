@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 // components
 import MediaPlayerImageOnly from "../../../../components/MediaPlayers/MediaPlayerImageOnly.js";
 import ImagePost from "../../../../components/Images/ImagePost.js";
@@ -17,9 +17,7 @@ export default function Blogs4({ items }) {
                 </div>
               </div>
             ) : null}
-            {prop.mediaplayer ? (
-              <MediaPlayerImageOnly {...prop.mediaplayer} />
-            ) : null}
+            {prop.mediaplayer ? <MediaPlayerImageOnly {...prop.mediaplayer} /> : null}
             {prop.textSection ? (
               <div className="container mx-auto px-4">
                 <div className="flex flex-wrap -mx-4">
@@ -58,10 +56,7 @@ export default function Blogs4({ items }) {
                         );
                       } else {
                         return (
-                          <p
-                            key={textKey}
-                            className="mb-4 text-lg text-blueGray-500"
-                          >
+                          <p key={textKey} className="mb-4 text-lg text-blueGray-500">
                             {textProp.description}
                           </p>
                         );

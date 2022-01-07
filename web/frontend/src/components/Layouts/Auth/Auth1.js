@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 // components
 import NavbarLinks from "../../../components/Navbars/NavbarLinks.js";
 import FooterAuth from "../../../components/Footers/Auth/FooterAuth.js";
@@ -25,8 +25,8 @@ export default function Auth1({ children, footer, navbar, image }) {
                   Here will be your content, instead of this box!
                 </h1>
                 <p>
-                  You can add one of the width utility classes to make it a
-                  little smaller.
+                  You can add one of the width utility classes to make it a little
+                  smaller.
                 </p>
               </div>
             )}

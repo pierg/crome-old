@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 // components
 
@@ -33,8 +33,8 @@ InfoAreaWhiteTitle.defaultProps = {
 InfoAreaWhiteTitle.propTypes = {
   // icon name to be added on the <i></i> tag, for example "fa fa-heart"
   icon: PropTypes.string.isRequired,
-  // choose the dark type when using this component on a lighter background
-  // choose the light type when using this component on a darker background
+  // choose the dark crometypes when using this component on a lighter background
+  // choose the light crometypes when using this component on a darker background
   type: PropTypes.oneOf(["light", "dark"]),
   title: PropTypes.string,
   description: PropTypes.string,

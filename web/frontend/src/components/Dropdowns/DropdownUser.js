@@ -1,14 +1,12 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 import { createPopper } from "@popperjs/core";
 import { Link } from "react-router-dom";
 
 export default function DropdownUser({ image, items }) {
   const [dropdownPopoverShow, setDropdownPopoverShow] = React.useState(false);
-  const [transformOrigin, setTransformOrigin] = React.useState(
-    "origin-top-right"
-  );
+  const [transformOrigin, setTransformOrigin] = React.useState("origin-top-right");
   const [menuClasses, setMenuClasses] = React.useState("");
   const [animating, setAntimating] = React.useState(false);
   const btnDropdownRef = React.createRef();

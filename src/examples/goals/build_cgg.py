@@ -8,7 +8,7 @@ w = ExampleWorld()
 def build_cgg():
 
     """Automatically build the CGG."""
-    cgg = Node.build_cgg_old(set_of_goals)
+    cgg = Node.build_cgg(set_of_goals)
     print(cgg)
 
 

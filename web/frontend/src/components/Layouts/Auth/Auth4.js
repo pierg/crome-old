@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 // components
 import NavbarLinks from "../../../components/Navbars/NavbarLinks.js";
 import PreFooterLarge from "../../../components/PreFooters/PreFooterLarge.js";

@@ -1,4 +1,4 @@
-from core.type.subtypes.action import BooleanAction
+from core.crometypes.subtypes.action import BooleanAction
 
 
 class Greet(BooleanAction):

@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 // components
 import Input from "../../../components/Elements/Input.js";
@@ -20,11 +20,7 @@ export default function CardChatDiscussion({
         <div className="bg-blueGray-800 inline-block rounded-t-lg px-5 py-3">
           <div className="py-4 flex flex-row justify-between">
             <div className="flex items-center">
-              <img
-                src={image}
-                className="rounded-full mr-4 max-w-64-px"
-                alt="..."
-              />
+              <img src={image} className="rounded-full mr-4 max-w-64-px" alt="..." />
               <div className="text-left flex-1">
                 <div className="justify-between items-center">
                   <h5 className="text-2xl text-white font-semibold leading-tight">

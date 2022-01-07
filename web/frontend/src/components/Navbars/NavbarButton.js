@@ -1,13 +1,8 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 import classnames from "classnames";
 
-export default function NavbarButton({
-  children,
-  breakpoint,
-  className,
-  ...rest
-}) {
+export default function NavbarButton({ children, breakpoint, className, ...rest }) {
   const breakpoints = {
     all: "hidden",
     sm: "sm:hidden",

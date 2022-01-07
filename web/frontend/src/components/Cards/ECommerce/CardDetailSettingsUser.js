@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 import classnames from "classnames";
 
 // components
@@ -90,9 +90,7 @@ export default function CardDetailSettingsUser({
               <div className="relative py-12">
                 <section className="text-center block">
                   <ImageUpload {...imageUpload} />
-                  <h3 className="text-3xl font-semibold mt-2 mb-4">
-                    {userName}
-                  </h3>
+                  <h3 className="text-3xl font-semibold mt-2 mb-4">{userName}</h3>
                 </section>
 
                 <section className="block">
@@ -174,56 +172,52 @@ export default function CardDetailSettingsUser({
                                       (tBodyProp, tBodyKey) => {
                                         return (
                                           <tr key={tBodyKey}>
-                                            {tBodyProp.map(
-                                              (colProp, colKey) => {
-                                                if (colProp.image) {
-                                                  return (
-                                                    <td
+                                            {tBodyProp.map((colProp, colKey) => {
+                                              if (colProp.image) {
+                                                return (
+                                                  <td
+                                                    key={colKey}
+                                                    className="align-middle uppercase font-bold text-sm p-3 border-t text-blueGray-500"
+                                                  >
+                                                    <img
+                                                      alt="..."
+                                                      className="bg-white inline-flex justify-center items-center w-12"
+                                                      src={colProp.image}
+                                                    />
+                                                  </td>
+                                                );
+                                              } else if (colProp.radio) {
+                                                return (
+                                                  <td
+                                                    key={colKey}
+                                                    className="align-middle uppercase font-normal p-3 border-t"
+                                                  >
+                                                    <Radio {...colProp.radio} />
+                                                  </td>
+                                                );
+                                              } else if (colProp.button) {
+                                                return (
+                                                  <td
+                                                    key={colKey}
+                                                    className="align-middle uppercase font-normal p-3 border-t"
+                                                  >
+                                                    <Button
                                                       key={colKey}
-                                                      className="align-middle uppercase font-bold text-sm p-3 border-t text-blueGray-500"
-                                                    >
-                                                      <img
-                                                        alt="..."
-                                                        className="bg-white inline-flex justify-center items-center w-12"
-                                                        src={colProp.image}
-                                                      />
-                                                    </td>
-                                                  );
-                                                } else if (colProp.radio) {
-                                                  return (
-                                                    <td
-                                                      key={colKey}
-                                                      className="align-middle uppercase font-normal p-3 border-t"
-                                                    >
-                                                      <Radio
-                                                        {...colProp.radio}
-                                                      />
-                                                    </td>
-                                                  );
-                                                } else if (colProp.button) {
-                                                  return (
-                                                    <td
-                                                      key={colKey}
-                                                      className="align-middle uppercase font-normal p-3 border-t"
-                                                    >
-                                                      <Button
-                                                        key={colKey}
-                                                        {...colProp.button}
-                                                      />
-                                                    </td>
-                                                  );
-                                                } else {
-                                                  return (
-                                                    <td
-                                                      key={colKey}
-                                                      className="align-middle uppercase font-normal p-3 border-t"
-                                                    >
-                                                      {colProp}
-                                                    </td>
-                                                  );
-                                                }
+                                                      {...colProp.button}
+                                                    />
+                                                  </td>
+                                                );
+                                              } else {
+                                                return (
+                                                  <td
+                                                    key={colKey}
+                                                    className="align-middle uppercase font-normal p-3 border-t"
+                                                  >
+                                                    {colProp}
+                                                  </td>
+                                                );
                                               }
-                                            )}
+                                            })}
                                           </tr>
                                         );
                                       }
@@ -242,46 +236,40 @@ export default function CardDetailSettingsUser({
                                 </header>
                                 <hr className="w-full mt-2 mb-8 h-0 border-blueGray-400" />
                                 {contentProp.inputs &&
-                                  contentProp.inputs.map(
-                                    (inputProp, inputKey) => {
-                                      let label = inputProp.label;
-                                      let element;
-                                      if (inputProp.input) {
-                                        element = (
-                                          <Input {...inputProp.input} />
-                                        );
-                                      } else {
-                                        element = (
-                                          <Select {...inputProp.select} />
-                                        );
-                                      }
-                                      return (
-                                        <div
-                                          key={inputKey}
-                                          className="flex flex-wrap -mx-4"
-                                        >
-                                          <div className="self-center px-4 relative w-full md:w-3/12 text-right">
-                                            <label className="block uppercase text-blueGray-700 text-xs font-bold mb-2 ml-1">
-                                              {label}
-                                            </label>
-                                          </div>
+                                  contentProp.inputs.map((inputProp, inputKey) => {
+                                    let label = inputProp.label;
+                                    let element;
+                                    if (inputProp.input) {
+                                      element = <Input {...inputProp.input} />;
+                                    } else {
+                                      element = <Select {...inputProp.select} />;
+                                    }
+                                    return (
+                                      <div
+                                        key={inputKey}
+                                        className="flex flex-wrap -mx-4"
+                                      >
+                                        <div className="self-center px-4 relative w-full md:w-3/12 text-right">
+                                          <label className="block uppercase text-blueGray-700 text-xs font-bold mb-2 ml-1">
+                                            {label}
+                                          </label>
+                                        </div>
 
-                                          <div className="self-center px-4 relative w-full md:w-9/12">
-                                            <div className="flex flex-wrap -mx-4">
-                                              <div
-                                                className={
-                                                  "px-4 relative w-full " +
-                                                  widths[inputProp.width]
-                                                }
-                                              >
-                                                {element}
-                                              </div>
+                                        <div className="self-center px-4 relative w-full md:w-9/12">
+                                          <div className="flex flex-wrap -mx-4">
+                                            <div
+                                              className={
+                                                "px-4 relative w-full " +
+                                                widths[inputProp.width]
+                                              }
+                                            >
+                                              {element}
                                             </div>
                                           </div>
                                         </div>
-                                      );
-                                    }
-                                  )}
+                                      </div>
+                                    );
+                                  })}
                               </div>
                             );
                           } else if (contentProp.list) {
@@ -298,9 +286,7 @@ export default function CardDetailSettingsUser({
                                     let text = <span>{listProp.text}</span>;
                                     let element;
                                     if (listProp.checkbox) {
-                                      element = (
-                                        <Checkbox {...listProp.checkbox} />
-                                      );
+                                      element = <Checkbox {...listProp.checkbox} />;
                                     } else {
                                       element = <Radio {...listProp.radio} />;
                                     }
@@ -326,9 +312,7 @@ export default function CardDetailSettingsUser({
                               </div>
                             );
                           } else {
-                            return (
-                              <Alert key={contentKey} {...contentProp.alert} />
-                            );
+                            return <Alert key={contentKey} {...contentProp.alert} />;
                           }
                         })}
                     </div>
@@ -369,9 +353,7 @@ const selectsShape = PropTypes.shape({
   select: PropTypes.object,
 });
 
-const inputsTypes = PropTypes.arrayOf(
-  PropTypes.oneOfType([inputsShape, selectsShape])
-);
+const inputsTypes = PropTypes.arrayOf(PropTypes.oneOfType([inputsShape, selectsShape]));
 
 const listsObject = {
   text: PropTypes.string,

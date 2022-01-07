@@ -1,6 +1,6 @@
 from typing import Set
 
-from core.type import Boolean, Types
+from core.crometypes import Boolean, Types
 
 
 class ReachLocation(Boolean):

@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 import classnames from "classnames";
 
 // components
@@ -87,9 +87,7 @@ export default function CardBilling({
                 {inputs.map((prop, key) => (
                   <div
                     key={key}
-                    className={
-                      "px-4 pb-2 relative w-full " + widths[prop.width]
-                    }
+                    className={"px-4 pb-2 relative w-full " + widths[prop.width]}
                   >
                     <label className="block uppercase text-blueGray-700 text-xs font-bold mb-2 ml-1">
                       {prop.label}
@@ -100,15 +98,10 @@ export default function CardBilling({
                 ))}
               </div>
 
-              <h3 className="text-3xl font-semibold mt-4 mb-6">
-                {paymentTitle}
-              </h3>
+              <h3 className="text-3xl font-semibold mt-4 mb-6">{paymentTitle}</h3>
               <ul className="flex-col md:flex-row flex flex-wrap list-none pl-0 mb-0">
                 {paymentOptions.map((prop, key) => (
-                  <li
-                    key={key}
-                    className="-mb-px mr-2 last:mr-0 flex-auto text-center"
-                  >
+                  <li key={key} className="-mb-px mr-2 last:mr-0 flex-auto text-center">
                     <a
                       href="#pablo"
                       className={classnames(
@@ -135,8 +128,7 @@ export default function CardBilling({
                         hidden: key !== open,
                         block: key === open,
                         "opacity-0 scale-0": key === open && oldInTransition,
-                        "opacity-100 scale-100":
-                          key === open && newInTransition,
+                        "opacity-100 scale-100": key === open && newInTransition,
                       }
                     )}
                   >
@@ -144,9 +136,7 @@ export default function CardBilling({
                       {prop.inputs.map((inputProp, inputKey) => (
                         <div
                           key={inputKey}
-                          className={
-                            "px-4 relative w-full " + widths[inputProp.width]
-                          }
+                          className={"px-4 relative w-full " + widths[inputProp.width]}
                         >
                           <label className="block uppercase text-blueGray-700 text-xs font-bold mb-2 ml-1">
                             {inputProp.label}
@@ -192,9 +182,7 @@ const selectsShape = PropTypes.shape({
   select: PropTypes.object,
 });
 
-const inputsTypes = PropTypes.arrayOf(
-  PropTypes.oneOfType([inputsShape, selectsShape])
-);
+const inputsTypes = PropTypes.arrayOf(PropTypes.oneOfType([inputsShape, selectsShape]));
 
 CardBilling.defaultProps = {
   inputs: [],

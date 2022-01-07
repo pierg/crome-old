@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 const Input = React.forwardRef(
   ({ border, size, leftIcon, rightIcon, type, ...rest }, ref) => {

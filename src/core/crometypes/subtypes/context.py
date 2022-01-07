@@ -1,4 +1,4 @@
-from core.type import Boolean, BoundedInteger, Types
+from core.crometypes import Boolean, BoundedInteger, Types
 
 
 class ContextInteger(BoundedInteger):

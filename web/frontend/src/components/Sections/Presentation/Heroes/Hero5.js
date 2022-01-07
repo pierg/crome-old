@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 // sections
 
 // components
@@ -14,10 +14,7 @@ export default function Hero5({ heading2badge, infoAreas }) {
         <div className="items-center flex flex-wrap -mx-4">
           {infoAreas.map((prop, key) => {
             return (
-              <div
-                className="text-left px-4 relative w-full lg:w-4/12"
-                key={key}
-              >
+              <div className="text-left px-4 relative w-full lg:w-4/12" key={key}>
                 <InfoAreaIconTitleLinkColor {...prop} />
               </div>
             );

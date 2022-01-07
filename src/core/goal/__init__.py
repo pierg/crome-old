@@ -10,6 +10,7 @@ from core.contract import (
 )
 from core.controller import Controller
 from core.controller.exceptions import ControllerException
+from core.crometypes import Boolean
 from core.goal.exceptions import (
     GoalAlgebraOperationFail,
     GoalException,
@@ -17,7 +18,6 @@ from core.goal.exceptions import (
     GoalSynthesisFail,
 )
 from core.specification import Specification
-from core.type import Boolean
 from tools.storage import Store
 from tools.strings import StringMng
 from tools.strix import Strix
@@ -35,6 +35,7 @@ class Goal:
         specification: Union[Specification, Contract] = None,
         context: Union[Specification, Boolean] = None,
         world: World = None,
+        viewpoint: str = None,
     ):
 
         """Read only properties."""
@@ -49,6 +50,10 @@ class Goal:
         self.specification: Contract = specification
         self.context: Specification = context
         self.world: World = world
+        if viewpoint is None:
+            self.viewpoint = self.specification.typeset.extract_viewpoint()
+        else:
+            self.viewpoint: str = viewpoint
 
         """Name of the session (i.e. the subfolder in the output folder)"""
         self.__session_name = None

@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 // components
 import Button from "../../../components/Elements/Button.js";
@@ -36,15 +36,10 @@ export default function CardPricingList({
       >
         <div className="mt-12 px-4 py-5 flex-auto">
           <h6 className="font-bold uppercase mb-2">{head}</h6>
-          <div className="text-6xl font-bold leading-tight mt-0 mb-2">
-            {title}
-          </div>
+          <div className="text-6xl font-bold leading-tight mt-0 mb-2">{title}</div>
           <ul className="my-6 mx-4 list-none">
             {list.map((prop, key) => (
-              <li
-                key={key}
-                className="py-3 border-b border-black border-opacity-10"
-              >
+              <li key={key} className="py-3 border-b border-black border-opacity-10">
                 <b className="mr-2">{prop.title}</b>
                 {prop.description}
               </li>

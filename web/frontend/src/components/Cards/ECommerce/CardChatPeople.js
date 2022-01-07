@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 // components
 import Input from "../../../components/Elements/Input.js";
@@ -12,11 +12,7 @@ export default function CardChatPeople({ input, contacts }) {
         {input && (
           <div className="bg-blueGray-200 rounded-t-lg">
             <div className="my-4 mb-3 px-3 relative">
-              <Input
-                {...input}
-                border={"borderless"}
-                leftIcon={"fas fa-search"}
-              />
+              <Input {...input} border={"borderless"} leftIcon={"fas fa-search"} />
             </div>
           </div>
         )}

@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 // components
 import Button from "../../../components/Elements/Button.js";
@@ -39,9 +39,7 @@ export default function CardProfileActions({
               <div className="py-4 flex justify-center">
                 {stats.map((prop, key) => (
                   <div key={key} className="text-center mr-4 p-4">
-                    <span className="font-bold text-xl block">
-                      {prop.title}
-                    </span>
+                    <span className="font-bold text-xl block">{prop.title}</span>
                     <span className="text-blueGray-400">{prop.subtitle}</span>
                   </div>
                 ))}
@@ -50,9 +48,7 @@ export default function CardProfileActions({
           </div>
 
           <div className="text-center">
-            <h3 className="text-2xl font-bold leading-tight mt-0 mb-1">
-              {title}
-            </h3>
+            <h3 className="text-2xl font-bold leading-tight mt-0 mb-1">{title}</h3>
             <p className="text-lg text-blueGray-400">{description}</p>
           </div>
         </div>

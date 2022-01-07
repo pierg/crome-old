@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 // components
 import Sidebar from "../../../components/Sidebar/Sidebar.js";
 import NavbarSearchUser from "../../../components/Navbars/NavbarSearchUser.js";

@@ -1,4 +1,4 @@
-from core.type.subtypes.context import ContextBooleanTime
+from core.crometypes.subtypes.context import ContextBooleanTime
 
 
 class Day(ContextBooleanTime):

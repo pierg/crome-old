@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 import prettier from "prettier";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { shadesOfPurple } from "react-syntax-highlighter/dist/cjs/styles/hljs";
@@ -41,8 +41,7 @@ const colors = {
   "orange-red": "from-orange-900 to-red-900 bg-red-900 bg-red-900",
   "amber-orange": "from-amber-900 to-orange-900 bg-orange-900 bg-orange-900",
   "emerald-teal": "from-emerald-900 to-teal-900 bg-teal-900 bg-teal-900",
-  "lightBlue-indigo":
-    "from-lightBlue-900 to-indigo-900 bg-indigo-900 bg-indigo-900",
+  "lightBlue-indigo": "from-lightBlue-900 to-indigo-900 bg-indigo-900 bg-indigo-900",
   "pink-purple": "from-pink-900 to-purple-900 bg-purple-900 bg-purple-900",
 };
 
@@ -178,8 +177,7 @@ export default function CodeSnippet({
           >
             <div
               className={
-                (codeSnippetProps && codeSnippetProps.wrapperClasses) ||
-                "w-full"
+                (codeSnippetProps && codeSnippetProps.wrapperClasses) || "w-full"
               }
             >
               {color !== "" &&
@@ -207,11 +205,7 @@ export default function CodeSnippet({
           </div>
           {process.env.REACT_APP_HIDDEN ? null : (
             <>
-              <div
-                className={
-                  "relative " + (openTab === "code" ? "block" : "hidden")
-                }
-              >
+              <div className={"relative " + (openTab === "code" ? "block" : "hidden")}>
                 <div className="docs-code-preview">
                   <button
                     className="text-blueGray-400 font-normal px-2 rounded outline-none group focus:outline-none mr-1 mb-1 bg-transparent absolute right-0 mt-1 focus:text-blueGray-200"
@@ -225,9 +219,7 @@ export default function CodeSnippet({
                                 '"<<props-here>>"',
                                 JSON.stringify({
                                   ...passProps,
-                                  [codeSnippetProps[
-                                    "colorSwitchePropToChange"
-                                  ]]: color,
+                                  [codeSnippetProps["colorSwitchePropToChange"]]: color,
                                 })
                               ),
                           {
@@ -258,9 +250,7 @@ export default function CodeSnippet({
                             '"<<props-here>>"',
                             JSON.stringify({
                               ...passProps,
-                              [codeSnippetProps[
-                                "colorSwitchePropToChange"
-                              ]]: color,
+                              [codeSnippetProps["colorSwitchePropToChange"]]: color,
                             })
                           ),
                       {
@@ -272,11 +262,7 @@ export default function CodeSnippet({
                   </SyntaxHighlighter>
                 </div>
               </div>
-              <div
-                className={
-                  "relative " + (openTab === "props" ? "block" : "hidden")
-                }
-              >
+              <div className={"relative " + (openTab === "props" ? "block" : "hidden")}>
                 <SyntaxHighlighter
                   language="jsx"
                   style={shadesOfPurple}

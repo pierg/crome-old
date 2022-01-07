@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 
 // components
 import Button from "../../../components/Elements/Button.js";
@@ -33,12 +33,8 @@ export default function CardPricingLogo({
         <div className="text-center p-5 flex-auto">
           <div className="flex flex-wrap">
             <div className="px-4 relative w-full">
-              <span className="text-blueGray-500 mt-2 text-5xl">
-                {description}
-              </span>
-              <h5 className="text-2xl font-bold leading-tight mt-2 mb-2">
-                {title}
-              </h5>
+              <span className="text-blueGray-500 mt-2 text-5xl">{description}</span>
+              <h5 className="text-2xl font-bold leading-tight mt-2 mb-2">{title}</h5>
 
               <hr className={colors[line] + " my-2 mx-auto w-1/5"} />
             </div>

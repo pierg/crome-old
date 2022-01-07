@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes from "prop-crometypes";
 import { Link } from "react-router-dom";
 
 // components
@@ -41,9 +41,7 @@ export default function CardDashboardProfile({
                     <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-700">
                       {prop.title}
                     </span>
-                    <span className="text-sm text-blueGray-400">
-                      {prop.subtitle}
-                    </span>
+                    <span className="text-sm text-blueGray-400">{prop.subtitle}</span>
                   </div>
                 ))}
               </div>

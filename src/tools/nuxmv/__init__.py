@@ -7,7 +7,7 @@ from typing import List, Tuple
 import docker
 from bloom_filter import BloomFilter
 
-from core.type import Boolean, BoundedInteger
+from core.crometypes import Boolean, BoundedInteger
 from core.typeset import Typeset
 from tools.logic import Logic
 

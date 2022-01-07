@@ -41,8 +41,8 @@ users = {}
 
 """
 HOW TO SEND A NOTIFICATION :
-emit("send-notification", {"type": "error", "content": "message appearing"}, room=users[data['session']])
-types : error = red,
+emit("send-notification", {"crometypes": "error", "content": "message appearing"}, room=users[data['session']])
+crometypes : error = red,
         success = green,
         warning = yellow,
         info = blue
@@ -325,7 +325,7 @@ def process_goals(data):
         cgg.export_to_json(os.path.join(project_folder, "goals"))
         emit(
             "send-notification",
-            {"type": "success", "content": "CGG has been built!"},
+            {"crometypes": "success", "content": "CGG has been built!"},
             room=users[data["session"]],
         )
         time.sleep(3)
@@ -335,7 +335,7 @@ def process_goals(data):
         emit(
             "send-notification",
             {
-                "type": "error",
+                "crometypes": "error",
                 "content": "CGG cannot be built, see console for more info",
             },
             room=users[data["session"]],
