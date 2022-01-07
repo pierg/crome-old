@@ -10,13 +10,14 @@ w = ExampleWorld()
 
 
 def test1():
+    print("wait")
     n1 = (
         Node(
             name="day_patrol_12",
             description="During context day => start from r1, patrol r1, r2 in strict order,\n"
             "Strict Ordered Patrolling Location r1, r2",
-            context=w["day"],
-            specification=LTL(StrictOrderedPatrolling("r1", "r2")),
+            context=w["dy"],
+            specification=LTL(StrictOrderedPatrolling("r1", "r2"), w.typeset),
             world=w,
         ),
     )
@@ -48,7 +49,7 @@ def build_set_of_goals():
             name="greet_person",
             description="Always => if see a person, greet in the same step,\n"
             "Only if see a person, greet immediately",
-            specification=BoundReaction(w["person"], w["greet"]),
+            specification=LTL(BoundReaction(w["person"], w["greet"])),
             world=w,
         ),
         Node(
@@ -56,7 +57,7 @@ def build_set_of_goals():
             description="During context day => if see a person, register in the next step,\n"
             "Only if see a person, register in the next step",
             context=w["day"],
-            specification=BoundDelay(w["person"], w["register"]),
+            specification=LTL(BoundDelay(w["person"], w["register"])),
             world=w,
         ),
     }

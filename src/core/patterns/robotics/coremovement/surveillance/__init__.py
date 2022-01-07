@@ -26,7 +26,7 @@ class Surveillance(CoreMovement):
     def __init__(self, formula: str, kind: Kinds):
         self.__formula: str = formula
         self.__kind: Surveillance.Kinds = kind
-        super().__init__(formula, Surveillance.Kinds.SURVEILLANCE)
+        super().__init__(formula, CoreMovement.Kinds.SURVEILLANCE)
 
     @staticmethod
     def check_inputs(*locations):
@@ -37,7 +37,7 @@ class Surveillance(CoreMovement):
 
 class Patrolling(Surveillance):
     def __init__(self, *locations):
-        Surveillance.check_inputs(locations)
+        Surveillance.check_inputs(*locations)
 
         f = []
 
@@ -49,7 +49,7 @@ class Patrolling(Surveillance):
 
 class OrderedPatrolling(Surveillance):
     def __init__(self, *locations):
-        Surveillance.check_inputs(locations)
+        Surveillance.check_inputs(*locations)
 
         lor = list(locations)
         lor.reverse()
@@ -107,7 +107,7 @@ class StrictOrderedPatrolling(Surveillance):
 
     def __init__(self, *locations):
 
-        Surveillance.check_inputs(locations)
+        Surveillance.check_inputs(*locations)
 
         lor = list(locations)
         lor.reverse()
@@ -169,3 +169,7 @@ class StrictOrderedPatrolling(Surveillance):
         super().__init__(
             formula=new_formula, kind=Surveillance.Kinds.STRICT_ORDERED_PATROLLING
         )
+
+
+if __name__ == "__main__":
+    s = StrictOrderedPatrolling("a", "b")

@@ -11,6 +11,7 @@ from treelib import Tree
 from core.patterns import Pattern
 from core.specification import Specification, SpecNotSATException
 from core.specification.bformula import Bool, BooleansNotSATException
+from core.type import Boolean
 from core.typeset import Typeset
 from tools.logic import Logic
 from tools.spot import Spot
@@ -62,6 +63,8 @@ class LTL(Specification):
         self.__init__ltl_formula(formula, typeset)
         self.__init__atoms_formula(boolean_formula, atoms_dictionary)
 
+        super().__init__(str(self.__spot_formula), self.__typeset)
+
     def __init__ltl_formula(self, formula, typeset):
         """Building the LTL formula and tree."""
         self.__original_formula = str(formula)
@@ -97,7 +100,7 @@ class LTL(Specification):
             self.__atoms_dictionary = dict()
             self.__atoms_tree = Tree()
             self.__gen_atom_tree(tree=self.__atoms_tree)
-            self.__boolean_formula = Bool(self.__translate_ltl_to_bool())
+            self.__boolean_formula = Bool(self.__atoms_tree_to_formula())
 
         else:
             """Create a 'boolean' spot formula."""
@@ -109,9 +112,6 @@ class LTL(Specification):
             self.__atoms_dictionary = dict()
             self.__atoms_tree = Tree()
             self.__gen_atom_tree(tree=self.__atoms_tree, spot_f=bool_spot)
-
-    def reinitialize(self):
-        pass
 
     def __deepcopy__(self: LTL, memo):
         cls = self.__class__
@@ -161,6 +161,9 @@ class LTL(Specification):
         # if self.__spot_formula.kindstr() == "U":
         #     return f"({str(self.__spot_formula)})"
         return str(self.__spot_formula)
+
+    def is_true(self):
+        return self.__spot_formula == "1"
 
     @property
     def to_bool(self) -> str:
@@ -249,16 +252,25 @@ class LTL(Specification):
         else:
             raise AttributeError
 
-    def __translate_ltl_to_bool(self, formula: str = None) -> str:
-        if isinstance(formula, str):
-            boolean_formula_str = formula
+    @staticmethod
+    def __unwrap_tree(parent: dict) -> str:
+        children = list(parent.values())[0]["children"]
+        parent_op = list(parent.keys())[0]
+        arguments = []
+        for child in children:
+            if isinstance(child, str):
+                arguments.append(child)
+            else:
+                arguments.append(LTL.__unwrap_tree(child))
+        return Logic.general(parent_op, arguments)
+
+    def __atoms_tree_to_formula(self) -> str:
+        tree = self.__atoms_tree
+        tree_dictionary = tree.to_dict()
+        if isinstance(tree_dictionary, dict):
+            return LTL.__unwrap_tree(tree_dictionary)
         else:
-            boolean_formula_str = deepcopy(self.__spot_formula.to_str())
-        for key, value in self.__atoms_dictionary.items():
-            boolean_formula_str = boolean_formula_str.replace(
-                value.represent(LTL.Output.SPOT_str), key
-            )
-        return boolean_formula_str
+            return tree_dictionary
 
     def __translate_bool_to_ltl(self, formula: str = None) -> str:
         if isinstance(formula, str):
@@ -320,6 +332,8 @@ class LTL(Specification):
     ):
         if spot_f is None:
             spot_f = self.__spot_formula
+
+        # print(spot_f)
 
         if self.is_atom:
             self.__create_atom_tree_node(
@@ -400,6 +414,7 @@ class LTL(Specification):
         return LTL(
             formula=f"({self.to_ltl}) & ({other.to_ltl})",
             boolean_formula=boolean_formula,
+            typeset=self.typeset | other.typeset,
         )
 
     def __or__(self: LTL, other: LTL) -> LTL:
@@ -408,26 +423,33 @@ class LTL(Specification):
         return LTL(
             formula=f"({self.to_ltl}) | ({other.to_ltl})",
             boolean_formula=self.__boolean_formula | other.__boolean_formula,
+            typeset=self.typeset | other.typeset,
         )
 
     def __invert__(self: LTL) -> LTL:
         """Returns a new Sformula with the negation of self."""
-        return LTL(formula=f"!({self.to_ltl})", boolean_formula=~self.__boolean_formula)
+        return LTL(
+            formula=f"!({self.to_ltl})",
+            boolean_formula=~self.__boolean_formula,
+            typeset=self.typeset,
+        )
 
     def __rshift__(self: LTL, other: LTL) -> LTL:
         """>> Returns a new Sformula that is the result of self -> other
         (implies)"""
         return LTL(
-            formula=f"({self.to_ltl}) -> ({other.to_ltl})",
+            formula=f"({other.to_ltl}) -> ({self.to_ltl})",
             boolean_formula=self.__boolean_formula >> other.__boolean_formula,
+            typeset=self.typeset | other.typeset,
         )
 
     def __lshift__(self: LTL, other: LTL) -> LTL:
         """<< Returns a new Sformula that is the result of other -> self
         (implies)"""
         return LTL(
-            formula=f"({other.to_ltl}) -> ({self.to_ltl})",
+            formula=f"({self.to_ltl}) -> ({other.to_ltl})",
             boolean_formula=other.__boolean_formula >> self.__boolean_formula,
+            typeset=self.typeset | other.typeset,
         )
 
     def __iand__(self: LTL, other: LTL) -> LTL:
@@ -454,15 +476,231 @@ class LTL(Specification):
         )
         return self
 
+    class RulesOutputType(Enum):
+        ListCNF = auto()
 
-if __name__ == "__main__":
+    def is_satisfiable(self: LTL) -> bool:
+        mtx_rules = LTL.extract_mutex_rules(self.typeset)
 
-    phi = "TRUE"
+        adj_rules = LTL.extract_adjacency_rules(self.typeset)
+
+        try:
+            if adj_rules is not None:
+                self & mtx_rules & adj_rules
+            else:
+                self & mtx_rules
+        except SpecNotSATException:
+            return False
+        return True
+
+    def is_valid(self: LTL) -> bool:
+
+        ref_rules = LTL.extract_refinement_rules(self.typeset)
+
+        try:
+            if ref_rules is not None:
+                new_formula = ref_rules >> self
+            else:
+                new_formula = self
+        except SpecNotSATException:
+            return False
+
+        return new_formula.is_true()
+
+    @staticmethod
+    def extract_refinement_rules(
+        typeset: Typeset,
+        output=None,
+    ) -> LTL | tuple[list[str], Typeset] | None:
+        """Extract Refinement rules from the Formula."""
+
+        rules_str = []
+        rules_typeset = Typeset()
+
+        for key_type, set_super_types in typeset.super_types.items():
+            if isinstance(key_type, Boolean):
+                for super_type in set_super_types:
+                    rules_str.append(
+                        Logic.g_(
+                            Logic.implies_(
+                                key_type.name,
+                                super_type.name,
+                            ),
+                        ),
+                    )
+                    rules_typeset |= Typeset({key_type})
+                    rules_typeset |= Typeset(set_super_types)
+
+        if len(rules_str) == 0:
+            return None
+
+        if output is not None and output == LTL.RulesOutputType.ListCNF:
+            return rules_str, rules_typeset
+
+        return LTL(
+            formula=Logic.and_(rules_str, brackets=True),
+            typeset=rules_typeset,
+            kind=Specification.Kind.REFINEMENT_RULE,
+        )
+
+    @staticmethod
+    def extract_mutex_rules(
+        typeset: Typeset,
+        output=None,
+    ) -> LTL | tuple[list[str], Typeset]:
+        """Extract Mutex rules from the Formula."""
+
+        rules_str = []
+        rules_typeset = Typeset()
+
+        for mutex_group in typeset.mutex_types:
+            or_elements = []
+            if len(mutex_group) > 1:
+                for mutex_type in mutex_group:
+                    neg_group = mutex_group.symmetric_difference({mutex_type})
+                    and_elements = [mutex_type.name]
+                    for elem in neg_group:
+                        and_elements.append(Logic.not_(elem.name))
+                    or_elements.append(Logic.and_(and_elements, brackets=True))
+                rules_str.append(
+                    Logic.g_(Logic.or_(or_elements, brackets=False)),
+                )
+                rules_typeset |= Typeset(mutex_group)
+
+        if len(rules_str) == 0:
+            return LTL("TRUE")
+
+        if output is not None and output == LTL.RulesOutputType.ListCNF:
+            return rules_str, rules_typeset
+
+        return LTL(
+            formula=Logic.and_(rules_str, brackets=True),
+            typeset=rules_typeset,
+            kind=Specification.Kind.MUTEX_RULE,
+        )
+
+    @staticmethod
+    def extract_adjacency_rules(
+        typeset: Typeset,
+        output=None,
+    ) -> LTL | tuple[list[str], Typeset] | None:
+        """Extract Adjacency rules from the Formula."""
+
+        rules_str = []
+        rules_typeset = Typeset()
+
+        for key_type, set_adjacent_types in typeset.adjacent_types.items():
+            if isinstance(key_type, Boolean):
+                # G(a -> X(b | c | d))
+                rules_str.append(
+                    Logic.g_(
+                        Logic.implies_(
+                            key_type.name,
+                            Logic.x_(
+                                Logic.or_(
+                                    [e.name for e in set_adjacent_types],
+                                ),
+                            ),
+                        ),
+                    ),
+                )
+                rules_typeset |= Typeset({key_type})
+                rules_typeset |= Typeset(set_adjacent_types)
+
+        if len(rules_str) == 0:
+            return None
+
+        if output is not None and output == LTL.RulesOutputType.ListCNF:
+            return rules_str, rules_typeset
+
+        return LTL(
+            formula=Logic.and_(rules_str, brackets=True),
+            typeset=rules_typeset,
+            kind=Specification.Kind.AJACENCY_RULE,
+        )
+
+    @staticmethod
+    def extract_liveness_rules(
+        typeset: Typeset,
+        output=None,
+    ) -> LTL | tuple[list[str], Typeset] | None:
+        """Extract Liveness rules from the Formula."""
+
+        rules_str = []
+        rules_typeset = Typeset()
+
+        sensors, outs = typeset.extract_inputs_outputs()
+
+        for t in sensors:
+            if isinstance(t, Boolean):
+                if t.kind == Types.Kind.SENSOR:
+                    rules_str.append(Logic.g_(Logic.f_(t.name)))
+                rules_typeset |= Typeset({t})
+
+        if len(rules_str) == 0:
+            return None
+
+        if output is not None and output == LTL.RulesOutputType.ListCNF:
+            return rules_str, rules_typeset
+
+        return LTL(
+            formula=Logic.and_(rules_str, brackets=True),
+            typeset=rules_typeset,
+            kind=Specification.Kind.LIVENESS_RULE,
+        )
+
+    @staticmethod
+    def context_active_rules(
+        typeset: Typeset,
+        output=None,
+    ) -> LTL | tuple[list[str], Typeset] | None:
+        """Extract Liveness rules from the Formula."""
+
+        rules_str = []
+        rules_typeset = Typeset()
+
+        inputs, outs = typeset.extract_inputs_outputs()
+
+        active_context_types = []
+        for t in inputs:
+            if isinstance(t, Boolean):
+                if t.kind == Types.Kind.ACTIVE or t.kind == Types.Kind.CONTEXT:
+                    active_context_types.append(t.name)
+                rules_typeset |= Typeset({t})
+
+        if len(active_context_types) > 0:
+            rules_str.append(Logic.g_(Logic.and_(active_context_types)))
+
+        if len(rules_str) == 0:
+            return None
+
+        if output is not None and output == LTL.RulesOutputType.ListCNF:
+            return rules_str, rules_typeset
+
+        return LTL(
+            formula=Logic.and_(rules_str, brackets=True),
+            typeset=rules_typeset,
+            kind=Specification.Kind.LIVENESS_RULE,
+        )
+
+
+def test():
+    phi = "G(F(r1 & F(r2))) & (!(r2) U r1) & G(((r2) -> (X((!(r2) U r1))))) & G(((r1) -> (X((!(r1) U r2)))))"
     # phi = "! z & G(a & b | G(k & l)) & F(c | !d) & (X(e & f) | !X(g | h)) & (l U p)"
     sformula = LTL(phi)
     print(sformula)
     print(sformula.tree(LTL.TreeType.LTL))
     print(sformula.tree(LTL.TreeType.BOOLEAN))
+
+
+if __name__ == "__main__":
+    test()
+    # phi = "TRUE"
+    # phi = "! z & G(a & b | G(k & l)) & F(c | !d) & (X(e & f) | !X(g | h)) & (l U p)"
+    # sformula = LTL(phi)
+    # print(sformula)
+    # print(sformula.tree(LTL.TreeType.LTL))
+    # print(sformula.tree(LTL.TreeType.BOOLEAN))
 
     # print(lformula.tree)
     # print(lformula.atoms)

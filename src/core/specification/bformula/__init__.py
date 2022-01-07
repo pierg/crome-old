@@ -6,7 +6,6 @@ from typing import List
 
 import pygraphviz as pgv
 from pyeda.boolalg.expr import AndOp, Expression, OrOp, expr
-from pyeda.boolalg.minimization import espresso_exprs
 
 from tools.logic import Logic
 
@@ -27,7 +26,10 @@ class Bool:
 
         if isinstance(formula, str):
             formula = formula.replace("!", "~")
-            expression = expr(formula)
+            try:
+                expression = expr(formula)
+            except Exception:
+                print("PRBLEM")
         elif isinstance(formula, Expression):
             expression = formula
         else:
@@ -39,10 +41,12 @@ class Bool:
         """Espresso Minimization
         Notice that the espresso_exprs function returns a tuple.
         The reason is that this function can minimize multiple input functions simultaneously."""
-        if expression.is_one():
-            self.__expression = expression
-        else:
-            self.__expression = espresso_exprs(expression.to_dnf())[0]
+        # if expression.satisfy_all():
+        #     self.__expression = expression
+        # else:
+        #     self.__expression = espresso_exprs(expression.to_dnf())[0]
+        # TODO: Espression Minimazion, doesn't not work if not DNF, e.g. (a -> a)
+        self.__expression = expression
 
     def __deepcopy__(self: Bool, memo):
         cls = self.__class__
@@ -134,9 +138,9 @@ class Bool:
 
         for (src, tgt) in graph.edges():
             if tgt in operation_graph.keys():
-                operation_graph[tgt].add(src)
+                operation_graph[tgt].append(src)
             else:
-                operation_graph[tgt] = {src}
+                operation_graph[tgt] = [src]
 
         # print(operation_graph)
 
@@ -157,6 +161,14 @@ class Bool:
             return Logic.and_([a.attr["label"] for a in atoms], brackets=True)
         elif operation == "or":
             return Logic.or_([a.attr["label"] for a in atoms])
+        elif operation == "impl":
+            return Logic.implies_(
+                list(atoms)[0].attr["label"], list(atoms)[1].attr["label"]
+            )
+        elif operation == "not":
+            return Logic.not_(list(atoms)[0].attr["label"])
+        else:
+            raise Exception("Attribute unkown")
 
     @staticmethod
     def get_parent_index(operation_graph, key):
@@ -176,7 +188,7 @@ class Bool:
 
     @staticmethod
     def build_graph(operation_graph) -> str:
-        # print(Pyeda.operation_graph_to_str(operation_graph))
+        # print(Bool.operation_graph_to_str(operation_graph))
         key = None
         for k in operation_graph.keys():
             if Bool.are_all_atoms(operation_graph[k]):
@@ -249,6 +261,6 @@ if __name__ == "__main__":
     # cnf = f.cnf
     # print(cnf)
 
-    f = Bool("c")
-    b = Bool("b")
-    c = b | ~f
+    f = Bool("a")
+    b = Bool("a")
+    c = f >> b

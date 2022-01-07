@@ -18,8 +18,8 @@ from core.typeset import Typeset
 class Contract:
     def __init__(
         self,
-        assumptions: LTL = None,
-        guarantees: LTL = None,
+        assumptions: Specification = None,
+        guarantees: Specification = None,
         saturate: bool = True,
     ):
 
@@ -116,7 +116,7 @@ class Contract:
         return cond_a and cond_g
 
     def __hash__(self):
-        return hash(f"{self.assumptions.string} -> {self.guarantees.string}")
+        return hash(f"{str(self.assumptions)} -> {str(self.guarantees)}")
 
     def get_controller_info(self, world_ts: Typeset = None) -> SynthesisInfo:
         """Extract All Info Needed to Build a Controller from the Contract."""
@@ -225,8 +225,8 @@ class Contract:
 
         print("The composition is compatible and consistent")
 
-        """Assumption relaxation"""
-        new_assumptions.relax_by(new_guarantees)
+        """Assumptions relaxation"""
+        new_assumptions |= ~new_guarantees
 
         """New contracts without saturation cause it was already saturated"""
         new_contract = Contract(
@@ -359,7 +359,6 @@ class Contract:
         print("The merging is compatible and consistent")
 
         """Guarantees relaxation"""
-        new_guarantees.relax_by(new_assumptions)
         new_guarantees = new_guarantees | ~new_assumptions
 
         """New contracts without saturation cause it was already saturated"""

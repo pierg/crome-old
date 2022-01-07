@@ -3,8 +3,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from enum import Enum, auto
 
-from tools.logic import LogicTuple
-from tools.nuxmv import Nuxmv
+from core.typeset import Typeset
 
 
 class SpecNotSATException(Exception):
@@ -20,12 +19,21 @@ class Specification(ABC):
         ATOM_ACTION = auto()
         ATOM_SENSOR = auto()
         ATOM_LOCATION = auto()
+        MUTEX_RULE = auto()
+        AJACENCY_RULE = auto()
+        LIVENESS_RULE = auto()
+        REFINEMENT_RULE = auto()
 
         class Rule(Enum):
             REFINEMENT = auto()
             MUTEX = auto()
             ADJACENCY = auto()
             LIVENESS = auto()
+
+    def __init__(self, formula: str, typeset: Typeset):
+
+        self.__formula = formula
+        self.__typeset = typeset
 
     from ._str import __hash__, __str__  # noqa
     from ._utils import translate_to_buchi  # noqa
@@ -34,6 +42,14 @@ class Specification(ABC):
     @abstractmethod
     def original_formula(self) -> str:
         pass
+
+    @property
+    def formula(self) -> str:
+        return self.__formula
+
+    @property
+    def typeset(self) -> Typeset:
+        return self.__typeset
 
     @abstractmethod
     def __and__(self: Specification, other: Specification) -> Specification:
@@ -67,35 +83,16 @@ class Specification(ABC):
     def __ior__(self: Specification, other: Specification) -> Specification:
         """self |= other Modifies self with the disjunction with other."""
 
+    def saturate(self, saturation: Specification):
+        pass
+
+    @abstractmethod
     def is_satisfiable(self: Specification) -> bool:
+        pass
 
-        formula = self.formula()
-
-        """Consider Mutually Exclusion Rules"""
-        from core.specification.__legacy.atom import Atom
-
-        mtx_rules = Atom.extract_mutex_rules(self.typeset)
-        if mtx_rules is not None:
-            formula = LogicTuple.and_([formula, mtx_rules.formula()])
-
-        """Consider Adjacency Rules"""
-        adj_rules = Atom.extract_adjacency_rules(self.typeset)
-        if adj_rules is not None:
-            formula = LogicTuple.and_([formula, adj_rules.formula()])
-
-        return Nuxmv.check_satisfiability(formula)
-
+    @abstractmethod
     def is_valid(self: Specification) -> bool:
-        formula = self.formula()
-
-        """Consider Refinement Rules"""
-        from core.specification.__legacy.atom import Atom
-
-        ref_rules = Atom.extract_refinement_rules(self.typeset)
-        if ref_rules is not None:
-            formula = LogicTuple.implies_(ref_rules.formula(), formula)
-
-        return Nuxmv.check_validity(formula)
+        pass
 
     def is_true(self: Specification) -> bool:
         return self.string == "TRUE"
@@ -120,20 +117,19 @@ class Specification(ABC):
 
         """Check if self -> other is valid, considering the refinement rules r"""
         """((r & s1) -> s2) === r -> (s1 -> s2)"""
-        from core.specification.__legacy.atom import Atom
+        if self.is_true():
+            return True
 
         assert self.is_satisfiable() and other.is_satisfiable()
 
-        rules = Atom.extract_refinement_rules(self.typeset | other.typeset)
+        """((r & s1) -> s2) === r -> (s1 -> s2)"""
 
-        if rules is not None:
-            formula = LogicTuple.implies_(
-                LogicTuple.and_([self.formula(), rules.formula()]),
-                other.formula(),
-            )
-        else:
-            formula = LogicTuple.implies_(self.formula(), other.formula())
-        return Nuxmv.check_validity(formula)
+        # print(self)
+        # print(other)
+        # print(f"({str(self)}) -> ({str(other)})")
+        # print(self << other)
+
+        return (self << other).is_valid()
 
     def __gt__(self, other: Specification):
         """self > other.
@@ -152,19 +148,23 @@ class Specification(ABC):
 
         assert self.is_satisfiable() and other.is_satisfiable()
 
-        """Check if other -> self is valid, considering the refinement rules r"""
         """((r & s1) -> s2) === r -> (s1 -> s2)"""
-        from core.specification.__legacy.atom import Atom
+        return (self >> other).is_valid()
 
-        rules = Atom.extract_refinement_rules(self.typeset | other.typeset)
-        if rules is not None:
-            formula = LogicTuple.implies_(
-                other.formula(),
-                LogicTuple.and_([self.formula(), rules.formula()]),
-            )
-        else:
-            formula = LogicTuple.implies_(other.formula(), self.formula())
-        return Nuxmv.check_validity(formula)
+        #
+        # """Check if other -> self is valid, considering the refinement rules r"""
+        # """((r & s1) -> s2) === r -> (s1 -> s2)"""
+        # from core.specification.__legacy.atom import Atom
+        #
+        # rules = Atom.extract_refinement_rules(self.typeset | other.typeset)
+        # if rules is not None:
+        #     formula = LogicTuple.implies_(
+        #         other.formula(),
+        #         LogicTuple.and_([self.formula(), rules.formula()]),
+        #     )
+        # else:
+        #     formula = LogicTuple.implies_(other.formula(), self.formula())
+        # return Nuxmv.check_validity(formula)
 
     def __eq__(self, other: Specification):
         """Check if self -> other and other -> self."""
