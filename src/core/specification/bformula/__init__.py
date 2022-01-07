@@ -6,6 +6,7 @@ from typing import List
 
 import pygraphviz as pgv
 from pyeda.boolalg.expr import AndOp, Expression, OrOp, expr
+from pyeda.boolalg.minimization import espresso_exprs
 
 from tools.logic import Logic
 
@@ -29,13 +30,18 @@ class Bool:
             try:
                 expression = expr(formula)
             except Exception:
-                print("PRBLEM")
+                raise Exception("Problem")
         elif isinstance(formula, Expression):
             expression = formula
         else:
             raise AttributeError
 
-        if expression.satisfy_one() is None:
+        if str(expression) != "1":
+            expression = expression.to_dnf()
+            if str(expression) != "1":
+                expression = espresso_exprs(expression)[0]
+
+        if expression != "1" and expression.satisfy_one() is None:
             raise BooleansNotSATException(str(expression))
 
         """Espresso Minimization

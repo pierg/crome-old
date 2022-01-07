@@ -59,7 +59,7 @@ try:
     )
 
     t_cgg_start = time.time()
-    cgg = Node.build_cgg({n_day, n_night, n_greet, n_register})
+    cgg = Node.build_cgg_old({n_day, n_night, n_greet, n_register})
     t_cgg_end = time.time()
 
     t_cgg = t_cgg_end - t_cgg_start

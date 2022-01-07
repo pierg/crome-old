@@ -14,7 +14,7 @@ try:
     set_of_goals = Persistence.load_goals(output_folder_path)
 
     """Automatically build the CGG"""
-    cgg = Node.build_cgg(set_of_goals)
+    cgg = Node.build_cgg_old(set_of_goals)
     print(cgg)
 
     """Setting the saving folder"""

@@ -42,7 +42,7 @@ try:
     )
 
     t_cgg_start = time.time()
-    cgg = Node.build_cgg({n_day, n_night})
+    cgg = Node.build_cgg_old({n_day, n_night})
     t_cgg_end = time.time()
 
     t_cgg = t_cgg_end - t_cgg_start

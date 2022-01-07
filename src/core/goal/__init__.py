@@ -17,7 +17,6 @@ from core.goal.exceptions import (
     GoalSynthesisFail,
 )
 from core.specification import Specification
-from core.specification.__legacy.formula import FormulaOutput
 from core.type import Boolean
 from tools.storage import Store
 from tools.strings import StringMng
@@ -221,15 +220,9 @@ class Goal:
             ret += "\t" * level + f"|\tCONTEXT:\t {str(goal.context)}\n"
         if not goal.specification.assumptions.is_true():
             ret += "\t" * level + "|\t  ASSUMPTIONS:\n"
-            ret += (
-                "\t" * level
-                + f"|\t  {goal.specification.assumptions.pretty_print(FormulaOutput.DNF)} \n"
-            )
+            ret += "\t" * level + f"|\t  {str(goal.specification.assumptions)} \n"
         ret += "\t" * level + "|\t  GUARANTEES:\n"
-        ret += (
-            "\t" * level
-            + f"|\t  {goal.specification.guarantees.pretty_print(FormulaOutput.CNF)} \n"
-        )
+        ret += "\t" * level + f"|\t  {str(goal.specification.guarantees)} \n"
         if goal.realizable is not None:
             if goal.realizable:
                 ret += (

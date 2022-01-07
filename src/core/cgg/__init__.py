@@ -16,7 +16,7 @@ from core.controller import Controller
 from core.controller.exceptions import ControllerException
 from core.goal import Goal
 from core.goal.exceptions import GoalException
-from core.specification import Specification
+from core.specification import Specification, SpecNotSATException
 from core.specification.exceptions import NotSatisfiableException
 from core.type import Types
 from core.type.subtypes.location import ReachLocation
@@ -90,6 +90,23 @@ class Node(Goal):
 
         self.__t_trans: int = 0
         self.__t_controllers: Dict[Tuple[ReachLocation, ReachLocation], Controller] = {}
+
+    def __str__(self, level=0):
+        """Print current Goal."""
+        ret = Goal.pretty_print_goal(self, level)
+
+        if self.children is not None:
+
+            for link, goals in self.children.items():
+
+                ret += "\t" * level + "|  " + link.name + "\n"
+                level += 1
+                for child in goals:
+                    try:
+                        ret += child.__str__(level + 1)
+                    except:
+                        print("ERROR IN PRINT")
+        return ret
 
     def set_session_name(
         self,
@@ -694,6 +711,94 @@ class Node(Goal):
                         if context not in combination:
                             saturated_combination &= ~context
                 except NotSatisfiableException:
+                    continue
+                saturated_combinations.append(saturated_combination)
+
+        print("\n".join(x.string for x in saturated_combinations))
+
+        """Group combinations"""
+        saturated_combinations_grouped = list(saturated_combinations)
+        for c_a in saturated_combinations:
+            for c_b in saturated_combinations:
+                if (
+                    c_a is not c_b
+                    and c_a <= c_b
+                    and c_b in saturated_combinations_grouped
+                ):
+                    saturated_combinations_grouped.remove(c_b)
+
+        print("\n".join(x.string for x in saturated_combinations))
+
+        """Map to goals"""
+        mapped_goals = set()
+        context_goal_map: Dict[Specification, Set[Node]] = {}
+        for goal in nodes:
+            if goal.context is not None:
+                for combination in saturated_combinations_grouped:
+                    if combination <= goal.context:
+                        if combination in context_goal_map:
+                            context_goal_map[combination].add(goal)
+                        else:
+                            context_goal_map[combination] = {goal}
+                        mapped_goals.add(goal)
+            else:
+                for combination in saturated_combinations_grouped:
+                    if combination in context_goal_map:
+                        context_goal_map[combination].add(goal)
+                    else:
+                        context_goal_map[combination] = {goal}
+                    mapped_goals.add(goal)
+
+        if mapped_goals != nodes:
+            raise Exception("Not all goals have been mapped!")
+        print("All goals have been mapped to mutually exclusive context")
+
+        """Building the cgg..."""
+        composed_goals = set()
+        for mutex_context, cluster in context_goal_map.items():
+            new_node = Node.composition(cluster)
+            new_node.context = mutex_context
+            composed_goals.add(new_node)
+
+        if kind == Link.CONJUNCTION:
+            cgg = Node.conjunction(composed_goals)
+        elif kind == Link.DISJUNCTION:
+            cgg = Node.disjunction(composed_goals)
+        else:
+            cgg = Node.conjunction(composed_goals)
+
+        """Renaming the CGG Mission and Scenarios nodes"""
+
+        """Assigning names for each node as 'scenarios'"""
+        for i, node in enumerate(cgg.get_scenarios()):
+            node.name = f"SCENARIO_{i}"
+        cgg.name = "MISSION"
+
+        return cgg
+
+    @staticmethod
+    def build_cgg_old(nodes: Set[Node], kind: Link = Link.CONJUNCTION) -> Node:
+
+        contexts = set()
+
+        for g in nodes:
+            if g.context is not None:
+                contexts.add(g.context)
+
+        """Extract all combinations of context which are consistent"""
+        saturated_combinations = []
+        for i in range(0, len(contexts)):
+            """Extract all combinations of i context and saturate it."""
+            combinations = itertools.combinations(contexts, i + 1)
+            for combination in combinations:
+                saturated_combination = combination[0]
+                try:
+                    for element in combination[1:]:
+                        saturated_combination &= element
+                    for context in contexts:
+                        if context not in combination:
+                            saturated_combination &= ~context
+                except SpecNotSATException:
                     continue
                 saturated_combinations.append(saturated_combination)
 
