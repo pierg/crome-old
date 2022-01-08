@@ -61,6 +61,9 @@ class Goal:
     def __str__(self):
         return Goal.pretty_print_goal(self)
 
+    def __le__(self, other: Goal):
+        return self.specification <= other.specification
+
     @property
     def name(self) -> str:
         return self.__name

@@ -79,11 +79,6 @@ class Specification(ABC):
         (implies)"""
 
     @abstractmethod
-    def __lshift__(self: Specification, other: Specification) -> Specification:
-        """<< Returns a new Specification that is the result of other -> self
-        (implies)"""
-
-    @abstractmethod
     def __iand__(self: Specification, other: Specification) -> Specification:
         """self &= other Modifies self with the conjunction with other."""
 
@@ -124,26 +119,8 @@ class Specification(ABC):
 
         True if self is a refinement of other
         """
-        # if other.is_true:
-        #     return True
-        #
-        # """Check if self -> other is valid, considering the refinement rules r"""
-        # """((r & s1) -> s2) === r -> (s1 -> s2)"""
-        # if self.is_true:
-        #     return True
-        #
-        # try:
-        #     assert self.is_satisfiable and other.is_satisfiable
-        # except Exception:
-        #     print("eXx")
-        # """((r & s1) -> s2) === r -> (s1 -> s2)"""
-        #
-        # # print(self)
-        # # print(other)
-        # # print(f"({str(self)}) -> ({str(other)})")
-        # # print(self << other)
-
-        return (self << other).is_valid
+        """Check if (self -> other) is valid"""
+        return (self >> other).is_valid
 
     def __gt__(self, other: Specification):
         """self > other.
@@ -157,13 +134,9 @@ class Specification(ABC):
 
         True if self is an abstraction of other
         """
-        # if self.is_true():
-        #     return True
-        #
-        # assert self.is_satisfiable and other.is_satisfiable
 
-        """((r & s1) -> s2) === r -> (s1 -> s2)"""
-        return (self >> other).is_valid
+        """Check if (other -> self) is valid"""
+        return (other >> self).is_valid
 
         #
         # """Check if other -> self is valid, considering the refinement rules r"""

@@ -223,8 +223,6 @@ class Contract:
             except NotSatisfiableException as e:
                 raise InconsistentContracts(contract, e)
 
-        print("The composition is compatible and consistent")
-
         """Assumptions relaxation"""
         new_assumptions |= ~new_guarantees
 
@@ -290,8 +288,6 @@ class Contract:
             except NotSatisfiableException as e:
                 raise InconsistentContracts(contract, e)
 
-        print("The disjunction is compatible and consistent")
-
         """New contracts without saturation cause it was already saturated"""
         new_contract = Contract(
             assumptions=new_assumptions, guarantees=new_guarantees, saturate=False
@@ -328,8 +324,6 @@ class Contract:
 
         quotient = Contract(assumptions=a2, guarantees=g2)
 
-        print("The quotient has been successfully computed")
-
         return quotient
 
     @staticmethod
@@ -355,8 +349,6 @@ class Contract:
                 new_guarantees &= contract.guarantees
             except NotSatisfiableException as e:
                 raise InconsistentContracts(contract, e)
-
-        print("The merging is compatible and consistent")
 
         """Guarantees relaxation"""
         new_guarantees = new_guarantees | ~new_assumptions
@@ -399,8 +391,6 @@ class Contract:
             raise InconsistentContracts(c, e)
 
         separation = Contract(assumptions=a2, guarantees=g2)
-
-        print("The separation has been successfully computed")
 
         print(g2)
 

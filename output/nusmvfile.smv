@@ -1,5 +1,7 @@
 MODULE main
 VAR
-	h: boolean;
+	l1: boolean;
+	ft: boolean;
+	l2: boolean;
 
-LTLSPEC !(X !h)
+LTLSPEC F G F ft | F G !l1 | F G !l2 | F (!ft & l1) | F (!ft & l2)

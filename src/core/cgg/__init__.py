@@ -466,10 +466,10 @@ class Node(Goal):
     def get_leaves(self) -> Set[Node]:
         """Depth-first search."""
         result = set()
-        if len(self.children) == 0:
+        if len(self.children_nodes()) == 0:
             result.add(self)
         for child in self.children_nodes():
-            result |= child.get_all_nodes()
+            result |= child.get_leaves()
         return result
 
     def save(self):
@@ -713,33 +713,22 @@ class Node(Goal):
 
         """Extract all combinations of context which are consistent"""
         saturated_combinations = []
-        print([c for c in contexts])
-        combinations = itertools.combinations(contexts, (0 + 1) % (len(contexts)))
-        for combination in combinations:
-            print(f"Combination\t{str([str(e) for e in combination])}")
         for i in range(0, len(contexts)):
             """Extract all combinations of i context and saturate it."""
             combinations = itertools.combinations(contexts, (i + 1) % (len(contexts)))
             for combination in combinations:
                 if len(combination) == 0:
                     continue
-                print(f"Selected\t{str([str(e) for e in combination])}")
                 saturated_combination = deepcopy(combination[0])
                 for element in combination[1:]:
                     saturated_combination &= element
-                print(f"Conjoined\t{saturated_combination}")
                 for context in contexts:
-                    print(f"Context\t{context}")
                     if context not in combination:
                         saturated_combination &= ~context
-                        print(f"Saturated\t{saturated_combination}")
                 if not saturated_combination.is_satisfiable:
                     continue
                 else:
                     saturated_combinations.append(saturated_combination)
-                    print(f"Added\t{saturated_combination}")
-
-        print("\n".join(x.string for x in saturated_combinations))
 
         """Group combinations"""
         saturated_combinations_grouped = list(saturated_combinations)
@@ -752,7 +741,11 @@ class Node(Goal):
                 ):
                     saturated_combinations_grouped.remove(c_b)
 
-        print("\n".join(x.string for x in saturated_combinations))
+        print(
+            "\nCONTEXT MUTEX:\t"
+            + ",\t".join(x.string for x in saturated_combinations)
+            + "\n"
+        )
 
         """Map to goals"""
         mapped_goals = set()
@@ -761,7 +754,6 @@ class Node(Goal):
             for combination in saturated_combinations_grouped:
                 add_goal = False
                 if goal.context is not None:
-                    print(f"{str(combination)} <= {str(goal.context)}")
                     if combination <= goal.context:
                         add_goal = True
                 else:

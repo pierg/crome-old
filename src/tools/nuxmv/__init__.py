@@ -2,7 +2,7 @@ import os
 import subprocess
 from enum import Enum
 from pathlib import Path
-from typing import List, Tuple
+from typing import List
 
 import docker
 from bloom_filter import BloomFilter
@@ -93,14 +93,6 @@ class Nuxmv:
                     raise Exception("nuXmv produced something unexpected")
 
     @staticmethod
-    def __trivialchecks(expression: str):
-        if expression == "TRUE":
-            return True
-
-        if expression == "FALSE":
-            return False
-
-    @staticmethod
     def __launch_nuxmv() -> List[str]:
         try:
             """"Trying nuXmv locally."""
@@ -127,14 +119,16 @@ class Nuxmv:
         return output
 
     @staticmethod
-    def check_satisfiability(formula: Tuple[str, Typeset]) -> bool:
-
-        expression, typeset = formula
+    def check_satisfiability(expression, typeset) -> bool:
 
         if not isinstance(expression, str) or not isinstance(typeset, Typeset):
             raise AttributeError
 
-        Nuxmv.__trivialchecks(expression)
+        if expression == "TRUE" or expression == "1":
+            return True
+
+        if expression == "FALSE" or expression == "0":
+            return False
 
         if expression in bloom_sat:
             print("\t\t\tSAT-SKIPPED:\t" + expression)
@@ -154,11 +148,13 @@ class Nuxmv:
         return sat
 
     @staticmethod
-    def check_validity(formula: Tuple[str, Typeset]) -> bool:
+    def check_validity(expression, typeset) -> bool:
 
-        expression, typeset = formula
+        if expression == "TRUE" or expression == "1":
+            return True
 
-        Nuxmv.__trivialchecks(expression)
+        if expression == "FALSE" or expression == "0":
+            return False
 
         if expression in bloom_val:
             print("\t\t\tVAL-SKIPPED:\t" + expression)

@@ -14,6 +14,7 @@ from core.specification import Specification, SpecNotSATException
 from core.specification.bformula import Bool, BooleansNotSATException
 from core.typeset import Typeset
 from tools.logic import Logic
+from tools.nuxmv import Nuxmv
 from tools.spot import Spot
 
 
@@ -135,15 +136,20 @@ class LTL(Specification):
         return str(new_f) != "0"
 
     @property
+    def spot_formula(self):
+        return self.__spot_formula
+
+    @property
     def is_valid(self: LTL) -> bool:
 
         ref_rules = LTL.extract_refinement_rules(self.typeset)
+
         if ref_rules is not None:
             new_f = ref_rules >> self
         else:
             new_f = self
 
-        return str(new_f) == "1"
+        return Nuxmv.check_validity(new_f.string, new_f.typeset)
 
     def represent(self, output_type: LTL.Output = Output.SUMMARY) -> str:
         if output_type == LTL.Output.SPOT_str:
@@ -451,17 +457,8 @@ class LTL(Specification):
         """>> Returns a new Sformula that is the result of self -> other
         (implies)"""
         return LTL(
-            formula=f"({other.string}) -> ({self.string})",
-            boolean_formula=self.__boolean_formula >> other.__boolean_formula,
-            typeset=self.typeset | other.typeset,
-        )
-
-    def __lshift__(self: LTL, other: LTL) -> LTL:
-        """<< Returns a new Sformula that is the result of other -> self
-        (implies)"""
-        return LTL(
             formula=f"({self.string}) -> ({other.string})",
-            boolean_formula=other.__boolean_formula >> self.__boolean_formula,
+            boolean_formula=self.__boolean_formula >> other.__boolean_formula,
             typeset=self.typeset | other.typeset,
         )
 
