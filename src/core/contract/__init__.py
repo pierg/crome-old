@@ -82,7 +82,7 @@ class Contract:
 
     def __checkfeasibility(self):
         """Check Feasibility."""
-        if self.assumptions is not None or not self.assumptions.is_true():
+        if self.assumptions is not None or not self.assumptions.is_true:
             try:
                 self.__assumptions & self.__guarantees
             except NotSatisfiableException as e:
@@ -328,6 +328,7 @@ class Contract:
 
     @staticmethod
     def merging(contracts: Set[Contract]) -> Contract:
+
         if len(contracts) == 1:
             return next(iter(contracts))
         if len(contracts) == 0:

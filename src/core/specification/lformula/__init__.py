@@ -64,7 +64,8 @@ class LTL(Specification):
         """Building the LTL formula and tree."""
         self.__original_formula = str(formula)
         spot_formula = spot.formula(self.__original_formula)
-        spot_formula = spot.simplify(spot_formula)
+        # IF SIMPLIFIED IT WILL ADD R, W, M etc... not in NuXMV
+        # spot_formula = spot.simplify(spot_formula, event_univ=False)
         spot_formula = Spot.transform_tree(spot_formula)
 
         self.__spot_formula = spot_formula
@@ -127,7 +128,7 @@ class LTL(Specification):
         else:
             new_f = self & mtx_rules
 
-        return str(new_f) != "0"
+        return Nuxmv.check_satisfiability(new_f.string, new_f.typeset)
 
     @property
     def spot_formula(self):
@@ -349,8 +350,6 @@ class LTL(Specification):
     ):
         if spot_f is None:
             spot_f = self.__spot_formula
-
-        # print(spot_f)
 
         if self.is_atom:
             self.__create_atom_tree_node(

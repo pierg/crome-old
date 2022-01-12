@@ -345,6 +345,7 @@ class Goal:
 
     @staticmethod
     def merging(goals: Set[Goal], name: str = None, description: str = None) -> Goal:
+
         if name is None:
             names = []
             for goal in goals:

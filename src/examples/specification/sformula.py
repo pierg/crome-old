@@ -62,5 +62,35 @@ def inconsistencies():
         print(f"{e.formula.original_formula} is not satisfiable")
 
 
+def release():
+    f = LTL("G(!l2 | X(!l2 U l1))")
+    f_not = ~f
+    print(f_not)
+    spot = f_not.spot_formula
+    print(spot)
+    print(f_not.is_satisfiable)
+
+
+def bug():
+
+    f1 = "(GFps -> G(ps <-> wa)) & GF(l1 & F(l2 & F(l3 & F(l4 & Fl5)))) & (!l2 U l1) & (!l3 U l2) & (!l4 U l3) & (!l5 U l4) & G(l2 -> X(!l2 U l1)) & G(l3 -> X(!l3 U l2)) & G(l4 -> X(!l4 U l3)) & G(l5 -> X(!l5 U l4)) & G(l1 -> X(!l1 U l5)) & G(l1 -> X(!l1 U l2)) & G(l2 -> X(!l2 U l3)) & G(l3 -> X(!l3 U l4)) & G(l4 -> X(!l4 U l5)) & G(l5 -> X(!l5 U l1)) & (GFbk -> G(bk -> Xre)) & (GFlc -> G(lf -> (Xch & Xlc))) & (GFps -> G(ps -> pc))"
+    f2 = "!(((GFps & GFbk) | !((GFps -> G(ps <-> wa)) & (GFbk -> G(bk -> Xre)) & (GFps -> G(ps -> pc)))) & (GFlc | !(GF(l1 & F(l2 & F(l3 & F(l4 & Fl5)))) & (!l2 U l1) & (!l3 U l2) & (!l4 U l3) & (!l5 U l4) & G(l2 -> X(!l2 U l1)) & G(l3 -> X(!l3 U l2)) & G(l4 -> X(!l4 U l3)) & G(l5 -> X(!l5 U l4)) & G(l1 -> X(!l1 U l5)) & G(l1 -> X(!l1 U l2)) & G(l2 -> X(!l2 U l3)) & G(l3 -> X(!l3 U l4)) & G(l4 -> X(!l4 U l5)) & G(l5 -> X(!l5 U l1)) & (GFlc -> G(lf -> (Xch & Xlc))))))"
+
+    f1 = LTL(f1)
+    print(f1)
+
+    f2 = LTL(f2)
+    print(f2)
+
+    g = f1 | ~f2
+    print(g)
+
+    f3 = ~f2
+    print(f3)
+
+    f4 = f1 | f3
+    print(f4)
+
+
 if __name__ == "__main__":
-    inconsistencies()
+    bug()

@@ -29,29 +29,15 @@ class Bool:
             formula = formula.replace("!", "~")
             try:
                 expression = expr(formula)
-            except Exception:
+            except Exception as e:
+                print(e)
                 raise Exception("Problem")
         elif isinstance(formula, Expression):
             expression = formula
         else:
             raise AttributeError
 
-        if not (str(expression) == "1" or str(expression) == "0"):
-            expression = expression.to_dnf()
-            if not (str(expression) == "1" or str(expression) == "0"):
-                expression = espresso_exprs(expression)[0]
-
         self.__expression = expression
-
-        """Espresso Minimization
-        Notice that the espresso_exprs function returns a tuple.
-        The reason is that this function can minimize multiple input functions simultaneously."""
-        # if expression.satisfy_all():
-        #     self.__expression = expression
-        # else:
-        #     self.__expression = espresso_exprs(expression.to_dnf())[0]
-        # TODO: Espression Minimazion, doesn't not work if not DNF, e.g. (a -> a)
-        # self.__expression = expression
 
     def __deepcopy__(self: Bool, memo):
         cls = self.__class__
@@ -70,6 +56,17 @@ class Bool:
     @property
     def expression(self):
         return self.__expression
+
+    def minimize(self):
+        """Espresso minimization works only for DNF forms and it's slow."""
+        if not (str(self.__expression) == "1" or str(self.__expression) == "0"):
+            print("start dnf")
+            self.__expression = self.__expression.to_dnf()
+            print("end dnf")
+            if not (str(self.__expression) == "1" or str(self.__expression) == "0"):
+                print("start espresso")
+                self.__expression = espresso_exprs(self.__expression)[0]
+                print("end espresso")
 
     def represent(self, output: Output = Output.SPOT_str):
         if output == Bool.Output.SPOT_str:
@@ -236,7 +233,8 @@ class Bool:
 
     def __invert__(self: Bool) -> Bool:
         """Returns a new Pyeda with the negation of self."""
-        return Bool(~self.__expression)
+        inverted_expr = ~self.__expression
+        return Bool(inverted_expr)
 
     def __rshift__(self: Bool, other: Bool) -> Bool:
         """>> Returns a new Pyeda that is the result of self -> other

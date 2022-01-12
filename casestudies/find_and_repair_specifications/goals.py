@@ -78,6 +78,38 @@ set_of_goals = {
     ),
 }
 
+
+set_of_goalski = {
+    Node(
+        name="day_patrolling",
+        description="During the day keep visiting the `front' locations",
+        context=w["dy"],
+        specification=Contract(
+            assumptions=None, guarantees=LTL(Patrolling("l2"), w.typeset)
+        ),
+        world=w,
+    ),
+    Node(
+        name="wave",
+        description="During the day keep visiting the `front' locations",
+        context=w["dy"],
+        specification=Contract(
+            assumptions=LTL(GF("ps"), w.typeset),
+            guarantees=LTL(BoundReaction("ps", "wa"), w.typeset),
+        ),
+        world=w,
+    ),
+    Node(
+        name="day_wave",
+        description="During the day wave when seeing a person",
+        context=w["nt"],
+        specification=Contract(
+            guarantees=LTL(Patrolling("l1"), w.typeset),
+        ),
+        world=w,
+    ),
+}
+
 if __name__ == "__main__":
     # g = Node(
     #     name="night_patrolling",

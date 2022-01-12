@@ -109,8 +109,10 @@ class Logic:
             return Logic.or_(elements)
         elif operation == "Not":
             return Logic.not_(elements[0])
+        elif operation == "Implies":
+            return Logic.implies_(elements[0], elements[1])
         else:
-            raise Exception("Attribute unknown")
+            raise Exception(f"Attribute unknown: {operation}")
 
     @staticmethod
     def and_(propositions: List[str], brackets: bool = False) -> str:
@@ -148,7 +150,8 @@ class Logic:
             or prop_1 == "(true)"
         ):
             return prop_2
-        return f"(({prop_1}) -> ({prop_2}))"
+        # return f"(({prop_1}) -> ({prop_2}))"
+        return f"(!({prop_1}) | ({prop_2}))"
 
     @staticmethod
     def iff_(prop_1: str, prop_2: str) -> str:
