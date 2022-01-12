@@ -4,9 +4,9 @@ from copy import copy, deepcopy
 from itertools import combinations
 from typing import Dict, Set, Tuple, TypeVar, Union
 
-from core.crometypes import BASE_CLASS_TYPES, Boolean, Types
+from core.crometypes import BASE_CLASS_TYPES, Boolean, CTypes
 
-AllTypes = TypeVar("AllTypes", bound=Types)
+AllTypes = TypeVar("AllTypes", bound=CTypes)
 
 
 class Typeset(dict):
@@ -53,7 +53,7 @@ class Typeset(dict):
 
     def __or__(self, element: Union[Typeset, AllTypes]) -> Typeset:
         """Returns self | element."""
-        if isinstance(element, Types):
+        if isinstance(element, CTypes):
             element = Typeset({element})
         """Shallow copy"""
         new_dict = copy(self)
@@ -62,7 +62,7 @@ class Typeset(dict):
 
     def __sub__(self, element: Union[Typeset, AllTypes]) -> Typeset:
         """ Returns self - element """
-        if isinstance(element, Types):
+        if isinstance(element, CTypes):
             element = Typeset({element})
         """Shallow copy"""
         new_dict = copy(self)
@@ -76,7 +76,7 @@ class Typeset(dict):
 
     def __ior__(self, element: Union[Typeset, AllTypes]):
         """Updates self with self |= element."""
-        if isinstance(element, Types):
+        if isinstance(element, CTypes):
             element = Typeset({element})
         for key, value in element.items():
             if key in self:
@@ -104,6 +104,9 @@ class Typeset(dict):
     def __isub__(self, element):
         """Updates self with self -= element."""
 
+    def size(self) -> int:
+        return len(list(self.keys()))
+
     @staticmethod
     def get_instance_ts(specification_ts: Typeset, world_ts: Typeset) -> Typeset:
         new_ts = Typeset()
@@ -117,7 +120,7 @@ class Typeset(dict):
                             new_ts |= elem
         return new_ts
 
-    def extract_inputs_outputs(self) -> Tuple[Set[Types], Set[Types]]:
+    def extract_inputs_outputs(self) -> Tuple[Set[CTypes], Set[CTypes]]:
         """Returns a set of variables in the typeset that are not controllable
         and controllable."""
         i = set()
@@ -130,7 +133,9 @@ class Typeset(dict):
                     o.add(t)
         return i, o
 
-    def extract_inputs_outputs_excluding_context(self) -> Tuple[Set[Types], Set[Types]]:
+    def extract_inputs_outputs_excluding_context(
+        self,
+    ) -> Tuple[Set[CTypes], Set[CTypes]]:
         """Returns a set of variables (excluding contexts) in the typeset that
         are not controllable and controllable."""
         i = set()
@@ -145,7 +150,7 @@ class Typeset(dict):
                     o.add(t)
         return i, o
 
-    def extract_actions(self) -> Set[Types]:
+    def extract_actions(self) -> Set[CTypes]:
         """Returns a set of variables in the typeset that are controllable
         actions."""
         ret = set()
@@ -155,7 +160,7 @@ class Typeset(dict):
                     ret.add(t)
         return ret
 
-    def extract_location(self) -> Set[Types]:
+    def extract_location(self) -> Set[CTypes]:
         """Returns a set of variables in the typeset that are controllable
         location."""
         ret = set()
@@ -165,7 +170,7 @@ class Typeset(dict):
                     ret.add(t)
         return ret
 
-    def extract_sensors(self) -> Set[Types]:
+    def extract_sensors(self) -> Set[CTypes]:
         """Returns a set of variables in the typeset that are not controllable
         sensors."""
         ret = set()
@@ -175,7 +180,7 @@ class Typeset(dict):
                     ret.add(t)
         return ret
 
-    def extract_sensor_actions(self) -> Set[Types]:
+    def extract_sensor_actions(self) -> Set[CTypes]:
         """Returns a set of variables in the typeset that are sensors of action
         completion."""
         ret = set()
@@ -185,7 +190,7 @@ class Typeset(dict):
                     ret.add(t)
         return ret
 
-    def extract_sensor_locations(self) -> Set[Types]:
+    def extract_sensor_locations(self) -> Set[CTypes]:
         """Returns a set of variables in the typeset that are sensors
         indicating current robot location."""
         ret = set()
@@ -227,7 +232,7 @@ class Typeset(dict):
     def update_mutextypes(self):
         if len(self.values()) > 1:
             self.__mutex_types = set()
-            mutex_vars_dict: Dict[str, Set[Types]] = {}
+            mutex_vars_dict: Dict[str, Set[CTypes]] = {}
             for variable in self.values():
                 if variable.mutex_group != "":
                     if variable.mutex_group in mutex_vars_dict:
@@ -275,8 +280,8 @@ class Typeset(dict):
 
     def extract_viewpoint(self):
         for v in self.values():
-            if v.kind == Types.Kind.LOCATION:
+            if v.kind == CTypes.Kind.LOCATION:
                 return "location"
-            elif v.kind == Types.Kind.ACTION:
+            elif v.kind == CTypes.Kind.ACTION:
                 return "action"
         return "other"

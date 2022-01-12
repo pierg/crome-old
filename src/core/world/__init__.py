@@ -1,7 +1,7 @@
 import uuid
 from typing import Set
 
-from core.crometypes import Types
+from core.crometypes import CTypes
 from core.crometypes.subtypes.action import BooleanAction
 from core.crometypes.subtypes.context import ContextBoolean
 from core.crometypes.subtypes.location import ReachLocation
@@ -46,10 +46,10 @@ class World(dict):
     def __init__(
         self,
         project_name: str = None,
-        actions: Set[Types] = None,
-        locations: Set[Types] = None,
-        sensors: Set[Types] = None,
-        contexts: Set[Types] = None,
+        actions: Set[CTypes] = None,
+        locations: Set[CTypes] = None,
+        sensors: Set[CTypes] = None,
+        contexts: Set[CTypes] = None,
     ):
         super().__init__()
 
@@ -81,7 +81,7 @@ class World(dict):
 
         self.__rules: Set[Rule] = set()
 
-    def add_type(self, name, elem: Types):
+    def add_type(self, name, elem: CTypes):
         self.__typeset |= elem
         super().__setitem__(name, elem.to_atom())
         super().__setitem__(f"!{name}", ~elem.to_atom())

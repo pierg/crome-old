@@ -1,6 +1,6 @@
 from typing import Set
 
-from core.crometypes import Boolean, Types
+from core.crometypes import Boolean, CTypes
 
 
 class ReachLocation(Boolean):
@@ -22,11 +22,11 @@ class ReachLocation(Boolean):
     def to_atom(self, kind=None):
         from core.specification import Specification
 
-        return super().to_atom(kind=Specification.Kind.ATOM_LOCATION)
+        return super().to_atom(kind=Specification.Kind.Atom.LOCATION)
 
     @property
     def kind(self):
-        return Types.Kind.LOCATION
+        return CTypes.Kind.LOCATION
 
     @property
     def adjacency_set(self) -> Set[str]:

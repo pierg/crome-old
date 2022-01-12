@@ -11,15 +11,10 @@ class Person(BooleanSensor):
         super().__init__(name)
 
 
-class Movement(BooleanSensor):
-    def __init__(self, name: str = "mv"):
-        super().__init__(name)
-
-
 """ACTIONS"""
 
 
-class Greet(BooleanAction):
+class Charge(BooleanAction):
     def __init__(self, name: str = "gr"):
         super().__init__(name)
 
@@ -31,6 +26,11 @@ class Report(BooleanAction):
 
 class Picture(BooleanAction):
     def __init__(self, name: str = "pc"):
+        super().__init__(name)
+
+
+class Wave(BooleanAction):
+    def __init__(self, name: str = "wa"):
         super().__init__(name)
 
 
@@ -75,6 +75,15 @@ class L2(Front):
     @property
     def mutex_group(self):
         return "locations"
+
+    @property
+    def adjacency_set(self):
+        return {"l1", "l4"}
+
+
+class Charging(L2):
+    def __init__(self, name: str = "lc"):
+        super().__init__(name)
 
     @property
     def adjacency_set(self):

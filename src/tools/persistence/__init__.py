@@ -1,17 +1,18 @@
 import os
-import pickle
-
+from pathlib import Path
 from typing import Set
+
+import dill as dill
 
 from core.cgg import Node
 from core.controller import Controller
-from pathlib import Path
-
 from core.world import World
 
 
 class Persistence:
-    default_folder_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'output'))
+    default_folder_path = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..", "..", "..", "output")
+    )
 
     @staticmethod
     def dump_cgg(cgg: Node, folder_path: str = None):
@@ -27,9 +28,8 @@ class Persistence:
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
 
-        file = open(output_file, 'wb')
-        pickle.dump(cgg, file)
-        file.close()
+        with open(output_file, "wb") as out_strm:
+            dill.dump(cgg, out_strm)
 
     @staticmethod
     def dump_world(world: World, folder_path: str = None):
@@ -44,8 +44,8 @@ class Persistence:
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
 
-        file = open(output_file, 'wb')
-        pickle.dump(world, file)
+        file = open(output_file, "wb")
+        dill.dump(world, file)
         file.close()
 
     @staticmethod
@@ -61,12 +61,14 @@ class Persistence:
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
 
-        file = open(output_file, 'wb')
-        pickle.dump(set_goals, file)
+        file = open(output_file, "wb")
+        dill.dump(set_goals, file)
         file.close()
 
     @staticmethod
-    def dump_controller(controller: Controller, folder_path: str = None, name: str = None):
+    def dump_controller(
+        controller: Controller, folder_path: str = None, name: str = None
+    ):
 
         if name is None:
             name = "controller"
@@ -78,8 +80,8 @@ class Persistence:
 
         output_file = Path(output_file)
 
-        file = open(output_file, 'wb')
-        pickle.dump(controller, file)
+        file = open(output_file, "wb")
+        dill.dump(controller, file)
         file.close()
 
     @staticmethod
@@ -89,8 +91,8 @@ class Persistence:
 
         file = Path(file)
 
-        file = open(file, 'rb')
-        cgg = pickle.load(file)
+        file = open(file, "rb")
+        cgg = dill.load(file)
         file.close()
 
         return cgg
@@ -105,8 +107,8 @@ class Persistence:
 
         file = Path(file)
 
-        file = open(file, 'rb')
-        controller = pickle.load(file)
+        file = open(file, "rb")
+        controller = dill.load(file)
         file.close()
 
         return controller
@@ -118,8 +120,8 @@ class Persistence:
 
         file = Path(file)
 
-        file = open(file, 'rb')
-        world = pickle.load(file)
+        file = open(file, "rb")
+        world = dill.load(file)
         file.close()
 
         return world
@@ -136,8 +138,8 @@ class Persistence:
             Persistence.dump_goals(set(), folder_path)
         # Added this
 
-        file = open(file, 'rb')
-        set_goals = pickle.load(file)
+        file = open(file, "rb")
+        set_goals = dill.load(file)
         file.close()
 
         return set_goals

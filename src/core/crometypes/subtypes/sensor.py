@@ -1,4 +1,4 @@
-from core.crometypes import Boolean, BoundedInteger, Types
+from core.crometypes import Boolean, BoundedInteger, CTypes
 
 
 class IntegerSensor(BoundedInteger):
@@ -7,7 +7,7 @@ class IntegerSensor(BoundedInteger):
 
     @property
     def kind(self):
-        return Types.Kind.SENSOR
+        return CTypes.Kind.SENSOR
 
 
 class BooleanSensor(Boolean):
@@ -17,8 +17,8 @@ class BooleanSensor(Boolean):
     def to_atom(self, kind=None):
         from core.specification import Specification
 
-        return super().to_atom(kind=Specification.Kind.ATOM_SENSOR)
+        return super().to_atom(kind=Specification.Kind.Atom.SENSOR)
 
     @property
     def kind(self):
-        return Types.Kind.SENSOR
+        return CTypes.Kind.SENSOR

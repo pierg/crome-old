@@ -21,14 +21,12 @@ BASE_CLASS_TYPES = [
 ]
 
 
-class Types(ABC):
+class CTypes(ABC):
     class Kind(Enum):
         SENSOR = auto()
-        SENSOR_ACTION = auto()
-        SENSOR_LOCATION = auto()
         LOCATION = auto()
-        ACTIVE = auto()
         ACTION = auto()
+        ACTIVE = auto()
         CONTEXT = auto()
 
     def __init__(self, name: str):
@@ -37,19 +35,22 @@ class Types(ABC):
     def __str__(self):
         return self.__name
 
+    def __le__(self, other: CTypes):
+        return isinstance(self, type(other))
+
     @property
     def name(self) -> str:
         return self.__name
 
-    def kind(self) -> Types.Kind:
+    def kind(self) -> CTypes.Kind:
         pass
 
     @property
     def controllable(self) -> bool:
         if (
-            self.kind == Types.Kind.SENSOR
-            or self.kind == Types.Kind.CONTEXT
-            or self.kind == Types.Kind.ACTIVE
+            self.kind == CTypes.Kind.SENSOR
+            or self.kind == CTypes.Kind.CONTEXT
+            or self.kind == CTypes.Kind.ACTIVE
         ):
             return False
         return True
@@ -68,7 +69,7 @@ class Types(ABC):
         return hash(self.name + type(self).__name__)
 
 
-class Boolean(Types):
+class Boolean(CTypes):
     def __init__(self, name: str):
         super().__init__(name)
 
@@ -82,7 +83,7 @@ class Boolean(Types):
         return ""
 
 
-class BoundedInteger(Types):
+class BoundedInteger(CTypes):
     def __init__(self, name: str, min_value: int, max_value: int):
         self.__min = min_value
         self.__max = max_value

@@ -31,7 +31,7 @@ class Coverage(CoreMovement):
 
 class Visit(Coverage):
     def __init__(self, *locations):
-        Coverage.check_inputs(locations)
+        Coverage.check_inputs(*locations)
 
         f = []
 
@@ -49,7 +49,7 @@ class OrderedVisit(Coverage):
     """Given a set of locations the robot should visit all the locations."""
 
     def __init__(self, *locations):
-        Coverage.check_inputs(locations)
+        Coverage.check_inputs(*locations)
 
         lor = list(locations)
         lor.reverse()
@@ -78,7 +78,7 @@ class OrderedVisit(Coverage):
 
 class StrictOrderedVisit(Coverage):
     def __init__(self, *locations):
-        Coverage.check_inputs(locations)
+        Coverage.check_inputs(*locations)
 
         lor = list(locations)
         lor.reverse()

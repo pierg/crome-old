@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from enum import Enum, auto
+from typing import List, Set
+
+from aenum import Enum, auto, skip
 
 from core.typeset import Typeset
 
@@ -14,21 +16,28 @@ class SpecNotSATException(Exception):
 class Specification(ABC):
     class Kind(Enum):
         UNDEFINED = auto()
-        ACTIVE_SIGNAL = auto()
-        CONTEXT = auto()
-        ATOM_ACTION = auto()
-        ATOM_SENSOR = auto()
-        ATOM_LOCATION = auto()
-        MUTEX_RULE = auto()
-        AJACENCY_RULE = auto()
-        LIVENESS_RULE = auto()
-        REFINEMENT_RULE = auto()
 
+        @skip
+        class Atom(Enum):
+            ACTION = auto()
+            SENSOR = auto()
+            LOCATION = auto()
+            CONTEXT = auto()
+            ACTIVE = auto()
+
+        @skip
         class Rule(Enum):
             REFINEMENT = auto()
             MUTEX = auto()
             ADJACENCY = auto()
             LIVENESS = auto()
+
+    class OutputStr(Enum):
+        ORIGINAL = auto()
+        SIMPLIFIED = auto()
+        CNF = auto()
+        DNF = auto()
+        SUMMARY = auto()
 
     def __init__(self, formula: str, typeset: Typeset):
 
@@ -43,21 +52,23 @@ class Specification(ABC):
 
     @property
     @abstractmethod
-    def original_formula(self) -> str:
-        pass
-
-    @property
-    def formula(self) -> str:
-        return self.__formula
-
-    @property
-    @abstractmethod
     def string(self) -> str:
         pass
 
     @property
     def typeset(self) -> Typeset:
         return self.__typeset
+
+    @property
+    def cnf(self) -> List[Set[Specification]]:
+        pass
+
+    @property
+    def dnf(self) -> List[Set[Specification]]:
+        pass
+
+    def represent(self, output_type: Specification.OutputStr) -> str:
+        pass
 
     @abstractmethod
     def __and__(self: Specification, other: Specification) -> Specification:

@@ -7,6 +7,7 @@ class Pattern(ABC):
     class Kinds(Enum):
         ROBOTIC = auto()
         DWYER = auto()
+        BASIC = auto()
 
     # TODO: to complete
 
@@ -28,3 +29,15 @@ class Pattern(ABC):
 
     def kind(self) -> Kinds:
         return self.__kind
+
+    @staticmethod
+    def process_unary_input(element):
+
+        if not isinstance(element, str):
+            raise AttributeError
+
+    @staticmethod
+    def process_binary_input(pre: str, post: str):
+
+        if not (isinstance(pre, str) or isinstance(post, str)):
+            raise AttributeError

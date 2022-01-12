@@ -1,0 +1,92 @@
+|---GOAL	 5e1c5 'MISSION'
+|	  ASSUMPTIONS:
+|	  (GFps & ((GFbk & GFlc) | (l2 R !l1) | (l3 R !l2) | (l4 R !l3) | (l5 R !l4) | (GFbk & F(bk & X!re)) | (GFlc & F(lf & (X!ch | X!lc))) | FG!l5 | F(l2 & X(l2 R !l1)) | F(l3 & X(l3 R !l2)) | F(l4 & X(l4 R !l3)) | F(l5 & X(l5 R !l4)) | F(l1 & X(l1 R !l5)) | F(l1 & X(l1 R !l2)) | F(l2 & X(l2 R !l3)) | F(l3 & X(l3 R !l4)) | F(l4 & X(l4 R !l5)) | F(l5 & X(l5 R !l1)) | FG!l1 | FG!l2 | FG!l3 | FG!l4)) | (GFps & G(FG!ft | FGFlc))
+|	  GUARANTEES:
+|	  (FG!ps | ((G((ps & wa) | (!ps & !wa)) | FG!ps) & (!l2 U l1) & (!l3 U l2) & (!l4 U l3) & (!l5 U l4) & GFl5 & G(!l2 | X(!l2 U l1)) & G(!l3 | X(!l3 U l2)) & G(!l4 | X(!l4 U l3)) & G(!l5 | X(!l5 U l4)) & G(!l1 | X(!l1 U l5)) & G(!l1 | X(!l1 U l2)) & G(!l2 | X(!l2 U l3)) & G(!l3 | X(!l3 U l4)) & G(!l4 | X(!l4 U l5)) & G(!l5 | X(!l5 U l1)) & GFl1 & GFl2 & GFl3 & GFl4 & (G(!bk | Xre) | FG!bk) & (G(!lf | (Xch & Xlc)) | FG!lc) & (FG!ps | G(pc | !ps))) | ((!l2 U l1) & (!l3 U l2) & (!l4 U l3) & (!l5 U l4) & GFl5 & G(!l2 | X(!l2 U l1)) & G(!l3 | X(!l3 U l2)) & G(!l4 | X(!l4 U l3)) & G(!l5 | X(!l5 U l4)) & G(!l1 | X(!l1 U l5)) & G(!l1 | X(!l1 U l2)) & G(!l2 | X(!l2 U l3)) & G(!l3 | X(!l3 U l4)) & G(!l4 | X(!l4 U l5)) & G(!l5 | X(!l5 U l1)) & GFl1 & GFl2 & GFl3 & GFl4 & (G(!bk | Xre) | FG!bk) & (G(!lf | (Xch & Xlc)) | FG!lc) & G(FG!bk | FG!lc))) & (FG!ps | (GFft & (G((ps & wa) | (!ps & !wa)) | FG!ps) & (G(!lf | (Xch & Xlc)) | FG!lc) & (FG!ps | G(pc | !ps))) | (GFft & GFG!lc))
+|  CONJUNCTION
+		|---GOAL	 c14a3 'SCENARIO_0'
+		|	CONTEXT:	 dy & !nt
+		|	  ASSUMPTIONS:
+		|	  GFps & G(FG!ft | FGFlc)
+		|	  GUARANTEES:
+		|	  FG!ps | (GFft & (G((ps & wa) | (!ps & !wa)) | FG!ps) & (G(!lf | (Xch & Xlc)) | FG!lc) & (FG!ps | G(pc | !ps))) | (GFft & GFG!lc)
+		|  MERGING
+				|---GOAL	 482c9 'day_patrolling||night_charge'
+				|	CONTEXT:	 dy & !nt
+				|	  ASSUMPTIONS:
+				|	  FG!ft | FGFlc
+				|	  GUARANTEES:
+				|	  GFft & (G(!lf | (Xch & Xlc)) | FG!lc)
+				|  COMPOSITION
+						|---GOAL	 5f40c 'night_charge'
+						|	  ASSUMPTIONS:
+						|	  GFlc
+						|	  GUARANTEES:
+						|	  G(!lf | (Xch & Xlc)) | FG!lc
+						|---GOAL	 3e2f4 'day_patrolling'
+						|	CONTEXT:	 dy
+						|	  GUARANTEES:
+						|	  GFft
+				|---GOAL	 f9349 'always_picture||day_wave'
+				|	CONTEXT:	 dy & !nt
+				|	  ASSUMPTIONS:
+				|	  GFps
+				|	  GUARANTEES:
+				|	  (G((ps & wa) | (!ps & !wa)) | FG!ps) & (FG!ps | G(pc | !ps))
+				|  COMPOSITION
+						|---GOAL	 1e6ef 'day_wave'
+						|	  ASSUMPTIONS:
+						|	  GFps
+						|	  GUARANTEES:
+						|	  G((ps & wa) | (!ps & !wa)) | FG!ps
+						|---GOAL	 d99a5 'always_picture'
+						|	  ASSUMPTIONS:
+						|	  GFps
+						|	  GUARANTEES:
+						|	  FG!ps | G(pc | !ps)
+		|---GOAL	 690b0 'SCENARIO_1'
+		|	CONTEXT:	 !dy & nt
+		|	  ASSUMPTIONS:
+		|	  GFps & ((GFbk & GFlc) | (l2 R !l1) | (l3 R !l2) | (l4 R !l3) | (l5 R !l4) | (GFbk & F(bk & X!re)) | (GFlc & F(lf & (X!ch | X!lc))) | FG!l5 | F(l2 & X(l2 R !l1)) | F(l3 & X(l3 R !l2)) | F(l4 & X(l4 R !l3)) | F(l5 & X(l5 R !l4)) | F(l1 & X(l1 R !l5)) | F(l1 & X(l1 R !l2)) | F(l2 & X(l2 R !l3)) | F(l3 & X(l3 R !l4)) | F(l4 & X(l4 R !l5)) | F(l5 & X(l5 R !l1)) | FG!l1 | FG!l2 | FG!l3 | FG!l4)
+		|	  GUARANTEES:
+		|	  FG!ps | ((G((ps & wa) | (!ps & !wa)) | FG!ps) & (!l2 U l1) & (!l3 U l2) & (!l4 U l3) & (!l5 U l4) & GFl5 & G(!l2 | X(!l2 U l1)) & G(!l3 | X(!l3 U l2)) & G(!l4 | X(!l4 U l3)) & G(!l5 | X(!l5 U l4)) & G(!l1 | X(!l1 U l5)) & G(!l1 | X(!l1 U l2)) & G(!l2 | X(!l2 U l3)) & G(!l3 | X(!l3 U l4)) & G(!l4 | X(!l4 U l5)) & G(!l5 | X(!l5 U l1)) & GFl1 & GFl2 & GFl3 & GFl4 & (G(!bk | Xre) | FG!bk) & (G(!lf | (Xch & Xlc)) | FG!lc) & (FG!ps | G(pc | !ps))) | ((!l2 U l1) & (!l3 U l2) & (!l4 U l3) & (!l5 U l4) & GFl5 & G(!l2 | X(!l2 U l1)) & G(!l3 | X(!l3 U l2)) & G(!l4 | X(!l4 U l3)) & G(!l5 | X(!l5 U l4)) & G(!l1 | X(!l1 U l5)) & G(!l1 | X(!l1 U l2)) & G(!l2 | X(!l2 U l3)) & G(!l3 | X(!l3 U l4)) & G(!l4 | X(!l4 U l5)) & G(!l5 | X(!l5 U l1)) & GFl1 & GFl2 & GFl3 & GFl4 & (G(!bk | Xre) | FG!bk) & (G(!lf | (Xch & Xlc)) | FG!lc) & G(FG!bk | FG!lc))
+		|  MERGING
+				|---GOAL	 f9349 'always_picture||day_wave'
+				|	CONTEXT:	 !dy & nt
+				|	  ASSUMPTIONS:
+				|	  GFps
+				|	  GUARANTEES:
+				|	  (G((ps & wa) | (!ps & !wa)) | FG!ps) & (FG!ps | G(pc | !ps))
+				|  COMPOSITION
+						|---GOAL	 1e6ef 'day_wave'
+						|	  ASSUMPTIONS:
+						|	  GFps
+						|	  GUARANTEES:
+						|	  G((ps & wa) | (!ps & !wa)) | FG!ps
+						|---GOAL	 d99a5 'always_picture'
+						|	  ASSUMPTIONS:
+						|	  GFps
+						|	  GUARANTEES:
+						|	  FG!ps | G(pc | !ps)
+				|---GOAL	 dada1 'night_charge||night_patrolling||night_report'
+				|	CONTEXT:	 !dy & nt
+				|	  ASSUMPTIONS:
+				|	  (GFbk & GFlc) | (l2 R !l1) | (l3 R !l2) | (l4 R !l3) | (l5 R !l4) | (GFbk & F(bk & X!re)) | (GFlc & F(lf & (X!ch | X!lc))) | FG!l5 | F(l2 & X(l2 R !l1)) | F(l3 & X(l3 R !l2)) | F(l4 & X(l4 R !l3)) | F(l5 & X(l5 R !l4)) | F(l1 & X(l1 R !l5)) | F(l1 & X(l1 R !l2)) | F(l2 & X(l2 R !l3)) | F(l3 & X(l3 R !l4)) | F(l4 & X(l4 R !l5)) | F(l5 & X(l5 R !l1)) | FG!l1 | FG!l2 | FG!l3 | FG!l4
+				|	  GUARANTEES:
+				|	  (!l2 U l1) & (!l3 U l2) & (!l4 U l3) & (!l5 U l4) & GFl5 & G(!l2 | X(!l2 U l1)) & G(!l3 | X(!l3 U l2)) & G(!l4 | X(!l4 U l3)) & G(!l5 | X(!l5 U l4)) & G(!l1 | X(!l1 U l5)) & G(!l1 | X(!l1 U l2)) & G(!l2 | X(!l2 U l3)) & G(!l3 | X(!l3 U l4)) & G(!l4 | X(!l4 U l5)) & G(!l5 | X(!l5 U l1)) & GFl1 & GFl2 & GFl3 & GFl4 & (G(!bk | Xre) | FG!bk) & (G(!lf | (Xch & Xlc)) | FG!lc)
+				|  COMPOSITION
+						|---GOAL	 5f40c 'night_charge'
+						|	  ASSUMPTIONS:
+						|	  GFlc
+						|	  GUARANTEES:
+						|	  G(!lf | (Xch & Xlc)) | FG!lc
+						|---GOAL	 77a3f 'night_report'
+						|	CONTEXT:	 nt
+						|	  ASSUMPTIONS:
+						|	  GFbk
+						|	  GUARANTEES:
+						|	  G(!bk | Xre) | FG!bk
+						|---GOAL	 aef8e 'night_patrolling'
+						|	CONTEXT:	 nt
+						|	  GUARANTEES:
+						|	  (!l2 U l1) & (!l3 U l2) & (!l4 U l3) & (!l5 U l4) & GFl5 & G(!l2 | X(!l2 U l1)) & G(!l3 | X(!l3 U l2)) & G(!l4 | X(!l4 U l3)) & G(!l5 | X(!l5 U l4)) & G(!l1 | X(!l1 U l5)) & G(!l1 | X(!l1 U l2)) & G(!l2 | X(!l2 U l3)) & G(!l3 | X(!l3 U l4)) & G(!l4 | X(!l4 U l5)) & G(!l5 | X(!l5 U l1)) & GFl1 & GFl2 & GFl3 & GFl4

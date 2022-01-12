@@ -15,7 +15,7 @@ from core.cgg.exceptions import CGGFailOperations, CGGOperationFail, TransSynthe
 from core.contract import Contract
 from core.controller import Controller
 from core.controller.exceptions import ControllerException
-from core.crometypes import Types
+from core.crometypes import CTypes
 from core.crometypes.subtypes.location import ReachLocation
 from core.goal import Goal
 from core.goal.exceptions import GoalException
@@ -472,6 +472,12 @@ class Node(Goal):
             result |= child.get_leaves()
         return result
 
+    def get_leaves_dict(self) -> Dict[str, Node]:
+        leaves = dict()
+        for leave in self.get_leaves():
+            leaves[leave.name] = leave
+        return leaves
+
     def save(self):
         Store.save_to_file(str(self), "cgg.txt", self.session_name)
 
@@ -534,7 +540,7 @@ class Node(Goal):
             json_file.write(json_formatted)
 
     def create_transition_controller(
-        self, start: Types, finish: Types, t_trans: int
+        self, start: CTypes, finish: CTypes, t_trans: int
     ) -> Controller:
 
         t_controller_name = f"TRANS_{start.name}-{finish.name}"

@@ -8,7 +8,7 @@ from typing import List, Set
 import spot
 from treelib import Tree
 
-from core.crometypes import Boolean
+from core.crometypes import Boolean, CTypes
 from core.patterns import Pattern
 from core.specification import Specification, SpecNotSATException
 from core.specification.bformula import Bool, BooleansNotSATException
@@ -28,12 +28,6 @@ class LTLNotSATException(SpecNotSATException):
 
 
 class LTL(Specification):
-    class Output(Enum):
-        SPOT_str = auto()
-        CNF_str = auto()
-        DNF_str = auto()
-        SUMMARY = auto()
-
     class TreeType(Enum):
         LTL = auto()
         BOOLEAN = auto()
@@ -151,10 +145,20 @@ class LTL(Specification):
 
         return Nuxmv.check_validity(new_f.string, new_f.typeset)
 
-    def represent(self, output_type: LTL.Output = Output.SUMMARY) -> str:
-        if output_type == LTL.Output.SPOT_str:
+    def represent(
+        self, output_type: Specification.OutputStr = Specification.OutputStr.SUMMARY
+    ) -> str:
+        if output_type == Specification.OutputStr.SIMPLIFIED:
             return str(self.__spot_formula)
-        elif output_type == LTL.Output.SUMMARY:
+        elif output_type == Specification.OutputStr.ORIGINAL:
+            return str(self.__original_formula)
+        elif output_type == Specification.OutputStr.CNF:
+            return "\n".join([Logic.or_([e.string for e in elem]) for elem in self.cnf])
+        elif output_type == Specification.OutputStr.DNF:
+            return "\n".join(
+                [Logic.and_([e.string for e in elem]) for elem in self.dnf]
+            )
+        elif output_type == Specification.OutputStr.SUMMARY:
             cnf = "\n".join([Logic.or_([e.string for e in elem]) for elem in self.cnf])
             dnf = "\n".join([Logic.and_([e.string for e in elem]) for elem in self.dnf])
             ret = (
@@ -165,10 +169,6 @@ class LTL(Specification):
                 f"{self.to_bool}\n\n"
                 f"LTL EXTENDED (from booleans)\n"
                 f"{self.__translate_bool_to_ltl()}\n\n"
-                # f"LTL CNF (from booleans)\n"
-                # f"{self.__normal_form_to_str(Sformula.Output.CNF_str)}\n\n"
-                # f"LTL DNF (from booleans)\n"
-                # f"{self.__normal_form_to_str(Sformula.Output.DNF_str)}\n"
                 f"LTL CNF (from booleans)\n"
                 f"{cnf}\n\n"
                 f"LTL DNF (from booleans)\n"
@@ -191,10 +191,6 @@ class LTL(Specification):
     @property
     def to_bool(self) -> str:
         return str(self.__boolean_formula.to_spot())
-
-    @property
-    def original_formula(self) -> str:
-        return self.__original_formula
 
     @property
     def hash(self):
@@ -251,8 +247,10 @@ class LTL(Specification):
         }
         self.__init__atoms_formula(new_boolean_formula, new_boolean_dictionary)
 
-    def __normal_form_to_str(self, kind: Output = Output.CNF_str):
-        if kind == LTL.Output.CNF_str:
+    def __normal_form_to_str(
+        self, kind: Specification.OutputStr = Specification.OutputStr.CNF
+    ):
+        if kind == Specification.OutputStr.CNF:
             return Logic.and_(
                 [
                     Logic.or_([atom.string for atom in clause], brackets=True)
@@ -260,7 +258,7 @@ class LTL(Specification):
                 ],
                 brackets=False,
             )
-        elif kind == LTL.Output.DNF_str:
+        elif kind == Specification.OutputStr.DNF:
             return Logic.or_(
                 [
                     Logic.and_([atom.string for atom in clause], brackets=True)
@@ -298,7 +296,7 @@ class LTL(Specification):
             ltl_formula_str = deepcopy(self.__boolean_formula.to_spot())
         for key, value in self.__atoms_dictionary.items():
             ltl_formula_str = ltl_formula_str.replace(
-                key, value.represent(LTL.Output.SPOT_str)
+                key, value.represent(Specification.OutputStr.SIMPLIFIED)
             )
         return ltl_formula_str
 
@@ -643,7 +641,7 @@ class LTL(Specification):
 
         for t in sensors:
             if isinstance(t, Boolean):
-                if t.kind == Types.Kind.SENSOR:
+                if t.kind == CTypes.Kind.SENSOR:
                     rules_str.append(Logic.g_(Logic.f_(t.name)))
                 rules_typeset |= Typeset({t})
 
@@ -674,7 +672,7 @@ class LTL(Specification):
         active_context_types = []
         for t in inputs:
             if isinstance(t, Boolean):
-                if t.kind == Types.Kind.ACTIVE or t.kind == Types.Kind.CONTEXT:
+                if t.kind == CTypes.Kind.ACTIVE or t.kind == CTypes.Kind.CONTEXT:
                     active_context_types.append(t.name)
                 rules_typeset |= Typeset({t})
 

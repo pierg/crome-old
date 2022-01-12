@@ -1,4 +1,4 @@
-from core.crometypes import Boolean, BoundedInteger, Types
+from core.crometypes import Boolean, BoundedInteger, CTypes
 
 
 class ContextInteger(BoundedInteger):
@@ -12,7 +12,7 @@ class ContextInteger(BoundedInteger):
 
     @property
     def kind(self):
-        return Types.Kind.CONTEXT
+        return CTypes.Kind.CONTEXT
 
 
 class ContextBoolean(Boolean):
@@ -23,7 +23,7 @@ class ContextBoolean(Boolean):
 
     @property
     def kind(self):
-        return Types.Kind.CONTEXT
+        return CTypes.Kind.CONTEXT
 
     @property
     def mutex_group(self):
@@ -32,7 +32,7 @@ class ContextBoolean(Boolean):
     def to_atom(self, kind=None):
         from core.specification import Specification
 
-        return super().to_atom(kind=Specification.Kind.CONTEXT)
+        return super().to_atom(kind=Specification.Kind.Atom.CONTEXT)
 
 
 class ContextIntegerTime(ContextInteger):

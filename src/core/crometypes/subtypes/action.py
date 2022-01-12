@@ -1,4 +1,4 @@
-from core.crometypes import Boolean, BoundedInteger, Types
+from core.crometypes import Boolean, BoundedInteger, CTypes
 
 
 class IntegerAction(BoundedInteger):
@@ -7,7 +7,7 @@ class IntegerAction(BoundedInteger):
 
     @property
     def kind(self):
-        return Types.Kind.ACTION
+        return CTypes.Kind.ACTION
 
 
 class BooleanAction(Boolean):
@@ -19,12 +19,12 @@ class BooleanAction(Boolean):
 
     @property
     def kind(self):
-        return Types.Kind.ACTION
+        return CTypes.Kind.ACTION
 
     def to_atom(self, kind=None):
         from core.specification import Specification
 
-        return super().to_atom(kind=Specification.Kind.ATOM_ACTION)
+        return super().to_atom(kind=Specification.Kind.Atom.ACTION)
 
     @property
     def mutex_group(self):

@@ -1,7 +1,6 @@
 MODULE main
 VAR
-	l1: boolean;
-	ft: boolean;
-	l2: boolean;
+	ps: boolean;
+	wa: boolean;
 
-LTLSPEC F G F ft | F G !l1 | F G !l2 | F (!ft & l1) | F (!ft & l2)
+LTLSPEC F (ps & X !wa) | (G (!ps | wa) & G (!ps | X wa)) | (G (!ps | X wa) & F (ps & !wa))

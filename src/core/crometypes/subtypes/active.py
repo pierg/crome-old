@@ -1,4 +1,4 @@
-from core.crometypes import Boolean, Types
+from core.crometypes import Boolean, CTypes
 
 
 class Active(Boolean):
@@ -8,8 +8,8 @@ class Active(Boolean):
     def to_atom(self, kind=None):
         from core.specification import Specification
 
-        return super().to_atom(kind=Specification.Kind.ACTIVE_SIGNAL)
+        return super().to_atom(kind=Specification.Kind.Atom.ACTIVE)
 
     @property
     def kind(self):
-        return Types.Kind.ACTIVE
+        return CTypes.Kind.ACTIVE

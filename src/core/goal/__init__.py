@@ -436,7 +436,7 @@ class Goal:
     def quotient(self, divisor: Goal) -> Goal:
         dividend = self
 
-        name = f"{dividend.name}/{divisor.name}"
+        name = f"({dividend.name}/{divisor.name})"
 
         set_of_contracts = set()
 
@@ -477,7 +477,7 @@ class Goal:
     def separation(self, divisor: Goal) -> Goal:
         dividend = self
 
-        name = f"{dividend.name}:{divisor.name}"
+        name = f"({dividend.name}:{divisor.name})"
 
         set_of_contracts = set()
 
