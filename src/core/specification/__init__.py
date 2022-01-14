@@ -38,6 +38,7 @@ class Specification(ABC):
         CNF = auto()
         DNF = auto()
         SUMMARY = auto()
+        LATEX = auto()
 
     def __init__(self, formula: str, typeset: Typeset):
 

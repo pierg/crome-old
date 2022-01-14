@@ -171,5 +171,58 @@ class StrictOrderedPatrolling(Surveillance):
         )
 
 
+class StrictOrder(Surveillance):
+    def __init__(self, *locations):
+
+        Surveillance.check_inputs(*locations)
+
+        lor = list(locations)
+        lor.reverse()
+        n = len(locations)
+
+        f2 = []
+        """1..n-1   !l_{i+1} U l_{i}"""
+        for i, l in enumerate(locations[: n - 1]):
+            f = Logic.u_(Logic.not_(locations[i + 1]), locations[i])
+            f2.append(f)
+        f2 = Logic.and_(f2)
+
+        f3 = []
+        """1..n   G(l_{(i+1)%n} -> X((!l_{(i+1)%n} U l_{i})))"""
+        for i, l in enumerate(locations):
+            f = Logic.g_(
+                Logic.implies_(
+                    locations[(i + 1) % n],
+                    Logic.x_(
+                        Logic.u_(Logic.not_(locations[(i + 1) % n]), locations[i])
+                    ),
+                )
+            )
+            f3.append(f)
+        f3 = Logic.and_(f3)
+
+        if len(locations) > 2:
+            f4 = []
+            """1..n   G(l_{(i+1)%n} -> X((!l_{(i+1)%n} U l_{i})))"""
+            for i, l in enumerate(locations):
+                f = Logic.g_(
+                    Logic.implies_(
+                        locations[i],
+                        Logic.x_(
+                            Logic.u_(Logic.not_(locations[i]), locations[(i + 1) % n])
+                        ),
+                    )
+                )
+                f4.append(f)
+            f4 = Logic.and_(f4)
+            new_formula = Logic.and_([f2, f3, f4])
+        else:
+            new_formula = Logic.and_([f2, f3])
+
+        super().__init__(
+            formula=new_formula, kind=Surveillance.Kinds.STRICT_ORDERED_PATROLLING
+        )
+
+
 if __name__ == "__main__":
     s = StrictOrderedPatrolling("a", "b")

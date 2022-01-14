@@ -23,7 +23,7 @@ set_of_goals = {
         description="During the day keep visiting the `front' locations",
         context=w["dy"],
         specification=Contract(
-            assumptions=None, guarantees=LTL(Patrolling("ft"), w.typeset)
+            assumptions=None, guarantees=LTL(Patrolling("lf"), w.typeset)
         ),
         world=w,
     ),
@@ -42,9 +42,7 @@ set_of_goals = {
         context=w["nt"],
         specification=Contract(
             assumptions=None,
-            guarantees=LTL(
-                StrictOrderedPatrolling("l1", "l2", "l3", "l4", "l5"), w.typeset
-            ),
+            guarantees=LTL(StrictOrderedPatrolling("l1", "l2", "l4", "l3"), w.typeset),
         ),
         world=w,
     ),
@@ -53,8 +51,8 @@ set_of_goals = {
         description="During the night promptly send a report when in the back of the store",
         context=w["nt"],
         specification=Contract(
-            assumptions=LTL(GF("bk"), w.typeset),
-            guarantees=LTL(PromptReaction("bk", "re"), w.typeset),
+            assumptions=LTL(GF("lb"), w.typeset),
+            guarantees=LTL(PromptReaction("lb", "re"), w.typeset),
         ),
         world=w,
     ),

@@ -2,12 +2,7 @@ from __future__ import annotations
 
 from copy import deepcopy
 
-from core.contract.exceptions import (
-    IncompatibleContracts,
-    InconsistentContracts,
-    Set,
-    UnfeasibleContracts,
-)
+from core.contract.exceptions import IncompatibleContracts, InconsistentContracts, Set
 from core.controller.synthesisinfo import SynthesisInfo
 from core.specification import Specification
 from core.specification.exceptions import NotSatisfiableException
@@ -83,10 +78,11 @@ class Contract:
     def __checkfeasibility(self):
         """Check Feasibility."""
         if self.assumptions is not None or not self.assumptions.is_true:
-            try:
-                self.__assumptions & self.__guarantees
-            except NotSatisfiableException as e:
-                raise UnfeasibleContracts(self, e)
+            f = self.__assumptions & self.__guarantees
+            if not f.is_satisfiable:
+                raise Exception(
+                    f"{self.assumptions.string}\nNOT SAT WITH\n{self.guarantees.string}"
+                )
 
     def __str__(self):
         ret = "\n--ASSUMPTIONS--\n"

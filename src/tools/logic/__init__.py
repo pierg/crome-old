@@ -150,8 +150,8 @@ class Logic:
             or prop_1 == "(true)"
         ):
             return prop_2
-        # return f"(({prop_1}) -> ({prop_2}))"
-        return f"(!({prop_1}) | ({prop_2}))"
+        return f"(({prop_1}) -> ({prop_2}))"
+        # return f"(!({prop_1}) | ({prop_2}))"
 
     @staticmethod
     def iff_(prop_1: str, prop_2: str) -> str:

@@ -23,6 +23,12 @@ class StringMng:
     DATA_INDENT = 0
 
     @staticmethod
+    def latexit(formula: str):
+        import spot
+
+        return spot.formula(str(formula))._repr_latex_()
+
+    @staticmethod
     def add_spaces_spot_ltl(formula: str):
         return re.sub(match_LTL_no_spaces, " ", formula)
 

@@ -120,13 +120,24 @@ class LTL(Specification):
 
     @property
     def is_satisfiable(self: LTL) -> bool:
+        """TODO: Too slow when adding adjacency and refinement"""
         mtx_rules = LTL.extract_mutex_rules(self.typeset)
 
-        adj_rules = LTL.extract_adjacency_rules(self.typeset)
-        if adj_rules is not None:
-            new_f = self & mtx_rules & adj_rules
-        else:
-            new_f = self & mtx_rules
+        new_f = self & mtx_rules
+
+        # adj_rules = LTL.extract_adjacency_rules(self.typeset)
+        #
+        # if adj_rules is not None:
+        #     new_f = self & mtx_rules & adj_rules
+        #     print(self.string)
+        #     print(mtx_rules.string)
+        #     print(adj_rules.string)
+
+        # ref_rules = LTL.extract_refinement_rules(self.typeset)
+        #
+        # if ref_rules is not None:
+        #     print(ref_rules.string)
+        #     new_f = ref_rules >> new_f
 
         return Nuxmv.check_satisfiability(new_f.string, new_f.typeset)
 
@@ -547,7 +558,7 @@ class LTL(Specification):
         return LTL(
             formula=Logic.and_(rules_str, brackets=True),
             typeset=rules_typeset,
-            kind=Specification.Kind.REFINEMENT_RULE,
+            kind=Specification.Kind.Rule.REFINEMENT,
         )
 
     @staticmethod
@@ -583,7 +594,7 @@ class LTL(Specification):
         return LTL(
             formula=Logic.and_(rules_str, brackets=True),
             typeset=rules_typeset,
-            kind=Specification.Kind.MUTEX_RULE,
+            kind=Specification.Kind.Rule.MUTEX,
         )
 
     @staticmethod
@@ -623,7 +634,7 @@ class LTL(Specification):
         return LTL(
             formula=Logic.and_(rules_str, brackets=True),
             typeset=rules_typeset,
-            kind=Specification.Kind.AJACENCY_RULE,
+            kind=Specification.Kind.Rule.ADJACENCY,
         )
 
     @staticmethod
@@ -653,7 +664,7 @@ class LTL(Specification):
         return LTL(
             formula=Logic.and_(rules_str, brackets=True),
             typeset=rules_typeset,
-            kind=Specification.Kind.LIVENESS_RULE,
+            kind=Specification.Kind.Rule.LIVENESS,
         )
 
     @staticmethod
@@ -687,7 +698,7 @@ class LTL(Specification):
         return LTL(
             formula=Logic.and_(rules_str, brackets=True),
             typeset=rules_typeset,
-            kind=Specification.Kind.LIVENESS_RULE,
+            kind=Specification.Kind.Rule.LIVENESS,
         )
 
 

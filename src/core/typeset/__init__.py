@@ -250,7 +250,8 @@ class Typeset(dict):
                 if hasattr(variable, "adjacency_set"):
                     """Adding 'self' as adjacent as well i.e. the robot can
                     stay still."""
-                    self.__adjacent_types[variable] = {variable}
+                    if len(list(variable.adjacency_set)) != 0:
+                        self.__adjacent_types[variable] = {variable}
                     for adjacent_class in variable.adjacency_set:
                         for variable_candidate in self.values():
                             if variable_candidate.__class__.__name__ == adjacent_class:

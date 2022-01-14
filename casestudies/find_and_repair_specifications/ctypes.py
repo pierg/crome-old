@@ -15,7 +15,7 @@ class Person(BooleanSensor):
 
 
 class Charge(BooleanAction):
-    def __init__(self, name: str = "gr"):
+    def __init__(self, name: str = "ch"):
         super().__init__(name)
 
 
@@ -38,7 +38,7 @@ class Wave(BooleanAction):
 
 
 class Front(ReachLocation):
-    def __init__(self, name: str = "ft"):
+    def __init__(self, name: str = "lf"):
         super().__init__(name)
 
     @property
@@ -47,7 +47,7 @@ class Front(ReachLocation):
 
 
 class Back(ReachLocation):
-    def __init__(self, name: str = "bk"):
+    def __init__(self, name: str = "lb"):
         super().__init__(name)
 
     @property
@@ -65,7 +65,7 @@ class L1(Front):
 
     @property
     def adjacency_set(self):
-        return {"L2", "L5"}
+        return {"L2", "L3"}
 
 
 class L2(Front):
@@ -78,16 +78,12 @@ class L2(Front):
 
     @property
     def adjacency_set(self):
-        return {"l1", "l4"}
+        return {"L1", "L4"}
 
 
 class Charging(L2):
     def __init__(self, name: str = "lc"):
         super().__init__(name)
-
-    @property
-    def adjacency_set(self):
-        return {"l1", "l4"}
 
 
 class L3(Front):
@@ -100,7 +96,7 @@ class L3(Front):
 
     @property
     def adjacency_set(self):
-        return {"L1", "L2", "L4", "L5"}
+        return {"L1", "L4", "L5"}
 
 
 class L4(Front):
@@ -113,7 +109,7 @@ class L4(Front):
 
     @property
     def adjacency_set(self):
-        return {"L2", "L5"}
+        return {"L2", "L3"}
 
 
 class L5(Back):
@@ -126,7 +122,7 @@ class L5(Back):
 
     @property
     def adjacency_set(self):
-        return {"l3", "R2", "R3", "R4"}
+        return {"L3"}
 
 
 """CONTEXT"""

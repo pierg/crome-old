@@ -1,6 +1,7 @@
 MODULE main
 VAR
-	nt: boolean;
-	dy: boolean;
+	l3: boolean;
+	l1: boolean;
+	l5: boolean;
 
-LTLSPEC (dy & !nt) -> nt
+LTLSPEC (F l3 & F l1 & G F l1 & G F l5) -> (F l3 & F l1 & G F l1 & G F l5 & G F l3)

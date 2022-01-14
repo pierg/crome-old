@@ -94,6 +94,7 @@ class Nuxmv:
 
     @staticmethod
     def __launch_nuxmv() -> List[str]:
+        # print("Launching nuXmv....")
         try:
             """"Trying nuXmv locally."""
             output = subprocess.check_output(
@@ -116,6 +117,7 @@ class Nuxmv:
         output = [
             x for x in output if not (x[:3] == "***" or x[:7] == "WARNING" or x == "")
         ]
+        # print("nuXmv has terminated!")
         return output
 
     @staticmethod
