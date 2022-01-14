@@ -2,12 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Set, Union
 
-from core.contract import (
-    Contract,
-    IncompatibleContracts,
-    InconsistentContracts,
-    UnfeasibleContracts,
-)
+from core.contract import Contract, IncompatibleContracts, InconsistentContracts
 from core.controller import Controller
 from core.controller.exceptions import ControllerException
 from core.crometypes import Boolean

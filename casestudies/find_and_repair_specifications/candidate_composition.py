@@ -22,22 +22,22 @@ g_prime = Node(
 
 set_of_goals = {
     Node(
-        name="patrol_l1_l5",
+        name="l1",
         specification=LTL(Patrolling("l1", "l5"), w.typeset),
         world=w,
     ),
     Node(
-        name="patrol_l3",
+        name="l2",
         specification=LTL(Patrolling("l3"), w.typeset),
         world=w,
     ),
     Node(
-        name="visit_l3_l1",
+        name="l3",
         specification=LTL(Visit("l3", "l1"), w.typeset),
         world=w,
     ),
     Node(
-        name="visit_l5",
+        name="4",
         description="Keep visiting l3",
         specification=LTL(Visit("l5"), w.typeset),
         world=w,

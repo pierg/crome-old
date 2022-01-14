@@ -28,12 +28,13 @@ class Library:
 
     def get_candidate_composition(self, goal_to_refine: Goal):
 
-        candidates = []
+        candidates = Counter()
         best_similar_types = 0
 
         for n in range(1, len(self.__goals)):
             for subset in itertools.combinations(self.__goals, n):
-                if len(subset) == 1:
+                n_compositions = len(subset)
+                if n_compositions == 1:
                     subset_typeset = subset[0].specification.typeset
                 else:
                     subset_typeset = reduce(
@@ -42,17 +43,30 @@ class Library:
                 similar_types = self.covers(goal_to_refine, subset_typeset)[1]
                 if similar_types > best_similar_types:
                     composition = Node.composition(subset)
-                    candidates = [composition]
+                    candidates = Counter()
                     best_similar_types = similar_types
                 elif similar_types == best_similar_types:
                     composition = Node.composition(subset)
-                    candidates.append(composition)
+                    candidates[composition] = n_compositions
 
         print(
-            f"There are {len(candidates)} candidates with the same number of similar types: {best_similar_types}"
+            f"There are {len(candidates.keys())} candidates with the same number of similar types: {best_similar_types}"
         )
 
+        for node, count in candidates.items():
+            print(f"{node.name}: {count}")
+
+        # Filtering candidates with too many goals composed
+        new_candidates = [
+            x for x, count in candidates.items() if count == min(candidates.values())
+        ]
+
+        print("filtering...")
+        print("\n".join(e.name for e in new_candidates))
+
         winner = self.get_most_refined(candidates)
+
+        winner = self.get_most_refined(new_candidates)
         print(f"{winner.name} is the most refined candidate")
         return winner
 
@@ -63,6 +77,10 @@ class Library:
         for a, b in itertools.permutations(goals, 2):
             if a <= b:
                 scores[a] += 1
+
+        print("ratings")
+        for node, count in scores.items():
+            print(f"{node.name}: {count}")
 
         return scores.most_common(1)[0][0]
 
