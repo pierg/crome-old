@@ -1,4 +1,4 @@
-from core.patterns.robotics.coremovement.coverage import OrderedVisit
+from core.patterns.robotics.coremovement.coverage import OrderedVisit, Visit
 from core.patterns.robotics.coremovement.surveillance import (
     OrderedPatrolling,
     Patrolling,
@@ -20,3 +20,11 @@ print(StringMng.latexit("G(((l1) -> (X((!(l1) U l5)))))"))
 
 print("\n\n")
 print(OrderedVisit("l1", "l3", "l5", "l4", "l2"))
+
+
+print("\n\n\n")
+
+print(StringMng.latexit(str(Patrolling("l1", "l5"))))
+print(StringMng.latexit(str(Patrolling("l3"))))
+print(StringMng.latexit(str(Visit("l3", "l1"))))
+print(StringMng.latexit(str(Visit("l5"))))

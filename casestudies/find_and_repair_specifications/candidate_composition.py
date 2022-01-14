@@ -37,9 +37,9 @@ set_of_goals = {
         world=w,
     ),
     Node(
-        name="visit_l3_l1",
+        name="visit_l5",
         description="Keep visiting l3",
-        specification=LTL(Visit("l3", "l1"), w.typeset),
+        specification=LTL(Visit("l5"), w.typeset),
         world=w,
     ),
 }

@@ -21,7 +21,7 @@ class Pattern(ABC):
         self.__kind: Pattern.Kinds = kind
 
     def __str__(self):
-        return self.__formula
+        return str(self.__formula)
 
     @property
     def formula(self) -> str:
