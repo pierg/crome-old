@@ -650,10 +650,8 @@ class Node(Goal):
 
         return new_node
 
-    def quotient(self, divisor: Node) -> Node:
-
-        dividend = self
-
+    @staticmethod
+    def quotient(dividend: Node, divisor: Node) -> Node:
         try:
             new_goal = Goal.quotient(dividend, divisor)
         except GoalException as e:
@@ -670,9 +668,8 @@ class Node(Goal):
 
         return new_node
 
-    def separation(self, divisor: Node) -> Node:
-
-        dividend = self
+    @staticmethod
+    def separation(dividend: Node, divisor: Node) -> Node:
 
         try:
             new_goal = Goal.separation(dividend, divisor)

@@ -1,14 +1,23 @@
 from casestudies.find_and_repair_specifications.goals import w
 from core.cgg import Node
 from core.contract import Contract
-from core.patterns.robotics.coremovement.coverage import OrderedVisit
+from core.library import Library
+from core.patterns.robotics.coremovement.coverage import Visit
 from core.patterns.robotics.coremovement.surveillance import (
+    OrderedLocations,
     OrderedPatrolling,
     Patrolling,
+    StrictOrderLocations,
 )
 from core.specification.lformula import LTL
+from tools.strings import StringMng
 
-g_prime = Node(
+print(OrderedLocations("l1", "l3"))
+print(OrderedLocations("l3", "l5"))
+print(OrderedLocations("l1", "l3", "l5"))
+
+
+goal_to_refine = Node(
     name="night_patrolling",
     description="During the night patrol in order all the locations in a strict order",
     context=w["nt"],
@@ -19,46 +28,87 @@ g_prime = Node(
     world=w,
 )
 
-l1 = Node(
-    name="patrol_l1_l2",
-    description="Keep visiting l1 and l2",
-    specification=LTL(Patrolling("l1", "l5"), w.typeset),
-    world=w,
-)
+print(f"goal_to_refine:\n{goal_to_refine.specification.guarantees}")
 
-l2 = Node(
-    name="patrol_l3",
-    description="Keep visiting l3",
-    specification=LTL(Patrolling("l3"), w.typeset),
-    world=w,
-)
 
-candidate_composition = Node.composition({l1, l2})
+lib1_goals = {
+    Node(
+        name="l1",
+        specification=LTL(Patrolling("l1", "l5"), w.typeset),
+        world=w,
+    ),
+    Node(
+        name="l2",
+        specification=LTL(Patrolling("l3"), w.typeset),
+        world=w,
+    ),
+    Node(
+        name="l3",
+        specification=LTL(Visit("l3", "l1"), w.typeset),
+        world=w,
+    ),
+    Node(
+        name="l4",
+        description="Keep visiting l3",
+        specification=LTL(Visit("l5"), w.typeset),
+        world=w,
+    ),
+}
 
-print(f"The composition is: \n'{candidate_composition}'")
+library = Library(lib1_goals)
 
-if not candidate_composition <= g_prime:
+candidate_composition = library.get_candidate_composition(goal_to_refine=goal_to_refine)
+
+print(candidate_composition)
+
+print(f"The candidate composition is: \n'{candidate_composition}'")
+
+if not candidate_composition <= goal_to_refine:
     print("The candidate_composition does not refine g_prime")
 
-quotient = candidate_composition.quotient(g_prime)
+quotient = Node.quotient(dividend=goal_to_refine, divisor=candidate_composition)
 print(f"The quotient is: \n'{quotient}'")
+print(StringMng.latexit(quotient.specification.assumptions))
+print(StringMng.latexit(quotient.specification.guarantees))
 
-print(quotient.specification.assumptions.spot_formula._repr_latex_())
-print(quotient.specification.guarantees.spot_formula._repr_latex_())
+
+#
+# lib_2_goals = {
+#     Node(
+#         name="order_3",
+#         description="l5 -> l1 -> l3",
+#         specification=LTL(OrderedLocations("l1", "l3", "l5"), w.typeset),
+#         world=w,
+#     ),
+# }
+#
+# print(StringMng.latexit(list(lib_2_goals)[0].specification.guarantees))
+#
+#
+# library_2 = Library(lib_2_goals)
+#
+# l_prime_1 = library_2.search_refinement(quotient)
+# if l_prime_1 <= quotient:
+#     print(f"The library goal {l_prime_1} refines the quotient")
 
 
 l_prime_1 = Node(
-    name="strict_order_visit_locations",
-    description="l1 -> l3 -> l5 -> l4 -> l2",
-    specification=LTL(OrderedVisit("l1", "l3", "l5", "l4", "l2"), w.typeset),
+    name="order_3",
+    description="l5 -> l1 -> l3",
+    specification=LTL(StrictOrderLocations("l1", "l3", "l5"), w.typeset),
     world=w,
 )
 
 if l_prime_1 <= quotient:
-    print("The library goal l_prime_1 refines the quotient")
+    print(f"The library goal {l_prime_1} refines the quotient")
+
+print(StringMng.latexit(l_prime_1.specification.guarantees))
+
 
 composition = Node.composition({l_prime_1, candidate_composition})
-print(f"The composition of l_prime_1 with candidate_composition is: \n'{composition}'")
+print(
+    f"The composition of {l_prime_1.name} with candidate_composition is: \n'{composition}'"
+)
 
-if composition <= quotient:
+if composition <= goal_to_refine:
     print("The composition now refines the initial goal g_prime")

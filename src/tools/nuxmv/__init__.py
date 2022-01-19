@@ -126,6 +126,9 @@ class Nuxmv:
         if not isinstance(expression, str) or not isinstance(typeset, Typeset):
             raise AttributeError
 
+        # expression = expression.replace("TRUE", "1")
+        # expression = expression.replace("FALSE", "0")
+
         if expression == "TRUE" or expression == "1":
             return True
 

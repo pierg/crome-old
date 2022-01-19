@@ -11,11 +11,20 @@ from core.patterns.robotics.trigger import (
     InstantaneousReaction,
     PromptReaction,
 )
-from core.specification import Specification
 from core.specification.lformula import LTL
 
 w = StoreWorld()
 
+
+n1 = Node(
+    name="day_patrolling",
+    description="During the day keep visiting the `front' locations",
+    context=w["dy"],
+    specification=Contract(
+        assumptions=None, guarantees=LTL(Patrolling("lf"), w.typeset)
+    ),
+    world=w,
+)
 
 set_of_goals = {
     Node(
@@ -107,70 +116,3 @@ set_of_goalski = {
         world=w,
     ),
 }
-
-if __name__ == "__main__":
-    # g = Node(
-    #     name="night_patrolling",
-    #     description="During the night patrol in order all the locations of the store in order",
-    #     context=w["nt"],
-    #     specification=LTL(Visit("l1", "l2"), w.typeset),
-    #     world=w,
-    # )
-    #
-    # l1 = Node(
-    #     name="patrol_l1_l2_l3_l4",
-    #     description="Keep visiting l1 and l2",
-    #     specification=LTL(Visit("l1"), w.typeset),
-    #     world=w,
-    # )
-    #
-    # assert not l1 <= g
-    # print(l1 <= g)
-    #
-    # sep = l1.separation(g)
-    # print(sep)
-    #
-    # new = Goal.merging({g, sep})
-    # print(g)
-    # print(new)
-    # print(l1 <= new)
-
-    g = Node(
-        name="day_wave",
-        description="During the day wave when seeing a person",
-        specification=Contract(
-            assumptions=None,
-            guarantees=LTL(InstantaneousReaction("ps", "wa"), w.typeset),
-        ),
-        world=w,
-    )
-
-    print(f"INITIAL GOAL:\n{g}")
-
-    l1 = Node(
-        name="lib_goal",
-        description="During the day wave when seeing a person after one step",
-        specification=Contract(
-            assumptions=None, guarantees=LTL(PromptReaction("ps", "wa"), w.typeset)
-        ),
-        world=w,
-    )
-
-    print(f"LIBRARY GOAL:\n{l1}")
-
-    assert not l1 <= g
-    print(l1 <= g)
-
-    sep = l1.separation(g)
-    print(f"SEPARATION:\n{sep}")
-
-    new = Node.merging({g, sep})
-    print(f"MERGING RES:\n{new}")
-
-    print("\n\n")
-    print(l1)
-    print("REFINES")
-    print(new)
-    print(l1 <= new)
-
-    print(new.specification.guarantees.represent(Specification.OutputStr.SUMMARY))

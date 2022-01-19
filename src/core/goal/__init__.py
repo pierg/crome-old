@@ -429,8 +429,8 @@ class Goal:
 
         return new_goal
 
-    def quotient(self, divisor: Goal) -> Goal:
-        dividend = self
+    @staticmethod
+    def quotient(dividend: Goal, divisor: Goal) -> Goal:
 
         name = f"({dividend.name}/{divisor.name})"
 
@@ -470,8 +470,8 @@ class Goal:
 
         return new_goal
 
-    def separation(self, divisor: Goal) -> Goal:
-        dividend = self
+    @staticmethod
+    def separation(dividend, divisor: Goal) -> Goal:
 
         name = f"({dividend.name}:{divisor.name})"
 

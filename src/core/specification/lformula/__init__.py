@@ -44,7 +44,7 @@ class LTL(Specification):
         """We can build a Sformula from scratch (str, or Pattern) or from an
         existing Pyeda."""
 
-        self.__spot_formula = None
+        self.__simplified_formula_spot = None
         self.__kind = kind
         self.__ltl_tree = None
         self.__atoms_tree = None
@@ -58,24 +58,26 @@ class LTL(Specification):
         self.__init__ltl_formula(formula, typeset)
         self.__init__atoms_formula(boolean_formula, atoms_dictionary)
 
-        super().__init__(str(self.__spot_formula), self.__typeset)
+        super().__init__(str(self.__simplified_formula_spot), self.__typeset)
 
     def __init__ltl_formula(self, formula, typeset):
         """Building the LTL formula and tree."""
-        self.__original_formula = str(formula)
-        spot_formula = spot.formula(self.__original_formula)
-        # IF SIMPLIFIED IT WILL ADD R, W, M etc... not in NuXMV
-        # spot_formula = spot.simplify(spot_formula, event_univ=False)
-        spot_formula = Spot.transform_tree(spot_formula)
+        self.__original_formula_str = str(formula)
 
-        self.__spot_formula = spot_formula
+        f = spot.formula(self.__original_formula_str)
+        self.__basic_formula_spot = Spot.transform_tree(f)
+
+        # IF SIMPLIFIED IT COULD ADD R, W, M etc... not supported by NuXMV
+        self.__simplified_formula_spot = spot.simplify(
+            self.__basic_formula_spot, event_univ=False
+        )
 
         if typeset is None:
             self.__typeset = Typeset.generate_typeset(
-                Spot.extract_ap(self.__spot_formula)
+                Spot.extract_ap(self.__simplified_formula_spot)
             )
         else:
-            s_typeset = Spot.extract_ap(self.__spot_formula)
+            s_typeset = Spot.extract_ap(self.__simplified_formula_spot)
             set_of_types = set(
                 filter((lambda x: x.name in s_typeset), typeset.values())
             )
@@ -111,11 +113,12 @@ class LTL(Specification):
         memo[id(self)] = result
         try:
             for k, v in self.__dict__.items():
-                if "_LTL__ltl_tree" not in k and "_LTL__spot_formula" not in k:
+                if "_LTL__ltl_tree" not in k and "spot" not in k:
                     setattr(result, k, deepcopy(v, memo))
-        except Exception:
-            print(k)
-        result.__init__ltl_formula(formula=self.string, typeset=self.typeset)
+        except Exception as e:
+            print(f"LTL deepcopy Exception:\n{k}")
+            raise e
+        result.__init__ltl_formula(formula=self.original, typeset=self.typeset)
         return result
 
     @property
@@ -139,11 +142,14 @@ class LTL(Specification):
         #     print(ref_rules.string)
         #     new_f = ref_rules >> new_f
 
-        return Nuxmv.check_satisfiability(new_f.string, new_f.typeset)
+        if new_f.string == "1":
+            return True
+
+        return Nuxmv.check_satisfiability(new_f.original, new_f.typeset)
 
     @property
     def spot_formula(self):
-        return self.__spot_formula
+        return self.__simplified_formula_spot
 
     @property
     def is_valid(self: LTL) -> bool:
@@ -155,15 +161,18 @@ class LTL(Specification):
         else:
             new_f = self
 
-        return Nuxmv.check_validity(new_f.string, new_f.typeset)
+        if new_f.string == "1":
+            return True
+
+        return Nuxmv.check_validity(new_f.original, new_f.typeset)
 
     def represent(
         self, output_type: Specification.OutputStr = Specification.OutputStr.SUMMARY
     ) -> str:
         if output_type == Specification.OutputStr.SIMPLIFIED:
-            return str(self.__spot_formula)
+            return str(self.__simplified_formula_spot)
         elif output_type == Specification.OutputStr.ORIGINAL:
-            return str(self.__original_formula)
+            return str(self.__basic_formula_spot)
         elif output_type == Specification.OutputStr.CNF:
             return "\n".join([Logic.or_([e.string for e in elem]) for elem in self.cnf])
         elif output_type == Specification.OutputStr.DNF:
@@ -195,10 +204,14 @@ class LTL(Specification):
 
     @property
     def string(self) -> str:
-        return str(self.__spot_formula)
+        return str(self.__simplified_formula_spot)
+
+    @property
+    def original(self) -> str:
+        return str(self.__basic_formula_spot)
 
     def is_true(self):
-        return self.__spot_formula == "1"
+        return self.__simplified_formula_spot == "1"
 
     @property
     def to_bool(self) -> str:
@@ -247,7 +260,7 @@ class LTL(Specification):
 
     def saturate(self, saturation: LTL):
         """Reinitiate LTL formula TODO:code better."""
-        new_ltl_formula = f"({saturation.string}) -> {self.string}"
+        new_ltl_formula = f"({saturation.original}) -> {self.original}"
         new_typeset = self.typeset | saturation.typeset
 
         self.__init__ltl_formula(new_ltl_formula, new_typeset)
@@ -322,7 +335,7 @@ class LTL(Specification):
 
     def __gen_ltl_tree(self, tree: Tree, spot_f=None, parent=None):
         if spot_f is None:
-            spot_f = self.__spot_formula
+            spot_f = self.__simplified_formula_spot
         node = tree.create_node(
             tag=f"{spot_f.kindstr()}\t--\t({spot_f})",
             parent=parent,
@@ -360,7 +373,7 @@ class LTL(Specification):
         self, tree: Tree = None, spot_f: spot.formula = None, parent=None
     ):
         if spot_f is None:
-            spot_f = self.__spot_formula
+            spot_f = self.__simplified_formula_spot
 
         if self.is_atom:
             self.__create_atom_tree_node(
@@ -393,7 +406,7 @@ class LTL(Specification):
             else:
                 hash_ = f"a{hashlib.sha1(f_string.encode('utf-8')).hexdigest()}"[0:5]
 
-            if self.__spot_formula == spot_f:
+            if self.__simplified_formula_spot == spot_f:
                 self.__atom_hash = hash_
                 sformula = self
             else:
@@ -437,9 +450,9 @@ class LTL(Specification):
         try:
             boolean_formula = self.__boolean_formula & other.__boolean_formula
         except BooleansNotSATException:
-            raise LTLNotSATException(f"({self.string}) & ({other.string})")
+            raise LTLNotSATException(f"({self.original}) & ({other.original})")
         return LTL(
-            formula=f"({self.string}) & ({other.string})",
+            formula=f"({self.original}) & ({other.original})",
             boolean_formula=boolean_formula,
             typeset=self.typeset | other.typeset,
         )
@@ -448,7 +461,7 @@ class LTL(Specification):
         """self | other Returns a new Sformula with the disjunction with
         other."""
         return LTL(
-            formula=f"({self.string}) | ({other.string})",
+            formula=f"({self.original}) | ({other.original})",
             boolean_formula=self.__boolean_formula | other.__boolean_formula,
             typeset=self.typeset | other.typeset,
         )
@@ -456,7 +469,7 @@ class LTL(Specification):
     def __invert__(self: LTL) -> LTL:
         """Returns a new Sformula with the negation of self."""
         return LTL(
-            formula=f"!({self.string})",
+            formula=f"!({self.original})",
             boolean_formula=~self.__boolean_formula,
             typeset=self.typeset,
         )
@@ -465,7 +478,7 @@ class LTL(Specification):
         """>> Returns a new Sformula that is the result of self -> other
         (implies)"""
         return LTL(
-            formula=f"({self.string}) -> ({other.string})",
+            formula=f"({self.original}) -> ({other.original})",
             boolean_formula=self.__boolean_formula >> other.__boolean_formula,
             typeset=self.typeset | other.typeset,
         )
@@ -473,7 +486,7 @@ class LTL(Specification):
     def __iand__(self: LTL, other: LTL) -> LTL:
         """self &= other Modifies self with the conjunction with other."""
         self.__init__ltl_formula(
-            formula=f"({self.string}) & ({other.string})",
+            formula=f"({self.original}) & ({other.original})",
             typeset=self.typeset | other.typeset,
         )
         self.__init__atoms_formula(
@@ -485,7 +498,7 @@ class LTL(Specification):
     def __ior__(self: LTL, other: LTL) -> LTL:
         """self |= other Modifies self with the disjunction with other."""
         self.__init__ltl_formula(
-            formula=f"({self.string}) | ({other.string})",
+            formula=f"({self.original}) | ({other.original})",
             typeset=self.typeset | other.typeset,
         )
         self.__init__atoms_formula(

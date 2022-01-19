@@ -10,7 +10,7 @@ if TYPE_CHECKING:
     from core.controller.synthesisinfo import SynthesisInfo
 
 
-match_LTL_no_spaces = r"(?<=[G|U|F|X])(?=[^\s])|(?=[U])+"
+match_LTL_no_spaces = r"((?<=[G|F|X])(?=[^\s]))|((?<=[U])(?=[a-z]))|(?=[U])+(?<=[a-z])"
 
 
 class StringMng:
@@ -26,10 +26,14 @@ class StringMng:
     def latexit(formula: str):
         import spot
 
+        if not isinstance(formula, str):
+            formula = str(formula)
+
         return spot.formula(str(formula))._repr_latex_()
 
     @staticmethod
     def add_spaces_spot_ltl(formula: str):
+        """TODO: FIX 'TRUE'"""
         return re.sub(match_LTL_no_spaces, " ", formula)
 
     @staticmethod

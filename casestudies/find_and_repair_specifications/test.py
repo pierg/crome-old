@@ -1,30 +1,11 @@
-from core.patterns.robotics.coremovement.coverage import OrderedVisit, Visit
-from core.patterns.robotics.coremovement.surveillance import (
-    OrderedPatrolling,
-    Patrolling,
-)
-from tools.strings import StringMng
+import spot
 
-print("\n\n")
-print(StringMng.latexit(str(Patrolling("l1", "l5"))))
-print(StringMng.latexit(str(Patrolling("l3"))))
+original = "((((TRUE & TRUE) & TRUE) | !(((TRUE -> ( G ( F l1) &  G ( F l5))) & (TRUE -> ( F l3 &  F l1))) & (TRUE ->  G ( F l3)))) & (((TRUE -> ( G ( F l1) &  G ( F l5))) & (TRUE -> ( F l3 &  F l1))) & (TRUE ->  G ( F l3)))) &  G ((((l5 & !l1) & !l3) | ((l1 & !l5) & !l3)) | ((l3 & !l5) & !l1))"
 
 
-print("\n\n")
-print(OrderedPatrolling("l1", "l3", "l5"))
-print(StringMng.latexit("G(F(l1 & F(l3 & F(l5))))"))
-print(StringMng.latexit("(!(l3) U l1) & (!(l5) U l3)"))
-print(StringMng.latexit("G(((l3) -> (X((!(l3) U l1)))))"))
-print(StringMng.latexit("G(((l5) -> (X((!(l5) U l3)))))"))
-print(StringMng.latexit("G(((l1) -> (X((!(l1) U l5)))))"))
-
-print("\n\n")
-print(OrderedVisit("l1", "l3", "l5", "l4", "l2"))
+s = spot.formula(original)
+print(s)
 
 
-print("\n\n\n")
-
-print(StringMng.latexit(str(Patrolling("l1", "l5"))))
-print(StringMng.latexit(str(Patrolling("l3"))))
-print(StringMng.latexit(str(Visit("l3", "l1"))))
-print(StringMng.latexit(str(Visit("l5"))))
+s = s.simplify()
+print(s)

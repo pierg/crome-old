@@ -90,12 +90,15 @@ class Library:
         MOCK UP OF GREEDY ALGORITHM IN COGOMO, TODO: integrate here
         """
 
-        for n in range(0, len(self.__goals) + 1):
+        for n in range(1, len(self.__goals)):
             for subset in itertools.combinations(self.__goals, n):
-                subset_typeset = reduce(
-                    (lambda x, y: x.specification.typeset | y.specification.typeset),
-                    list(subset),
-                )
+                n_compositions = len(subset)
+                if n_compositions == 1:
+                    subset_typeset = subset[0].specification.typeset
+                else:
+                    subset_typeset = reduce(
+                        (lambda x, y: x | y), [g.specification.typeset for g in subset]
+                    )
                 if not self.covers(goal_to_refine, subset_typeset)[0]:
                     continue
                 g = Node.composition(subset)
