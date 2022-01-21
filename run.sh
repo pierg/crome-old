@@ -1,6 +1,8 @@
 if [ $# -eq 0 ]
   then
     echo "No parameters provided. Launching bash"
+    echo "...activating conda env..."
+    conda activate crome-env
     bash
 else
     while test $# -gt 0; do
