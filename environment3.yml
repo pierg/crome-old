@@ -1,5 +1,4 @@
-channels:
-  - defaults
+name: crome
 dependencies:
   - python=3.9
   - pygraphviz
