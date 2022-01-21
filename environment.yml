@@ -1,4 +1,4 @@
-name: envs
+name: crome
 channels:
   - defaults
 dependencies:
