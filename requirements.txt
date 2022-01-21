@@ -9,3 +9,7 @@ flask_socketio
 python-socketio
 pre-commit
 bloom-filter
+
+aenum
+treelib
+# pygraphviz INSTALL MANIALLY, RUN: conda install -c conda-forge pygraphviz
