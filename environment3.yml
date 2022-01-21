@@ -1,0 +1,20 @@
+name: crome
+channels:
+  - defaults
+dependencies:
+  - python=3.9
+  - pygraphviz
+  - pip:
+    - dill
+    - python-dotenv
+    - bloom-filter
+    - flask_socketio
+    - docker
+    - pre-commit
+    - graphviz
+    - tabulate
+    - flask
+    - flask_cors
+    - python-socketio
+    - aenum
+    - treelib
