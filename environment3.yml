@@ -1,7 +1,8 @@
 name: conda-env
 dependencies:
-  - python=3.9
+  - python=3.10
   - pygraphviz
+  - pip
   - pip:
     - dill
     - python-dotenv
