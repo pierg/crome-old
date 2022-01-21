@@ -7,13 +7,14 @@ dependencies:
   - dill
   - graphviz
   - tabulate
-  - docker
   - flask
-  - python-dotenv
   - flask_cors
-  - flask_socketio
   - python-socketio
-  - pre-commit
-  - bloom-filter
   - aenum
   - treelib
+  - pip:
+      - python-dotenv
+      - bloom-filter
+      - flask_socketio
+      - docker
+      - pre-commit
