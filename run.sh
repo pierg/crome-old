@@ -2,6 +2,7 @@ if [ $# -eq 0 ]
   then
     echo "No parameters provided. Launching bash"
     echo "...activating conda env..."
+    exec bash
     conda activate crome-env
     bash
 else
