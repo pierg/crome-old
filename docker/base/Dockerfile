@@ -1,4 +1,4 @@
-FROM pmallozzi/ltltools:base
+FROM pmallozzi/ltltools:latest
 
 ENV GIT_SSL_NO_VERIFY=1
 RUN git clone https://github.com/pierg/crome.git --branch master --single-branch
