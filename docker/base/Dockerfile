@@ -12,7 +12,6 @@ RUN conda env create --file environment.yml
 # Include Spot Python library manually
 #RUN cp -R /home/dependencies/spot/* /miniconda/envs/conda-env/lib/python*/site-packages
 RUN conda init bash
-RUN conda activate crome-env
 
 
 
