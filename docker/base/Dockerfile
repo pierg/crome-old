@@ -8,7 +8,7 @@ WORKDIR /home/crome
 
 # Install Dependencies
 RUN conda env create --name conda
-RUN conda activate myenv
+RUN conda activate conda
 RUN conda install --file requirements.txt
 RUN conda install -c conda-forge pygraphviz
 
