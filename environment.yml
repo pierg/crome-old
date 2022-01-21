@@ -1,4 +1,4 @@
-name: /Users/pier/Projects/crome/conda
+name: ./conda
 channels:
   - conda-forge
   - defaults
