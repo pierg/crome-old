@@ -1,4 +1,4 @@
-FROM pmallozzi/ltltools:web
+FROM pmallozzi/ltltools:base
 
 ARG UBUNTU_VER=21.04
 ARG CONDA_VER=latest
