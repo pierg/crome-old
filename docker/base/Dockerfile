@@ -7,8 +7,8 @@ RUN git clone https://github.com/pierg/crome.git --branch master --single-branch
 WORKDIR /home/crome
 
 # Install Dependencies
-RUN conda env create --name conda
-RUN conda activate conda
+RUN conda env create --name venv
+RUN conda activate venv
 RUN conda install --file requirements.txt
 RUN conda install -c conda-forge pygraphviz
 
