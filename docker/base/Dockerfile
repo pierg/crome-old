@@ -6,16 +6,14 @@ RUN git clone https://github.com/pierg/crome.git --branch master --single-branch
 
 WORKDIR /home/crome
 
-# Create the environment:
-RUN conda env create -f environment.yml
-
-# Activate the environment, and make sure it's activated:
+# Install Dependencies
+RUN conda env create --name conda
 RUN conda activate myenv
-
+RUN conda install --file requirements.txt
 RUN conda install -c conda-forge pygraphviz
 
 # Include Spot Python library manually
-#RUN cp -R /home/ltltools/dependencies/ubuntu/spot/PACKAGE /home/crome/venv/lib/*/site-packages
+RUN cp -R /home/ltltools/dependencies/spot/* /home/crome/conda/lib/python*/site-packages/
 
 
 
