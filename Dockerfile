@@ -10,10 +10,15 @@ RUN npm run build
 WORKDIR /home/crome
 
 
-RUN pip3 install -r requirements.txt
-
+# Preparing the environment
+RUN conda env create --file environment.yml
 # Include Spot Python library manually
-RUN cp -R /home/ltltools/dependencies/ubuntu/spot/PACKAGE /home/crome/venv/lib/*/site-packages
+RUN cp -R /home/dependencies/spot/* /miniconda/envs/conda-env/lib/python*/site-packages
+RUN conda init bash
+RUN conda activate crome-env
+
+
+
 
 
 

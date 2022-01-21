@@ -1,20 +1,19 @@
-name: crome
-channels:
-  - defaults
+name: crome-env
 dependencies:
-  - python=3.9
+  - python=3.10
   - pygraphviz
-  - dill
-  - graphviz
-  - tabulate
-  - flask
-  - flask_cors
-  - python-socketio
-  - aenum
-  - treelib
+  - pip
   - pip:
-      - python-dotenv
-      - bloom-filter
-      - flask_socketio
-      - docker
-      - pre-commit
+    - dill
+    - python-dotenv
+    - bloom-filter
+    - flask_socketio
+    - docker
+    - pre-commit
+    - graphviz
+    - tabulate
+    - flask
+    - flask_cors
+    - python-socketio
+    - aenum
+    - treelib
