@@ -75,7 +75,6 @@ class Boolean(CTypes):
 
     def to_atom(self, kind=None):
         from core.specification.lformula import LTL
-
         return LTL(self.name, kind=kind)
 
     @property

@@ -22,6 +22,7 @@ class Store:
                 output_folder = f"{Store.output_folder}"
 
         output_file = f"{output_folder}/{file_name}"
+        output_file_orig = f"{output_folder}/{file_name}"
 
         output_folder = Path(output_folder)
         output_file = Path(output_file)
@@ -33,6 +34,7 @@ class Store:
             f.write(text)
 
         f.close()
+        return output_file_orig
 
     @staticmethod
     def generate_eps_from_dot(dot_mealy: str, file_name: str, folder_name=None):

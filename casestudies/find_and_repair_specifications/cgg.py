@@ -16,5 +16,10 @@ print(cgg)
 cgg.set_session_name(f"examples/{os.path.basename(os.getcwd())}")
 """Save CGG as text file"""
 cgg.save()
+
+cgg.realize_specification_controllers()
+print(cgg)
+cgg.save()
+
 """Save CGG so that it can be loaded later"""
 # Persistence.dump_cgg(cgg, output_folder_path)

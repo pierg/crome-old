@@ -1,19 +1,27 @@
-name: crome-env
+name: crome-legacy
+
+channels:
+  - default
+  - conda-forge
+
 dependencies:
   - python=3.10
   - pygraphviz
+  - spot
   - pip
   - pip:
     - dill
     - python-dotenv
     - bloom-filter
-    - flask_socketio
+    - pyeda
+    - ipython
+#    - flask_socketio
     - docker
     - pre-commit
     - graphviz
     - tabulate
-    - flask
-    - flask_cors
-    - python-socketio
+#    - flask
+#    - flask_cors
+#    - python-socketio
     - aenum
     - treelib

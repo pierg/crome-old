@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Set, Union
 
+import spot
+
 from core.contract import Contract, IncompatibleContracts, InconsistentContracts
 from core.controller import Controller
 from core.controller.exceptions import ControllerException
@@ -52,6 +54,7 @@ class Goal:
 
         """Name of the session (i.e. the subfolder in the output folder)"""
         self.__session_name = None
+        self._synth_time = -1
 
     def __str__(self):
         return Goal.pretty_print_goal(self)
@@ -147,7 +150,11 @@ class Goal:
 
     @property
     def synth_time(self) -> float:
-        return self.controller.synth_time
+        return self._synth_time
+
+    @synth_time.setter
+    def synth_time(self, time):
+        self._synth_time = time
 
     def translate_to_buchi(self):
 
@@ -179,7 +186,7 @@ class Goal:
             Store.save_to_file(
                 controller_synthesis_input, "controller.txt", folder_name
             )
-            realized, kiss_mealy, time = Strix.generate_controller(a, g, i, o)
+            realized, hoa_mealy, time = Strix.generate_controller(a, g, i, o)
 
             if not realized:
                 controller_info = self.specification.get_controller_info(
@@ -192,26 +199,30 @@ class Goal:
                 Store.save_to_file(
                     controller_synthesis_input, "controller.txt", folder_name
                 )
-                realized, kiss_mealy, time = Strix.generate_controller(a, g, i, o)
+                realized, hoa_mealy, time = Strix.generate_controller(a, g, i, o)
 
             self.__realizable = realized
 
             if realized:
-                Store.save_to_file(kiss_mealy, "controller_kiss", folder_name)
+                path = Store.save_to_file(hoa_mealy, "controller_hoa", folder_name)
+                automaton = spot.automaton(path)
+                dot_format = automaton.to_str(format="dot")
+                Store.generate_eps_from_dot(dot_format, "controller_dot", folder_name)
                 # Store.generate_eps_from_dot(dot_mealy, "controller", folder_name)
             else:
-                Store.save_to_file(kiss_mealy, "controller_inverted_kiss", folder_name)
+                Store.save_to_file(hoa_mealy, "controller_inverted_hoa", folder_name)
                 # Store.generate_eps_from_dot(dot_mealy, "controller_inverted", folder_name)
 
-            self.__controller = Controller(
-                mealy_machine=kiss_mealy,
-                world=self.world,
-                name=self.name,
-                synth_time=time,
-            )
-            print(f"NAME:\t{self.__name} ({self.__id})")
-            print(self.__controller)
-            Store.save_to_file(str(self.__controller), "controller_table", folder_name)
+            # self.__controller = Controller(
+            #     mealy_machine=hoa_mealy,
+            #     world=self.world,
+            #     name=self.name,
+            #     synth_time=time,
+            # )
+            self.synth_time = time
+            # print(f"NAME:\t{self.__name} ({self.__id})")
+            # print(self.__controller)
+            # Store.save_to_file(str(self.__controller), "controller_table", folder_name)
 
         except ControllerException as e:
             raise GoalSynthesisFail(self, e)

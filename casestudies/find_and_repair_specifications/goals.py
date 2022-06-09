@@ -32,7 +32,7 @@ set_of_goals = {
         description="During the day keep visiting the `front' locations",
         context=w["dy"],
         specification=Contract(
-            assumptions=None, guarantees=LTL(Patrolling("lf"), w.typeset)
+            assumptions=None, guarantees=LTL(StrictOrderedPatrolling("l1", "l3", "l5", "l3"), w.typeset)
         ),
         world=w,
     ),
@@ -116,3 +116,4 @@ set_of_goalski = {
         world=w,
     ),
 }
+

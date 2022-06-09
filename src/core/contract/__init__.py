@@ -130,13 +130,11 @@ class Contract:
         a_typeset = Typeset()
         g_typeset = Typeset()
 
-        list, typeset = self.assumptions.formula(SpecificationOutput.ListCNF)
-        assumptions.extend(list)
-        a_typeset |= typeset
-
-        list, typeset = self.guarantees.formula(SpecificationOutput.ListCNF)
-        guarantees.extend(list)
-        g_typeset |= typeset
+        assumptions.append(self.assumptions.represent(Specification.OutputStr.ORIGINAL))
+        a_typeset |= self.assumptions.typeset
+        
+        guarantees.append(self.guarantees.represent(Specification.OutputStr.ORIGINAL))
+        g_typeset |= self.guarantees.typeset
 
         if world_ts is not None:
             instance_ts = Typeset.get_instance_ts((a_typeset | g_typeset), world_ts)
@@ -150,32 +148,32 @@ class Contract:
         o_typeset = Typeset(o_set)
 
         """Mutex Rules"""
-        ret = Atom.extract_mutex_rules(i_typeset, output=SpecificationOutput.ListCNF)
+        ret = LTL.extract_mutex_rules(i_typeset, output=LTL.RulesOutputType.ListCNF)
         if ret is not None:
             rules, typeset = ret
             a_mutex.extend(rules)
 
-        ret = Atom.extract_mutex_rules(o_typeset, output=SpecificationOutput.ListCNF)
+        ret = LTL.extract_mutex_rules(o_typeset, output=LTL.RulesOutputType.ListCNF)
         if ret is not None:
             rules, typeset = ret
             g_mutex.extend(rules)
 
         """Adjacecy Rules"""
-        ret = Atom.extract_adjacency_rules(
-            o_typeset, output=SpecificationOutput.ListCNF
+        ret = LTL.extract_adjacency_rules(
+            o_typeset, output=LTL.RulesOutputType.ListCNF
         )
         if ret is not None:
             rules, typeset = ret
             g_adjacency.extend(rules)
 
         """Adding Liveness To Sensors (input)"""
-        ret = Atom.extract_liveness_rules(i_typeset, output=SpecificationOutput.ListCNF)
+        ret = LTL.extract_liveness_rules(i_typeset, output=LTL.RulesOutputType.ListCNF)
         if ret is not None:
             rules, typeset = ret
             a_liveness.extend(rules)
 
         """Adding context and active signal rules"""
-        ret = Atom.context_active_rules(i_typeset, output=SpecificationOutput.ListCNF)
+        ret = LTL.context_active_rules(i_typeset, output=LTL.RulesOutputType.ListCNF)
         if ret is not None:
             rules, typeset = ret
             assumptions.extend(rules)

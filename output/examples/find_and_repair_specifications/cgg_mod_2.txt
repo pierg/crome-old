@@ -1,0 +1,106 @@
+|---GOAL	 3e34f 'MISSION'
+|	  ASSUMPTIONS:
+|	  G(Fps & Flc) | (GFps & F((ps & !wa) | (!ps & wa))) | (GFps & F(!pc & ps)) | (GFlc & F(lf & X(!ch | !lc))) 
+|	  GUARANTEES:
+|	  (((G((ps & wa) | (!ps & !wa)) | FG!ps) & (!l2 U l1) & (!l4 U l2) & (!l3 U l4) & G(F(l1 & F(l2 & F(l4 & Fl3))) & (!l2 | X(!l2 U l1)) & (!l4 | X(!l4 U l2)) & (!l3 | X(!l3 U l4)) & (!l1 | X(!l1 U l3)) & (!l1 | X(!l1 U l2)) & (!l2 | X(!l2 U l4)) & (!l4 | X(!l4 U l3)) & (!l3 | X(!l3 U l1))) & (G(!lb | Xre) | FG!lb) & (G(!lf | X(ch & lc)) | FG!lc) & (FG!ps | G(pc | !ps))) | ((!l2 U l1) & (!l4 U l2) & (!l3 U l4) & G(F(l1 & F(l2 & F(l4 & Fl3))) & (!l2 | X(!l2 U l1)) & (!l4 | X(!l4 U l2)) & (!l3 | X(!l3 U l4)) & (!l1 | X(!l1 U l3)) & (!l1 | X(!l1 U l2)) & (!l2 | X(!l2 U l4)) & (!l4 | X(!l4 U l3)) & (!l3 | X(!l3 U l1))) & FG!lb) | ((G((ps & wa) | (!ps & !wa)) | FG!ps) & (G(!lf | X(ch & lc)) | FG!lc) & (FG!ps | G(pc | !ps)) & F(G!ps | G!lc))) & (((G((ps & wa) | (!ps & !wa)) | FG!ps) & (G(!lf | X(ch & lc)) | FG!lc) & (FG!ps | G(pc | !ps)) & F(G!ps | G!lc)) | (GFlf & (G((ps & wa) | (!ps & !wa)) | FG!ps) & (G(!lf | X(ch & lc)) | FG!lc) & (FG!ps | G(pc | !ps)))) 
+|	  REALIZABLE:	YES	1.1257741451263428 seconds
+|  CONJUNCTION
+		|---GOAL	 f3f48 'SCENARIO_0'
+		|	CONTEXT:	 dy & !nt
+		|	  ASSUMPTIONS:
+		|	  G(Fps & Flc) | (GFps & F((ps & !wa) | (!ps & wa))) | (GFps & F(!pc & ps)) | (GFlc & F(lf & X(!ch | !lc))) 
+		|	  GUARANTEES:
+		|	  ((G((ps & wa) | (!ps & !wa)) | FG!ps) & (G(!lf | X(ch & lc)) | FG!lc) & (FG!ps | G(pc | !ps)) & F(G!ps | G!lc)) | (GFlf & (G((ps & wa) | (!ps & !wa)) | FG!ps) & (G(!lf | X(ch & lc)) | FG!lc) & (FG!ps | G(pc | !ps))) 
+		|	  REALIZABLE:	YES	0.053518056869506836 seconds vs 0.865 = 0.777 + 0.032 + 0.029 + 0.027
+		|  MERGING
+				|---GOAL	 a16fb 'always_picture||day_wave||night_charge'
+				|	CONTEXT:	 dy & !nt
+				|	  ASSUMPTIONS:
+				|	  G(Fps & Flc) | (GFps & F((ps & !wa) | (!ps & wa))) | (GFps & F(!pc & ps)) | (GFlc & F(lf & X(!ch | !lc))) 
+				|	  GUARANTEES:
+				|	  (G((ps & wa) | (!ps & !wa)) | FG!ps) & (G(!lf | X(ch & lc)) | FG!lc) & (FG!ps | G(pc | !ps)) 
+				|	  REALIZABLE:	YES	0.03925585746765137 seconds
+				|  COMPOSITION
+						|---GOAL	 1e6ef 'day_wave'
+						|	  ASSUMPTIONS:
+						|	  GFps 
+						|	  GUARANTEES:
+						|	  G((ps & wa) | (!ps & !wa)) | FG!ps 
+						|	  REALIZABLE:	YES	0.7770280838012695 seconds
+						|---GOAL	 5f40c 'night_charge'
+						|	  ASSUMPTIONS:
+						|	  GFlc 
+						|	  GUARANTEES:
+						|	  G(!lf | X(ch & lc)) | FG!lc 
+						|	  REALIZABLE:	YES	0.032012939453125 seconds
+						|---GOAL	 d99a5 'always_picture'
+						|	  ASSUMPTIONS:
+						|	  GFps 
+						|	  GUARANTEES:
+						|	  FG!ps | G(pc | !ps) 
+						|	  REALIZABLE:	YES	0.029508113861083984 seconds
+				|---GOAL	 3e2f4 'day_patrolling'
+				|	CONTEXT:	 dy & !nt
+				|	  GUARANTEES:
+				|	  GFlf 
+				|	  REALIZABLE:	YES	0.028120994567871094 seconds
+				|  COMPOSITION
+						|---GOAL	 3e2f4 'day_patrolling'
+						|	CONTEXT:	 dy
+						|	  GUARANTEES:
+						|	  GFlf 
+						|	  REALIZABLE:	YES	0.02798604965209961 seconds
+		|---GOAL	 bcdf8 'SCENARIO_1'
+		|	CONTEXT:	 !dy & nt
+		|	  ASSUMPTIONS:
+		|	  (GFlb | (l2 R !l1) | (l4 R !l2) | (l3 R !l4) | F(G(!l1 | G(!l2 | G(!l4 | G!l3))) | (l2 & X(l2 R !l1)) | (l4 & X(l4 R !l2)) | (l3 & X(l3 R !l4)) | (l1 & X(l1 R !l3)) | (l1 & X(l1 R !l2)) | (l2 & X(l2 R !l4)) | (l4 & X(l4 R !l3)) | (l3 & X(l3 R !l1)))) & (G(Fps & Flc) | (GFps & F((ps & !wa) | (!ps & wa))) | (GFps & F(!pc & ps)) | (GFlc & F(lf & X(!ch | !lc)))) 
+		|	  GUARANTEES:
+		|	  ((G((ps & wa) | (!ps & !wa)) | FG!ps) & (!l2 U l1) & (!l4 U l2) & (!l3 U l4) & G(F(l1 & F(l2 & F(l4 & Fl3))) & (!l2 | X(!l2 U l1)) & (!l4 | X(!l4 U l2)) & (!l3 | X(!l3 U l4)) & (!l1 | X(!l1 U l3)) & (!l1 | X(!l1 U l2)) & (!l2 | X(!l2 U l4)) & (!l4 | X(!l4 U l3)) & (!l3 | X(!l3 U l1))) & (G(!lb | Xre) | FG!lb) & (G(!lf | X(ch & lc)) | FG!lc) & (FG!ps | G(pc | !ps))) | ((!l2 U l1) & (!l4 U l2) & (!l3 U l4) & G(F(l1 & F(l2 & F(l4 & Fl3))) & (!l2 | X(!l2 U l1)) & (!l4 | X(!l4 U l2)) & (!l3 | X(!l3 U l4)) & (!l1 | X(!l1 U l3)) & (!l1 | X(!l1 U l2)) & (!l2 | X(!l2 U l4)) & (!l4 | X(!l4 U l3)) & (!l3 | X(!l3 U l1))) & FG!lb) | ((G((ps & wa) | (!ps & !wa)) | FG!ps) & (G(!lf | X(ch & lc)) | FG!lc) & (FG!ps | G(pc | !ps)) & F(G!ps | G!lc)) 
+		|	  REALIZABLE:	YES	0.7941920757293701 seconds
+		|  MERGING
+				|---GOAL	 2bda1 'night_patrolling||night_report'
+				|	CONTEXT:	 !dy & nt
+				|	  ASSUMPTIONS:
+				|	  GFlb | (l2 R !l1) | (l4 R !l2) | (l3 R !l4) | F(G(!l1 | G(!l2 | G(!l4 | G!l3))) | (l2 & X(l2 R !l1)) | (l4 & X(l4 R !l2)) | (l3 & X(l3 R !l4)) | (l1 & X(l1 R !l3)) | (l1 & X(l1 R !l2)) | (l2 & X(l2 R !l4)) | (l4 & X(l4 R !l3)) | (l3 & X(l3 R !l1))) 
+				|	  GUARANTEES:
+				|	  (!l2 U l1) & (!l4 U l2) & (!l3 U l4) & G(F(l1 & F(l2 & F(l4 & Fl3))) & (!l2 | X(!l2 U l1)) & (!l4 | X(!l4 U l2)) & (!l3 | X(!l3 U l4)) & (!l1 | X(!l1 U l3)) & (!l1 | X(!l1 U l2)) & (!l2 | X(!l2 U l4)) & (!l4 | X(!l4 U l3)) & (!l3 | X(!l3 U l1))) & (G(!lb | Xre) | FG!lb) 
+				|	  REALIZABLE:	YES	0.05469322204589844 seconds
+				|  COMPOSITION
+						|---GOAL	 77a3f 'night_report'
+						|	CONTEXT:	 nt
+						|	  ASSUMPTIONS:
+						|	  GFlb 
+						|	  GUARANTEES:
+						|	  G(!lb | Xre) | FG!lb 
+						|	  REALIZABLE:	YES	0.028768062591552734 seconds
+						|---GOAL	 aef8e 'night_patrolling'
+						|	CONTEXT:	 nt
+						|	  GUARANTEES:
+						|	  (!l2 U l1) & (!l4 U l2) & (!l3 U l4) & G(F(l1 & F(l2 & F(l4 & Fl3))) & (!l2 | X(!l2 U l1)) & (!l4 | X(!l4 U l2)) & (!l3 | X(!l3 U l4)) & (!l1 | X(!l1 U l3)) & (!l1 | X(!l1 U l2)) & (!l2 | X(!l2 U l4)) & (!l4 | X(!l4 U l3)) & (!l3 | X(!l3 U l1))) 
+						|	  REALIZABLE:	YES	0.046462059020996094 seconds
+				|---GOAL	 a16fb 'always_picture||day_wave||night_charge'
+				|	CONTEXT:	 !dy & nt
+				|	  ASSUMPTIONS:
+				|	  G(Fps & Flc) | (GFps & F((ps & !wa) | (!ps & wa))) | (GFps & F(!pc & ps)) | (GFlc & F(lf & X(!ch | !lc))) 
+				|	  GUARANTEES:
+				|	  (G((ps & wa) | (!ps & !wa)) | FG!ps) & (G(!lf | X(ch & lc)) | FG!lc) & (FG!ps | G(pc | !ps)) 
+				|	  REALIZABLE:	YES	0.040232181549072266 seconds
+				|  COMPOSITION
+						|---GOAL	 1e6ef 'day_wave'
+						|	  ASSUMPTIONS:
+						|	  GFps 
+						|	  GUARANTEES:
+						|	  G((ps & wa) | (!ps & !wa)) | FG!ps 
+						|	  REALIZABLE:	YES	0.7770280838012695 seconds
+						|---GOAL	 5f40c 'night_charge'
+						|	  ASSUMPTIONS:
+						|	  GFlc 
+						|	  GUARANTEES:
+						|	  G(!lf | X(ch & lc)) | FG!lc 
+						|	  REALIZABLE:	YES	0.032012939453125 seconds
+						|---GOAL	 d99a5 'always_picture'
+						|	  ASSUMPTIONS:
+						|	  GFps 
+						|	  GUARANTEES:
+						|	  FG!ps | G(pc | !ps) 
+						|	  REALIZABLE:	YES	0.029508113861083984 seconds

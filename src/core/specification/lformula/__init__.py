@@ -125,8 +125,10 @@ class LTL(Specification):
     def is_satisfiable(self: LTL) -> bool:
         """TODO: Too slow when adding adjacency and refinement"""
         mtx_rules = LTL.extract_mutex_rules(self.typeset)
+        new_f = self
 
-        new_f = self & mtx_rules
+        if mtx_rules is not None:
+            new_f = self & mtx_rules
 
         # adj_rules = LTL.extract_adjacency_rules(self.typeset)
         #
@@ -578,7 +580,7 @@ class LTL(Specification):
     def extract_mutex_rules(
         typeset: Typeset,
         output=None,
-    ) -> LTL | tuple[list[str], Typeset]:
+    ) -> LTL | tuple[list[str], Typeset] | None:
         """Extract Mutex rules from the Formula."""
 
         rules_str = []
@@ -599,7 +601,7 @@ class LTL(Specification):
                 rules_typeset |= Typeset(mutex_group)
 
         if len(rules_str) == 0:
-            return LTL("TRUE")
+            return None
 
         if output is not None and output == LTL.RulesOutputType.ListCNF:
             return rules_str, rules_typeset

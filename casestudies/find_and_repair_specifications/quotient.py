@@ -12,6 +12,7 @@ from core.patterns.robotics.coremovement.surveillance import (
 from core.specification.lformula import LTL
 from tools.strings import StringMng
 
+
 print(OrderedLocations("l1", "l3"))
 print(OrderedLocations("l3", "l5"))
 print(OrderedLocations("l1", "l3", "l5"))

@@ -10,7 +10,7 @@ g = Node(
     name="day_wave",
     description="During the day wave when seeing a person",
     specification=Contract(
-        assumptions=None,
+        assumptions=LTL("GF(ps)", w.typeset),
         guarantees=LTL(InstantaneousReaction("ps", "pc"), w.typeset),
     ),
     world=w,

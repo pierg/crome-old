@@ -19,6 +19,7 @@ backend_folder = Path(__file__).parent.absolute()
 front_end_folder = Path(__file__).parents[1].absolute() / "frontend"
 build_folder = front_end_folder / "build"
 storage_folder = Path(__file__).parents[2].absolute() / "storage"
+
 if backend_folder.exists():
     print(backend_folder)
 if build_folder.exists():
